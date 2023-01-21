@@ -1,3 +1,7 @@
+<script>
+	import hydro from '$lib/assets/hydro.png';
+</script>
+
 <div class="container">
 	<h1 class="logo">The Synthetic Gazette</h1>
 
@@ -35,11 +39,11 @@
 			</p>
 		</article>
 
-		<article class="homepage__article">
-			<h1 class="homepage__h1">The Elbonian Revolution</h1>
-			<h2 class="homepage__h2">
+		<article class="homepage__article homepage__article--special-report">
+			<h2 class="homepage__h2">The Elbonian Revolution</h2>
+			<h1 class="homepage__h1">
 				The people of Elbonia rise up against their oppressive government
-			</h2>
+			</h1>
 			<p class="homepage__p">
 				The small country of Elbonia, located in the fictional region of the world, has been rocked
 				by a massive popular uprising against its long-time authoritarian government. For years, the
@@ -99,6 +103,8 @@
 		</article>
 
 		<article class="homepage__article">
+			<img class="homepage__img" src={hydro} alt="Delapidated hydro power plant" />
+
 			<h1 class="homepage__h1">The Importance of Walkable Cities</h1>
 			<h2 class="homepage__h2">Why walkability should be a key consideration in urban planning</h2>
 			<p class="homepage__p">
@@ -106,16 +112,6 @@
 				property values and a more vibrant local economy. This is because walkable neighborhoods are
 				often more desirable places to live, work, and shop, which attracts more businesses and
 				people to the area.
-			</p>
-			<p class="homepage__p">
-				Despite these benefits, many cities around the world are still designed primarily for cars,
-				with wide roads and large parking lots. However, an increasing number of urban planners,
-				architects, and policymakers are beginning to recognize the importance of walkability and
-				are taking steps to make their cities more pedestrian-friendly. This includes things like
-				creating more bike lanes, building more sidewalks and crosswalks, and encouraging the
-				development of mixed-use neighborhoods. By making our cities more walkable, we can not only
-				improve our own health and well-being, but also create more vibrant and sustainable
-				communities for everyone.
 			</p>
 		</article>
 
@@ -189,6 +185,18 @@
 		border: 1px solid #e2e2e2;
 		padding: 2.5rem;
 		margin-bottom: 1rem;
+
+		&--special-report {
+			background-color: #222;
+			color: #fff;
+		}
+	}
+
+	img.homepage__img {
+		width: calc(100% + 2.5rem + 2.5rem);
+		height: 100%;
+		object-fit: cover;
+		margin: -2.5rem -2.5rem 1rem -2.5rem;
 	}
 
 	h1.homepage__h1 {
