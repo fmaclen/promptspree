@@ -1,5 +1,6 @@
 <script>
 	import hydro from '$lib/assets/hydro.png';
+	import lawn from '$lib/assets/lawn.png';
 </script>
 
 <div class="container">
@@ -7,6 +8,8 @@
 
 	<main class="homepage">
 		<article class="homepage__article">
+			<img class="homepage__img" src={lawn} alt="Future of Lawn Furniture" />
+
 			<h1 class="homepage__h1">Future of Lawn Furniture: Smart and Connected</h1>
 			<h2 class="homepage__h2">How technology is revolutionizing outdoor living spaces</h2>
 			<p class="homepage__p">
@@ -32,11 +35,6 @@
 				panels and rainwater harvesting systems. This not only helps to reduce energy consumption
 				and water usage, but also helps to reduce the environmental impact of outdoor living spaces.
 			</p>
-			<p class="homepage__p">
-				Overall, smart and connected lawn furniture is the future of outdoor living spaces. With the
-				integration of technology, these new designs offer homeowners a wide range of features and
-				benefits that were once unimaginable, while also promoting sustainability.
-			</p>
 		</article>
 
 		<article class="homepage__article homepage__article--special-report">
@@ -54,92 +52,89 @@
 		</article>
 
 		<article class="homepage__article">
-			<h1 class="homepage__h1">MH370 Mystery Finally Solved</h1>
+			<h1 class="homepage__h1">
+				Tech giant "Innovax" has announced plans to lay off a significant portion of its global
+				workforce
+			</h1>
 			<h2 class="homepage__h2">
-				After years of speculation and searching, evidence confirms the fate of the missing Malaysia
-				Airlines flight
+				The affected employees, who make up more than 6% of the company's workforce, will be let go
+				in the coming weeks and months.
 			</h2>
 			<p class="homepage__p">
-				On March 8, 2014, Malaysia Airlines flight MH370 disappeared without a trace, leaving the
-				world in shock and the fate of the 239 passengers and crew members unknown. For years,
-				search teams scoured the Indian Ocean in an effort to find the missing plane, and theories
-				about what happened to it ran rampant. However, recent evidence has finally provided closure
-				to this aviation mystery.
+				The company has stated that it will provide support and assistance to the affected
+				employees, including severance packages and job search assistance, while using the resources
+				to invest in other areas of the company with better growth prospects.
 			</p>
 			<p class="homepage__p">
-				In July 2018, a piece of debris from the plane washed up on the coast of Madagascar, and
-				further analysis confirmed it was from MH370. In addition, the government of Malaysia, in
-				conjunction with the Australian Transport Safety Bureau and the Chinese government, released
-				a report stating that the plane's final resting place is in the southern Indian Ocean.
+				The company has stated that it will provide support and assistance to the affected
+				employees, including severance packages and job search assistance. While the layoffs are
+				certainly difficult news for those who will be losing their jobs, the company is confident
+				that this decision will ultimately lead to a stronger and more sustainable business for the
+				future. The company is expecting to use the resources to invest in other areas of the
+				company that have better growth prospects.
 			</p>
 		</article>
 
 		<article class="homepage__article">
-			<h1 class="homepage__h1">Raising the Debt Ceiling: A Necessary Move for Xandaria</h1>
+			<h1 class="homepage__h1">
+				Markus Stone testifies on defense of his tweets on the buyout of Zenith Motors
+			</h1>
 			<h2 class="homepage__h2">
-				Xandaria, facing economic challenges, had to increase its debt ceiling to avoid default and
-				stabilize its economy.
+				Tech CEO defends statements on potential acquisition of electric car company
 			</h2>
 			<p class="homepage__p">
-				In recent years, Xandaria has been facing economic challenges, including a slow growth in
-				GDP and high unemployment rates. As a result, the government has had to increase its
-				spending in order to stimulate the economy and support social welfare programs. However,
-				this increased spending has led to a rise in the country's debt levels, and it became
-				necessary for the government to raise the debt ceiling in order to avoid default and
-				stabilize its economy.
+				Markus Stone, CEO of StoneTech, took the witness stand on Friday to defend a series of
+				tweets he made in 2018 claiming that he had secured the financing to take Zenith Motors
+				private in a deal that never came to fruition. The tweets, which were posted on StoneTech's
+				official twitter account, caused a stir in the business world and raised questions about the
+				credibility of Stone's statements.
+			</p>
+		</article>
+
+		<article class="homepage__article">
+			<h1 class="homepage__h1">Jack Smith, Legendary Singer-songwriter, Passes Away at 81</h1>
+			<h2 class="homepage__h2">
+				Singer-songwriter Jack Smith has passed away at the age of 81, his representative has
+				confirmed. The veteran musician was a founding member of two of the most successful bands of
+				the 1960s: The Blazers and Smith, Jones and Williams.
+			</h2>
+			<p class="homepage__p">
+				In a shocking plot twist, it was revealed that Jack Smith was actually still alive and had
+				been living in seclusion for the past 20 years. He had orchestrated his own "death" as a
+				publicity stunt to make a comeback and release new music under a new persona. The news sent
+				shockwaves through the music industry, as fans and fellow musicians were left in disbelief.
+				Some were excited for the chance to hear new music from the legendary artist, while others
+				felt betrayed by the elaborate deception.
+			</p>
+		</article>
+
+		<article class="homepage__article">
+			<h2 class="homepage__h2">68,000 Slices Cut from Giant Pie</h2>
+			<h1 class="homepage__h1">Pizza Palace Attempts to Break World Record for Largest Pizza</h1>
+			<p class="homepage__p">
+				Pizza Palace, a popular pizza chain, has announced its attempt to break the world record for
+				the largest pizza ever made. The pizza, named "The Big City," is a cheese and pepperoni pie,
+				with foldable slices designed to be eaten on the go, in true metropolitan style. The pizza
+				is so big that it was cut into 68,000 slices, making it the largest pizza ever made.
 			</p>
 			<p class="homepage__p">
-				Raising the debt ceiling is a controversial move, as it allows the government to borrow more
-				money, which can lead to concerns about long-term sustainability and potential inflation.
-				However, in the short-term, it was necessary for Xandaria to take this step in order to
-				avoid a financial crisis and support economic growth.
-			</p>
-			<p class="homepage__p">
-				The government has also implemented several economic reforms and austerity measures to
-				address the issues and get the economy back on track. The government has also emphasized
-				that it will focus on long-term solutions such as increasing revenue and reducing spending
-				to bring down the debt level and avoid future raises in debt ceiling.
+				The company wanted to find a way to celebrate the news and make a statement in the pizza
+				industry. The Big City pizza was created to showcase Pizza Palace's commitment to quality
+				and innovation. The pizza is a true representation of Pizza Palace's heritage and the
+				company's desire to push the boundaries of what is possible. The company plans to unveil the
+				pizza at an event in the coming weeks, where it will be available for purchase for a limited
+				time.
 			</p>
 		</article>
 
 		<article class="homepage__article">
 			<img class="homepage__img" src={hydro} alt="Delapidated hydro power plant" />
-
-			<h1 class="homepage__h1">The Importance of Walkable Cities</h1>
-			<h2 class="homepage__h2">Why walkability should be a key consideration in urban planning</h2>
+			<h1 class="homepage__h1">Aldonia's Global Ventures Struggle</h1>
+			<h2 class="homepage__h2">“They're falling apart bit by bit.”</h2>
 			<p class="homepage__p">
-				One of the key economic benefits of walkable cities is that they tend to have higher
-				property values and a more vibrant local economy. This is because walkable neighborhoods are
-				often more desirable places to live, work, and shop, which attracts more businesses and
-				people to the area.
-			</p>
-		</article>
-
-		<article class="homepage__article">
-			<h1 class="homepage__h1">Rising of Crypto Betting</h1>
-			<h2 class="homepage__h2">How blockchain technology is changing the way we gamble</h2>
-			<p class="homepage__p">
-				Crypto betting, also known as blockchain betting, refers to the use of cryptocurrencies,
-				such as Bitcoin and Ethereum, to place bets on various games and events. This type of
-				betting has become increasingly popular in recent years, thanks to the many benefits that it
-				offers over traditional online gambling.
-			</p>
-			<p class="homepage__p">
-				One of the biggest benefits of crypto betting is the increased level of security and
-				transparency. Because all transactions are recorded on a public blockchain, it is almost
-				impossible for anyone to cheat or manipulate the system. In addition, because
-				cryptocurrencies are decentralized, there is no need for a middleman, such as a bank, to
-				process transactions, which can also help to reduce costs and increase speed.
-			</p>
-			<p class="homepage__p">
-				Despite these benefits, crypto betting is still in its early stages and there are some
-				challenges that need to be addressed. One of these challenges is the volatility of
-				cryptocurrencies, which can make it difficult for players to know how much they are actually
-				risking. Additionally, because crypto betting is not yet regulated in many jurisdictions,
-				there is a risk that players may not be protected in case of fraud or other issues. However,
-				as the technology and regulations continue to evolve, it is likely that these challenges
-				will be overcome, and crypto betting will become an increasingly popular and mainstream way
-				to gamble.
+				Many of Aldonia's infrastructure projects under the Continental Expansion program are
+				plagued with problems, including a giant hydropower plant in a neighboring country, adding
+				more costs to a program criticized for leading countries deeper into debt;
 			</p>
 		</article>
 
