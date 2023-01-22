@@ -1,3 +1,7 @@
+# Pocketbase
+/pocketbase/pb_data
+
+# SvelteKit
 .DS_Store
 node_modules
 /build
