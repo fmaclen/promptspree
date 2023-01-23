@@ -14,7 +14,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 	if (event.locals.pb.authStore.isValid) {
 		// Is authorized :D
 		event.locals.user = serializeNonPOJOs(event.locals.pb.authStore.model);
-		console.log('access gramted');
 	} else {
 		// Is not authorized :(
 		event.locals.user = undefined;

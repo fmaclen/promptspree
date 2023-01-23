@@ -45,7 +45,6 @@
 
 <style lang="scss">
 	article.article {
-		font-family: 'EB Garamond', 'Georgia', serif;
 		display: inline-flex;
 		flex-direction: column;
 		row-gap: 24px;
@@ -74,43 +73,37 @@
 	}
 
 	time.article__time {
-		font-family: 'IBM Plex Mono', monospace;
-		font-size: 0.75rem;
-		color: slateblue;
+		font-size: 14px;
+		font-family: var(--font-mono);
+		color: var(--color-accent);
 		letter-spacing: 0.1em;
 		text-transform: capitalize;
 	}
 
 	h1.article__headline {
-		font-size: 2.25rem;
-		letter-spacing: -0.025em;
+		font-size: 32px;
+		letter-spacing: -0.035em;
 		line-height: 1em;
 		margin: 0;
 	}
 
 	h2.article__summary {
-		font-style: italic;
-		font-size: 1.5rem;
-		line-height: 1.15em;
+		font-weight: 200;
+		font-size: 24px;
+		line-height: 1.25em;
 		margin: 0;
 	}
 
 	p.article__p {
-		font-size: 0.9rem;
+		font-size: 16px;
 		margin: 0;
 		font-size: 1.1rem;
-		line-height: 1.25em;
+		line-height: 1.5em;
 	}
 
-	/* p.article__empty {
-		text-align: center;
-		font-style: italic;
-		width: 100%;
-		padding: 4rem 0;
-		border: 1px solid #e2e2e2;
-	} */
-
 	code.article__prompt {
+		font-size: 14px;
+		font-family: var(--font-mono);
 		overflow-y: scroll;
 		background-color: #f4f4f4;
 		color: #999;
