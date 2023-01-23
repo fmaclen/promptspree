@@ -1,12 +1,18 @@
 import { pb } from '$lib/+server.utils';
 
 export const load = async () => {
-	const records = await pb.collection('articles').getFullList(25, {
-		sort: '-created',
-		filter: 'status = "published"'
-	});
+	let records: any;
+
+	try {
+		records = await pb.collection('articles').getFullList(25, {
+			sort: '-created',
+			filter: 'status = "published"'
+		});
+	} catch (error) {
+		console.error(error);
+	}
 
 	return {
-		articles: JSON.parse(JSON.stringify(records))
+		articles: records ? JSON.parse(JSON.stringify(records)) : []
 	};
 };

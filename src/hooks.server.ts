@@ -4,7 +4,7 @@ import { pb, serializeNonPOJOs } from '$lib/+server.utils';
 const redirectTo = (origin: string, route: string) => {
 	const url = new URL(origin);
 	// url.protocol = process.env.USE_HTTP === 'true' ? 'http:' : 'https:';
-	return Response.redirect(`${url.origin}${route}`, 307);
+	return Response.redirect(`${url.origin}${route}`, 303);
 };
 
 export const handle: Handle = async ({ event, resolve }) => {

@@ -50,7 +50,25 @@
 
 	<footer class="footer">
 		<div class="container">
-			{title}
+			<nav class="footer-nav">
+				<nav class="footer-nav__links">
+					<a href="/" class="footer-nav__logo">{title}</a>
+					<hr class="footer-nav__hr" />
+					<a href="/register" class="footer-nav__a">Register</a>
+					<a href="/login" class="footer-nav__a">Login</a>
+				</nav>
+
+				<nav class="footer-nav__links">
+					<a
+						href="https://github.com/fmaclen/the-synthetic-gazette"
+						class="footer-nav__a"
+						target="_blank"
+						rel="noreferrer"
+					>
+						GitHub
+					</a>
+				</nav>
+			</nav>
 		</div>
 	</footer>
 </div>
@@ -189,12 +207,50 @@
 	}
 
 	footer.footer {
+		background-color: #222;
+		padding: 32px;
+	}
+
+	nav.footer-nav {
+		display: flex;
+		width: 100%;
+		column-gap: 32px;
+		justify-content: space-between;
+	}
+
+	nav.footer-nav__links {
+		display: flex;
+		column-gap: 16px;
+	}
+
+	a.footer-nav__a,
+	a.footer-nav__logo {
 		font-family: var(--font-base);
 		font-size: 16px;
 		font-weight: 600;
-		letter-spacing: -0.035em;
 		color: #fff;
-		background-color: #222;
-		padding: 32px;
+		text-decoration: none;
+
+		&:hover {
+			opacity: 0.75;
+		}
+	}
+
+	a.footer-nav__logo {
+		letter-spacing: -0.035em;
+	}
+
+	a.footer-nav__a {
+		font-size: 14px;
+		font-weight: 400;
+	}
+
+	hr.footer-nav__hr {
+		height: 100%;
+		border: 0;
+		margin: 0;
+		padding: 0;
+		width: 1px;
+		background-color: var(--color-grey70);
 	}
 </style>
