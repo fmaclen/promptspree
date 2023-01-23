@@ -23,12 +23,17 @@
 			{#if data.user}
 				<a class="nav__a" href="/editor">Editor</a>
 				<form action="/logout" method="POST" class="nav__form">
-					{data.user.name ? data.user.name : 'Anonymous'}
-					<button class="nav__button" type="submit">Logout</button>
+					<nav class="nav__auth">
+						{data.user.name ? data.user.name : 'Anonymous'}
+						<button class="nav__button" type="submit">Logout</button>
+					</nav>
 				</form>
 			{:else}
 				<div class="nav__placeholder" />
-				<a class="nav__a" href="/login">Login</a>
+				<nav class="nav__auth">
+					<a class="nav__a" href="/login">Login</a>
+					<a class="nav__a" href="/register">Register</a>
+				</nav>
 			{/if}
 		</nav>
 	</div>
@@ -54,8 +59,8 @@
 				<nav class="footer-nav__links">
 					<a href="/" class="footer-nav__logo">{title}</a>
 					<hr class="footer-nav__hr" />
-					<a href="/register" class="footer-nav__a">Register</a>
 					<a href="/login" class="footer-nav__a">Login</a>
+					<a href="/register" class="footer-nav__a">Register</a>
 				</nav>
 
 				<nav class="footer-nav__links">
@@ -132,7 +137,7 @@
 		border-bottom: 1px solid #e2e2e2;
 		padding: 1rem 0;
 		font-size: 14px;
-		column-gap: 0.5rem;
+		column-gap: 32px;
 		text-align: center;
 
 		> *:first-child {
@@ -172,8 +177,12 @@
 		cursor: pointer;
 	}
 
+	nav.nav__auth {
+		display: flex;
+		column-gap: 16px;
+	}
+
 	header.header {
-		/* margin: 6rem 0; */
 		display: flex;
 		flex-direction: column;
 		row-gap: 3rem;

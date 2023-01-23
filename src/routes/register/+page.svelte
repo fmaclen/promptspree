@@ -4,22 +4,21 @@
 	import FormButton from '$lib/components/FormButton.svelte';
 </script>
 
-<form class="form" action="?/login" method="POST">
+<form class="form" action="?/register" method="POST">
 	<fieldset class="form__fieldset">
 		<FormField label="E-mail">
-			<FormInput
-				type="email"
-				name="email"
-				value="steve@example.com"
-				placeholder="steve@example.com"
-			/>
+			<FormInput type="email" name="email" placeholder="steve@example.com" />
 		</FormField>
 
 		<FormField label="Password">
-			<FormInput type="password" name="password" value="1234567890" />
+			<FormInput type="password" name="password" />
 		</FormField>
 
-		<FormButton type="submit" label="Login" />
+		<FormField label="Confirm password">
+			<FormInput type="password" name="confirmPassword" />
+		</FormField>
+
+		<FormButton type="submit" label="Register" disabled={true} />
 	</fieldset>
 </form>
 
