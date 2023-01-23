@@ -19,6 +19,7 @@
 	};
 
 	export let article: Article;
+	export let sentiment: 'positive' | undefined = undefined;
 </script>
 
 <article class="article {article.isPlaceholder ? 'article--placeholder' : ''}">
@@ -30,9 +31,11 @@
 		/>
 	{/if}
 
-	<time class="article__time">
-		{formatDistance(new Date(article.updated), new Date(), { addSuffix: true })}
-	</time>
+	{#if !article.isPlaceholder}
+		<time class="article__time {sentiment === 'positive' ? 'article__time--positive' : ''}">
+			{formatDistance(new Date(article.updated), new Date(), { addSuffix: true })}
+		</time>
+	{/if}
 	<h1 class="article__headline">
 		{article.headline}
 	</h1>
@@ -79,8 +82,10 @@
 		font-size: 14px;
 		font-family: var(--font-mono);
 		color: var(--color-accent);
-		letter-spacing: 0.1em;
-		text-transform: capitalize;
+
+		&--positive {
+			color: var(--color-positive);
+		}
 	}
 
 	h1.article__headline {

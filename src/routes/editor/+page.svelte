@@ -1,5 +1,8 @@
-<script>
-	// import type { PageData } from './$types';
+<script lang="ts">
+	import type { ActionData } from './$types';
+
+	export let form: ActionData;
+
 	import Article from '$lib/components/Article.svelte';
 	import FormButton from '$lib/components/FormButton.svelte';
 	import FormField from '$lib/components/FormField.svelte';
@@ -14,30 +17,93 @@
 		collectionName: 'collectionName',
 		id: 'id',
 		image: [],
-		updated: '2021-05-01T00:00:00.000Z',
+		updated: new Date().toISOString(),
 		isPlaceholder: true
 	};
-	let article = PLACEHOLDER_ARTICLE;
 
-	// const isLoggedIn = data.user || false;
-	const isLoggedIn = false;
-	const isPublishable = isLoggedIn && false;
+	// Prompt
+	let prompt = form?.prompt;
+	$: isGenerateDisabled = !prompt;
+	$: isGenerating = false;
+
+	// Preview
+	$: article = form ? form : PLACEHOLDER_ARTICLE;
+	$: isPublishable = form;
 </script>
 
 <section class="editor">
-	<form class="form" action="/article?/generate" method="POST">
+	<form class="form" action="/editor?/generate" method="POST">
 		<FormField label="Prompt">
 			<FormTextarea
 				name="prompt"
 				placeholder="Write a placeholder article about Flibbertigibbet Jibber-jabber Jiggery-pokery"
+				bind:value={prompt}
 			/>
 		</FormField>
-		<FormButton label="Generate" type="submit" />
+		<FormButton label="Generate" type="submit" disabled={isGenerateDisabled} />
 	</form>
 
-	<form class="form form--preview" action="/article?/publish" method="POST">
-		<Article {article} />
-		<FormButton label="Publish" type="submit" disabled={!isPublishable} />
+	{#if isGenerating}
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			xmlns:xlink="http://www.w3.org/1999/xlink"
+			x="0px"
+			y="0px"
+			width="16px"
+			height="16px"
+			viewBox="0 0 16 16"
+			><g transform="translate(0, 0)"
+				><g class="nc-loop-dots-anim-6-16-icon-o"
+					><circle cx="1.5" cy="8" fill="#444444" r="1.5" /><circle
+						cx="8"
+						cy="8"
+						fill="#444444"
+						r="1.5"
+					/><circle cx="14.5" cy="8" fill="#444444" r="1.5" /></g
+				><style>
+					.nc-loop-dots-anim-6-16-icon-o,
+					.nc-loop-dots-anim-6-16-icon-o > * {
+						--animation-duration: 1.2s;
+					}
+					.nc-loop-dots-anim-6-16-icon-o {
+						transform-origin: 50% 50%;
+						animation: nc-loop-dots-anim-6 var(--animation-duration) infinite;
+					}
+					.nc-loop-dots-anim-6-16-icon-o > :nth-child(2),
+					.nc-loop-dots-anim-6-16-icon-o > :nth-child(3) {
+						transform-origin: 11.25px 50%;
+						animation: nc-loop-dots-anim-6-inner var(--animation-duration) infinite;
+					}
+					@keyframes nc-loop-dots-anim-6 {
+						0%,
+						50% {
+							transform: rotate(0);
+						}
+						100% {
+							animation-timing-function: cubic-bezier(1, 0, 0, 1);
+							transform: rotate(180deg);
+						}
+					}
+					@keyframes nc-loop-dots-anim-6-inner {
+						0% {
+							transform: rotate(0);
+						}
+						100%,
+						50% {
+							animation-timing-function: cubic-bezier(1, 0, 0, 1);
+							transform: rotate(180deg);
+						}
+					}
+				</style></g
+			></svg
+		>
+	{:else}
+		<span class="editor__ready">→</span>
+	{/if}
+
+	<form class="form form--preview" action="/editor?/publish" method="POST">
+		<Article {article} sentiment="positive" />
+		<FormButton label="Publish" type="submit" sentiment="positive" disabled={!isPublishable} />
 	</form>
 </section>
 
@@ -45,7 +111,7 @@
 	section.editor {
 		display: grid;
 		width: 100%;
-		grid-template-columns: 1fr 1fr;
+		grid-template-columns: 1fr auto 1fr;
 		column-gap: 32px;
 		align-items: center;
 	}
@@ -54,5 +120,11 @@
 		display: flex;
 		flex-direction: column;
 		row-gap: 16px;
+	}
+
+	span.editor__ready {
+		width: 16px;
+		font-size: 16px;
+		color: var(--color-grey20);
 	}
 </style>

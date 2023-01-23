@@ -1,4 +1,4 @@
-import { pb } from '$lib/+server.utils';
+import { pb } from '$lib/+server.pocketbase';
 
 export const load = async () => {
 	let records: any;

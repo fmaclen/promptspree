@@ -86,6 +86,7 @@
 		--font-mono: 'Overpass Mono', monospace;
 
 		--color-accent: slateblue;
+		--color-positive: #00b376;
 
 		--color-border: #e2e2e2;
 

@@ -2,9 +2,14 @@
 	export let label: string;
 	export let type: 'button' | 'submit' | 'reset' | null | undefined = 'button';
 	export let disabled: boolean = false;
+	export let sentiment: 'positive' | undefined = undefined;
 </script>
 
-<button {type} {disabled} class="form-button">{label}</button>
+<button
+	{type}
+	{disabled}
+	class="form-button {sentiment === 'positive' ? 'form-button--positive' : ''}">{label}</button
+>
 
 <style lang="scss">
 	button.form-button {
@@ -18,6 +23,10 @@
 		background-color: var(--color-accent);
 		color: var(--color-white);
 		cursor: pointer;
+
+		&--positive {
+			background-color: var(--color-positive);
+		}
 
 		&:hover {
 			border-color: var(--color-black-alpha35);

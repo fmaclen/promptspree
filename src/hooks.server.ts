@@ -1,5 +1,5 @@
 import type { Handle } from '@sveltejs/kit';
-import { pb, serializeNonPOJOs } from '$lib/+server.utils';
+import { pb, serializeNonPOJOs } from '$lib/+server.pocketbase';
 
 const redirectTo = (origin: string, route: string) => {
 	const url = new URL(origin);

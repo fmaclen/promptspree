@@ -1,13 +1,13 @@
 <script lang="ts">
 	export let name: string;
-	export let value: string = '';
+	export let value: string | number | null = null;
 	export let placeholder: string = '';
 	export let disabled: boolean = false;
 	export let maxlength: number = 280;
 	export let rows: number = 7;
 </script>
 
-<textarea {name} {value} {placeholder} {disabled} {maxlength} {rows} class="form-textarea" />
+<textarea {name} {placeholder} {disabled} {maxlength} {rows} class="form-textarea" bind:value />
 
 <style lang="scss">
 	textarea.form-textarea {
