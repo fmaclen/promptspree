@@ -17,6 +17,6 @@ export const actions = {
 			throw error(500, 'Something went wrong logging in');
 		}
 
-		throw redirect(307, '/');
+		throw redirect(303, '/');
 	}
 };

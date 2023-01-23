@@ -6,15 +6,11 @@
 </script>
 
 <section class="homepage">
-	{#if data.user}
-		<div class="homepage__articles">
-			{#each data.articles as article}
-				<Article {article} />
-			{/each}
-		</div>
-	{:else}
-		<p class="homepage__empty">The key to the mystery lies within the login.</p>
-	{/if}
+	<div class="homepage__articles">
+		{#each data.articles as article}
+			<Article {article} />
+		{/each}
+	</div>
 </section>
 
 <style lang="scss">

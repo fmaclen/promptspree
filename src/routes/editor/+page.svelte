@@ -67,10 +67,6 @@
 		}
 	}
 
-	div.preview {
-		background-color: #fff;
-	}
-
 	fieldset.form__fieldset {
 		border: none;
 		margin: 0;
@@ -89,7 +85,7 @@
 		font-weight: 500;
 	}
 
-	button.form__button,
+	/* button.form__button,
 	textarea.form__textarea,
 	input.form__input {
 		font-size: 0.75rem;
@@ -106,7 +102,7 @@
 			outline: 1px solid slateblue;
 			background-color: transparent;
 		}
-	}
+	} */
 
 	textarea.form__textarea {
 		min-height: 256px;

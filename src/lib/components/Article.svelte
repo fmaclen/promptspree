@@ -1,9 +1,6 @@
 <script lang="ts">
 	import { formatDistance } from 'date-fns';
-
-	const getImageURL = (collectionId: string, recordId: string, fileName: string, size = '0x0') => {
-		return `http://localhost:8090/api/files/${collectionId}/${recordId}/${fileName}?thumb=${size}`;
-	};
+	import { getImageURL } from '$lib/+server.utils';
 
 	interface Article {
 		body: string;
@@ -95,13 +92,13 @@
 		line-height: 1.25em;
 	}
 
-	p.article__empty {
+	/* p.article__empty {
 		text-align: center;
 		font-style: italic;
 		width: 100%;
 		padding: 4rem 0;
 		border: 1px solid #e2e2e2;
-	}
+	} */
 
 	code.article__prompt {
 		overflow-y: scroll;

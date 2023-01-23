@@ -1,5 +1,5 @@
-import { pb, serializeNonPOJOs } from '$lib/+server.utils';
 import type { Handle } from '@sveltejs/kit';
+import { pb, serializeNonPOJOs } from '$lib/+server.utils';
 
 export const handle: Handle = async ({ event, resolve }) => {
 	event.locals.pb = pb;

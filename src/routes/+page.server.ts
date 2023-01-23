@@ -1,12 +1,9 @@
-import PocketBase from 'pocketbase';
-
-const pb = new PocketBase('http://127.0.0.1:8090');
+import { pb } from '$lib/+server.utils';
 
 export const load = async ({ locals }) => {
-	// filter records where the status is not "draft"
-	const records = await pb.collection('articles').getFullList(200, {
+	const records = await pb.collection('articles').getFullList(25, {
 		sort: '-created',
-		filter: 'status != "draft"'
+		filter: 'status = "published"'
 	});
 
 	return {
