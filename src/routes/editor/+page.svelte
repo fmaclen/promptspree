@@ -43,63 +43,65 @@
 		<FormButton label="Generate" type="submit" disabled={isGenerateDisabled} />
 	</form>
 
-	{#if isGenerating}
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			xmlns:xlink="http://www.w3.org/1999/xlink"
-			x="0px"
-			y="0px"
-			width="16px"
-			height="16px"
-			viewBox="0 0 16 16"
-			><g transform="translate(0, 0)"
-				><g class="nc-loop-dots-anim-6-16-icon-o"
-					><circle cx="1.5" cy="8" fill="#444444" r="1.5" /><circle
-						cx="8"
-						cy="8"
-						fill="#444444"
-						r="1.5"
-					/><circle cx="14.5" cy="8" fill="#444444" r="1.5" /></g
-				><style>
-					.nc-loop-dots-anim-6-16-icon-o,
-					.nc-loop-dots-anim-6-16-icon-o > * {
-						--animation-duration: 1.2s;
-					}
-					.nc-loop-dots-anim-6-16-icon-o {
-						transform-origin: 50% 50%;
-						animation: nc-loop-dots-anim-6 var(--animation-duration) infinite;
-					}
-					.nc-loop-dots-anim-6-16-icon-o > :nth-child(2),
-					.nc-loop-dots-anim-6-16-icon-o > :nth-child(3) {
-						transform-origin: 11.25px 50%;
-						animation: nc-loop-dots-anim-6-inner var(--animation-duration) infinite;
-					}
-					@keyframes nc-loop-dots-anim-6 {
-						0%,
-						50% {
-							transform: rotate(0);
+	<div class="editor__status">
+		{#if isGenerating}
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				xmlns:xlink="http://www.w3.org/1999/xlink"
+				x="0px"
+				y="0px"
+				width="16px"
+				height="16px"
+				viewBox="0 0 16 16"
+				><g transform="translate(0, 0)"
+					><g class="nc-loop-dots-anim-6-16-icon-o"
+						><circle cx="1.5" cy="8" fill="#444444" r="1.5" /><circle
+							cx="8"
+							cy="8"
+							fill="#444444"
+							r="1.5"
+						/><circle cx="14.5" cy="8" fill="#444444" r="1.5" /></g
+					><style>
+						.nc-loop-dots-anim-6-16-icon-o,
+						.nc-loop-dots-anim-6-16-icon-o > * {
+							--animation-duration: 1.2s;
 						}
-						100% {
-							animation-timing-function: cubic-bezier(1, 0, 0, 1);
-							transform: rotate(180deg);
+						.nc-loop-dots-anim-6-16-icon-o {
+							transform-origin: 50% 50%;
+							animation: nc-loop-dots-anim-6 var(--animation-duration) infinite;
 						}
-					}
-					@keyframes nc-loop-dots-anim-6-inner {
-						0% {
-							transform: rotate(0);
+						.nc-loop-dots-anim-6-16-icon-o > :nth-child(2),
+						.nc-loop-dots-anim-6-16-icon-o > :nth-child(3) {
+							transform-origin: 11.25px 50%;
+							animation: nc-loop-dots-anim-6-inner var(--animation-duration) infinite;
 						}
-						100%,
-						50% {
-							animation-timing-function: cubic-bezier(1, 0, 0, 1);
-							transform: rotate(180deg);
+						@keyframes nc-loop-dots-anim-6 {
+							0%,
+							50% {
+								transform: rotate(0);
+							}
+							100% {
+								animation-timing-function: cubic-bezier(1, 0, 0, 1);
+								transform: rotate(180deg);
+							}
 						}
-					}
-				</style></g
-			></svg
-		>
-	{:else}
-		<span class="editor__ready">→</span>
-	{/if}
+						@keyframes nc-loop-dots-anim-6-inner {
+							0% {
+								transform: rotate(0);
+							}
+							100%,
+							50% {
+								animation-timing-function: cubic-bezier(1, 0, 0, 1);
+								transform: rotate(180deg);
+							}
+						}
+					</style>
+				</g></svg
+			>
+		{:else}
+			<span class="editor__ready">→</span>
+		{/if}
+	</div>
 
 	<form class="form form--preview" action="/editor?/publish" method="POST">
 		<Article {article} sentiment="positive" />
@@ -112,8 +114,13 @@
 		display: grid;
 		width: 100%;
 		grid-template-columns: 1fr auto 1fr;
-		column-gap: 32px;
+		gap: 32px;
 		align-items: center;
+
+		@media (max-width: 1280px) {
+			grid-template-columns: unset;
+			grid-template-rows: repeat(3, auto);
+		}
 	}
 
 	form.form {
@@ -122,9 +129,15 @@
 		row-gap: 16px;
 	}
 
-	span.editor__ready {
+	div.editor__status {
+		width: 100%;
 		width: 16px;
 		font-size: 16px;
 		color: var(--color-grey20);
+
+		@media (max-width: 1280px) {
+			margin-inline: auto;
+			transform: rotate(90deg);
+		}
 	}
 </style>

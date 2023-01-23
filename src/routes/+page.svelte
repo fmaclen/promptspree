@@ -32,6 +32,14 @@
 		margin-top: calc(calc(var(--section-spacing) + 3rem) * -1);
 		column-count: 3;
 		break-inside: avoid-column;
+
+		@media (max-width: 1440px) {
+			column-count: 2;
+		}
+
+		@media (max-width: 720px) {
+			columns: unset;
+		}
 	}
 
 	p.homepage__empty {
