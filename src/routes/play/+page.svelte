@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { ActionData } from './$types';
+	import type { ActionData } from '../play/$types';
 
 	export let form: ActionData;
 
@@ -31,8 +31,8 @@
 	$: isPublishable = form;
 </script>
 
-<section class="editor">
-	<form class="form" action="/editor?/generate" method="POST">
+<section class="play">
+	<form class="form" action="/play?/generate" method="POST">
 		<FormField label="Prompt">
 			<FormTextarea
 				name="prompt"
@@ -43,7 +43,7 @@
 		<FormButton label="Generate" type="submit" disabled={isGenerateDisabled} />
 	</form>
 
-	<div class="editor__status">
+	<div class="play__status">
 		{#if isGenerating}
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
@@ -99,18 +99,18 @@
 				</g></svg
 			>
 		{:else}
-			<span class="editor__ready">→</span>
+			<span class="play__ready">→</span>
 		{/if}
 	</div>
 
-	<form class="form form--preview" action="/editor?/publish" method="POST">
+	<form class="form form--preview" action="/play?/publish" method="POST">
 		<Article {article} sentiment="positive" />
 		<FormButton label="Publish" type="submit" sentiment="positive" disabled={!isPublishable} />
 	</form>
 </section>
 
 <style lang="scss">
-	section.editor {
+	section.play {
 		display: grid;
 		width: 100%;
 		grid-template-columns: 1fr auto 1fr;
@@ -129,7 +129,7 @@
 		row-gap: 16px;
 	}
 
-	div.editor__status {
+	div.play__status {
 		width: 100%;
 		width: 16px;
 		font-size: 16px;

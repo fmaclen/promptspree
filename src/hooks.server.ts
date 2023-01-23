@@ -18,7 +18,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 		// Is not authorized :(
 		event.locals.user = undefined;
 
-		const PROTECTED_PATHS = ['/editor'];
+		const PROTECTED_PATHS = ['/play'];
 
 		if (PROTECTED_PATHS.some((path) => event.url.pathname.includes(path))) {
 			return redirectTo(event.url.origin, '/login');

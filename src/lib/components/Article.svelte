@@ -19,12 +19,8 @@
 	export let sentiment: 'positive' | undefined = undefined;
 
 	const getImageURL = (imageFile: string) => {
-		{
-			console.log(article.imageFile);
-		}
 		return `${article.baseImageURL}/api/files/${article.collectionId}/${article.id}/${imageFile}`;
 	};
-	console.log(article.image[0]);
 </script>
 
 <article class="article {article.isPlaceholder ? 'article--placeholder' : ''}">
@@ -59,12 +55,13 @@
 		border-radius: 2px;
 		overflow: hidden;
 		padding: 32px;
-		margin-bottom: 1rem;
+		margin-bottom: 16px;
 		background-color: #fff;
 
 		&--placeholder {
 			background-color: #fafafa;
 			color: #999;
+			margin-bottom: 0;
 
 			time.article__time {
 				color: #999;

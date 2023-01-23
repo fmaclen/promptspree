@@ -21,7 +21,7 @@
 		<nav class="nav">
 			<time class="nav__time">{today}</time>
 			{#if data.user}
-				<a class="nav__a" href="/editor">Editor</a>
+				<a class="nav__a" href="/play">Play</a>
 				<form action="/logout" method="POST" class="nav__form">
 					<nav class="nav__auth">
 						{data.user.name ? data.user.name : 'Anonymous'}

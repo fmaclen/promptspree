@@ -29,9 +29,9 @@
 	}
 
 	div.homepage__articles {
-		margin-top: calc(calc(var(--section-spacing) + 3rem) * -1);
 		column-count: 3;
 		break-inside: avoid-column;
+		column-gap: 16px;
 
 		@media (max-width: 1440px) {
 			column-count: 2;
