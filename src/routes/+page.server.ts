@@ -1,3 +1,4 @@
+import { env } from '$env/dynamic/private';
 import { pb } from '$lib/+server.pocketbase';
 
 export const load = async () => {
@@ -12,7 +13,13 @@ export const load = async () => {
 		console.error(error);
 	}
 
+	const articles = JSON.parse(JSON.stringify(records));
+
+	articles.forEach((article: any) => {
+		article.baseImageURL = env.POCKETBASE_URL;
+	});
+
 	return {
-		articles: records ? JSON.parse(JSON.stringify(records)) : []
+		articles: articles || []
 	};
 };

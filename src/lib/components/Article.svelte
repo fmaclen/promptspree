@@ -10,26 +10,27 @@
 		image: string[];
 		summary: string;
 		updated: string;
+		baseImageURL: string;
 		isPlaceholder?: boolean;
 		prompt?: string;
 	}
 
-	// const getImageURL = (collectionId: string, recordId: string, fileName: string) => {
-	// 	return `http://localhost:8090/api/files/${collectionId}/${recordId}/${fileName}`;
-	// };
-
 	export let article: Article;
 	export let sentiment: 'positive' | undefined = undefined;
+
+	const getImageURL = (imageFile: string) => {
+		{
+			console.log(article.imageFile);
+		}
+		return `${article.baseImageURL}/api/files/${article.collectionId}/${article.id}/${imageFile}`;
+	};
+	console.log(article.image[0]);
 </script>
 
 <article class="article {article.isPlaceholder ? 'article--placeholder' : ''}">
-	<!-- {#if article.image.length > 0}
-		<img
-			class="article__img"
-			src={getImageURL(article.collectionId, article.id, article.image[0])}
-			alt={article.headline}
-		/>
-	{/if} -->
+	{#if article.image.length > 0}
+		<img class="article__img" src={getImageURL(article.image[0])} alt={article.headline} />
+	{/if}
 
 	{#if !article.isPlaceholder}
 		<time class="article__time {sentiment === 'positive' ? 'article__time--positive' : ''}">
