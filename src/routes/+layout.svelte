@@ -23,7 +23,7 @@
 			{#if data.user}
 				<form action="/logout" method="POST" class="nav__form">
 					<strong>{data.user.name ? data.user.name : 'Anonymous'}</strong>
-					<a class="nav__a" href="/editor">Open Editor</a>
+					<a class="nav__a" href="/editor">Editor</a>
 					<button class="nav__button" type="submit">Logout</button>
 				</form>
 			{:else}
@@ -84,6 +84,11 @@
 		border-bottom: 1px solid #e2e2e2;
 		padding: 1rem 0;
 		font-size: 0.9rem;
+		column-gap: 0.5rem;
+	}
+
+	time.nav__time {
+		margin-right: auto;
 	}
 
 	form.nav__form {

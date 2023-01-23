@@ -1,19 +1,24 @@
 <script>
+	// import type { PageData } from './$types';
 	import Article from '$lib/components/Article.svelte';
 
-	const ARTICLE = {
-		headline: 'Lex Fridman Overcomes Fear of Flash Websites',
+	const PLACEHOLDER_ARTICLE = {
+		headline: 'Flibbertigibbet Jibber-jabber Jiggery-pokery',
 		summary:
-			'Lex Fridman, a renowned computer scientist, descibes his struggle with fobia to Flash websites and his triumphant journey to overcome it.',
-		body: 'Lex Fridman, a renowned computer scientist and MIT professor, has recently opened up about his lifelong struggle with fobia to Flash websites. He was diagnosed with the condition at a young age, and the fear of Flash websites caused him to avoid many activities online.',
+			'This article delves into the world of flibbertigibbet jibber-jabber jiggery-pokery, a fascinating and little-known phenomenon that has recently been gaining attention in the scientific community.',
+		body: 'The first thing to know about flibbertigibbet jibber-jabber jiggery-pokery is that it is a complex and multi-faceted phenomenon. At its core, it is a form of communication that is characterized by its nonsensical and seemingly random nature. Despite its apparent lack of meaning, however, flibbertigibbet jibber-jabber jiggery-pokery has been found to be a powerful tool for expressing deep emotions and ideas.',
 		collectionId: 'collectionId',
 		collectionName: 'collectionName',
 		id: 'id',
 		image: [],
 		updated: '2021-05-01T00:00:00.000Z',
-		prompt:
-			'Write a breaking news article Lex Fridman has fobia to Flash websites, describes struggle'
+		isPlaceholder: true
 	};
+	let article = PLACEHOLDER_ARTICLE;
+
+	// const isLoggedIn = data.user || false;
+	const isLoggedIn = false;
+	const isPublishable = isLoggedIn && false;
 </script>
 
 <section class="section">
@@ -21,19 +26,27 @@
 	<div class="editor">
 		<form class="form" action="?/login" method="POST">
 			<fieldset class="form__fieldset">
+				Prompt
 				<label class="form__field">
-					Prompt
-					<textarea name="prompt" class="form__textarea" placeholder="Enter your prompt here." />
+					<textarea
+						name="prompt"
+						class="form__textarea"
+						placeholder={isLoggedIn
+							? 'Write a placeholder article'
+							: 'Login, then generate and publish your article'}
+						disabled={!isLoggedIn}
+					/>
 				</label>
 
-				<button type="submit" class="form__button">Generate</button>
+				<button type="submit" class="form__button" disabled={!isLoggedIn}>Generate</button>
 			</fieldset>
 		</form>
 
 		<form class="form form--preview" action="?/login" method="POST">
 			<fieldset class="form__fieldset">
-				<Article article={ARTICLE} />
-				<button type="submit" class="form__button" disabled={true}>Publish</button>
+				Preview
+				<Article {article} />
+				<button type="submit" class="form__button" disabled={!isPublishable}>Publish</button>
 			</fieldset>
 		</form>
 	</div>
@@ -52,7 +65,7 @@
 
 	div.editor {
 		display: flex;
-		gap: 4rem;
+		gap: 1rem;
 		width: 100%;
 	}
 
@@ -98,6 +111,10 @@
 		box-sizing: border-box;
 		color: slateblue;
 
+		&:disabled {
+			cursor: not-allowed;
+		}
+
 		&:focus {
 			outline: 1px solid slateblue;
 			background-color: transparent;
@@ -117,8 +134,12 @@
 		font-weight: 700;
 		color: #fff;
 
-		&:hover {
+		&:hover:not(:disabled) {
 			background-color: slateblue;
+		}
+
+		&:disabled {
+			opacity: 0.25;
 		}
 	}
 </style>

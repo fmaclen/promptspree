@@ -11,13 +11,14 @@
 		image: string[];
 		summary: string;
 		updated: string;
+		isPlaceholder?: boolean;
 		prompt?: string;
 	}
 
 	export let article: Article;
 </script>
 
-<article class="article">
+<article class="article {article.isPlaceholder ? 'article--placeholder' : ''}">
 	{#if article.image.length > 0}
 		<img
 			class="article__img"
@@ -54,6 +55,15 @@
 		padding: 2.5rem;
 		margin-bottom: 1rem;
 		background-color: #fff;
+
+		&--placeholder {
+			background-color: #fafafa;
+			color: #999;
+
+			time.article__time {
+				color: #999;
+			}
+		}
 	}
 
 	img.article__img {
