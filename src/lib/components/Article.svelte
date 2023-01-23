@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { formatDistance } from 'date-fns';
-	import { getImageURL } from '$lib/+server.utils';
 
 	interface Article {
 		body: string;
@@ -14,6 +13,10 @@
 		isPlaceholder?: boolean;
 		prompt?: string;
 	}
+
+	const getImageURL = (collectionId: string, recordId: string, fileName: string) => {
+		return `http://localhost:8090/api/files/${collectionId}/${recordId}/${fileName}`;
+	};
 
 	export let article: Article;
 </script>
