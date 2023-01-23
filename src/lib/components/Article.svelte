@@ -14,22 +14,22 @@
 		prompt?: string;
 	}
 
-	const getImageURL = (collectionId: string, recordId: string, fileName: string) => {
-		return `http://localhost:8090/api/files/${collectionId}/${recordId}/${fileName}`;
-	};
+	// const getImageURL = (collectionId: string, recordId: string, fileName: string) => {
+	// 	return `http://localhost:8090/api/files/${collectionId}/${recordId}/${fileName}`;
+	// };
 
 	export let article: Article;
 	export let sentiment: 'positive' | undefined = undefined;
 </script>
 
 <article class="article {article.isPlaceholder ? 'article--placeholder' : ''}">
-	{#if article.image.length > 0}
+	<!-- {#if article.image.length > 0}
 		<img
 			class="article__img"
 			src={getImageURL(article.collectionId, article.id, article.image[0])}
 			alt={article.headline}
 		/>
-	{/if}
+	{/if} -->
 
 	{#if !article.isPlaceholder}
 		<time class="article__time {sentiment === 'positive' ? 'article__time--positive' : ''}">
@@ -57,7 +57,7 @@
 		border: 1px solid #e2e2e2;
 		border-radius: 2px;
 		overflow: hidden;
-		padding: 2.5rem;
+		padding: 32px;
 		margin-bottom: 1rem;
 		background-color: #fff;
 

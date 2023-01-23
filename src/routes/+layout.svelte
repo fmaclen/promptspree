@@ -124,9 +124,19 @@
 		width: 100%;
 		max-width: 1440px;
 		margin-inline: auto;
-		padding-left: 4rem;
-		padding-right: 4rem;
 		box-sizing: border-box;
+
+		--container-padding: 4rem;
+		padding-left: var(--container-padding);
+		padding-right: var(--container-padding);
+
+		@media (max-width: 1440px) {
+			--container-padding: 2rem;
+		}
+
+		@media (max-width: 720px) {
+			--container-padding: 1rem;
+		}
 	}
 
 	nav.nav {
