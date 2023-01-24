@@ -21,7 +21,7 @@
 		<nav class="nav">
 			<time class="nav__time">{today}</time>
 			{#if data.user}
-				<a class="nav__a" href="/play">Play</a>
+				<a class="nav__a nav__a--play" href="/play">Play</a>
 				<form action="/logout" method="POST" class="nav__form">
 					<nav class="nav__auth">
 						{data.user.name ? data.user.name : 'Anonymous'}
@@ -177,6 +177,29 @@
 
 		&:hover {
 			color: var(--color-accent);
+		}
+	}
+
+	a.nav__a--play {
+		display: inline-flex;
+		font-size: 16px;
+		max-width: max-content;
+		color: var(--color-white);
+		background-color: var(--color-accent);
+		margin-inline: auto;
+		padding: 28px 24px;
+		margin-bottom: -24px;
+		transition: all 100ms;
+
+		&:hover {
+			color: var(--color-white);
+			background-color: var(--color-grey90);
+			transform: scale(1.05);
+		}
+
+		&:active {
+			transform: scale(0.95);
+			background-color: var(--color-accent);
 		}
 	}
 

@@ -47,11 +47,11 @@
 
 		&--placeholder {
 			background-color: #fafafa;
-			color: #999;
+			color: #ccc;
 			margin-bottom: 0;
 
 			time.article__time {
-				color: #999;
+				color: #ccc;
 			}
 		}
 	}
