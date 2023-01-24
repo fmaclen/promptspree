@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# This script starts by pulling the latest changes from git
+# then it checks if there is a package-lock.json file
+# if there is it runs npm ci otherwise it runs npm i 
+# then it runs npm run build 
+# after that it uses pkill command to kill any existing process that match the specified command
+# "APP_NAME=synthetic-gazette node build/index.js"
+# then it runs the index.js file with environment variables by sourcing the .env file
+# This time it uses nohup command to run the node process detached from the console 
+# and it appends & at the end of the command to run it in background.
+
+# Pull the latest changes from git
+git pull
+
+# Check if deploy script is in "quick" mode
+if [ "$1" != "-q" ]; then
+    # Run npm i if needed
+    if [ -e "package-lock.json" ]; then
+        npm ci
+    else
+        npm i
+    fi
+fi
+
+# Run npm run build
+npm run build
+
+# Kill any existing processes that match the specified command
+pkill -f "node build/index.js APP_NAME=synthetic-gazette"
+
+# Load environment variables and run the index.js detached from the console
+env $(cat .env | xargs) nohup node build/index.js APP_NAME=synthetic-gazette &
