@@ -1,22 +1,31 @@
-import { error, redirect } from '@sveltejs/kit';
+import type { Actions } from './$types';
+import { redirect } from '@sveltejs/kit';
 
 export const actions = {
 	login: async ({ request, locals }) => {
 		const body = Object.fromEntries(await request.formData());
 
+		body.email = body.email.toString();
+		body.password = body.password.toString();
+
 		try {
 			await locals.pb.collection('users').authWithPassword(body.email, body.password);
+
 			if (!locals.pb?.authStore?.model?.verified) {
 				locals.pb.authStore.clear();
+
 				return {
-					notVerified: true
+					status: 401,
+					message: 'You are in the waitlist'
 				};
 			}
 		} catch (err) {
-			console.error('Error: ', err);
-			throw error(500, 'Something went wrong logging in');
+			return {
+				status: 401,
+				message: 'Invalid email or password'
+			};
 		}
 
 		throw redirect(303, '/');
 	}
-};
+} satisfies Actions;

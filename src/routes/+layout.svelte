@@ -24,7 +24,7 @@
 				<a class="nav__a nav__a--play" href="/play">Play</a>
 				<form action="/logout" method="POST" class="nav__form">
 					<nav class="nav__auth">
-						{data.user.name ? data.user.name : 'Anonymous'}
+						{data.user.nickname ? data.user.nickname : 'Anonymous'}
 						<button class="nav__button" type="submit">Logout</button>
 					</nav>
 				</form>
@@ -32,7 +32,7 @@
 				<div class="nav__placeholder" />
 				<nav class="nav__auth">
 					<a class="nav__a" href="/login">Login</a>
-					<a class="nav__a" href="/register">Register</a>
+					<a class="nav__a" href="/waitlist">Join waitlist</a>
 				</nav>
 			{/if}
 		</nav>
@@ -58,9 +58,6 @@
 			<nav class="footer-nav">
 				<nav class="footer-nav__links">
 					<a href="/" class="footer-nav__logo">{title}</a>
-					<hr class="footer-nav__hr" />
-					<a href="/login" class="footer-nav__a">Login</a>
-					<a href="/register" class="footer-nav__a">Register</a>
 				</nav>
 
 				<nav class="footer-nav__links">
@@ -72,6 +69,9 @@
 					>
 						GitHub
 					</a>
+					<hr class="footer-nav__hr" />
+					<a href="/login" class="footer-nav__a">Login</a>
+					<a href="/waitlist" class="footer-nav__a">Join waitlist</a>
 				</nav>
 			</nav>
 		</div>

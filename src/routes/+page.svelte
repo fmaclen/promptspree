@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Article from '$lib/components/Article.svelte';
+	import Notice from '$lib/components/Notice.svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -13,11 +14,11 @@
 			{/each}
 		</div>
 	{:else}
-		<p class="homepage__empty">
+		<Notice>
 			Having trouble displaying the articles.<br />Server might be temporarily offline or AI may
 			have already taken over.
-		</p>
-		<p class="homepage__empty">In any case, try again later.</p>
+		</Notice>
+		<Notice>In any case, try again later.</Notice>
 	{/if}
 </section>
 
