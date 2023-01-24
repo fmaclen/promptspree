@@ -8,7 +8,8 @@
 <button
 	{type}
 	{disabled}
-	class="form-button {sentiment === 'positive' ? 'form-button--positive' : ''}">{label}</button
+	class="form-button {sentiment === 'positive' ? 'form-button--positive' : ''}"
+	on:click>{label}</button
 >
 
 <style lang="scss">

@@ -7,28 +7,22 @@
 	import FormButton from '$lib/components/FormButton.svelte';
 	import FormField from '$lib/components/FormField.svelte';
 	import FormTextarea from '$lib/components/FormTextarea.svelte';
-
-	const PLACEHOLDER_ARTICLE = {
-		headline: 'Flibbertigibbet Jibber-jabber Jiggery-pokery',
-		summary:
-			'This article delves into the world of flibbertigibbet jibber-jabber jiggery-pokery, a fascinating and little-known phenomenon that has recently been gaining attention in the scientific community.',
-		body: 'The first thing to know about flibbertigibbet jibber-jabber jiggery-pokery is that it is a complex and multi-faceted phenomenon. At its core, it is a form of communication that is characterized by its nonsensical and seemingly random nature. Despite its apparent lack of meaning, however, flibbertigibbet jibber-jabber jiggery-pokery has been found to be a powerful tool for expressing deep emotions and ideas.',
-		collectionId: 'collectionId',
-		collectionName: 'collectionName',
-		id: 'id',
-		image: [],
-		updated: new Date().toISOString(),
-		isPlaceholder: true
-	};
+	import { PLACEHOLDER_ARTICLE } from '$lib/components/Article';
 
 	// Prompt
 	let prompt = form?.prompt;
-	$: isGenerateDisabled = !prompt;
-	$: isGenerating = false;
+	let isGenerating = false;
+	$: isGenerated = form !== undefined;
+	$: article = form ? form : PLACEHOLDER_ARTICLE;
+
+	const handleGenerate = async (event: Event) => {
+		isGenerated = false;
+		isGenerating = true;
+		event.target.parentElement.submit();
+		form.reset();
+	};
 
 	// Preview
-	$: article = form ? form : PLACEHOLDER_ARTICLE;
-	$: isPublishable = form;
 </script>
 
 <section class="play">
@@ -38,9 +32,15 @@
 				name="prompt"
 				placeholder="Write a placeholder article about Flibbertigibbet Jibber-jabber Jiggery-pokery"
 				bind:value={prompt}
+				disabled={isGenerating}
 			/>
 		</FormField>
-		<FormButton label="Generate" type="submit" disabled={isGenerateDisabled} />
+		<FormButton
+			label="Generate"
+			type="submit"
+			disabled={!prompt || isGenerating}
+			on:click={handleGenerate}
+		/>
 	</form>
 
 	<div class="play__status">
@@ -105,7 +105,12 @@
 
 	<form class="form form--preview" action="/play?/publish" method="POST">
 		<Article {article} sentiment="positive" />
-		<FormButton label="Publish" type="submit" sentiment="positive" disabled={!isPublishable} />
+		<FormButton
+			label="Publish"
+			type="submit"
+			sentiment="positive"
+			disabled={isGenerating || isGenerated}
+		/>
 	</form>
 </section>
 

@@ -1,32 +1,28 @@
 import { aiCompletion } from '$lib/+server.openai';
+import { PLACEHOLDER_ARTICLE } from '$lib/components/Article';
 
 export const actions = {
 	generate: async ({ request }) => {
 		const body = Object.fromEntries(await request.formData());
 
-		// const parsed = getArticleFromCompletion(
-		// 	body.prompt,
-		// 	`{
-		// 		"headline": "Headline should have different words than prompt shorter than 80 characters",
-		// 		"summary": "Summary should be shorter than 200 characters",
-		// 		"body": [
-		// 			"Paragraph 1 should be shorter than 140 characters",
-		// 			"Paragraph 2 should be shorter than 280 characters"
-		// 		]
-		// 	}
-		// `
-		// );
-		// console.log(parsed);
-		// return parsed;
+		// Trust but verify the prompt is not too long
+		if (body.prompt.length > 280) return PLACEHOLDER_ARTICLE;
 
-		const completion = await aiCompletion(body.prompt);
-		console.log(completion);
-		return getArticleFromCompletion(body.prompt, completion.data.choices[0].text);
+		try {
+			const completion = await aiCompletion(body.prompt);
+			if (completion.data.choices[0].text)
+				return getArticleFromCompletion(body.prompt, completion.data.choices[0].text);
+		} catch (error) {
+			console.error(error);
+			return PLACEHOLDER_ARTICLE;
+		}
+
+		// return new Promise((resolve) => {
+		// 	setTimeout(() => resolve(PLACEHOLDER_ARTICLE), 5000);
+		// });
 	},
 	publish: async ({ request }) => {
 		const body = Object.fromEntries(await request.formData());
-
-		console.log('publishing: ', body);
 	}
 };
 

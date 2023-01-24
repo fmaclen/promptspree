@@ -1,19 +1,6 @@
 <script lang="ts">
 	import { formatDistance } from 'date-fns';
-
-	interface Article {
-		body: string;
-		collectionId: string;
-		collectionName: string;
-		headline: string;
-		id: string;
-		image: string[];
-		summary: string;
-		updated: string;
-		baseImageURL: string;
-		isPlaceholder?: boolean;
-		prompt?: string;
-	}
+	import type { Article } from './Article';
 
 	export let article: Article;
 	export let sentiment: 'positive' | undefined = undefined;

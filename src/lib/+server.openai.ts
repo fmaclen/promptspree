@@ -11,7 +11,7 @@ const sanitizePrompt = (prompt: string) => {
 	return `
 		${prompt}
 
-		Format the article using this JSON layout without repeating information and no vague words:
+		Format the response using this JSON layout:
 		{
 			"headline": "Headline should have different words than prompt shorter than 80 characters",
 			"summary": "Summary should be shorter than 200 characters",
