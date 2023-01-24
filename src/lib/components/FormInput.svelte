@@ -12,7 +12,17 @@
 	};
 </script>
 
-<input {name} {placeholder} {required} {disabled} use:setType bind:value class="form-field-input" />
+<input
+	{name}
+	{placeholder}
+	{required}
+	{disabled}
+	minlength={type === 'password' ? 8 : undefined}
+	maxlength={type === 'password' ? 72 : undefined}
+	use:setType
+	bind:value
+	class="form-field-input"
+/>
 
 <style lang="scss">
 	input.form-field-input {
