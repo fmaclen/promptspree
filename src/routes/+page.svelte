@@ -42,12 +42,4 @@
 			columns: unset;
 		}
 	}
-
-	p.homepage__empty {
-		font-family: var(--font-mono);
-		text-align: center;
-		width: 100%;
-		font-size: 14px;
-		color: var(--color-grey50);
-	}
 </style>
