@@ -1,5 +1,6 @@
 # Pocketbase
 /pocketbase/pb_data
+/pocketbase/nohup.out
 
 # SvelteKit
 .DS_Store
