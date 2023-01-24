@@ -1,5 +1,4 @@
-import { env } from '$env/dynamic/private';
-import { pb } from '$lib/+server.pocketbase';
+import { pb, pocketbaseURL } from '$lib/+server.pocketbase';
 
 export const load = async () => {
 	let records: any;
@@ -16,7 +15,7 @@ export const load = async () => {
 	const articles = JSON.parse(JSON.stringify(records));
 
 	articles.forEach((article: any) => {
-		article.baseImageURL = env.POCKETBASE_URL;
+		article.baseImageURL = pocketbaseURL;
 	});
 
 	return {

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# This script runs "npm run dev" while including the environment variables found in the .env file.
+
+set -a # automatically exports all variables
+source .env
+npm run dev
+set +a # stops automatically exporting all variables

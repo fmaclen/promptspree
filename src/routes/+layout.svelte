@@ -185,21 +185,20 @@
 		font-size: 16px;
 		max-width: max-content;
 		color: var(--color-white);
-		background-color: var(--color-accent);
+		background-color: var(--color-grey90);
 		margin-inline: auto;
 		padding: 28px 24px;
-		margin-bottom: -24px;
+		margin-bottom: -32px;
 		transition: all 100ms;
 
 		&:hover {
 			color: var(--color-white);
-			background-color: var(--color-grey90);
-			transform: scale(1.05);
+			background-color: var(--color-accent);
 		}
 
 		&:active {
 			transform: scale(0.95);
-			background-color: var(--color-accent);
+			background-color: var(--color-positive);
 		}
 	}
 
@@ -235,10 +234,10 @@
 		font-family: var(--font-base);
 		text-align: center;
 		letter-spacing: -0.065em;
+		margin-top: 32px;
+		margin-bottom: 8px;
 		font-size: 48px;
 		line-height: 1em;
-		margin-top: 0;
-		margin-bottom: 0.5rem;
 	}
 
 	p.header__slogan {
