@@ -77,6 +77,7 @@
 		@media (max-width: 1280px) {
 			grid-template-columns: unset;
 			grid-template-rows: repeat(3, auto);
+			gap: 16px;
 		}
 	}
 

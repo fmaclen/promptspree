@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { formatDistance } from 'date-fns';
 	import type { Article } from '$lib/article';
+	import Notice from './Notice.svelte';
 
 	export let article: Article;
 	export let sentiment: 'positive' | undefined = undefined;
@@ -8,12 +9,14 @@
 
 <article class="article {article.isPlaceholder ? 'article--placeholder' : ''}">
 	{#if article.imageURL}
-		<img class="article__img" src={article.imageURL} alt={article.headline} />
+		<img class="article__img" src={article.imageURL} alt="AI-generated for this article" />
 	{/if}
 
 	{#if !article.isPlaceholder}
 		<time class="article__time {sentiment === 'positive' ? 'article__time--positive' : ''}">
-			{formatDistance(new Date(article.updated), new Date(), { addSuffix: true })}
+			{article.author} — {formatDistance(new Date(article.updated), new Date(), {
+				addSuffix: true
+			})}
 		</time>
 	{/if}
 	<h1 class="article__headline">
@@ -25,7 +28,11 @@
 	{/each}
 
 	{#if article.prompt}
-		<code class="article__prompt">{article.prompt.split(/\nFormat/)[0]} </code>
+		<code class="article__prompt">
+			<Notice>
+				{article.prompt.split(/\nFormat/)[0]}
+			</Notice>
+		</code>
 	{/if}
 </article>
 
@@ -96,11 +103,11 @@
 		overflow-y: scroll;
 		background-color: #f4f4f4;
 		color: #999;
-		padding: 1.5rem 2.5rem;
+		/* padding: 20px 32px; */
 		margin: 0;
 		box-sizing: border-box;
 
-		width: calc(100% + 2.5rem + 2.5rem);
-		margin: 1rem -2.5rem -2.5rem -2.5rem;
+		width: calc(100% + 32px + 32px);
+		margin: 0 -32px -32px -32px;
 	}
 </style>
