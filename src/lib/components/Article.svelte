@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { formatDistance } from 'date-fns';
 	import type { Article } from '$lib/article';
-	import Notice from './Notice.svelte';
 
 	export let article: Article;
 	export let sentiment: 'positive' | undefined = undefined;
@@ -29,9 +28,7 @@
 
 	{#if article.prompt}
 		<code class="article__prompt">
-			<Notice>
-				{article.prompt.split(/\nFormat/)[0]}
-			</Notice>
+			{article.prompt.split(/\nFormat/)[0]}
 		</code>
 	{/if}
 </article>
@@ -103,7 +100,7 @@
 		overflow-y: scroll;
 		background-color: #f4f4f4;
 		color: #999;
-		/* padding: 20px 32px; */
+		padding: 20px 32px;
 		margin: 0;
 		box-sizing: border-box;
 
