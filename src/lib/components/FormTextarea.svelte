@@ -5,9 +5,20 @@
 	export let disabled: boolean = false;
 	export let maxlength: number = 280;
 	export let rows: number = 7;
+	export let autofocus: boolean = false;
 </script>
 
-<textarea {name} {placeholder} {disabled} {maxlength} {rows} class="form-textarea" bind:value />
+<!-- svelte-ignore a11y-autofocus -->
+<textarea
+	{autofocus}
+	{name}
+	{placeholder}
+	{disabled}
+	{maxlength}
+	{rows}
+	class="form-textarea"
+	bind:value
+/>
 
 <style lang="scss">
 	textarea.form-textarea {

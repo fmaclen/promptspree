@@ -1,21 +1,28 @@
-import { pb, pocketbaseURL } from '$lib/+server.pocketbase';
+import { getImageURL, handlePocketbaseError, pb } from '$lib/pocketbase.server';
+import type { Article } from '$lib/article';
+import type { BaseAuthStore, Record } from 'pocketbase';
+import { generateArticle } from '$lib/article.server';
 
 export const load = async () => {
-	let records: any;
+	let records: Record[] = [];
 
 	try {
 		records = await pb.collection('articles').getFullList(25, {
 			sort: '-created',
-			filter: 'status = "published"'
+			filter: 'status = "published"',
+			expand: 'user'
 		});
-	} catch (error) {
-		console.error(error);
+	} catch (err) {
+		handlePocketbaseError(err);
 	}
 
-	const articles = JSON.parse(JSON.stringify(records));
+	const articles: Article[] = [];
 
-	articles.forEach((article: any) => {
-		article.baseImageURL = pocketbaseURL;
+	const articlesCollection = JSON.parse(JSON.stringify(records)) as BaseAuthStore['model'][];
+
+	articlesCollection.map((article) => {
+		const generatedArticle = generateArticle(article);
+		if (generatedArticle) articles.push(generatedArticle);
 	});
 
 	return {
