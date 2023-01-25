@@ -69,9 +69,11 @@
 					>
 						GitHub
 					</a>
-					<hr class="footer-nav__hr" />
-					<a href="/login" class="footer-nav__a">Login</a>
-					<a href="/waitlist" class="footer-nav__a">Join waitlist</a>
+					{#if !data.user}
+						<hr class="footer-nav__hr" />
+						<a href="/login" class="footer-nav__a">Login</a>
+						<a href="/waitlist" class="footer-nav__a">Join waitlist</a>
+					{/if}
 				</nav>
 			</nav>
 		</div>

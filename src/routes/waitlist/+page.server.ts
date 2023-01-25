@@ -2,11 +2,11 @@ import type { ClientResponseError } from 'pocketbase';
 import type { Actions } from './$types';
 
 export const actions = {
-	join: async ({ locals, request }) => {
-		const data = Object.fromEntries(await request.formData());
+	default: async ({ locals, request }) => {
+		const formData = await request.formData();
 
 		try {
-			await locals.pb.collection('users').create(data);
+			await locals.pb.collection('users').create(formData);
 		} catch (error) {
 			const clientError = error as ClientResponseError;
 

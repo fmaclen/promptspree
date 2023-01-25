@@ -7,16 +7,18 @@
 	import Notice from '$lib/components/Notice.svelte';
 	import FormFieldset from '$lib/components/FormFieldset.svelte';
 
-	$: email = '';
-	$: nickname = '';
-	$: password = '';
-	$: passwordConfirm = '';
-	$: isSubmitDisabled = !email || !nickname || !password || password !== passwordConfirm;
+	let isLoading = false;
+	let email = '';
+	let nickname = '';
+	let password = '';
+	let passwordConfirm = '';
+	$: isSubmitDisabled =
+		!email || !nickname || !password || password !== passwordConfirm || isLoading;
 
 	export let form: ActionData;
 </script>
 
-<form class="form" action="?/join" method="POST">
+<form class="form" method="POST" on:submit={() => (isLoading = true)}>
 	<FormFieldset>
 		{#if form?.status == 200}
 			<Notice>{form.message}</Notice>
