@@ -25,7 +25,7 @@
 			<FormInput
 				type="email"
 				name="email"
-				placeholder="steve@example.com"
+				placeholder="cosmic.damascus@example.com"
 				required={true}
 				bind:value={email}
 			/>
