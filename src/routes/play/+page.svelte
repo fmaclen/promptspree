@@ -1,103 +1,60 @@
 <script lang="ts">
-	import type { ActionData } from '../play/$types';
-
-	export let form: ActionData;
-
+	import type { ActionResult } from '@sveltejs/kit';
+	import { enhance, applyAction } from '$app/forms';
 	import Article from '$lib/components/Article.svelte';
 	import FormButton from '$lib/components/FormButton.svelte';
 	import FormField from '$lib/components/FormField.svelte';
 	import FormTextarea from '$lib/components/FormTextarea.svelte';
-	import { PLACEHOLDER_ARTICLE } from '$lib/components/Article';
+	import Notice from '$lib/components/Notice.svelte';
+	import IconLoading from '$lib/components/IconLoading.svelte';
+	import { PLACEHOLDER_ARTICLE } from '$lib/article';
 
-	// Prompt
-	let prompt = form?.prompt;
+	let prompt = '';
+	let error = '';
 	let isGenerating = false;
-	$: isGenerated = form !== undefined;
-	$: article = form ? form : PLACEHOLDER_ARTICLE;
+	let isPublishable = false;
+	let article = PLACEHOLDER_ARTICLE;
 
-	const handleGenerate = async (event: Event) => {
-		isGenerated = false;
+	const submitGenerate = ({ form }: { form: HTMLFormElement }) => {
 		isGenerating = true;
-		event.target.parentElement.submit();
-		form.reset();
+		return async ({ result, update }: { result: ActionResult; update: () => void }) => {
+			if (result.type === 'success') {
+				// form.reset();
+				article = { ...article, ...result.data };
+				console.log(article);
+			}
+			if (result.type === 'error') {
+				console.log('ERROR', result);
+				await applyAction(result);
+			}
+			update();
+			isGenerating = false;
+		};
 	};
-
-	// Preview
 </script>
 
 <section class="play">
-	<form class="form" action="/play?/generate" method="POST">
+	<form class="form" method="POST" action="?/generate" use:enhance={submitGenerate}>
 		<FormField label="Prompt">
 			<FormTextarea
+				autofocus={true}
 				name="prompt"
 				placeholder="Write a placeholder article about Flibbertigibbet Jibber-jabber Jiggery-pokery"
 				bind:value={prompt}
 				disabled={isGenerating}
 			/>
 		</FormField>
-		<FormButton
-			label="Generate"
-			type="submit"
-			disabled={!prompt || isGenerating}
-			on:click={handleGenerate}
-		/>
+
+		{#if error}
+			<Notice>{error}</Notice>
+		{/if}
+
+		<FormButton label="Generate" type="submit" disabled={!prompt || isGenerating} />
 	</form>
 
 	<div class="play__status">
 		{#if isGenerating}
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				xmlns:xlink="http://www.w3.org/1999/xlink"
-				x="0px"
-				y="0px"
-				width="16px"
-				height="16px"
-				viewBox="0 0 16 16"
-				><g transform="translate(0, 0)"
-					><g class="nc-loop-dots-anim-6-16-icon-o"
-						><circle cx="1.5" cy="8" fill="#444444" r="1.5" /><circle
-							cx="8"
-							cy="8"
-							fill="#444444"
-							r="1.5"
-						/><circle cx="14.5" cy="8" fill="#444444" r="1.5" /></g
-					><style>
-						.nc-loop-dots-anim-6-16-icon-o,
-						.nc-loop-dots-anim-6-16-icon-o > * {
-							--animation-duration: 1.2s;
-						}
-						.nc-loop-dots-anim-6-16-icon-o {
-							transform-origin: 50% 50%;
-							animation: nc-loop-dots-anim-6 var(--animation-duration) infinite;
-						}
-						.nc-loop-dots-anim-6-16-icon-o > :nth-child(2),
-						.nc-loop-dots-anim-6-16-icon-o > :nth-child(3) {
-							transform-origin: 11.25px 50%;
-							animation: nc-loop-dots-anim-6-inner var(--animation-duration) infinite;
-						}
-						@keyframes nc-loop-dots-anim-6 {
-							0%,
-							50% {
-								transform: rotate(0);
-							}
-							100% {
-								animation-timing-function: cubic-bezier(1, 0, 0, 1);
-								transform: rotate(180deg);
-							}
-						}
-						@keyframes nc-loop-dots-anim-6-inner {
-							0% {
-								transform: rotate(0);
-							}
-							100%,
-							50% {
-								animation-timing-function: cubic-bezier(1, 0, 0, 1);
-								transform: rotate(180deg);
-							}
-						}
-					</style>
-				</g></svg
-			>
+			<IconLoading />
 		{:else}
 			<span class="play__ready">→</span>
 		{/if}
@@ -105,12 +62,7 @@
 
 	<form class="form form--preview" action="/play?/publish" method="POST">
 		<Article {article} sentiment="positive" />
-		<FormButton
-			label="Publish"
-			type="submit"
-			sentiment="positive"
-			disabled={isGenerating || isGenerated}
-		/>
+		<FormButton label="Publish" type="submit" sentiment="positive" disabled={!isPublishable} />
 	</form>
 </section>
 

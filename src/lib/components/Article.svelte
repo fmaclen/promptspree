@@ -1,18 +1,14 @@
 <script lang="ts">
 	import { formatDistance } from 'date-fns';
-	import type { Article } from './Article';
+	import type { Article } from '$lib/article';
 
 	export let article: Article;
 	export let sentiment: 'positive' | undefined = undefined;
-
-	const getImageURL = (imageFile: string) => {
-		return `${article.baseImageURL}/api/files/${article.collectionId}/${article.id}/${imageFile}`;
-	};
 </script>
 
 <article class="article {article.isPlaceholder ? 'article--placeholder' : ''}">
-	{#if article.image.length > 0}
-		<img class="article__img" src={getImageURL(article.image[0])} alt={article.headline} />
+	{#if article.imageURL}
+		<img class="article__img" src={article.imageURL} alt={article.headline} />
 	{/if}
 
 	{#if !article.isPlaceholder}
@@ -24,7 +20,7 @@
 		{article.headline}
 	</h1>
 	<h2 class="article__summary">{article.summary}</h2>
-	{#each article.body.split(/\n/) as paragraph}
+	{#each article.body as paragraph}
 		<p class="article__p">{paragraph}</p>
 	{/each}
 
