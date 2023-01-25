@@ -1,6 +1,7 @@
 import type { BaseAuthStore } from 'pocketbase';
 import type { Article } from '$lib/article';
 import { getImageURL } from '$lib/pocketbase.server';
+import type { ArticlePromptShape } from './openai.server';
 
 // Creates an `Article` from a database collection so we don't expose the database schema to the client
 export const generateArticle = (articleCollection: BaseAuthStore['model']) => {
@@ -9,7 +10,7 @@ export const generateArticle = (articleCollection: BaseAuthStore['model']) => {
 	const article: Article = {
 		id: articleCollection.id,
 		updated: articleCollection.updated,
-		author: articleCollection.expand.user.nickname,
+		author: articleCollection.expand.user?.nickname,
 		headline: articleCollection.headline,
 		summary: articleCollection.summary,
 		body: articleCollection.body.split('\n'),
@@ -20,11 +21,17 @@ export const generateArticle = (articleCollection: BaseAuthStore['model']) => {
 	return article;
 };
 
+// Parses the completion from OpenAI and checks the format of the fields is correct
 export const getFieldsFromCompletion = (completion: string | undefined) => {
 	if (!completion) return null;
 
 	// Check the AI completion had the correct fields
-	const fields = JSON.parse(completion);
+	let fields: ArticlePromptShape;
+	try {
+		fields = JSON.parse(completion);
+	} catch (err) {
+		return null;
+	}
 	if (!fields.headline || !fields.summary || !fields.body) return null;
 
 	return {

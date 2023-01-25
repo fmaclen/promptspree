@@ -36,8 +36,6 @@ export const actions = {
 		const completion = await getCompletionFromAI(prompt);
 		const fieldsFromCompletion = getFieldsFromCompletion(completion);
 
-		if (!fieldsFromCompletion) throw error(400, 'AI generated article but was in the wrong format');
-
 		// // Update the article with the completion
 		try {
 			articleCollection = serializeNonPOJOs(
@@ -48,6 +46,9 @@ export const actions = {
 		} catch (err) {
 			handlePocketbaseError(err);
 		}
+
+		if (!fieldsFromCompletion)
+			throw error(400, 'AI tried to generate the article but was in the wrong format');
 
 		// Generate the article for frontend
 		const article = generateArticle(articleCollection);

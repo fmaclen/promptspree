@@ -25,18 +25,3 @@ export const PLACEHOLDER_ARTICLE: Article = {
 	imageURL: undefined,
 	isPlaceholder: true
 };
-
-// export const parseArticleFromCompletion = (prompt: string, completion: string) => {
-// 	const article = JSON.parse(completion);
-// 	article.body = article.body.join('\n');
-// 	article.prompt = prompt;
-
-// 	// FIXME: this is a hack to make the article valid
-// 	article.updated = new Date().toISOString();
-// 	article.collectionId = '';
-// 	article.collectionName = '';
-// 	article.id = '';
-// 	article.image = [];
-
-// 	return article;
-// };
