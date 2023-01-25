@@ -1,5 +1,6 @@
 import type { Actions } from './$types';
 import { redirect } from '@sveltejs/kit';
+import { logErrorToSlack } from '$lib/slack.server';
 
 export const actions = {
 	default: async ({ request, locals }) => {
@@ -22,6 +23,8 @@ export const actions = {
 				};
 			}
 		} catch (err) {
+			logErrorToSlack(err);
+
 			return {
 				status: 400,
 				message: 'Invalid email or password'

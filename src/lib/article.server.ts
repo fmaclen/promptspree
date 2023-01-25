@@ -2,6 +2,7 @@ import type { BaseAuthStore } from 'pocketbase';
 import type { Article } from '$lib/article';
 import { getImageURL } from '$lib/pocketbase.server';
 import type { ArticlePromptShape } from './openai.server';
+import { logErrorToSlack } from '$lib/slack.server';
 
 // Creates an `Article` from a database collection so we don't expose the database schema to the client
 export const generateArticle = (articleCollection: BaseAuthStore['model']) => {
@@ -30,6 +31,7 @@ export const getFieldsFromCompletion = (completion: string | undefined) => {
 	try {
 		fields = JSON.parse(completion);
 	} catch (err) {
+		logErrorToSlack(err);
 		return null;
 	}
 	if (!fields.headline || !fields.summary || !fields.body) return null;

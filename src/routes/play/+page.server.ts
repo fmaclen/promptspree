@@ -2,6 +2,7 @@ import { redirect, error } from '@sveltejs/kit';
 import { getCompletionFromAI } from '$lib/openai.server';
 import { handlePocketbaseError, pb, serializeNonPOJOs } from '$lib/pocketbase.server';
 import { generateArticle, getFieldsFromCompletion } from '$lib/article.server';
+import { logErrorToSlack } from '$lib/slack.server';
 import type { BaseAuthStore } from 'pocketbase';
 import type { Actions } from './$types';
 
@@ -27,6 +28,7 @@ export const actions = {
 		try {
 			articleCollection = serializeNonPOJOs(await pb.collection('articles').create(formData));
 		} catch (err) {
+			logErrorToSlack(err);
 			handlePocketbaseError(err);
 		}
 
@@ -44,6 +46,7 @@ export const actions = {
 					.update(articleCollection.id, { completion, ...fieldsFromCompletion }, { expand: 'user' })
 			);
 		} catch (err) {
+			logErrorToSlack(err);
 			handlePocketbaseError(err);
 		}
 

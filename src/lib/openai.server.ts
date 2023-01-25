@@ -1,6 +1,7 @@
 import { Configuration, OpenAIApi } from 'openai';
 import { env } from '$env/dynamic/private';
 import { error } from '@sveltejs/kit';
+import { logErrorToSlack } from '$lib/slack.server';
 
 export interface ArticlePromptShape {
 	headline: string;
@@ -47,7 +48,8 @@ export const getCompletionFromAI = async (prompt: string) => {
 
 		return completion.data.choices[0].text;
 	} catch (err) {
-		if (err?.response?.status === 429) {
+		logErrorToSlack(err);
+		if (err?.response.status === 429) {
 			throw error(429, 'OpenAI API rate limit exceeded');
 		}
 		return err?.toString();

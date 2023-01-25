@@ -1,4 +1,5 @@
 import type { ClientResponseError } from 'pocketbase';
+import { logErrorToSlack } from '$lib/slack.server';
 import type { Actions } from './$types';
 
 export const actions = {
@@ -7,8 +8,9 @@ export const actions = {
 
 		try {
 			await locals.pb.collection('users').create(formData);
-		} catch (error) {
-			const clientError = error as ClientResponseError;
+		} catch (err) {
+			logErrorToSlack(err);
+			const clientError = err as ClientResponseError;
 
 			return {
 				status: clientError.data.code,
