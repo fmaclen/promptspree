@@ -43,7 +43,11 @@ export const actions = {
 			articleCollection = serializeNonPOJOs(
 				await pb
 					.collection('articles')
-					.update(articleCollection.id, { completion, ...fieldsFromCompletion }, { expand: 'user' })
+					.update(
+						articleCollection.id,
+						{ completion, ...fieldsFromCompletion, user: locals.user.id },
+						{ expand: 'user' }
+					)
 			);
 		} catch (err) {
 			logErrorToSlack(err);
@@ -59,13 +63,28 @@ export const actions = {
 		article.isPlaceholder = false;
 
 		return article;
-	}
-	// publish: async ({ request }) => {
-	// 	const body = Object.fromEntries(await request.formData());
+	},
+	publish: async ({ request, locals }) => {
+		const formData = await request.formData();
+		const articleId = formData.get('articleId')?.toString();
 
-	// 	return {
-	// 		status: 200,
-	// 		message: 'this is a test for PUBLISHING'
-	// 	};
-	// }
+		if (!locals?.user || !articleId) throw error(400, "Can't publish the article");
+
+		formData.append('status', 'published');
+		formData.append('user', locals.user.id);
+
+		let articleCollection: BaseAuthStore['model'] = null;
+
+		try {
+			articleCollection = serializeNonPOJOs(
+				await pb.collection('articles').update(articleId, formData)
+			);
+		} catch (err) {
+			logErrorToSlack(err);
+			handlePocketbaseError(err);
+		}
+		if (!articleCollection) throw error(400, 'Article could not be published');
+
+		throw redirect(303, `/article/${articleCollection.id}`);
+	}
 } satisfies Actions;

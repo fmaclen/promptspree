@@ -19,11 +19,19 @@
 			})}
 		</time>
 	{/if}
-	<a href="/article/{article.id}" class="article__a">
+
+	{#if isPreview && article.id}
+		<a href="/article/{article.id}" class="article__a">
+			<h1 class="article__headline">
+				{article.headline}
+			</h1>
+		</a>
+	{:else}
 		<h1 class="article__headline">
 			{article.headline}
 		</h1>
-	</a>
+	{/if}
+
 	<h2 class="article__summary">{article.summary}</h2>
 	{#if !isPreview}
 		{#each article.body as paragraph}

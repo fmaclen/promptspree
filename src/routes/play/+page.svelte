@@ -11,26 +11,34 @@
 
 	let prompt = '';
 	let error = '';
-	let isGenerating = false;
-	let isPublishable = false;
 	let article = PLACEHOLDER_ARTICLE;
+	let isLoading = false;
+	$: isPublishable = article.id;
 
-	const submitGenerate = ({ form }: { form: HTMLFormElement }) => {
-		isGenerating = true;
+	const submitGenerate = () => {
+		isLoading = true;
 		return async ({ result, update }: { result: ActionResult; update: () => void }) => {
 			if (result.type === 'success') {
-				// form.reset();
 				article = { ...article, ...result.data };
-				console.log(article);
+				console.log('submitGenerate', article);
 			}
 			if (result.type === 'error') {
-				console.log('ERROR', result);
+				// console.log('ERROR', result);
 				await applyAction(result);
 			}
 			update();
-			isGenerating = false;
+			isLoading = false;
 		};
 	};
+
+	const submitPublish = () => {
+		isLoading = true;
+	};
+
+	$: {
+		console.log('reactive', article);
+		console.log('isPublishable', isPublishable);
+	}
 </script>
 
 <section class="play">
@@ -41,7 +49,7 @@
 				name="prompt"
 				placeholder="Write a placeholder article about Flibbertigibbet Jibber-jabber Jiggery-pokery"
 				bind:value={prompt}
-				disabled={isGenerating}
+				disabled={isLoading}
 			/>
 		</FormField>
 
@@ -49,18 +57,21 @@
 			<Notice>{error}</Notice>
 		{/if}
 
-		<FormButton label="Generate" type="submit" disabled={!prompt || isGenerating} />
+		<FormButton label="Generate" type="submit" disabled={!prompt || isLoading} />
 	</form>
 
 	<div class="play__status">
-		{#if isGenerating}
+		{#if isLoading}
 			<IconLoading />
 		{:else}
 			<span class="play__ready">→</span>
 		{/if}
 	</div>
 
-	<form class="form form--preview" action="/play?/publish" method="POST">
+	<form class="form form--preview" method="POST" action="?/publish" use:enhance={submitPublish}>
+		{#if isPublishable}
+			<input type="hidden" name="articleId" value={article.id} />
+		{/if}
 		<Article {article} sentiment="positive" />
 		<FormButton label="Publish" type="submit" sentiment="positive" disabled={!isPublishable} />
 	</form>
