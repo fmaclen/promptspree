@@ -49,9 +49,14 @@ export const getCompletionFromAI = async (prompt: string) => {
 		return completion.data.choices[0].text;
 	} catch (err) {
 		logErrorToSlack(err);
-		if (err?.response.status === 429) {
-			throw error(429, 'OpenAI API rate limit exceeded');
+
+		switch (err?.response.status) {
+			case 429:
+				throw error(429, 'API rate limit exceeded');
+			case 503:
+				throw error(503, 'That model is currently overloaded with other requests. ');
+			default:
+				throw error(500, 'Uknown error');
 		}
-		return err?.toString();
 	}
 };
