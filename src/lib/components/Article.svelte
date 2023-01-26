@@ -83,7 +83,8 @@
 		color: inherit;
 
 		&:hover {
-			text-decoration: wavy var(--color-accent) underline;
+			text-decoration: wavy underline;
+			text-decoration-color: var(--color-secondary);
 			text-decoration-thickness: 2px;
 			color: var(--color-accent);
 		}
