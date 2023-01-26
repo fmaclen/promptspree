@@ -4,6 +4,7 @@
 
 	export let article: Article;
 	export let sentiment: 'positive' | undefined = undefined;
+	export let isPreview: boolean = false;
 </script>
 
 <article class="article {article.isPlaceholder ? 'article--placeholder' : ''}">
@@ -18,13 +19,17 @@
 			})}
 		</time>
 	{/if}
-	<h1 class="article__headline">
-		{article.headline}
-	</h1>
+	<a href="/article/{article.id}" class="article__a">
+		<h1 class="article__headline">
+			{article.headline}
+		</h1>
+	</a>
 	<h2 class="article__summary">{article.summary}</h2>
-	{#each article.body as paragraph}
-		<p class="article__p">{paragraph}</p>
-	{/each}
+	{#if !isPreview}
+		{#each article.body as paragraph}
+			<p class="article__p">{paragraph}</p>
+		{/each}
+	{/if}
 
 	{#if article.prompt}
 		<code class="article__prompt">
@@ -70,6 +75,17 @@
 
 		&--positive {
 			color: var(--color-positive);
+		}
+	}
+
+	a.article__a {
+		text-decoration: none;
+		color: inherit;
+
+		&:hover {
+			text-decoration: wavy var(--color-accent) underline;
+			text-decoration-thickness: 2px;
+			color: var(--color-accent);
 		}
 	}
 

@@ -10,7 +10,7 @@
 	{#if data.articles.length > 0}
 		<div class="homepage__articles">
 			{#each data.articles as article}
-				<Article {article} />
+				<Article {article} isPreview={true} />
 			{/each}
 		</div>
 	{:else}
