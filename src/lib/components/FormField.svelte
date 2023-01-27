@@ -11,7 +11,7 @@
 	label.form-field {
 		display: flex;
 		flex-direction: column;
-		gap: 0.5rem;
+		gap: 8px;
 		font-size: 14px;
 		font-weight: 600;
 	}

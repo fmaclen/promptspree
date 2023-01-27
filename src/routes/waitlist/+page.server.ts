@@ -6,6 +6,10 @@ export const actions = {
 	default: async ({ locals, request }) => {
 		const formData = await request.formData();
 
+		// Need to manually convert the checkbox value to a boolean for Pocketbase
+		const hasAcceptedTerms = formData.get('terms') === 'on';
+		if (hasAcceptedTerms) formData.set('terms', 'true');
+
 		try {
 			await locals.pb.collection('users').create(formData);
 		} catch (err) {

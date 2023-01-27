@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { formatDistance } from 'date-fns';
 	import type { Article } from '$lib/article';
+	import A from './A.svelte';
 
 	export let article: Article;
 	export let sentiment: 'positive' | undefined = undefined;
@@ -21,11 +22,11 @@
 	{/if}
 
 	{#if isPreview && article.id}
-		<a href="/article/{article.id}" class="article__a">
+		<A href="/article/{article.id}">
 			<h1 class="article__headline">
 				{article.headline}
 			</h1>
-		</a>
+		</A>
 	{:else}
 		<h1 class="article__headline">
 			{article.headline}
@@ -86,18 +87,6 @@
 		}
 	}
 
-	a.article__a {
-		text-decoration: none;
-		color: inherit;
-
-		&:hover {
-			text-decoration: wavy underline;
-			text-decoration-color: var(--color-secondary);
-			text-decoration-thickness: 2px;
-			color: var(--color-accent);
-		}
-	}
-
 	h1.article__headline {
 		font-size: 32px;
 		letter-spacing: -0.035em;
@@ -120,12 +109,12 @@
 	}
 
 	code.article__prompt {
-		font-size: 14px;
+		font-size: 13px;
 		font-family: var(--font-mono);
 		overflow-y: scroll;
 		background-color: #f4f4f4;
 		color: #999;
-		padding: 20px 32px;
+		padding: 12px 32px;
 		margin: 0;
 		box-sizing: border-box;
 
