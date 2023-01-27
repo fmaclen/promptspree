@@ -1,6 +1,5 @@
 <script lang="ts">
-	import type { ActionData } from './$types';
-
+	import { enhance, type SubmitFunction } from '$app/forms';
 	import FormField from '$lib/components/FormField.svelte';
 	import FormInput from '$lib/components/FormInput.svelte';
 	import FormButton from '$lib/components/FormButton.svelte';
@@ -8,6 +7,14 @@
 	import FormFieldset from '$lib/components/FormFieldset.svelte';
 	import P from '$lib/components/P.svelte';
 	import A from '$lib/components/A.svelte';
+	import { Sentiment } from '$lib/utils';
+
+	type Errors = {
+		[key: string]: {
+			code: string;
+			message: string;
+		};
+	};
 
 	let isLoading = false;
 	let email = '';
@@ -15,6 +22,8 @@
 	let password = '';
 	let passwordConfirm = '';
 	let hasAcceptedTerms = false;
+	let errors: Errors | undefined;
+	let success = '';
 	$: isSubmitDisabled =
 		!email ||
 		!nickname ||
@@ -23,13 +32,33 @@
 		!hasAcceptedTerms ||
 		isLoading;
 
-	export let form: ActionData;
+	const handleSubmit: SubmitFunction = () => {
+		isLoading = true;
+		errors = undefined; // Clear existing errors
+
+		return async ({ result, update }) => {
+			switch (result.type) {
+				case 'success':
+					success = result.data?.message;
+					break;
+				case 'failure':
+					errors = result.data?.errors;
+					password = ''; // Reset password
+					passwordConfirm = ''; // Reset password confirmation
+					break;
+				default:
+					break;
+			}
+			isLoading = false;
+			await update();
+		};
+	};
 </script>
 
-<form class="form" method="POST" on:submit={() => (isLoading = true)}>
+<form class="form" method="POST" use:enhance={handleSubmit}>
 	<FormFieldset>
-		{#if form?.status == 200}
-			<Notice>{form.message}</Notice>
+		{#if success}
+			<Notice sentiment={Sentiment.POSITIVE}>{success}</Notice>
 		{:else}
 			<FormField label="E-mail">
 				<FormInput
@@ -40,8 +69,8 @@
 					bind:value={email}
 				/>
 
-				{#if form?.message?.email?.message}
-					<Notice>{form.message.email.message}</Notice>
+				{#if errors?.email}
+					<Notice sentiment={Sentiment.NEGATIVE}>Email is already in use or invalid</Notice>
 				{/if}
 			</FormField>
 
@@ -53,16 +82,16 @@
 					bind:value={nickname}
 				/>
 
-				{#if form?.message?.nickname?.message}
-					<Notice>{form.message.nickname.message}</Notice>
+				{#if errors?.nickname}
+					<Notice sentiment={Sentiment.NEGATIVE}>Nickname is already in taken or invalid</Notice>
 				{/if}
 			</FormField>
 
 			<FormField label="Password">
 				<FormInput type="password" name="password" required={true} bind:value={password} />
 
-				{#if form?.message?.password?.message}
-					<Notice>{form.message.password.message}</Notice>
+				{#if errors?.password}
+					<Notice sentiment={Sentiment.NEGATIVE}>Passwords didn't match</Notice>
 				{/if}
 			</FormField>
 
@@ -75,19 +104,24 @@
 				/>
 			</FormField>
 
-			<label class="form-field-checkbox">
-				<input
-					class="form-field-checkbox__input"
-					type="checkbox"
-					name="terms"
-					bind:checked={hasAcceptedTerms}
-				/>
-				<P>
-					I agree to the <A href="/legal" isHighlighted={true}>terms of service</A>
-					and
-					<A href="/legal" isHighlighted={true}>privacy policy</A>.
-				</P>
-			</label>
+			<div class="form-field-checkbox">
+				<label class="form-field-checkbox__label">
+					<input
+						class="form-field-checkbox__input"
+						type="checkbox"
+						name="terms"
+						bind:checked={hasAcceptedTerms}
+					/>
+					<P>
+						I agree to the <A href="/legal" isHighlighted={true}>terms of service</A>
+						and
+						<A href="/legal" isHighlighted={true}>privacy policy</A>.
+					</P>
+				</label>
+				{#if errors?.terms}
+					<Notice sentiment={Sentiment.NEGATIVE}>You must agree to the terms and conditions</Notice>
+				{/if}
+			</div>
 
 			<FormButton type="submit" label="Join waitlist" disabled={isSubmitDisabled} />
 		{/if}
@@ -95,7 +129,13 @@
 </form>
 
 <style lang="scss">
-	label.form-field-checkbox {
+	div.form-field-checkbox {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	label.form-field-checkbox__label {
 		display: flex;
 		align-items: center;
 		column-gap: 12px;

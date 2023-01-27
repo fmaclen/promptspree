@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { enhance, type SubmitFunction } from '$app/forms';
-
 	import FormField from '$lib/components/FormField.svelte';
 	import FormInput from '$lib/components/FormInput.svelte';
 	import FormButton from '$lib/components/FormButton.svelte';
@@ -17,10 +16,13 @@
 	const handleSubmit: SubmitFunction = () => {
 		isLoading = true;
 		error = ''; // Clear existing error
-		password = ''; // Reset password
 
 		return async ({ result, update }) => {
-			if (result.type == 'failure') error = result.data?.message;
+			if (result.type == 'failure') {
+				error = result.data?.message;
+				password = ''; // Reset password
+			}
+
 			isLoading = false;
 			await update();
 		};

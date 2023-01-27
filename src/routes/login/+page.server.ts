@@ -1,6 +1,7 @@
 import type { Actions } from './$types';
 import { fail, redirect } from '@sveltejs/kit';
 import { logEventToSlack } from '$lib/slack.server';
+import { handlePocketbaseErrors } from '$lib/pocketbase.server';
 
 export const actions = {
 	default: async ({ request, locals }) => {
@@ -22,12 +23,8 @@ export const actions = {
 				});
 			}
 		} catch (err) {
-			logEventToSlack(`LOGIN: ${email}`, err);
-
-			return fail(400, {
-				message: 'Invalid email or password',
-				email
-			});
+			logEventToSlack(`/login/+page.server.ts: ${email}`, err);
+			return handlePocketbaseErrors(err);
 		}
 
 		// User is logged in, redirect to homepage

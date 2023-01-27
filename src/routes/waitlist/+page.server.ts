@@ -1,6 +1,6 @@
-import type { ClientResponseError } from 'pocketbase';
 import { logEventToSlack } from '$lib/slack.server';
 import type { Actions } from './$types';
+import { handlePocketbaseErrors } from '$lib/pocketbase.server';
 
 export const actions = {
 	default: async ({ locals, request }) => {
@@ -13,18 +13,13 @@ export const actions = {
 		try {
 			await locals.pb.collection('users').create(formData);
 		} catch (err) {
-			logEventToSlack("WAITLIST: coudnl't join waitlist", err);
-			const clientError = err as ClientResponseError;
-
-			return {
-				status: clientError.data.code,
-				message: { ...clientError.data.data }
-			};
+			logEventToSlack(`/waitlist/+page.server.ts: ${formData.get('email')}`, err);
+			return handlePocketbaseErrors(err);
 		}
 
 		return {
-			status: 200,
-			message: "You have been added to the waitlist. We'll email you as soon as a spot opens up."
+			success: true,
+			message: "You are now in the waitlist! We'll email you as soon as a spot opens up."
 		};
 	}
 } satisfies Actions;

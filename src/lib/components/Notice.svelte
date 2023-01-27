@@ -19,6 +19,11 @@
 		padding: 16px 8px;
 		box-sizing: border-box;
 
+		&--positive {
+			background-color: var(--color-positive-secondary);
+			color: var(--color-positive);
+		}
+
 		&--negative {
 			background-color: var(--color-negative-secondary);
 			color: var(--color-negative);
