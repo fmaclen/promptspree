@@ -89,7 +89,7 @@
 				</P>
 			</label>
 
-			<FormButton type="submit" label="Join waitlist" disabled={false} />
+			<FormButton type="submit" label="Join waitlist" disabled={isSubmitDisabled} />
 		{/if}
 	</FormFieldset>
 </form>
