@@ -20,10 +20,8 @@
 		return async ({ result, update }: { result: ActionResult; update: () => void }) => {
 			if (result.type === 'success') {
 				article = { ...article, ...result.data };
-				console.log('submitGenerate', article);
 			}
 			if (result.type === 'error') {
-				// console.log('ERROR', result);
 				await applyAction(result);
 			}
 			update();
@@ -34,11 +32,6 @@
 	const submitPublish = () => {
 		isLoading = true;
 	};
-
-	$: {
-		console.log('reactive', article);
-		console.log('isPublishable', isPublishable);
-	}
 </script>
 
 <section class="play">
