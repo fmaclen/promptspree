@@ -2,7 +2,7 @@ import { redirect, error } from '@sveltejs/kit';
 import { getCompletionFromAI } from '$lib/openai.server';
 import { handlePocketbaseError, pb, serializeNonPOJOs } from '$lib/pocketbase.server';
 import { generateArticle, getFieldsFromCompletion } from '$lib/article.server';
-import { logErrorToSlack } from '$lib/slack.server';
+import { logEventToSlack } from '$lib/slack.server';
 import type { BaseAuthStore } from 'pocketbase';
 import type { Actions } from './$types';
 
@@ -28,7 +28,7 @@ export const actions = {
 		try {
 			articleCollection = serializeNonPOJOs(await pb.collection('articles').create(formData));
 		} catch (err) {
-			logErrorToSlack(err);
+			logEventToSlack("PLAY: couldn't create article collection", err);
 			handlePocketbaseError(err);
 		}
 
@@ -50,7 +50,7 @@ export const actions = {
 					)
 			);
 		} catch (err) {
-			logErrorToSlack(err);
+			logEventToSlack("PLAY: couldn't update article collection with completion", err);
 			handlePocketbaseError(err);
 		}
 
@@ -80,7 +80,7 @@ export const actions = {
 				await pb.collection('articles').update(articleId, formData)
 			);
 		} catch (err) {
-			logErrorToSlack(err);
+			logEventToSlack("PLAY: coudn't publish article", err);
 			handlePocketbaseError(err);
 		}
 		if (!articleCollection) throw error(400, 'Article could not be published');

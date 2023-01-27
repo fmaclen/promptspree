@@ -1,5 +1,5 @@
 import type { ClientResponseError } from 'pocketbase';
-import { logErrorToSlack } from '$lib/slack.server';
+import { logEventToSlack } from '$lib/slack.server';
 import type { Actions } from './$types';
 
 export const actions = {
@@ -13,7 +13,7 @@ export const actions = {
 		try {
 			await locals.pb.collection('users').create(formData);
 		} catch (err) {
-			logErrorToSlack(err);
+			logEventToSlack("WAITLIST: coudnl't join waitlist", err);
 			const clientError = err as ClientResponseError;
 
 			return {

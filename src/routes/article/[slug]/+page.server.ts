@@ -2,7 +2,7 @@ import type { Record } from 'pocketbase';
 import { error } from '@sveltejs/kit';
 import { pb } from '$lib/pocketbase.server';
 import { generateArticle } from '$lib/article.server';
-import { logErrorToSlack } from '$lib/slack.server';
+import { logEventToSlack } from '$lib/slack.server';
 import type { PageServerLoad } from './$types';
 
 interface Params {
@@ -20,7 +20,7 @@ export const load = (async ({ params }: { params: Params }) => {
 			expand: 'user'
 		});
 	} catch (err) {
-		logErrorToSlack(err);
+		logEventToSlack('ARTICLE', err);
 	}
 
 	const article = generateArticle(record);

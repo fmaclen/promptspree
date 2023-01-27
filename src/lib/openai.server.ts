@@ -1,7 +1,7 @@
 import { Configuration, OpenAIApi } from 'openai';
 import { env } from '$env/dynamic/private';
 import { error } from '@sveltejs/kit';
-import { logErrorToSlack } from '$lib/slack.server';
+import { logEventToSlack } from '$lib/slack.server';
 
 export interface ArticlePromptShape {
 	headline: string;
@@ -48,7 +48,7 @@ export const getCompletionFromAI = async (prompt: string) => {
 
 		return completion.data.choices[0].text;
 	} catch (err) {
-		logErrorToSlack(err);
+		logEventToSlack('openai.server.ts: getCompletionFromAI', err);
 
 		switch (err?.response.status) {
 			case 429:
