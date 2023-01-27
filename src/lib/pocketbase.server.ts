@@ -27,15 +27,14 @@ export const handlePocketbaseError = (err: unknown) => {
 export const handlePocketbaseErrors = (err: unknown) => {
 	// Check if the error is a Pocketbase error
 	if (typeof err === 'object' && err !== null && err instanceof ClientResponseError) {
+		console.log(err.data.code, { ...err.data });
+
 		// Check if the Pocketbase server is online
-		if (err.status === 0) throw error(500, 'Server is under maintenance, please try again later');
+		if (err.status === 0)
+			throw error(500, 'Server is undergoing maintenance, please try again later');
 
 		// Return the field validation errors
-		return fail(err.data.code, {
-			errors: {
-				...err.data.data
-			}
-		});
+		return fail(err.data.code, { ...err.data });
 	} else {
 		throw error(500);
 	}

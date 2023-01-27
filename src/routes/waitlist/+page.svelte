@@ -42,7 +42,7 @@
 					success = result.data?.message;
 					break;
 				case 'failure':
-					errors = result.data?.errors;
+					errors = result.data?.data;
 					password = ''; // Reset password
 					passwordConfirm = ''; // Reset password confirmation
 					break;
@@ -70,7 +70,7 @@
 				/>
 
 				{#if errors?.email}
-					<Notice sentiment={Sentiment.NEGATIVE}>Email is already in use or invalid</Notice>
+					<Notice sentiment={Sentiment.NEGATIVE}>Email is already in use or is invalid</Notice>
 				{/if}
 			</FormField>
 
@@ -83,7 +83,7 @@
 				/>
 
 				{#if errors?.nickname}
-					<Notice sentiment={Sentiment.NEGATIVE}>Nickname is already in taken or invalid</Notice>
+					<Notice sentiment={Sentiment.NEGATIVE}>Nickname is already taken or is invalid</Notice>
 				{/if}
 			</FormField>
 

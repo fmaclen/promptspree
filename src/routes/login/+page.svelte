@@ -18,8 +18,10 @@
 		error = ''; // Clear existing error
 
 		return async ({ result, update }) => {
+			console.log(result);
+
 			if (result.type == 'failure') {
-				error = result.data?.message;
+				error = "Can't login, check your credentials";
 				password = ''; // Reset password
 			}
 
