@@ -91,7 +91,11 @@
 		--color-accent: slateblue;
 		--color-accent-bg: #fbf9ff;
 		--color-secondary: hotpink;
+
 		--color-positive: #00b376;
+		--color-positive-secondary: #ecf9f6;
+		--color-negative: #e75258;
+		--color-negative-secondary: #f9ecef;
 
 		--color-border: #e2e2e2;
 

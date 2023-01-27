@@ -1,4 +1,10 @@
-<div class="notice">
+<script lang="ts">
+	import { Sentiment } from '$lib/utils';
+
+	export let sentiment: Sentiment = Sentiment.NEUTRAL;
+</script>
+
+<div class="notice {sentiment !== Sentiment.NEUTRAL ? `notice--${sentiment}` : ''}">
 	<slot />
 </div>
 
@@ -12,5 +18,10 @@
 		background-color: var(--color-grey5);
 		padding: 16px 8px;
 		box-sizing: border-box;
+
+		&--negative {
+			background-color: var(--color-negative-secondary);
+			color: var(--color-negative);
+		}
 	}
 </style>

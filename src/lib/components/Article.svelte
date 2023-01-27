@@ -52,12 +52,13 @@
 		display: inline-flex;
 		flex-direction: column;
 		row-gap: 24px;
-		border: 1px solid #e2e2e2;
-		border-radius: 2px;
-		overflow: hidden;
+		width: 100%;
+		box-sizing: border-box;
 		padding: 32px;
 		margin-bottom: 16px;
+		overflow: hidden;
 		background-color: #fff;
+		border: 1px solid #e2e2e2;
 
 		&--placeholder {
 			background-color: #fafafa;

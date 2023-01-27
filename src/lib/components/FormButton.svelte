@@ -14,14 +14,13 @@
 
 <style lang="scss">
 	button.form-button {
-		border-radius: 4px;
 		border: none;
-		padding: 12px;
+		padding: 16px;
 		letter-spacing: -0.03em;
 		font-size: 14px;
 		font-weight: 600;
 		font-family: var(--font-base);
-		background-color: var(--color-accent);
+		background-color: var(--color-grey90);
 		color: var(--color-white);
 		cursor: pointer;
 
@@ -30,11 +29,12 @@
 		}
 
 		&:hover {
-			border-color: var(--color-black-alpha35);
+			background-color: var(--color-accent);
 		}
 
 		&:active {
 			transform: scale(0.95);
+			background-color: var(--color-positive);
 		}
 
 		&:disabled {
