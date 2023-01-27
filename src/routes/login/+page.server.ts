@@ -1,5 +1,5 @@
 import type { Actions } from './$types';
-import { redirect } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 import { logEventToSlack } from '$lib/slack.server';
 
 export const actions = {
@@ -17,20 +17,20 @@ export const actions = {
 			if (!locals.pb?.authStore?.model?.verified) {
 				locals.pb.authStore.clear();
 
-				return {
-					status: 200,
-					message: 'You are in the waitlist'
-				};
+				return fail(401, {
+					message: 'The account has not been verified yet'
+				});
 			}
 		} catch (err) {
 			logEventToSlack(`LOGIN: ${email}`, err);
 
-			return {
-				status: 400,
-				message: 'Invalid email or password'
-			};
+			return fail(400, {
+				message: 'Invalid email or password',
+				email
+			});
 		}
 
+		// User is logged in, redirect to homepage
 		throw redirect(303, '/');
 	}
 } satisfies Actions;

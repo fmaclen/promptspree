@@ -1,24 +1,36 @@
 <script lang="ts">
-	import type { ActionData } from './$types';
+	import { enhance, type SubmitFunction } from '$app/forms';
 
 	import FormField from '$lib/components/FormField.svelte';
 	import FormInput from '$lib/components/FormInput.svelte';
 	import FormButton from '$lib/components/FormButton.svelte';
 	import Notice from '$lib/components/Notice.svelte';
 	import FormFieldset from '$lib/components/FormFieldset.svelte';
+	import { Sentiment } from '$lib/utils';
 
 	let isLoading = false;
 	let email = '';
 	let password = '';
+	let error = '';
 	$: isSubmitDisabled = !email || !password || isLoading;
 
-	export let form: ActionData;
+	const handleSubmit: SubmitFunction = () => {
+		isLoading = true;
+		error = ''; // Clear existing error
+		password = ''; // Reset password
+
+		return async ({ result, update }) => {
+			if (result.type == 'failure') error = result.data?.message;
+			isLoading = false;
+			await update();
+		};
+	};
 </script>
 
-<form class="form" method="POST" on:submit={() => (isLoading = true)}>
+<form class="form" method="POST" use:enhance={handleSubmit}>
 	<FormFieldset>
-		{#if form?.status == 400}
-			<Notice>{form.message || form.status}</Notice>
+		{#if error}
+			<Notice sentiment={Sentiment.NEGATIVE}>{error}</Notice>
 		{/if}
 
 		<FormField label="E-mail">
