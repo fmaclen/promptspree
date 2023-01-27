@@ -3,8 +3,9 @@ import type { Article } from '$lib/article';
 import type { BaseAuthStore, Record } from 'pocketbase';
 import { generateArticle } from '$lib/article.server';
 import { logErrorToSlack } from '$lib/slack.server';
+import type { PageServerLoad } from './$types';
 
-export const load = async () => {
+export const load = (async () => {
 	let records: Record[] = [];
 
 	try {
@@ -30,4 +31,4 @@ export const load = async () => {
 	return {
 		articles: articles || []
 	};
-};
+}) satisfies PageServerLoad;
