@@ -1,6 +1,6 @@
 import type { Actions } from './$types';
 import { redirect } from '@sveltejs/kit';
-import { logErrorToSlack } from '$lib/slack.server';
+import { logEventToSlack } from '$lib/slack.server';
 
 export const actions = {
 	default: async ({ request, locals }) => {
