@@ -23,7 +23,7 @@ export const actions = {
 				};
 			}
 		} catch (err) {
-			logErrorToSlack(err);
+			logEventToSlack(`LOGIN: ${email}`, err);
 
 			return {
 				status: 400,
