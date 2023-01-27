@@ -56,9 +56,7 @@
 	<footer class="footer">
 		<div class="container">
 			<nav class="footer-nav">
-				<nav class="footer-nav__links">
-					<a href="/" class="footer-nav__logo">{APP_NAME}</a>
-				</nav>
+				<a href="/" class="footer-nav__logo">{APP_NAME}</a>
 
 				<nav class="footer-nav__links">
 					{#if !data.user}
@@ -273,7 +271,13 @@
 
 	nav.footer-nav__links {
 		display: flex;
-		column-gap: 16px;
+		gap: 16px;
+		/* text-align: right; */
+
+		@media (max-width: 960px) {
+			flex-direction: column;
+			margin-left: auto;
+		}
 	}
 
 	a.footer-nav__a,
@@ -299,11 +303,17 @@
 	}
 
 	hr.footer-nav__hr {
-		height: 100%;
 		border: 0;
 		margin: 0;
 		padding: 0;
-		width: 1px;
 		background-color: var(--color-grey60);
+
+		width: 1px;
+		height: 100%;
+
+		@media (max-width: 960px) {
+			width: 100%;
+			height: 1px;
+		}
 	}
 </style>
