@@ -14,20 +14,16 @@
 
 - Clone the repository on a [server](https://www.digitalocean.com/pricing/droplets#basic-droplets) with [Node.JS](https://nodejs.dev/en/download/) v18+: `git clone https://github.com/fmaclen/the-synthetic-gazette.git`
 
-#### Backend
+#### Setup backend
 
 - Download the latest version of [Pocketbase](https://pocketbase.io/docs/) for your server's OS and unzip it on `/pocketbase`
-- Start Pocketbase by `cd pocketbase` and then serve it in a detached sreen: `screen -dmS pocketbase nohup ./pocketbase serve &`
-- Pocketbase will run with default settings and will be accessible at `http://127.0.0.1:8090`
 
-#### Frontend
+#### Run deploy script
 
-- Back to the root of the repository: `cd ..`
-- Create a copy of `.env.sample` and name it `.env`, then edit with your own values.
-- Run `./scripts/deploy` that:
-  - Pulls the latest changes from Github
-  - Builds the app
-  - Kill the process of the existing server (if any)
-  - Starts the server in a detached screen (on port `3000`)
-
-**Note:** if deploy script doesn't work try `chmod +x ./scripts/deploy`
+- From the root directory run `./scripts/deploy`, it will:
+  - Pull the latest changes from the repository
+  - Install dependencies
+  - Build the frontend
+  - Start Pocketbase in a detached window (will be accessible at `http://127.0.0.1:8090`)
+  - Start the SvelteKit frontend in a detached window (will be accessible at `http://localhost:3000`)
+- Inspect if the process are running in the background with `ps aux | grep APP_NAME`
