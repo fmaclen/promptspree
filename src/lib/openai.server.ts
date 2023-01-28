@@ -1,7 +1,7 @@
-import { Configuration, OpenAIApi } from 'openai';
 import { env } from '$env/dynamic/private';
-import { error } from '@sveltejs/kit';
 import { logEventToSlack } from '$lib/slack.server';
+import { error } from '@sveltejs/kit';
+import { Configuration, OpenAIApi } from 'openai';
 
 export interface ArticlePromptShape {
 	headline: string;

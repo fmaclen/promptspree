@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { formatDistance } from 'date-fns';
 	import type { Article } from '$lib/article';
+	import { formatDistance } from 'date-fns';
+
 	import A from './A.svelte';
 
 	export let article: Article;

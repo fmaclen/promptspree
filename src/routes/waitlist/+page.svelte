@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { enhance, type SubmitFunction } from '$app/forms';
-	import FormField from '$lib/components/FormField.svelte';
-	import FormInput from '$lib/components/FormInput.svelte';
-	import FormButton from '$lib/components/FormButton.svelte';
-	import Notice from '$lib/components/Notice.svelte';
-	import FormFieldset from '$lib/components/FormFieldset.svelte';
-	import P from '$lib/components/P.svelte';
+	import { type SubmitFunction, enhance } from '$app/forms';
 	import A from '$lib/components/A.svelte';
+	import FormButton from '$lib/components/FormButton.svelte';
+	import FormField from '$lib/components/FormField.svelte';
+	import FormFieldset from '$lib/components/FormFieldset.svelte';
+	import FormInput from '$lib/components/FormInput.svelte';
+	import Notice from '$lib/components/Notice.svelte';
+	import P from '$lib/components/P.svelte';
 	import { Sentiment } from '$lib/utils';
 
 	type Errors = {

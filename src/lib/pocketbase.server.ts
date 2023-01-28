@@ -1,6 +1,6 @@
-import PocketBase, { BaseAuthStore, ClientResponseError } from 'pocketbase';
 import { env } from '$env/dynamic/private';
 import { error, fail } from '@sveltejs/kit';
+import PocketBase, { BaseAuthStore, ClientResponseError } from 'pocketbase';
 
 export const pocketbaseURL = env.POCKETBASE_URL || 'http://127.0.0.1:8090';
 

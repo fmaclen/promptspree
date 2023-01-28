@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Article from '$lib/components/Article.svelte';
 	import Notice from '$lib/components/Notice.svelte';
+
 	import type { PageData } from './$types';
 
 	export let data: PageData;

@@ -1,5 +1,5 @@
-import type { Handle, RequestEvent } from '@sveltejs/kit';
 import { pb, serializeNonPOJOs } from '$lib/pocketbase.server';
+import type { Handle, RequestEvent } from '@sveltejs/kit';
 
 export const handle: Handle = async ({ event, resolve }) => {
 	await handleUserAuth(event);

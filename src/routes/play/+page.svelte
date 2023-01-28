@@ -1,13 +1,13 @@
 <script lang="ts">
-	import type { ActionResult } from '@sveltejs/kit';
-	import { enhance, applyAction } from '$app/forms';
+	import { applyAction, enhance } from '$app/forms';
+	import { PLACEHOLDER_ARTICLE } from '$lib/article';
 	import Article from '$lib/components/Article.svelte';
 	import FormButton from '$lib/components/FormButton.svelte';
 	import FormField from '$lib/components/FormField.svelte';
 	import FormTextarea from '$lib/components/FormTextarea.svelte';
-	import Notice from '$lib/components/Notice.svelte';
 	import IconLoading from '$lib/components/IconLoading.svelte';
-	import { PLACEHOLDER_ARTICLE } from '$lib/article';
+	import Notice from '$lib/components/Notice.svelte';
+	import type { ActionResult } from '@sveltejs/kit';
 
 	let prompt = '';
 	let error = '';

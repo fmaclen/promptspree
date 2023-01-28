@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { APP_NAME } from '$lib/utils';
+
 	import type { PageData } from './$types';
 
 	export let data: PageData;

@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { APP_NAME, APP_EMAIL } from '$lib/utils';
-	import Section from '$lib/components/Section.svelte';
-	import SectionGroup from '$lib/components/SectionGroup.svelte';
+	import A from '$lib/components/A.svelte';
 	import H3 from '$lib/components/H3.svelte';
 	import P from '$lib/components/P.svelte';
-	import A from '$lib/components/A.svelte';
+	import Section from '$lib/components/Section.svelte';
+	import SectionGroup from '$lib/components/SectionGroup.svelte';
+	import { APP_EMAIL, APP_NAME } from '$lib/utils';
 </script>
 
 <Section>
