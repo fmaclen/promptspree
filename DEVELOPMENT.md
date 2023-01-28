@@ -24,6 +24,6 @@
   - Pull the latest changes from the repository
   - Install dependencies
   - Build the frontend
-  - Start Pocketbase in a detached window (will be accessible at `http://127.0.0.1:8090`)
-  - Start the SvelteKit frontend in a detached window (will be accessible at `http://localhost:3000`)
+  - Start (or restart) Pocketbase in a detached window, it will also apply any new migrations (accessible at `http://127.0.0.1:8090`)
+  - Start (or restart) the SvelteKit frontend in a detached window (accessible at `http://localhost:3000`)
 - Inspect if the process are running in the background with `ps aux | grep APP_NAME`
