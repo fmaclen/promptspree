@@ -1,8 +1,9 @@
-import { logEventToSlack } from '$lib/slack.server';
-import type { Actions } from './$types';
 import { handlePocketbaseErrors } from '$lib/pocketbase.server';
+import { logEventToSlack } from '$lib/slack.server';
 
-export const actions = {
+import type { Actions } from './$types';
+
+export const actions: Actions = {
 	default: async ({ locals, request }) => {
 		const formData = await request.formData();
 
@@ -22,4 +23,4 @@ export const actions = {
 			message: "You are now in the waitlist! We'll email you as soon as a spot opens up."
 		};
 	}
-} satisfies Actions;
+};

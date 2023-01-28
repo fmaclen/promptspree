@@ -1,12 +1,13 @@
-import { redirect, error } from '@sveltejs/kit';
+import { generateArticle, getFieldsFromCompletion } from '$lib/article.server';
 import { getCompletionFromAI } from '$lib/openai.server';
 import { handlePocketbaseError, pb, serializeNonPOJOs } from '$lib/pocketbase.server';
-import { generateArticle, getFieldsFromCompletion } from '$lib/article.server';
 import { logEventToSlack } from '$lib/slack.server';
+import { error, redirect } from '@sveltejs/kit';
 import type { BaseAuthStore } from 'pocketbase';
+
 import type { Actions } from './$types';
 
-export const actions = {
+export const actions: Actions = {
 	generate: async ({ request, locals }) => {
 		// Redirect to login if no user is set in locals
 		if (!locals?.user) throw redirect(303, '/login');
@@ -87,4 +88,4 @@ export const actions = {
 
 		throw redirect(303, `/article/${articleCollection.id}`);
 	}
-} satisfies Actions;
+};

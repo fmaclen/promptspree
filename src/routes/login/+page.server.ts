@@ -1,9 +1,10 @@
-import type { Actions } from './$types';
-import { fail, redirect } from '@sveltejs/kit';
-import { logEventToSlack } from '$lib/slack.server';
 import { handlePocketbaseErrors } from '$lib/pocketbase.server';
+import { logEventToSlack } from '$lib/slack.server';
+import { fail, redirect } from '@sveltejs/kit';
 
-export const actions = {
+import type { Actions } from './$types';
+
+export const actions: Actions = {
 	default: async ({ request, locals }) => {
 		const formData = await request.formData();
 
@@ -30,4 +31,4 @@ export const actions = {
 		// User is logged in, redirect to homepage
 		throw redirect(303, '/');
 	}
-} satisfies Actions;
+};

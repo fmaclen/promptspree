@@ -1,15 +1,16 @@
-import type { Record } from 'pocketbase';
-import { error } from '@sveltejs/kit';
-import { pb } from '$lib/pocketbase.server';
 import { generateArticle } from '$lib/article.server';
+import { pb } from '$lib/pocketbase.server';
 import { logEventToSlack } from '$lib/slack.server';
+import { error } from '@sveltejs/kit';
+import type { Record } from 'pocketbase';
+
 import type { PageServerLoad } from './$types';
 
 interface Params {
 	slug: string | null;
 }
 
-export const load = (async ({ params }: { params: Params }) => {
+export const load: PageServerLoad = async ({ params }: { params: Params }) => {
 	const { slug } = params;
 	if (!slug) throw error(404, 'Not found');
 
@@ -27,4 +28,4 @@ export const load = (async ({ params }: { params: Params }) => {
 	if (!article) throw error(404, 'Not found');
 
 	return { article };
-}) satisfies PageServerLoad;
+};

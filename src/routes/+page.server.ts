@@ -1,11 +1,12 @@
-import { handlePocketbaseError, pb } from '$lib/pocketbase.server';
 import type { Article } from '$lib/article';
-import type { BaseAuthStore, Record } from 'pocketbase';
 import { generateArticle } from '$lib/article.server';
+import { handlePocketbaseError, pb } from '$lib/pocketbase.server';
 import { logEventToSlack } from '$lib/slack.server';
+import type { BaseAuthStore, Record } from 'pocketbase';
+
 import type { PageServerLoad } from './$types';
 
-export const load = (async () => {
+export const load: PageServerLoad = async () => {
 	let records: Record[] = [];
 
 	try {
@@ -31,4 +32,4 @@ export const load = (async () => {
 	return {
 		articles: articles || []
 	};
-}) satisfies PageServerLoad;
+};
