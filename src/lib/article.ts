@@ -25,3 +25,11 @@ export const PLACEHOLDER_ARTICLE: Article = {
 	imageURL: undefined,
 	isPlaceholder: true
 };
+
+export enum Reaction {
+	'🤯',
+	'🤣',
+	'🤔',
+	'😑',
+	'🫠'
+}

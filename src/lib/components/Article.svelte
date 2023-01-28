@@ -1,5 +1,6 @@
 <script lang="ts">
-	import type { Article } from '$lib/article';
+	import { type SubmitFunction, enhance } from '$app/forms';
+	import { type Article, Reaction } from '$lib/article';
 	import { formatDistance } from 'date-fns';
 
 	import A from './A.svelte';
@@ -7,11 +8,37 @@
 	export let article: Article;
 	export let sentiment: 'positive' | undefined = undefined;
 	export let isPreview: boolean = false;
+
+	let currentReaction: Reaction | undefined = undefined;
+	let errors;
+
+	const handleReaction: SubmitFunction = () => {
+		return async ({ result, update }) => {
+			switch (result.type) {
+				case 'success':
+					currentReaction = result?.data?.reactCollection?.reaction;
+					break;
+				case 'failure':
+					errors = result.data?.data;
+					break;
+				default:
+					break;
+			}
+			await update();
+		};
+	};
 </script>
 
 <article class="article {article.isPlaceholder ? 'article--placeholder' : ''}">
 	{#if article.imageURL}
-		<img class="article__img" src={article.imageURL} alt="AI-generated for this article" />
+		{@const ALT = 'AI-generated for this article'}
+		{#if isPreview && article.id}
+			<A href="/article/{article.id}">
+				<img class="article__img" src={article.imageURL} alt={ALT} title={ALT} />
+			</A>
+		{:else}
+			<img class="article__img" src={article.imageURL} alt={ALT} title={ALT} />
+		{/if}
 	{/if}
 
 	{#if !article.isPlaceholder}
@@ -41,11 +68,28 @@
 		{/each}
 	{/if}
 
-	{#if article.prompt}
-		<code class="article__prompt">
-			{article.prompt.split(/\nFormat/)[0]}
-		</code>
-	{/if}
+	<div class="article-prompt">
+		<nav class="article-ranking">
+			{#each Array.from({ length: 5 }, (_, i) => i) as index}
+				<form action="/article/{article.id}?/react" method="POST" use:enhance={handleReaction}>
+					<input type="hidden" name="reaction" value={index} />
+					<button
+						type="submit"
+						class="article-ranking__button {currentReaction == index
+							? 'article-ranking__button--reacted'
+							: ''}"
+					>
+						{Reaction[index]}
+					</button>
+				</form>
+			{/each}
+		</nav>
+		{#if article.prompt}
+			<code class="article-prompt__code">
+				{article.prompt}
+			</code>
+		{/if}
+	</div>
 </article>
 
 <style lang="scss">
@@ -53,7 +97,6 @@
 		display: inline-flex;
 		flex-direction: column;
 		row-gap: 24px;
-		width: 100%;
 		box-sizing: border-box;
 		padding: 32px;
 		margin-bottom: 16px;
@@ -73,10 +116,10 @@
 	}
 
 	img.article__img {
-		width: calc(100% + 2.5rem + 2.5rem);
+		width: calc(100% + 32px + 32px);
 		height: 100%;
 		object-fit: cover;
-		margin: -2.5rem -2.5rem 1rem -2.5rem;
+		margin: -32px -32px 16px -32px;
 	}
 
 	time.article__time {
@@ -110,17 +153,71 @@
 		line-height: 1.5em;
 	}
 
-	code.article__prompt {
+	div.article-prompt {
+		display: flex;
+		flex-direction: column;
+		width: calc(100% + 32px + 32px);
+		margin: 16px -32px -32px -32px;
+	}
+
+	code.article-prompt__code {
 		font-size: 13px;
 		font-family: var(--font-mono);
 		overflow-y: scroll;
-		background-color: #f4f4f4;
 		color: #999;
-		padding: 12px 32px;
+		padding: 20px 32px;
 		margin: 0;
 		box-sizing: border-box;
+	}
 
-		width: calc(100% + 32px + 32px);
-		margin: 0 -32px -32px -32px;
+	nav.article-ranking {
+		display: grid;
+		grid-auto-flow: column;
+		margin: 0;
+		padding: 0;
+		border-top: 1px solid var(--color-border);
+	}
+
+	button.article-ranking__button {
+		font-family: var(--font-mono);
+		display: grid;
+		grid-auto-flow: column;
+		align-items: center;
+		justify-content: center;
+		gap: 8px;
+		width: 100%;
+		padding: 12px;
+		box-sizing: border-box;
+		border: none;
+		background-color: var(--color-grey5);
+		border-left: 1px solid var(--color-border);
+		border-bottom: 1px solid var(--color-border);
+		font-size: 14px;
+		cursor: pointer;
+		filter: grayscale(100%);
+		text-align: center;
+
+		font-weight: 400;
+		color: var(--color-grey30);
+
+		&--reacted {
+			font-weight: 600;
+		}
+
+		&--reacted,
+		&:hover {
+			filter: grayscale(0%);
+			background-color: transparent;
+			border-bottom-color: transparent;
+			color: var(--color-grey80);
+		}
+
+		&:first-child {
+			border-left: none;
+		}
+	}
+
+	span.article-ranking__rank {
+		font-size: 11px;
 	}
 </style>
