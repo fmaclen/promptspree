@@ -1,31 +1,33 @@
-import type { Handle } from '@sveltejs/kit';
+import type { Handle, RequestEvent } from '@sveltejs/kit';
 import { pb, serializeNonPOJOs } from '$lib/pocketbase.server';
 
-const redirectTo = (origin: string, route: string) => {
-	const url = new URL(origin);
-	// url.protocol = process.env.USE_HTTP === 'true' ? 'http:' : 'https:';
-	return Response.redirect(`${url.origin}${route}`, 303);
-};
-
 export const handle: Handle = async ({ event, resolve }) => {
-	event.locals.pb = pb;
-	event.locals.pb.authStore.loadFromCookie(event.request.headers.get('cookie') || '');
+	await handleUserAuth(event);
 
-	if (event.locals.pb.authStore.isValid) {
-		// Is authorized :D
-		event.locals.user = serializeNonPOJOs(event.locals.pb.authStore.model);
-	} else {
-		// Is not authorized :(
-		event.locals.user = undefined;
-
-		const PROTECTED_PATHS = ['/play'];
-
-		if (PROTECTED_PATHS.some((path) => event.url.pathname.includes(path))) {
-			return redirectTo(event.url.origin, '/login');
-		}
+	// Handle protected paths
+	const PROTECTED_PATHS = ['/play'];
+	if (PROTECTED_PATHS.some((path) => event.url.pathname.includes(path))) {
+		return Response.redirect(`${event.url.origin}/login`, 303);
 	}
+
+	// Set cookies
 	const response = await resolve(event);
 	response.headers.set('set-cookie', event.locals.pb.authStore.exportToCookie({ secure: false }));
 
 	return response;
+};
+
+const handleUserAuth = async (event: RequestEvent) => {
+	event.locals.pb = pb;
+	event.locals.pb.authStore.loadFromCookie(event.request.headers.get('cookie') || '');
+
+	try {
+		if (event.locals.pb.authStore.isValid) {
+			await event.locals.pb.collection('users').authRefresh();
+			event.locals.user = serializeNonPOJOs(event.locals.pb.authStore.model);
+		}
+	} catch (_) {
+		event.locals.pb.authStore.clear();
+		event.locals.user = undefined;
+	}
 };
