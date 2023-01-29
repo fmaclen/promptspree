@@ -1,6 +1,6 @@
 import { generateArticle, getFieldsFromCompletion } from '$lib/article.server';
 import { getCompletionFromAI } from '$lib/openai.server';
-import { handlePocketbaseError, pb, serializeNonPOJOs } from '$lib/pocketbase.server';
+import { handlePocketbaseError } from '$lib/pocketbase.server';
 import { logEventToSlack } from '$lib/slack.server';
 import { error, redirect } from '@sveltejs/kit';
 import type { BaseAuthStore } from 'pocketbase';
@@ -27,7 +27,7 @@ export const actions: Actions = {
 
 		// Create the draft article
 		try {
-			articleCollection = serializeNonPOJOs(await pb.collection('articles').create(formData));
+			articleCollection = await locals.pb.collection('articles').create(formData);
 		} catch (err) {
 			logEventToSlack("PLAY: couldn't create article collection", err);
 			handlePocketbaseError(err);
@@ -41,15 +41,13 @@ export const actions: Actions = {
 
 		// // Update the article with the completion
 		try {
-			articleCollection = serializeNonPOJOs(
-				await pb
-					.collection('articles')
-					.update(
-						articleCollection.id,
-						{ completion, ...fieldsFromCompletion, user: locals.user.id },
-						{ expand: 'user' }
-					)
-			);
+			articleCollection = await locals.pb
+				.collection('articles')
+				.update(
+					articleCollection.id,
+					{ completion, ...fieldsFromCompletion, user: locals.user.id },
+					{ expand: 'user' }
+				);
 		} catch (err) {
 			logEventToSlack("PLAY: couldn't update article collection with completion", err);
 			handlePocketbaseError(err);
@@ -77,9 +75,7 @@ export const actions: Actions = {
 		let articleCollection: BaseAuthStore['model'] = null;
 
 		try {
-			articleCollection = serializeNonPOJOs(
-				await pb.collection('articles').update(articleId, formData)
-			);
+			articleCollection = await locals.pb.collection('articles').update(articleId, formData);
 		} catch (err) {
 			logEventToSlack("PLAY: coudn't publish article", err);
 			handlePocketbaseError(err);

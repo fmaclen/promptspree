@@ -1,16 +1,16 @@
 import type { Article } from '$lib/article';
 import { generateArticle } from '$lib/article.server';
-import { handlePocketbaseError, pb } from '$lib/pocketbase.server';
+import { handlePocketbaseError } from '$lib/pocketbase.server';
 import { logEventToSlack } from '$lib/slack.server';
 import type { BaseAuthStore, Record } from 'pocketbase';
 
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ locals }) => {
 	let records: Record[] = [];
 
 	try {
-		records = await pb.collection('articles').getFullList(25, {
+		records = await locals.pb.collection('articles').getFullList(25, {
 			sort: '-created',
 			filter: 'status = "published"',
 			expand: 'user'

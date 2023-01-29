@@ -1,13 +1,16 @@
-import { pb, serializeNonPOJOs } from '$lib/pocketbase.server';
+import { POCKETBASE_URL } from '$lib/pocketbase.server';
 import type { Handle, RequestEvent } from '@sveltejs/kit';
+import pocketbaseEs from 'pocketbase';
 
 export const handle: Handle = async ({ event, resolve }) => {
 	await handleUserAuth(event);
 
 	// Handle protected paths
-	const PROTECTED_PATHS = ['/play'];
-	if (PROTECTED_PATHS.some((path) => event.url.pathname.includes(path))) {
-		return Response.redirect(`${event.url.origin}/login`, 303);
+	if (!event.locals.user) {
+		const PROTECTED_PATHS = ['/play'];
+		if (PROTECTED_PATHS.some((path) => event.url.pathname.includes(path))) {
+			return Response.redirect(`${event.url.origin}/login`, 303);
+		}
 	}
 
 	// Set cookies
@@ -18,13 +21,13 @@ export const handle: Handle = async ({ event, resolve }) => {
 };
 
 const handleUserAuth = async (event: RequestEvent) => {
-	event.locals.pb = pb;
+	event.locals.pb = new pocketbaseEs(POCKETBASE_URL);
 	event.locals.pb.authStore.loadFromCookie(event.request.headers.get('cookie') || '');
 
 	try {
 		if (event.locals.pb.authStore.isValid) {
 			await event.locals.pb.collection('users').authRefresh();
-			event.locals.user = serializeNonPOJOs(event.locals.pb.authStore.model);
+			event.locals.user = structuredClone(event.locals.pb.authStore.model); // Serialize non POJOs
 		}
 	} catch (_) {
 		event.locals.pb.authStore.clear();
