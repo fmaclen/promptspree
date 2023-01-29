@@ -1,4 +1,4 @@
-import { pocketbaseURL, serializeNonPOJOs } from '$lib/pocketbase.server';
+import { POCKETBASE_URL } from '$lib/pocketbase.server';
 import type { Handle, RequestEvent } from '@sveltejs/kit';
 import pocketbaseEs from 'pocketbase';
 
@@ -21,13 +21,13 @@ export const handle: Handle = async ({ event, resolve }) => {
 };
 
 const handleUserAuth = async (event: RequestEvent) => {
-	event.locals.pb = new pocketbaseEs(pocketbaseURL);
+	event.locals.pb = new pocketbaseEs(POCKETBASE_URL);
 	event.locals.pb.authStore.loadFromCookie(event.request.headers.get('cookie') || '');
 
 	try {
 		if (event.locals.pb.authStore.isValid) {
 			await event.locals.pb.collection('users').authRefresh();
-			event.locals.user = serializeNonPOJOs(event.locals.pb.authStore.model);
+			event.locals.user = structuredClone(event.locals.pb.authStore.model); // Serialize non POJOs
 		}
 	} catch (_) {
 		event.locals.pb.authStore.clear();

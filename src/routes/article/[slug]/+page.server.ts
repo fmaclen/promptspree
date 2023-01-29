@@ -1,23 +1,17 @@
 import { generateArticle } from '$lib/article.server';
-import { pb } from '$lib/pocketbase.server';
 import { logEventToSlack } from '$lib/slack.server';
 import { error } from '@sveltejs/kit';
 import type { Record } from 'pocketbase';
 
 import type { PageServerLoad } from './$types';
 
-interface Params {
-	slug: string | null;
-}
-
-export const load: PageServerLoad = async ({ params }: { params: Params }) => {
-	const { slug } = params;
-	if (!slug) throw error(404, 'Not found');
+export const load: PageServerLoad = async ({ locals, params }) => {
+	if (!params.slug) throw error(404, 'Not found');
 
 	let record: Record | null = null;
 
 	try {
-		record = await pb.collection('articles').getOne(slug, {
+		record = await locals.pb.collection('articles').getOne(params.slug, {
 			expand: 'user'
 		});
 	} catch (err) {
