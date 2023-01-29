@@ -31,6 +31,6 @@ const handleUserAuth = async (event: RequestEvent) => {
 		}
 	} catch (_) {
 		event.locals.pb.authStore.clear();
-		event.locals.user = undefined;
+		event.locals.user = null;
 	}
 };
