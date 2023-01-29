@@ -10,15 +10,15 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 	if (!params.slug || !locals?.user) throw error(404, 'Not found');
 
 	let articleCollection: BaseAuthStore['model'] = null;
-	let reactionCollection: BaseAuthStore['model'] = null;
+	// let reactionCollection: BaseAuthStore['model'] = null;
 
 	try {
 		articleCollection = await locals.pb.collection('articles').getOne(params.slug, {
 			expand: 'user'
 		});
-		reactionCollection = await locals.pb
-			.collection('reactions')
-			.getOne(`user="${locals.user.id}" && article="${params.slug}"`);
+		// reactionCollection = await locals.pb
+		// 	.collection('reactions')
+		// 	.getFirstListItem(`user="${locals.user.id}" && article="${params.slug}"`);
 	} catch (err) {
 		logEventToSlack('/article/[slug]/+page.server.ts', err);
 		return handlePocketbaseErrors(err);
@@ -27,7 +27,7 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 	const article = generateArticle(articleCollection);
 	if (!article) throw error(404, 'Not found');
 
-	return { success: true, article, reactionCollection };
+	return { success: true, article };
 };
 
 export const actions: Actions = {
