@@ -1,6 +1,6 @@
 import { POCKETBASE_URL } from '$lib/pocketbase.server';
 import type { Handle, RequestEvent } from '@sveltejs/kit';
-import pocketbaseEs from 'pocketbase';
+import Pocketbase from 'pocketbase';
 
 export const handle: Handle = async ({ event, resolve }) => {
 	await handleUserAuth(event);
@@ -21,7 +21,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 };
 
 const handleUserAuth = async (event: RequestEvent) => {
-	event.locals.pb = new pocketbaseEs(POCKETBASE_URL);
+	event.locals.pb = new Pocketbase(POCKETBASE_URL);
 	event.locals.pb.authStore.loadFromCookie(event.request.headers.get('cookie') || '');
 
 	try {
