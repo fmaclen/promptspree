@@ -1,6 +1,6 @@
 import { POCKETBASE_URL } from '$lib/pocketbase.server';
-import type { Handle, RequestEvent } from '@sveltejs/kit';
-import pocketbaseEs from 'pocketbase';
+import { type Handle, type RequestEvent, redirect } from '@sveltejs/kit';
+import Pocketbase from 'pocketbase';
 
 export const handle: Handle = async ({ event, resolve }) => {
 	await handleUserAuth(event);
@@ -9,7 +9,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	if (!event.locals.user) {
 		const PROTECTED_PATHS = ['/play'];
 		if (PROTECTED_PATHS.some((path) => event.url.pathname.includes(path))) {
-			return Response.redirect(`${event.url.origin}/login`, 303);
+			throw redirect(303, '/login');
 		}
 	}
 
@@ -21,7 +21,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 };
 
 const handleUserAuth = async (event: RequestEvent) => {
-	event.locals.pb = new pocketbaseEs(POCKETBASE_URL);
+	event.locals.pb = new Pocketbase(POCKETBASE_URL);
 	event.locals.pb.authStore.loadFromCookie(event.request.headers.get('cookie') || '');
 
 	try {
