@@ -20,10 +20,3 @@
 		</Notice>
 	</SectionGroup>
 </Section>
-
-<style lang="scss">
-	h1.error__h1 {
-		text-align: center;
-		font-weight: 200;
-	}
-</style>
