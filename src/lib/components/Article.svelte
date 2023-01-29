@@ -69,7 +69,6 @@
 		<div class="article-prompt">
 			<nav class="article-ranking">
 				{#each Object.entries(Reaction) as [_, reaction], index}
-					{console.log('article', article, index)}
 					<form action="/article/{article.id}?/react" method="POST" use:enhance={handleReaction}>
 						<input type="hidden" name="reaction" value={index} />
 						<button
@@ -80,7 +79,8 @@
 						>
 							{reaction}
 							{#if article?.reactions}
-								{article.reactions[index]?.sum || 0}
+								{article.reactions.find((reaction) => parseInt(reaction.reaction) === index)?.sum ||
+									0}
 							{/if}
 						</button>
 					</form>
