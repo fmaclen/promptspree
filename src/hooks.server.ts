@@ -1,5 +1,5 @@
 import { POCKETBASE_URL } from '$lib/pocketbase.server';
-import type { Handle, RequestEvent } from '@sveltejs/kit';
+import { type Handle, type RequestEvent, redirect } from '@sveltejs/kit';
 import Pocketbase from 'pocketbase';
 
 export const handle: Handle = async ({ event, resolve }) => {
@@ -9,7 +9,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	if (!event.locals.user) {
 		const PROTECTED_PATHS = ['/play'];
 		if (PROTECTED_PATHS.some((path) => event.url.pathname.includes(path))) {
-			return Response.redirect(`${event.url.origin}/login`, 303);
+			throw redirect(303, '/login');
 		}
 	}
 
