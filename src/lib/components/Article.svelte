@@ -1,22 +1,21 @@
 <script lang="ts">
 	import { type SubmitFunction, enhance } from '$app/forms';
 	import { type Article, Reaction } from '$lib/article';
+	import type { Sentiment } from '$lib/utils';
 	import { formatDistance } from 'date-fns';
 
 	import A from './A.svelte';
 
 	export let article: Article;
-	export let sentiment: 'positive' | undefined = undefined;
+	export let sentiment: Sentiment | undefined = undefined;
 	export let isPreview: boolean = false;
 
-	let currentReaction: Reaction | undefined = undefined;
 	let errors;
 
 	const handleReaction: SubmitFunction = () => {
 		return async ({ result, update }) => {
 			switch (result.type) {
 				case 'success':
-					currentReaction = result?.data?.reactCollection?.reaction;
 					break;
 				case 'failure':
 					errors = result.data?.data;
@@ -66,30 +65,35 @@
 		{#each article.body as paragraph}
 			<p class="article__p">{paragraph}</p>
 		{/each}
-	{/if}
 
-	<div class="article-prompt">
-		<nav class="article-ranking">
-			{#each Array.from({ length: 5 }, (_, i) => i) as index}
-				<form action="/article/{article.id}?/react" method="POST" use:enhance={handleReaction}>
-					<input type="hidden" name="reaction" value={index} />
-					<button
-						type="submit"
-						class="article-ranking__button {currentReaction == index
-							? 'article-ranking__button--reacted'
-							: ''}"
-					>
-						{Reaction[index]}
-					</button>
-				</form>
-			{/each}
-		</nav>
-		{#if article.prompt}
-			<code class="article-prompt__code">
-				{article.prompt}
-			</code>
-		{/if}
-	</div>
+		<div class="article-prompt">
+			<nav class="article-ranking">
+				{#each Object.entries(Reaction) as [_, reaction], index}
+					{console.log('article', article, index)}
+					<form action="/article/{article.id}?/react" method="POST" use:enhance={handleReaction}>
+						<input type="hidden" name="reaction" value={index} />
+						<button
+							type="submit"
+							class="article-ranking__button {article?.userReaction === index
+								? 'article-ranking__button--reacted'
+								: ''}"
+						>
+							{reaction}
+							{#if article?.reactions}
+								{article.reactions[index]?.sum || 0}
+							{/if}
+						</button>
+					</form>
+				{/each}
+			</nav>
+
+			{#if article.prompt}
+				<code class="article-prompt__code">
+					{article.prompt}
+				</code>
+			{/if}
+		</div>
+	{/if}
 </article>
 
 <style lang="scss">

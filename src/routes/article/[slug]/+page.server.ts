@@ -1,33 +1,16 @@
+import type { ArticleReaction } from '$lib/article';
 import { generateArticle } from '$lib/article.server';
 import { handlePocketbaseErrors } from '$lib/pocketbase.server';
 import { logEventToSlack } from '$lib/slack.server';
 import { type Actions, error } from '@sveltejs/kit';
-import type { BaseAuthStore } from 'pocketbase';
+import type { BaseAuthStore, Record } from 'pocketbase';
 
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals, params }) => {
 	if (!params.slug || !locals?.user) throw error(404, 'Not found');
 
-	let articleCollection: BaseAuthStore['model'] = null;
-	// let reactionCollection: BaseAuthStore['model'] = null;
-
-	try {
-		articleCollection = await locals.pb.collection('articles').getOne(params.slug, {
-			expand: 'user'
-		});
-		// reactionCollection = await locals.pb
-		// 	.collection('reactions')
-		// 	.getFirstListItem(`user="${locals.user.id}" && article="${params.slug}"`);
-	} catch (err) {
-		logEventToSlack('/article/[slug]/+page.server.ts', err);
-		return handlePocketbaseErrors(err);
-	}
-
-	const article = generateArticle(articleCollection);
-	if (!article) throw error(404, 'Not found');
-
-	return { success: true, article };
+	return getArticleAndReactions(params.slug, locals);
 };
 
 export const actions: Actions = {
@@ -39,14 +22,13 @@ export const actions: Actions = {
 		if (!locals?.user || !articleId || !reaction) throw error(400, "Can't react to the article");
 
 		let articleCollection: BaseAuthStore['model'] = null;
-		let reactCollection: BaseAuthStore['model'] = null;
+		let reactionCollection: BaseAuthStore['model'] = null;
 
 		// Check if the article exists
 		try {
 			articleCollection = await locals.pb.collection('articles').getOne(articleId);
 		} catch (_) {
 			// eslint-disable-next-line no-empty
-			// We expect this to be an error often, so we don't log it
 		}
 
 		// It should be rare that we hit this case since the UI is the one defining
@@ -60,40 +42,35 @@ export const actions: Actions = {
 
 		// Check if the user already reacted to article
 		try {
-			reactCollection = await locals.pb
+			reactionCollection = await locals.pb
 				.collection('reactions')
 				.getFirstListItem(`user="${locals.user.id}" && article="${articleCollection.id}"`);
 		} catch (_) {
 			// eslint-disable-next-line no-empty
-			// We expect this to be an error often, so we don't log it
 		}
 
-		// If reaction exists check if the reaction is the same: delete it
-		if (reactCollection?.reaction === reaction) {
-			try {
-				await locals.pb.collection('reactions').delete(reactCollection.id);
-			} catch (err) {
-				return handleErrors(err);
-			}
-			// Don't return anything else
-			return;
-		}
-
-		// If reaction is different from existing one: update it
+		// Create, update or delete reaction
 		try {
-			if (reactCollection) {
-				reactCollection = await locals.pb
-					.collection('reactions')
-					.update(reactCollection.id, formData);
+			if (reactionCollection) {
+				if (reactionCollection?.reaction === reaction) {
+					// Delete it
+					await locals.pb.collection('reactions').delete(reactionCollection.id);
+				} else {
+					// Update it
+					reactionCollection = await locals.pb
+						.collection('reactions')
+						.update(reactionCollection.id, formData);
+				}
 			} else {
-				// Create a new reaction
-				reactCollection = await locals.pb.collection('reactions').create(formData);
+				// Create it
+				reactionCollection = await locals.pb.collection('reactions').create(formData);
 			}
 		} catch (err) {
 			return handleErrors(err);
 		}
 
-		return { reactCollection };
+		// Return the article with the updated reactions
+		return getArticleAndReactions(articleId, locals);
 	}
 };
 
@@ -104,4 +81,55 @@ const handleErrors = (err: any) => {
 		logEventToSlack('/article/[slug]?/react', err);
 		throw error(500);
 	}
+};
+
+// Gets an article with it's reactions and the current user's reaction
+const getArticleAndReactions = async (articleId: string, locals: any) => {
+	let articleCollection: BaseAuthStore['model'] = null;
+	let reactionCollection: Record[];
+
+	try {
+		articleCollection = await locals.pb.collection('articles').getOne(articleId, {
+			expand: 'user'
+		});
+		reactionCollection = await locals.pb
+			.collection('reactions')
+			.getFullList(200, { filter: `article="${articleId}"` });
+	} catch (err) {
+		logEventToSlack('/article/[slug]/+page.server.ts', err);
+		return handlePocketbaseErrors(err);
+	}
+
+	if (!articleCollection) throw error(404, 'Not found');
+
+	const article = generateArticle(articleCollection);
+	const reactions = generateArticleReactions(reactionCollection);
+	const userReaction = generateArticleUserReaction(reactionCollection, locals);
+
+	return { success: true, article: { ...article, reactions, userReaction } };
+};
+
+// Calculates the sum of all reactions in an article by reaction type
+const generateArticleReactions = (reactionCollection: Record[]) => {
+	if (reactionCollection.length === 0) return [];
+
+	const reactions: ArticleReaction[] = [];
+
+	reactionCollection.forEach((item) => {
+		const existingReaction = reactions.find((r) => r.reaction === item.reaction);
+		if (existingReaction) {
+			existingReaction.sum++;
+		} else {
+			reactions.push({ reaction: item.reaction, sum: 1 });
+		}
+	});
+
+	return reactions;
+};
+
+// Finds the user's reaction to the article from the list of article reactions
+const generateArticleUserReaction = (reactionCollection: Record[], locals: any) => {
+	const userReaction = reactionCollection.find((item) => item.user === locals?.user?.id);
+	if (userReaction) return parseInt(userReaction.reaction);
+	return null;
 };

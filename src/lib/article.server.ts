@@ -17,7 +17,9 @@ export const generateArticle = (articleCollection: BaseAuthStore['model']) => {
 		summary: articleCollection.summary,
 		body: articleCollection.body.split('\n'),
 		prompt: articleCollection.prompt,
-		imageURL: getImageURL(articleCollection)
+		imageURL: getImageURL(articleCollection),
+		reactions: null,
+		userReaction: null
 	};
 
 	return article;
