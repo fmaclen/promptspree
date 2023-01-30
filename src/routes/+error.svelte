@@ -16,7 +16,7 @@
 	<SectionGroup>
 		<H3>Error {$page.status}</H3>
 		<Notice sentiment={Sentiment.NEGATIVE}>
-			{!error && error !== 'Error: 500' ? error : DEFAULT_ERROR}
+			{error === 'Error: 500' ? DEFAULT_ERROR : error}
 		</Notice>
 	</SectionGroup>
 </Section>

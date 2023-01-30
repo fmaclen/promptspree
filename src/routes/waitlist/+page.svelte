@@ -9,7 +9,7 @@
 	import P from '$lib/components/P.svelte';
 	import { Sentiment } from '$lib/utils';
 
-	type Errors = {
+	type PocketbaseFieldErrors = {
 		[key: string]: {
 			code: string;
 			message: string;
@@ -22,7 +22,7 @@
 	let password = '';
 	let passwordConfirm = '';
 	let hasAcceptedTerms = false;
-	let errors: Errors | undefined;
+	let errors: PocketbaseFieldErrors | undefined;
 	let success = '';
 	$: isSubmitDisabled =
 		!email ||
