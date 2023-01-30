@@ -14,8 +14,8 @@ export const generateArticle = (articleCollection: BaseAuthStore['model']) => {
 		updated: articleCollection.updated,
 		author: articleCollection.expand.user?.nickname,
 		headline: articleCollection.headline,
-		summary: articleCollection.summary,
-		body: articleCollection.body.split('\n'),
+		keywords: JSON.parse(articleCollection.keywords),
+		body: JSON.parse(articleCollection.body),
 		prompt: articleCollection.prompt,
 		imageURL: getImageURL(articleCollection),
 		reactions: null,
@@ -37,11 +37,12 @@ export const getFieldsFromCompletion = (completion: string | undefined) => {
 		logEventToSlack('article.server.ts: getFieldsFromCompletion', err);
 		return null;
 	}
-	if (!fields.headline || !fields.summary || !fields.body) return null;
+	if (!fields.headline || !fields.keywords || !fields.body) return null;
 
 	return {
 		headline: fields.headline,
-		summary: fields.summary,
-		body: fields.body.join('\n')
+		// We store these values as string arrays in the database
+		keywords: JSON.stringify(fields.keywords),
+		body: JSON.stringify(fields.body)
 	};
 };

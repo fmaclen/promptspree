@@ -36,13 +36,12 @@
 				{article.headline}
 			</h1>
 		</A>
+		<p class="article__p">{article?.body[0]}</p>
 	{:else}
 		<h1 class="article__headline">
 			{article.headline}
 		</h1>
 	{/if}
-
-	<h2 class="article__summary">{article.summary}</h2>
 
 	{#if !isPreview}
 		{#if article?.body}
@@ -110,12 +109,6 @@
 		margin: 0;
 	}
 
-	h2.article__summary {
-		font-weight: 200;
-		font-size: 24px;
-		line-height: 1.25em;
-		margin: 0;
-	}
 	p.article__p {
 		font-size: 16px;
 		margin: 0;

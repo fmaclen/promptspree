@@ -1,4 +1,4 @@
-import type { Article } from '$lib/article';
+import { type Article, ArticleStatus } from '$lib/article';
 import { generateArticle } from '$lib/article.server';
 import { handlePocketbaseError } from '$lib/pocketbase.server';
 import { logEventToSlack } from '$lib/slack.server';
@@ -12,7 +12,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 	try {
 		records = await locals.pb.collection('articles').getFullList(25, {
 			sort: '-created',
-			filter: 'status = "published"',
+			filter: `status = "${ArticleStatus.PUBLISHED}"`,
 			expand: 'user'
 		});
 	} catch (err) {
