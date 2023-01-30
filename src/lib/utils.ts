@@ -7,10 +7,3 @@ export enum Sentiment {
 	NEGATIVE = 'negative',
 	WARNING = 'warning'
 }
-
-export type PocketbaseFieldErrors = {
-	[key: string]: {
-		code: string;
-		message: string;
-	};
-};
