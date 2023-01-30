@@ -44,7 +44,23 @@
 
 	<h2 class="article__summary">{article.summary}</h2>
 
-	<slot />
+	{#if !isPreview}
+		{#if article?.body}
+			{#each article.body as paragraph}
+				<p class="article__p">{paragraph}</p>
+			{/each}
+		{/if}
+
+		<div class="article-prompt">
+			<slot />
+
+			{#if article.prompt}
+				<code class="article-prompt__code">
+					{article.prompt}
+				</code>
+			{/if}
+		</div>
+	{/if}
 </article>
 
 <style lang="scss">
@@ -99,5 +115,28 @@
 		font-size: 24px;
 		line-height: 1.25em;
 		margin: 0;
+	}
+	p.article__p {
+		font-size: 16px;
+		margin: 0;
+		font-size: 1.1rem;
+		line-height: 1.5em;
+	}
+
+	div.article-prompt {
+		display: flex;
+		flex-direction: column;
+		width: calc(100% + 32px + 32px);
+		margin: 16px -32px -32px -32px;
+	}
+
+	code.article-prompt__code {
+		font-size: 13px;
+		font-family: var(--font-mono);
+		overflow-y: scroll;
+		color: #999;
+		padding: 20px 32px;
+		margin: 0;
+		box-sizing: border-box;
 	}
 </style>

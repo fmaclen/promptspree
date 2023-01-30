@@ -20,79 +20,40 @@
 <Section>
 	{#if article}
 		<Article {article}>
-			{#if article?.body}
-				{#each article.body as paragraph}
-					<p class="article__p">{paragraph}</p>
-				{/each}
-			{/if}
+			<nav class="article-reactions">
+				{#each Object.entries(Reaction) as [_, reaction], index}
+					{@const totalReactions = article?.reactions?.find(
+						(reaction) => parseInt(reaction.reaction) === index
+					)?.sum}
 
-			<div class="article-prompt">
-				<nav class="article-reactions">
-					{#each Object.entries(Reaction) as [_, reaction], index}
-						{@const totalReactions = article?.reactions?.find(
-							(reaction) => parseInt(reaction.reaction) === index
-						)?.sum}
-
-						<form
-							class="article-reactions__form"
-							action="/article/{article.id}?/react"
-							method="POST"
-							use:enhance={handleReaction}
+					<form
+						class="article-reactions__form"
+						action="/article/{article.id}?/react"
+						method="POST"
+						use:enhance={handleReaction}
+					>
+						<input type="hidden" name="reaction" value={index} />
+						<button
+							type="submit"
+							class="article-reactions__button
+							{article?.userReaction === index ? 'article-reactions__button--reacted' : ''}"
 						>
-							<input type="hidden" name="reaction" value={index} />
-							<button
-								type="submit"
-								class="article-reactions__button {article?.userReaction === index
-									? 'article-reactions__button--reacted'
-									: ''}"
-							>
-								{reaction}
+							{reaction}
 
-								{#if totalReactions}
-									<span class="article-reactions__sum">
-										{totalReactions}
-									</span>
-								{/if}
-							</button>
-						</form>
-					{/each}
-				</nav>
-
-				{#if article.prompt}
-					<code class="article-prompt__code">
-						{article.prompt}
-					</code>
-				{/if}
-			</div>
+							{#if totalReactions}
+								<span class="article-reactions__sum">
+									{totalReactions}
+								</span>
+							{/if}
+						</button>
+					</form>
+				{/each}
+			</nav>
 		</Article>
 	{/if}
 </Section>
 
 <style lang="scss">
-	p.article__p {
-		font-size: 16px;
-		margin: 0;
-		font-size: 1.1rem;
-		line-height: 1.5em;
-	}
-
-	div.article-prompt {
-		display: flex;
-		flex-direction: column;
-		width: calc(100% + 32px + 32px);
-		margin: 16px -32px -32px -32px;
-	}
-
-	code.article-prompt__code {
-		font-size: 13px;
-		font-family: var(--font-mono);
-		overflow-y: scroll;
-		color: #999;
-		padding: 20px 32px;
-		margin: 0;
-		box-sizing: border-box;
-	}
-
 	nav.article-reactions {
 		display: grid;
 		grid-auto-flow: column;
