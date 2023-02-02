@@ -37,6 +37,7 @@
 							type="submit"
 							class="article-reactions__button
 							{article?.userReaction === index ? 'article-reactions__button--reacted' : ''}"
+							disabled={!data.user}
 						>
 							{reaction}
 
@@ -59,7 +60,6 @@
 		grid-auto-flow: column;
 		margin: 0;
 		padding: 0;
-		border-top: 1px solid var(--color-border);
 	}
 
 	form.article-reactions__form {
@@ -96,11 +96,15 @@
 		}
 
 		&--reacted,
-		&:hover {
+		&:hover:not(:disabled) {
 			filter: grayscale(0%);
 			background-color: transparent;
 			border-bottom-color: transparent;
 			color: var(--color-accent);
+		}
+
+		&:disabled {
+			cursor: not-allowed;
 		}
 	}
 

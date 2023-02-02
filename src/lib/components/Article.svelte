@@ -24,7 +24,7 @@
 
 	{#if !article.isPlaceholder}
 		<time class="article__time {sentiment === 'positive' ? 'article__time--positive' : ''}">
-			{article.author} — {formatDistance(new Date(article.updated), new Date(), {
+			{article.category} — {formatDistance(new Date(article.updated), new Date(), {
 				addSuffix: true
 			})}
 		</time>
@@ -50,15 +50,15 @@
 			{/each}
 		{/if}
 
-		<div class="article-prompt">
-			<slot />
+		{#if article.prompt}
+			<div class="article-prompt">
+				<slot />
 
-			{#if article.prompt}
 				<code class="article-prompt__code">
-					{article.prompt}
+					{article.prompt}<br/><br/>By {article.author}
 				</code>
-			{/if}
-		</div>
+			</div>
+		{/if}
 	{/if}
 </article>
 
@@ -121,6 +121,7 @@
 		flex-direction: column;
 		width: calc(100% + 32px + 32px);
 		margin: 16px -32px -32px -32px;
+		border-top: 1px solid var(--color-border);
 	}
 
 	code.article-prompt__code {

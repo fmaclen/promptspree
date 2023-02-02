@@ -8,7 +8,7 @@ import type { BaseAuthStore, Record } from 'pocketbase';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals, params }) => {
-	if (!params.slug || !locals?.user) throw error(404, 'Not found');
+	if (!params.slug) throw error(404, 'Not found');
 
 	return getArticleAndReactions(params.slug, locals);
 };
@@ -104,7 +104,7 @@ const getArticleAndReactions = async (articleId: string, locals: any) => {
 
 	const article = generateArticle(articleCollection);
 	const reactions = generateArticleReactions(reactionCollection);
-	const userReaction = generateArticleUserReaction(reactionCollection, locals);
+	const userReaction = locals.user ? generateArticleUserReaction(reactionCollection, locals) : null;
 
 	return { success: true, article: { ...article, reactions, userReaction } };
 };
