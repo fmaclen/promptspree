@@ -1,3 +1,6 @@
+# Visual Studio Code
+.vscode
+
 # Pocketbase
 /pocketbase/pb_data
 /pocketbase/nohup.out
