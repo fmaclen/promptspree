@@ -1,5 +1,5 @@
-export const APP_NAME = 'The Synthetic Gazette';
-export const APP_EMAIL = 'hello@example.com';
+export const APP_NAME = 'Promptspree';
+export const APP_EMAIL = 'support@promptspree.com';
 
 export enum Sentiment {
 	NEUTRAL = 'neutral',
