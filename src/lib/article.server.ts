@@ -13,10 +13,10 @@ export const generateArticle = (articleCollection: BaseAuthStore['model']) => {
 		id: articleCollection.id,
 		updated: articleCollection.updated,
 		author: articleCollection.expand.user?.nickname,
-		headline: articleCollection.headline,
-		summary: articleCollection.summary,
-		body: articleCollection.body.split('\n'),
 		prompt: articleCollection.prompt,
+		headline: articleCollection.headline,
+		category: articleCollection.category,
+		body: JSON.parse(articleCollection.body),
 		imageURL: getImageURL(articleCollection),
 		reactions: null,
 		userReaction: null
@@ -37,11 +37,13 @@ export const getFieldsFromCompletion = (completion: string | undefined) => {
 		logEventToSlack('article.server.ts: getFieldsFromCompletion', err);
 		return null;
 	}
-	if (!fields.headline || !fields.summary || !fields.body) return null;
+	if (!fields.headline || !fields.category || !fields.body) return null;
 
 	return {
 		headline: fields.headline,
-		summary: fields.summary,
-		body: fields.body.join('\n')
+		// FIXME: Should check that the AI picked a valid `ArticleCategory` in `getCompletionFromAI`
+		category: fields.category, 
+		// We store the paragraphs in the body as string arrays
+		body: JSON.stringify(fields.body) 
 	};
 };

@@ -1,3 +1,4 @@
+import { ArticleStatus } from '$lib/article';
 import { generateArticle, getFieldsFromCompletion } from '$lib/article.server';
 import { getCompletionFromAI } from '$lib/openai.server';
 import { handlePocketbaseError } from '$lib/pocketbase.server';
@@ -20,7 +21,7 @@ export const actions: Actions = {
 		if (prompt.length < 10) return { errors: ['prompt', 'Prompt is too short'] };
 		if (prompt.length > 290) return { errors: ['prompt', 'Prompt is greater than 280 characters'] };
 
-		formData.append('status', 'draft'); // Set the default status
+		formData.append('status', ArticleStatus.DRAFT); // Set the default status
 		formData.append('user', locals.user.id); // Set the author
 
 		let articleCollection: BaseAuthStore['model'] = null;
@@ -69,7 +70,7 @@ export const actions: Actions = {
 
 		if (!locals?.user || !articleId) throw error(400, "Can't publish the article");
 
-		formData.append('status', 'published');
+		formData.append('status', ArticleStatus.PUBLISHED);
 		formData.append('user', locals.user.id);
 
 		let articleCollection: BaseAuthStore['model'] = null;
