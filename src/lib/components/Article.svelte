@@ -55,7 +55,7 @@
 				<slot />
 
 				<code class="article-prompt__code">
-					{article.prompt}<br/><br/>By {article.author}
+					{article.prompt}<br /><br />By {article.author}
 				</code>
 			</div>
 		{/if}

@@ -10,10 +10,10 @@
 	export let data: PageData;
 	let article = data.article;
 	let currentUserId = data.user?.id;
-	
+
 	const handleReaction: SubmitFunction = () => {
 		return async ({ result, update }) => {
-			article = result.data?.article || article;
+			article = result.type === 'success' ? result.data?.article : article;
 			await update();
 		};
 	};

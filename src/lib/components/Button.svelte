@@ -1,4 +1,4 @@
-<script lang="ts">	
+<script lang="ts">
 	export let href: string | undefined = undefined;
 	export let type: 'button' | 'submit' | 'reset' | undefined = undefined;
 	export let primary: boolean | undefined = undefined;
@@ -7,11 +7,21 @@
 </script>
 
 {#if href}
-	<a href={href} class="a {primary ? 'a--primary' : ''} {secondary ? 'a--secondary' : ''} {dark ? 'a--dark' : ''}">
+	<a
+		{href}
+		class="a {primary ? 'a--primary' : ''} {secondary ? 'a--secondary' : ''} {dark
+			? 'a--dark'
+			: ''}"
+	>
 		<slot />
 	</a>
 {:else}
-	<button type={type} class="button {primary ? 'button--primary' : ''} {secondary ? 'a--secondary' : ''} {dark ? 'button--dark' : ''}">
+	<button
+		{type}
+		class="button {primary ? 'button--primary' : ''} {secondary ? 'a--secondary' : ''} {dark
+			? 'button--dark'
+			: ''}"
+	>
 		<slot />
 	</button>
 {/if}
@@ -33,7 +43,7 @@
 		width: max-content;
 
 		border: 1px solid hsl(0, 0%, 80%);
-		box-shadow: inset 4px 4px 0 rgba(255,255,255,.35);
+		box-shadow: inset 4px 4px 0 rgba(255, 255, 255, 0.35);
 
 		&--secondary {
 			/* box-shadow: inset 1px 1px 0 rgba(255,255,255,.35); */
@@ -42,7 +52,7 @@
 		}
 
 		&:active {
-			box-shadow: inset 4px 4px 0 rgba(0,0,0,.05);
+			box-shadow: inset 4px 4px 0 rgba(0, 0, 0, 0.05);
 			background-color: var(--color-white);
 		}
 	}

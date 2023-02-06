@@ -1,9 +1,7 @@
-import type {  ArticleReactionByType, ArticleReactions } from '$lib/article';
 import { generateArticle } from '$lib/article.server';
-import { handlePocketbaseErrors } from '$lib/pocketbase.server';
 import { logEventToSlack } from '$lib/slack.server';
 import { type Actions, error } from '@sveltejs/kit';
-import type { BaseAuthStore, Record } from 'pocketbase';
+import type { BaseAuthStore } from 'pocketbase';
 
 import type { PageServerLoad } from './$types';
 
@@ -12,18 +10,14 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 
 	let articleCollection: BaseAuthStore['model'] = null;
 	try {
-		articleCollection = await locals.pb.collection('articles').getOne(params.slug, { expand: 'user' });
+		articleCollection = await locals.pb
+			.collection('articles')
+			.getOne(params.slug, { expand: 'user' });
 	} catch (_) {
 		// eslint-disable-next-line no-empty
 	}
 
-	const author = {
-		id: articleCollection?.expand.user.id,
-		nickname: articleCollection?.expand.user.nickname
-	}
-
-	const article = await generateArticle(articleCollection, author, locals)
-
+	const article = await generateArticle(articleCollection, locals);
 	if (!article) throw error(404, 'Not found');
 
 	return { article };
@@ -42,7 +36,9 @@ export const actions: Actions = {
 
 		// Check if the article exists
 		try {
-			articleCollection = await locals.pb.collection('articles').getOne(articleId);
+			articleCollection = await locals.pb
+				.collection('articles')
+				.getOne(articleId, { expand: 'user' });
 		} catch (_) {
 			// eslint-disable-next-line no-empty
 		}
@@ -50,7 +46,7 @@ export const actions: Actions = {
 		// It should be rare that we hit this case since the UI is the one defining
 		// the `articleId`, but it's still possible that the article is deleted
 		// during a long user serssion.
-		if (!articleCollection) return handleErrors({ status: 404 });
+		if (!articleCollection) throw error(404, 'Not found');
 
 		// Append user and article to formData
 		formData.append('user', locals.user.id);
@@ -85,8 +81,10 @@ export const actions: Actions = {
 			return handleErrors(err);
 		}
 
-		// Return the article with the updated reactions
-		return getArticleAndReactions(articleId, locals);
+		const article = await generateArticle(articleCollection, locals);
+		if (!article) throw error(404, 'Not found');
+
+		return { article };
 	}
 };
 
@@ -98,4 +96,3 @@ const handleErrors = (err: any) => {
 		throw error(500);
 	}
 };
-

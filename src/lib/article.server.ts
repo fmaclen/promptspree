@@ -13,10 +13,15 @@ import { handlePocketbaseError } from './pocketbase.server';
 
 export const generateArticle = async (
 	articleCollection: BaseAuthStore['model'],
-	author: ArticleAuthor,
 	locals: App.Locals
 ): Promise<Article | null> => {
-	if (!articleCollection) return null;
+	if (!articleCollection || !articleCollection.expand.user) return null;
+
+	// Get author details from the expanded user collection
+	const author = {
+		id: articleCollection?.expand.user.id,
+		nickname: articleCollection?.expand.user.nickname
+	};
 
 	const reactions = await getArticleReactions(articleCollection.id, locals);
 
@@ -65,9 +70,6 @@ const getArticleReactions = async (
 		byType[reaction].total++;
 		total++;
 	});
-
-	// Sort the reactions by type by the total number of reactions
-	byType.sort((a, b) => b.total - a.total);
 
 	// Find if the current user has reacted to this article
 	const currentUserReaction = reactionCollection.find((item) => item.user === locals?.user?.id);

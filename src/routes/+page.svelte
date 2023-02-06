@@ -36,8 +36,10 @@
 				>
 					<div class="article-reactions-summary">
 						<Button href="/article/{article.id}" secondary={true}>
+							{article.reactions.total > 0
+								? article.reactions.byType.sort((a, b) => b.total - a.total)[0].reaction
+								: ''}
 							{article.reactions.total}
-							{article.reactions.total > 0 ? article.reactions.byType[0].reaction : ''}
 						</Button>
 					</div>
 				</ArticleMetadata>

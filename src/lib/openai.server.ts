@@ -2,6 +2,7 @@ import { env } from '$env/dynamic/private';
 import { logEventToSlack } from '$lib/slack.server';
 import { error } from '@sveltejs/kit';
 import { Configuration, OpenAIApi } from 'openai';
+
 import { ArticleCategory } from './article';
 
 export interface ArticlePromptShape {
@@ -10,7 +11,7 @@ export interface ArticlePromptShape {
 	body: string[];
 }
 
-const articleCategories = Object.values(ArticleCategory).join(', ')
+const articleCategories = Object.values(ArticleCategory).join(', ');
 const articlePromptShape = {
 	headline: 'Clickbait headline should be less 80 characters',
 	body: [
@@ -18,7 +19,7 @@ const articlePromptShape = {
 		'Paragraph 2 should be between 200 and 280 characters long',
 		'Paragraph 3 should be between 70 and 200 character longs'
 	],
-	category: `Choose the closest category that best describes the article: ${articleCategories}`,
+	category: `Choose the closest category that best describes the article: ${articleCategories}`
 };
 
 const configuration = new Configuration({
@@ -37,7 +38,6 @@ const formatPrompt = (prompt: string) => {
 
 export const getCompletionFromAI = async (prompt: string) => {
 	try {
-
 		const completion = await openai.createCompletion({
 			model: 'text-davinci-003',
 			temperature: 0.7,

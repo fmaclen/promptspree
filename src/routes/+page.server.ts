@@ -23,12 +23,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 	const articles: Article[] = [];
 
 	for (const articleCollection of articlesCollection) {
-		const author = {
-			id: articleCollection?.expand.user.id,
-			nickname: articleCollection?.expand.user.nickname
-		};
-
-		const generatedArticle = await generateArticle(articleCollection, author, locals);
+		const generatedArticle = await generateArticle(articleCollection, locals);
 		if (generatedArticle) articles.push(generatedArticle);
 	}
 
