@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
-	import { PLACEHOLDER_ARTICLE } from '$lib/article';
+	// import { PLACEHOLDER_ARTICLE } from '$lib/article';
 	import Article from '$lib/components/Article.svelte';
 	import FormButton from '$lib/components/FormButton.svelte';
 	import FormField from '$lib/components/FormField.svelte';
@@ -11,7 +11,8 @@
 
 	let prompt = '';
 	let error = '';
-	let article = PLACEHOLDER_ARTICLE;
+	// let article = PLACEHOLDER_ARTICLE;
+	let article = undefined;
 	let isLoading = false;
 	$: isPublishable = article.id;
 

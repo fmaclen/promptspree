@@ -1,5 +1,5 @@
-import type { ArticleReaction, ArticleReactionByType, ArticleReactions } from '$lib/article';
-import { generateArticle2 } from '$lib/article.server';
+import type {  ArticleReactionByType, ArticleReactions } from '$lib/article';
+import { generateArticle } from '$lib/article.server';
 import { handlePocketbaseErrors } from '$lib/pocketbase.server';
 import { logEventToSlack } from '$lib/slack.server';
 import { type Actions, error } from '@sveltejs/kit';
@@ -10,7 +10,23 @@ import type { PageServerLoad } from './$types';
 export const load: PageServerLoad = async ({ locals, params }) => {
 	if (!params.slug) throw error(404, 'Not found');
 
-	return getArticleAndReactions(params.slug, locals);
+	let articleCollection: BaseAuthStore['model'] = null;
+	try {
+		articleCollection = await locals.pb.collection('articles').getOne(params.slug, { expand: 'user' });
+	} catch (_) {
+		// eslint-disable-next-line no-empty
+	}
+
+	const author = {
+		id: articleCollection?.expand.user.id,
+		nickname: articleCollection?.expand.user.nickname
+	}
+
+	const article = await generateArticle(articleCollection, author, locals)
+
+	if (!article) throw error(404, 'Not found');
+
+	return { article };
 };
 
 export const actions: Actions = {
@@ -83,52 +99,3 @@ const handleErrors = (err: any) => {
 	}
 };
 
-// Gets an article with it's reactions and the current user's reaction
-const getArticleAndReactions = async (articleId: string, locals: any) => {
-	let articleCollection: BaseAuthStore['model'] = null;
-	let reactionCollection: Record[];
-
-	try {
-		articleCollection = await locals.pb.collection('articles').getOne(articleId, {
-			expand: 'user'
-		});
-		reactionCollection = await locals.pb
-			.collection('reactions')
-			.getFullList(200, { filter: `article="${articleId}"` });
-	} catch (err) {
-		logEventToSlack('/article/[slug]/+page.server.ts', err);
-		return handlePocketbaseErrors(err);
-	}
-
-	if (!articleCollection) throw error(404, 'Not found');
-
-	const article = generateArticle2(articleCollection);
-	const reactions = generateArticleReactions(reactionCollection, locals);
-
-	return { success: true, article: { ...article, reactions } };
-};
-
-// Calculates the sum of all reactions in an article by reaction type
-const generateArticleReactions = (reactionCollection: Record[], locals: any): ArticleReactions | null => {
-	if (reactionCollection.length === 0) return null;
-
-	let total = 0;
-	const byType: ArticleReactionByType[] = [];
-
-	// Count the total number of reactions and the number of reactions by type
-	reactionCollection.forEach((item) => {
-		const existingReaction = byType.find((r) => r.reaction === item.reaction);
-		if (existingReaction) {
-			total++;
-			existingReaction.total++;
-		} else {
-			byType.push({ reaction: item.reaction, total: 1 });
-		}
-	});
-
-	// Find if the current user has reacted to this article
-	const currentUserReaction = reactionCollection.find((item) => item.user === locals?.user?.id);
-	const byCurrentUser = currentUserReaction ? parseInt(currentUserReaction.reaction) : undefined;
-
-	return { total, byType, byCurrentUser };
-};

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { type SubmitFunction, enhance } from '$app/forms';
 	import { Reaction } from '$lib/article';
-	import A from '$lib/components/A.svelte';
 	import ArticleMetadata from '$lib/components/ArticleMetadata.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import Section from '$lib/components/Section.svelte';
@@ -10,10 +9,11 @@
 
 	export let data: PageData;
 	let article = data.article;
-
+	let currentUserId = data.user?.id;
+	
 	const handleReaction: SubmitFunction = () => {
 		return async ({ result, update }) => {
-			article = result?.data?.article || article;
+			article = result.data?.article || article;
 			await update();
 		};
 	};
@@ -34,29 +34,25 @@
 		</div>
 
 		<nav class="article-reactions">
-			{#each Object.entries(Reaction) as [_, reaction], index}
-				{@const totalReactions = article.reactions.byType.find(
-					(reaction) => parseInt(reaction.reaction) === index
-				)?.total}
-
+			{#each article.reactions.byType as reaction}
 				<form
 					class="article-reactions__form"
 					action="/article/{article.id}?/react"
 					method="POST"
 					use:enhance={handleReaction}
 				>
-					<input type="hidden" name="reaction" value={index} />
+					<input type="hidden" name="reaction" value={reaction.index} />
 					<button
 						type="submit"
 						class="article-reactions__button
-							{article?.reactions?.byCurrentUser === index ? 'article-reactions__button--reacted' : ''}"
+							{article?.reactions?.byCurrentUser === reaction.index ? 'article-reactions__button--reacted' : ''}"
 						disabled={!data.user}
 					>
-						{reaction}
+						{reaction.reaction}
 
-						{#if totalReactions}
+						{#if reaction.total}
 							<span class="article-reactions__sum">
-								{totalReactions}
+								{reaction.total}
 							</span>
 						{/if}
 					</button>
@@ -71,11 +67,13 @@
 		</div>
 
 		<ArticleMetadata
-			id={article?.user?.id}
-			nickname={article?.user?.nickname}
+			id={article.author.id}
+			nickname={article.author.nickname}
 			updated={article.updated}
 		>
-			<!-- <Button href="/">Delete</Button> -->
+			{#if currentUserId === article.author.id}
+				<Button href="/">Delete</Button>
+			{/if}
 		</ArticleMetadata>
 	</article>
 </Section>

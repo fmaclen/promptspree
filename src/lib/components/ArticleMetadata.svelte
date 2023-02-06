@@ -3,14 +3,14 @@
 
 	export let id: string;
 	export let nickname: string;
-	export let updated: Date;
+	export let updated: string;
 </script>
 
 <nav class="metadata">
 	<a class="metadata__a" href={`/profile/${id}`}>
 		<span class="metadata__author">{nickname}</span>
 
-		<time class="metadata__time">
+		<time class="metadata__time" title={updated} datetime={updated}>
 			{formatDistance(new Date(updated), new Date(), {
 				addSuffix: true
 			})}
@@ -21,8 +21,8 @@
 
 <style lang="scss">
 	nav.metadata {
-		min-height: 56px;
-		padding: 8px 8px 8px 16px;
+		min-height: 48px;
+		padding: 6px 8px 6px 16px;
 		width: 100%;
 		box-sizing: border-box;
 		font-size: 13px;

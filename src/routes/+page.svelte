@@ -18,25 +18,26 @@
 <Section>
 	<div class="articles">
 		{#each data.articles as article}
-			<article class="article {article.isPlaceholder ? 'article--placeholder' : ''}">
-				<div class="article__body">
-					<h3 class="article__category">{article.category}</h3>
-					<A href="/article/{article.id}">
+			<article class="article">
+				<A href="/article/{article.id}">
+					<div class="article__body">
+						<h3 class="article__category">{article.category}</h3>
 						<h1 class="article__headline">
 							{article.headline}
 						</h1>
-					</A>
-					<p class="article__body">{article.body[0]}</p>
-				</div>
+						<p class="article__body">{article.body[0]}</p>
+					</div>
+				</A>
 
 				<ArticleMetadata
-					id={article?.user?.id}
-					nickname={article?.user?.nickname}
+					id={article.author.id}
+					nickname={article.author.nickname}
 					updated={article.updated}
 				>
 					<div class="article-reactions-summary">
 						<Button href="/article/{article.id}" secondary={true}>
-							{article.reactions || 0} 🤯
+							{article.reactions.total}
+							{article.reactions.total > 0 ? article.reactions.byType[0].reaction : ''}
 						</Button>
 					</div>
 				</ArticleMetadata>
