@@ -1,4 +1,4 @@
-import type { Article } from '$lib/article';
+import type { Article,Article2 } from '$lib/article';
 import { getImageURL } from '$lib/pocketbase.server';
 import { logEventToSlack } from '$lib/slack.server';
 import type { BaseAuthStore } from 'pocketbase';
@@ -24,6 +24,29 @@ export const generateArticle = (articleCollection: BaseAuthStore['model']) => {
 
 	return article;
 };
+
+export const generateArticle2 = (articleCollection: BaseAuthStore['model']) => {
+	if (!articleCollection) return null;
+
+	const article: Article2 = {
+		id: articleCollection.id,
+		updated: articleCollection.updated,
+		user: {
+			id: articleCollection.expand.user?.id,
+			nickname: articleCollection.expand.user?.nickname
+		},
+		prompt: articleCollection.prompt,
+		headline: articleCollection.headline,
+		category: articleCollection.category,
+		body: JSON.parse(articleCollection.body),
+		reactions: {
+			total: 0,
+		},
+	};
+
+	return article;
+};
+
 
 // Parses the completion from OpenAI and checks the format of the fields is correct
 export const getFieldsFromCompletion = (completion: string | undefined) => {

@@ -1,6 +1,12 @@
-export interface ArticleReaction {
+export interface ArticleReactions {
+	total: number;
+	byType?: ArticleReactionByType[];
+	byCurrentUser?: Reaction | number;
+}
+
+export interface ArticleReactionByType {
 	reaction: Reaction;
-	sum: number;
+	total: number;
 }
 
 export interface Article {
@@ -9,12 +15,28 @@ export interface Article {
 	headline: string;
 	category: ArticleCategory;
 	body: string[];
-	reactions: ArticleReaction[] | null;
+	reactions: ArticleReactions | null;
 	userReaction: Reaction | number | null;
 	id?: string;
 	prompt?: string;
 	imageURL?: string;
 	isPlaceholder?: boolean;
+}
+
+export interface ArticleAuthor {
+	id: string;
+	nickname: string;
+}
+
+export interface Article2 {
+	updated: string;
+	user: ArticleAuthor;
+	headline: string;
+	category: ArticleCategory;
+	body: string[];
+	reactions: ArticleReactions;
+	id: string;
+	prompt: string;
 }
 
 export enum Reaction {

@@ -10,5 +10,6 @@
 		row-gap: 64px;
 		margin-inline: auto;
 		max-width: 768px;
+		padding: 16px;
 	}
 </style>

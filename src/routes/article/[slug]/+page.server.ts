@@ -1,5 +1,5 @@
-import type { ArticleReaction } from '$lib/article';
-import { generateArticle } from '$lib/article.server';
+import type { ArticleReaction, ArticleReactionByType, ArticleReactions } from '$lib/article';
+import { generateArticle2 } from '$lib/article.server';
 import { handlePocketbaseErrors } from '$lib/pocketbase.server';
 import { logEventToSlack } from '$lib/slack.server';
 import { type Actions, error } from '@sveltejs/kit';
@@ -102,34 +102,33 @@ const getArticleAndReactions = async (articleId: string, locals: any) => {
 
 	if (!articleCollection) throw error(404, 'Not found');
 
-	const article = generateArticle(articleCollection);
-	const reactions = generateArticleReactions(reactionCollection);
-	const userReaction = locals.user ? generateArticleUserReaction(reactionCollection, locals) : null;
+	const article = generateArticle2(articleCollection);
+	const reactions = generateArticleReactions(reactionCollection, locals);
 
-	return { success: true, article: { ...article, reactions, userReaction } };
+	return { success: true, article: { ...article, reactions } };
 };
 
 // Calculates the sum of all reactions in an article by reaction type
-const generateArticleReactions = (reactionCollection: Record[]) => {
-	if (reactionCollection.length === 0) return [];
+const generateArticleReactions = (reactionCollection: Record[], locals: any): ArticleReactions | null => {
+	if (reactionCollection.length === 0) return null;
 
-	const reactions: ArticleReaction[] = [];
+	let total = 0;
+	const byType: ArticleReactionByType[] = [];
 
+	// Count the total number of reactions and the number of reactions by type
 	reactionCollection.forEach((item) => {
-		const existingReaction = reactions.find((r) => r.reaction === item.reaction);
+		const existingReaction = byType.find((r) => r.reaction === item.reaction);
 		if (existingReaction) {
-			existingReaction.sum++;
+			total++;
+			existingReaction.total++;
 		} else {
-			reactions.push({ reaction: item.reaction, sum: 1 });
+			byType.push({ reaction: item.reaction, total: 1 });
 		}
 	});
 
-	return reactions;
-};
+	// Find if the current user has reacted to this article
+	const currentUserReaction = reactionCollection.find((item) => item.user === locals?.user?.id);
+	const byCurrentUser = currentUserReaction ? parseInt(currentUserReaction.reaction) : undefined;
 
-// Finds the user's reaction to the article from the list of article reactions
-const generateArticleUserReaction = (reactionCollection: Record[], locals: any) => {
-	const userReaction = reactionCollection.find((item) => item.user === locals?.user?.id);
-	if (userReaction) return parseInt(userReaction.reaction);
-	return null;
+	return { total, byType, byCurrentUser };
 };
