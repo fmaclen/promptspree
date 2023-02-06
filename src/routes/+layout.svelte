@@ -85,6 +85,12 @@
 		background-color: hsl(0, 0%, 95%);
 	}
 
+	div.layout {
+		display: flex;
+		flex-direction: column;
+		min-height: 100vh;
+	}
+
 	header.header {
 		position: sticky;
 		top: 0;
@@ -108,6 +114,7 @@
 		background-color: var(--color-accent);
 		color: var(--color-white);
 		font-size: 14px;
+		margin-top: auto;
 	}
 
 	nav.footer__nav {
