@@ -23,7 +23,15 @@
 <div class="layout">
 	<header class="header">
 		<hgroup class="header__hgroup">
-			<nav class="header__nav"><Button href="/profile">Profile</Button></nav>
+			<nav class="header__nav">
+				{#if data.user}
+					<form action="/logout" method="POST" class="nav__form">
+						<Button type="submit">Logout</Button>
+					</form>
+				{:else}
+					<Button href="/waitlist">Join</Button>
+				{/if}
+			</nav>
 			<Logo title={APP_NAME} />
 			<nav class="header__nav"><Button href="/play">Play</Button></nav>
 		</hgroup>
@@ -114,16 +122,39 @@
 		background-color: var(--color-accent);
 		color: var(--color-white);
 		font-size: 14px;
-		margin-top: auto;
+	
+		position: relative;
+		
+		&::before {
+			content: '';
+			position: absolute;
+			inset: 0;
+			/* background-image: url("https://i.gifer.com/PSIZ.gif"); */
+			/* background-image: url("https://i.gifer.com/7SGq.gif"); */
+			/* background-image: url("https://i.gifer.com/LSsT.gif"); */
+			/* background-image: url("https://i.gifer.com/7P0u.gif"); */
+			/* background-image: url("https://i.gifer.com/9wxw.gif"); */
+			/* background-image: url("https://i.gifer.com/XzZg.gif"); */
+			/* background-image: url("https://i.gifer.com/29Q.gif"); */
+			/* background-image: url("https://i.gifer.com/9x4s.gif"); */
+			background-size: cover;
+			/* background-size: 100%; */
+			background-size: max-content;
+			background-position: center;
+			filter: saturate(0);
+			opacity: .05;
+		}
 	}
 
 	nav.footer__nav {
+		position: relative;
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);
 		justify-content: space-between;
 		align-items: start;
 		column-gap: 32px;
 		padding: 32px 16px;
+		z-index: 1;
 	}
 
 	div.footer__links {

@@ -19,7 +19,7 @@
 	};
 </script>
 
-<Section>
+<Section isFullscreen={true}>
 	<article class="article">
 		<div class="article__body">
 			<h3 class="article__category">{article.category}</h3>

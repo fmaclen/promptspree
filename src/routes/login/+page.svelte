@@ -5,6 +5,7 @@
 	import FormFieldset from '$lib/components/FormFieldset.svelte';
 	import FormInput from '$lib/components/FormInput.svelte';
 	import Notice from '$lib/components/Notice.svelte';
+	import Section from '$lib/components/Section.svelte';
 	import { Sentiment } from '$lib/utils';
 
 	let isLoading = false;
@@ -29,26 +30,35 @@
 	};
 </script>
 
-<form class="form" method="POST" use:enhance={handleSubmit}>
-	<FormFieldset>
-		{#if error}
-			<Notice sentiment={Sentiment.NEGATIVE}>{error}</Notice>
-		{/if}
+<Section isFullscreen={true} title="Login">
+	<form class="form" method="POST" use:enhance={handleSubmit}>
+		<FormFieldset>
+			{#if error}
+				<Notice sentiment={Sentiment.NEGATIVE}>{error}</Notice>
+			{/if}
 
-		<FormField label="E-mail">
-			<FormInput
-				type="email"
-				name="email"
-				placeholder="cosmic.damascus@example.com"
-				required={true}
-				bind:value={email}
-			/>
-		</FormField>
+			<FormField label="E-mail">
+				<FormInput
+					type="email"
+					name="email"
+					placeholder="cosmic.damascus@example.com"
+					required={true}
+					bind:value={email}
+				/>
+			</FormField>
 
-		<FormField label="Password">
-			<FormInput type="password" name="password" required={true} bind:value={password} />
-		</FormField>
+			<FormField label="Password">
+				<FormInput type="password" name="password" required={true} bind:value={password} />
+			</FormField>
 
-		<FormButton type="submit" label="Login" disabled={isSubmitDisabled} />
-	</FormFieldset>
-</form>
+			<FormButton type="submit" label="Login" disabled={isSubmitDisabled} />
+		</FormFieldset>
+	</form>
+</Section>
+
+<style lang="scss">
+	form.form {
+		@import '$lib/components/Form.scss';
+		@include baseForm;
+	}
+</style>

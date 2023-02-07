@@ -1,9 +1,10 @@
 <script lang="ts">
 	export let href: string | undefined = undefined;
 	export let type: 'button' | 'submit' | 'reset' | undefined = undefined;
-	export let primary: boolean | undefined = undefined;
-	export let secondary: boolean | undefined = undefined;
-	export let dark: boolean | undefined = undefined;
+	export let primary: boolean = false;
+	export let secondary: boolean = false;
+	export let dark: boolean = false;
+	export let disabled: boolean  = false;
 </script>
 
 {#if href}
@@ -18,6 +19,7 @@
 {:else}
 	<button
 		{type}
+		{disabled}
 		class="button {primary ? 'button--primary' : ''} {secondary ? 'a--secondary' : ''} {dark
 			? 'button--dark'
 			: ''}"
