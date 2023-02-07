@@ -20,7 +20,7 @@
 	<button
 		{type}
 		{disabled}
-		class="button {primary ? 'button--primary' : ''} {secondary ? 'a--secondary' : ''} {dark
+		class="button {primary ? 'button--primary' : ''} {secondary ? 'button--secondary' : ''} {dark
 			? 'button--dark'
 			: ''}"
 	>
