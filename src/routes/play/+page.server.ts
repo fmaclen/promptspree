@@ -42,19 +42,9 @@ export const actions: Actions = {
 
 		// Get completion from OpenAI and parse it
 		const completion = await getCompletionFromAI(prompt);
-		const fieldsFromCompletion = getFieldsFromCompletion(completion);
+		if (completion.status !== 200) return fail(completion.status, { error: completion.message });
 
-		// const completion = 'DEBUGGING';
-
-		// const fieldsFromCompletion = {
-		// 	category: 'Tech',
-		// 	headline: 'This is a headline',
-		// 	body: JSON.stringify([
-		// 		'This is a paragraph 1',
-		// 		'This is a paragraph 2',
-		// 		'This is a paragraph 3'
-		// 	])
-		// };
+		const fieldsFromCompletion = getFieldsFromCompletion(completion.message);
 
 		// // Update the article with the completion
 		try {

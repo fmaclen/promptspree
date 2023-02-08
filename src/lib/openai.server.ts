@@ -1,6 +1,6 @@
 import { env } from '$env/dynamic/private';
 import { logEventToSlack } from '$lib/slack.server';
-import { error } from '@sveltejs/kit';
+import { error} from '@sveltejs/kit';
 import { Configuration, OpenAIApi } from 'openai';
 
 import { ArticleCategory } from './article';
@@ -36,9 +36,9 @@ const formatPrompt = (prompt: string) => {
 	`;
 };
 
-export const getCompletionFromAI = async (prompt: string) => {
+export const getCompletionFromAI = async (prompt: string): Promise<{ status: number, message: string; }> => {
 	try {
-		const completion = await openai.createCompletion({
+		const completionResponse = await openai.createCompletion({
 			model: 'text-davinci-003',
 			temperature: 0.7,
 			max_tokens: 384,
@@ -48,17 +48,21 @@ export const getCompletionFromAI = async (prompt: string) => {
 			prompt: formatPrompt(prompt)
 		});
 
-		return completion.data.choices[0].text?.trim();
+		const completion = completionResponse.data.choices[0].text?.trim()
+		if (completion) return { status: 200, message: completion };
+
+		// If we get here, the AI didn't return a completion for some unknown reason
+		throw error(500);
 	} catch (err: any) {
 		logEventToSlack('openai.server.ts: getCompletionFromAI', err);
 
 		switch (err?.response?.status) {
 			case 429:
-				throw error(429, 'API rate limit exceeded');
+				return { status: 429, message: 'API rate limit exceeded' };
 			case 503:
-				throw error(503, 'That model is currently overloaded with other requests');
+				return { status: 503, message: 'That model is currently overloaded with other requests' };
 			default:
-				throw error(500, 'Uknown error');
+				throw error(500);
 		}
 	}
 };
