@@ -26,7 +26,6 @@
 
 		&--fullscreen {
 			margin-block: auto;
-			height: 100%;
 		}
 	}
 

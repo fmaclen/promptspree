@@ -1,9 +1,7 @@
 <script>
 	import { page } from '$app/stores';
-	import H3 from '$lib/components/H3.svelte';
 	import Notice from '$lib/components/Notice.svelte';
 	import Section from '$lib/components/Section.svelte';
-	import SectionGroup from '$lib/components/SectionGroup.svelte';
 	import { Sentiment } from '$lib/utils';
 
 	const DEFAULT_ERROR =
@@ -12,11 +10,8 @@
 	let error = $page.error && $page.error.message;
 </script>
 
-<Section>
-	<SectionGroup>
-		<H3>Error {$page.status}</H3>
-		<Notice sentiment={Sentiment.NEGATIVE}>
-			{error === 'Error: 500' ? DEFAULT_ERROR : error}
-		</Notice>
-	</SectionGroup>
+<Section isFullscreen={true} title="Error {$page.status}">
+	<Notice sentiment={Sentiment.NEGATIVE}>
+		{error === 'Error: 500' ? DEFAULT_ERROR : error}
+	</Notice>
 </Section>
