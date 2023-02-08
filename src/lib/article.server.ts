@@ -1,6 +1,5 @@
 import {
 	type Article,
-	type ArticleAuthor,
 	type ArticleReactionByType,
 	type ArticleReactions,
 	Reaction
@@ -46,15 +45,6 @@ const getArticleReactions = async (
 ): Promise<ArticleReactions> => {
 	let reactionCollection: Record[];
 
-	try {
-		reactionCollection = await locals.pb
-			.collection('reactions')
-			.getFullList(200, { filter: `article="${articleId}"` });
-	} catch (err) {
-		logEventToSlack('/article/[slug]/+page.server.ts', err);
-		return handlePocketbaseError(err);
-	}
-
 	let total = 0;
 
 	// Initialise the array of reaction types with a total of 0 for each
@@ -63,6 +53,15 @@ const getArticleReactions = async (
 		reaction: reaction[1], // e.g. '🤯'
 		total: 0
 	}));
+
+	try {
+		reactionCollection = await locals.pb
+			.collection('reactions')
+			.getFullList(200, { filter: `article="${articleId}"` });
+	} catch (err) {
+		logEventToSlack('/article/[slug]/+page.server.ts', err);
+		return handlePocketbaseError(err);
+	}
 
 	// Count the total number of reactions and the number of reactions by type
 	reactionCollection.forEach((item) => {
@@ -87,7 +86,7 @@ export const getFieldsFromCompletion = (completion: string | undefined) => {
 	try {
 		fields = JSON.parse(completion);
 	} catch (err) {
-		logEventToSlack('article.server.ts: getFieldsFromCompletion', err);
+		logEventToSlack('/lib/article.server.ts: getFieldsFromCompletion', err);
 		return null;
 	}
 	if (!fields.headline || !fields.category || !fields.body) return null;

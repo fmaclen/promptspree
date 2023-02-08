@@ -27,6 +27,7 @@
 
 		resize: vertical;
 		line-height: 1.25em;
+		max-height: 10vh;
 
 		&:disabled {
 			@include disabledInput;

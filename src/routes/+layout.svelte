@@ -8,6 +8,9 @@
 
 	export let data: PageData;
 
+	const isFooterVisible = data.path !== '/play';
+
+	console.log(data)
 	const today = new Date().toLocaleDateString('en-US', {
 		weekday: 'long',
 		year: 'numeric',
@@ -40,36 +43,42 @@
 
 	<slot />
 
-	<footer class="footer">
-		<div class="footer__container">
-			<nav class="footer__nav">
-				<Logo title={APP_NAME} hasDarkBackground={true} />
+	{#if isFooterVisible}
+		<footer class="footer">
+			<div class="footer__container">
+				<nav class="footer__nav">
+					<Logo title={APP_NAME} hasDarkBackground={true} />
 
-				<div class="footer__links">
-					{#if !data.user}
-						<a href="/waitlist" class="footer__a">Join waitlist</a>
-						<a href="/login" class="footer__a">Login</a>
+					<div class="footer__links">
+						{#if !data.user}
+							<a href="/waitlist" class="footer__a">Join waitlist</a>
+							<a href="/login" class="footer__a">Login</a>
+							<hr class="footer__hr" />
+						{/if}
+						<a
+							href="https://github.com/fmaclen/the-synthetic-gazette"
+							class="footer__a"
+							target="_blank"
+							rel="noreferrer"
+						>
+							GitHub
+						</a>
 						<hr class="footer__hr" />
-					{/if}
-					<a
-						href="https://github.com/fmaclen/the-synthetic-gazette"
-						class="footer__a"
-						target="_blank"
-						rel="noreferrer"
-					>
-						GitHub
-					</a>
-					<hr class="footer__hr" />
-					<a href="/legal" class="footer__a">Terms of service</a>
-					<a href="/legal" class="footer__a">Privacy policy</a>
-				</div>
-			</nav>
-		</div>
-	</footer>
+						<a href="/legal" class="footer__a">Terms of service</a>
+						<a href="/legal" class="footer__a">Privacy policy</a>
+					</div>
+				</nav>
+			</div>
+		</footer>
+	{/if}
 </div>
 
 <style lang="scss">
 	@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;400;600;800&family=Overpass+Mono:wght@300&family=Playfair+Display:wght@400;800&display=swap');
+
+	:global(html) {
+		scroll-behavior: smooth;
+	}
 
 	:global(body) {
 		--font-serif: 'Playfair Display', serif;
@@ -122,9 +131,9 @@
 		background-color: var(--color-accent);
 		color: var(--color-white);
 		font-size: 14px;
-	
+
 		position: relative;
-		
+
 		&::before {
 			content: '';
 			position: absolute;
@@ -142,7 +151,7 @@
 			background-size: max-content;
 			background-position: center;
 			filter: saturate(0);
-			opacity: .05;
+			opacity: 0.05;
 		}
 	}
 

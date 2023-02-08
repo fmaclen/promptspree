@@ -31,7 +31,7 @@ const openai = new OpenAIApi(configuration);
 const formatPrompt = (prompt: string) => {
 	return `
 		${prompt.trim()}
-		Write article in English, don't repeat phrases, use this JSON shape minified, stricly adhere to character limits as specified:
+		Write article in English, don't repeat phrases, use this JSON shape and minify it, stricly adhere to character limits as specified:
 		${JSON.stringify(articlePromptShape)}
 	`;
 };
