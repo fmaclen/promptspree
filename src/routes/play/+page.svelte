@@ -21,11 +21,10 @@
 	$: isLoading = false;
 
 	const submitGenerate = () => {
-		// HACK:
-		// When typing in the textarea on mobile browsers the page scrolls down
-		// to the bottom of the textarea. This is a hack to scroll back to the top
-		// of the page after the form is submitted so that the top part of the article
-		// is visible on the viewport.
+		// HACK: when the textarea is focused on mobile browsers and the keyboard appears
+		// the page is scrolled down to the bottom of the textarea.
+		// This hacks forces the page to scroll back to the top of the page and resets
+		// the viewport size to the original size.
 		window.scrollTo(0, 0);
 		document.body.style.height = '100%';
 		document.body.style.height = `${document.body.scrollHeight}px`;
@@ -60,11 +59,60 @@
 	<HR />
 {/if}
 
-<Notice>Write a prompt below to generate an article draft</Notice>
-<HR/>
+<Notice>
+	{#if isLoading}
+		<IconLoading />
+	{:else}
+		Write a prompt below to generate an article
+	{/if}
+</Notice>
+<HR />
 
 <section class="play">
-	<!-- <Section> -->
+	<div class="play__prompt">
+		{#if fieldError}
+			<Notice sentiment={Sentiment.NEGATIVE}>{fieldError[1]}</Notice>
+		{/if}
+
+		<FormTextarea
+			name="prePrompt"
+			placeholder="e.g. write an opinion piece about kids these days in a judgemental tone"
+			disabled={isLoading}
+			bind:value={prompt}
+		/>
+
+		<nav class="form-nav">
+			<form class="form" method="POST" action="?/generate" use:enhance={submitGenerate}>
+				<input type="hidden" name="prompt" bind:value={prompt} />
+
+				{#if article}
+					<input type="hidden" name="articleId" value={article.id} />
+					<FormButton
+						label='Try another one'
+						secondary={true}
+						type="submit"
+						disabled={!prompt || isLoading}
+					/>
+				{:else}
+					<FormButton
+						label={isLoading ? 'Generating...' : 'Generate'}
+						type="submit"
+						disabled={!prompt || isLoading}
+					/>
+				{/if}
+			</form>
+
+			{#if article}
+				<form class="form" method="POST" action="?/publish" use:enhance={submitPublish}>
+					<input type="hidden" name="articleId" value={article.id} />
+					<FormButton label="Publish" type="submit" disabled={!prompt || isLoading} />
+				</form>
+			{/if}
+		</nav>
+	</div>
+
+	<HR />
+
 	<div class="play__draft">
 		<article class="article">
 			<div class="article__body">
@@ -80,113 +128,59 @@
 					{/each}
 				{:else}
 					<ArticlePlaceholder {isLoading} />
-					{/if}
-				</div>
+				{/if}
+			</div>
 		</article>
 	</div>
 
-	<div class="play__prompt">
-		{#if fieldError}
-			<Notice sentiment={Sentiment.NEGATIVE}>{fieldError[1]}</Notice>
-		{/if}
-
-		<!-- <FormField label="Prompt"> -->
-			<FormTextarea
-				name="prePrompt"
-				placeholder="e.g. write a story about how everything new is old again"
-				disabled={isLoading}
-				bind:value={prompt}
-			/>
-		<!-- </FormField> -->
-
-		<nav class="form-nav">
-			<form class="form" method="POST" action="?/generate" use:enhance={submitGenerate}>
-				<input type="hidden" name="prompt" bind:value={prompt} />
-				<FormButton
-					label={article ? 'Try another one' : 'Generate'}
-					type="submit"
-					disabled={!prompt || isLoading}
-				/>
-			</form>
-
-			{#if article}
-				<form class="form" method="POST" action="?/publish" use:enhance={submitPublish}>
-					<input type="hidden" name="articleId" value={article.id} />
-					<FormButton label="Publish" type="submit" disabled={!prompt || isLoading} />
-				</form>
-			{/if}
-		</nav>
-	</div>
 	<!-- </Section> -->
 </section>
 
 <style lang="scss">
 	section.play {
+		/* position: relative; */
 		display: grid;
-		grid-template-rows: auto max-content;
-		flex-grow: 1;
-		/* height: calc(100vh - 64px); */
-		/* display: grid;
-		width: 100%;
-		grid-template-columns: 1fr auto 1fr;
-		gap: 32px;
-		align-items: center;
-
-		@media (max-width: 1280px) {
-			grid-template-columns: unset;
-			grid-template-rows: repeat(3, auto);
-			gap: 16px;
-		} */
-		/* background-color: aquamarine; */
+		grid-template-rows: max-content auto;
+		/* flex-grow: 1; */
+		/* height: 100%; */
 	}
 
 	div.play__draft {
+		display: flex;
+		align-items: center;
 		padding: 24px;
+
+		max-width: 512px;
+		width: 100%;
+		box-sizing: border-box;
+		margin-inline: auto;
 	}
 
 	div.play__prompt {
-		/* background-color: tomato; */
-		position: sticky;
-		bottom: 0;
 		display: flex;
 		flex-direction: column;
 		row-gap: 16px;
 		padding: 24px;
-		background-color: hsl(0, 0%, 95%);
-		/* border-top: 1px solid tomato; */
-		border-top: 1px solid hsl(0, 0%, 85%);
-		box-shadow: inset 0 1px 0 var(--color-white);
+		max-width: 512px;
+		width: 100%;
+		box-sizing: border-box;
+		margin-inline: auto;
 	}
 
 	form.form {
 		width: 100%;
-
 		display: flex;
 		flex-direction: column;
 		row-gap: 16px;
-		/* padding: 24px; */
 	}
 
 	nav.form-nav {
 		display: flex;
 		justify-content: flex-end;
-		column-gap: 16px;
+		flex-direction: column;
+		row-gap: 8px;
 		width: 100%;
 	}
-
-	/* 
-	div.play__status {
-		width: 100%;
-		width: 16px;
-		font-size: 16px;
-		color: var(--color-grey20);
-
-		@media (max-width: 1280px) {
-			margin-inline: auto;
-			transform: rotate(90deg);
-		}
-	}
-	*/
 
 	/* ============================================================================== */
 	/* ============================================================================== */
@@ -196,7 +190,6 @@
 		border: 1px solid rgba(0, 0, 0, 0.2);
 		border-radius: 2px;
 		box-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5), inset 1px 1px 0 rgba(255, 255, 255, 0.5);
-
 		width: 100%;
 	}
 

@@ -17,12 +17,12 @@
 		animateLineWidths();
 	});
 
-	const ONE_SECOND = 1000;
+	const THREE_SECONDS = 3000;
 
 	$: if (isLoading) {
 		interval = setInterval(() => {
 			animateLineWidths();
-		}, ONE_SECOND);
+		}, THREE_SECONDS);
 	}
 </script>
 

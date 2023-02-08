@@ -27,7 +27,9 @@
 
 		resize: vertical;
 		line-height: 1.25em;
+		min-height: 84px;
 		max-height: 10vh;
+		box-sizing: border-box;
 
 		&:disabled {
 			@include disabledInput;

@@ -22,8 +22,8 @@
 
 	&:active,
 	&:focus {
-		outline-color: var(--color-accent);
-		outline-style: auto;
+		outline: 1px solid var(--color-accent);
+		-webkit-tap-highlight-color: rgba(0,0,0,0); // Removes outline on iOS
 	}
 
 	&::placeholder {

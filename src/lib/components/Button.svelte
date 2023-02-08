@@ -36,25 +36,24 @@
 		font-family: var(--font-sans);
 		font-size: 13px;
 		font-weight: 600;
-		color: hsl(0, 0%, 30%);
 		background-color: transparent;
 		box-sizing: border-box;
 		text-align: center;
-
+		
 		border-radius: 2px;
 		width: max-content;
-
+		
+		color: hsl(0, 0%, 30%);
 		border: 1px solid hsl(0, 0%, 80%);
-		box-shadow: inset 4px 4px 0 rgba(255, 255, 255, 0.35);
+		box-shadow: inset 2px 2px 0 rgba(255, 255, 255, 0.5);
 
 		&--secondary {
-			/* box-shadow: inset 1px 1px 0 rgba(255,255,255,.35); */
 			font-weight: 400;
 			padding: 8px 12px;
 		}
 
 		&:active {
-			box-shadow: inset 4px 4px 0 rgba(0, 0, 0, 0.05);
+			box-shadow: inset 2px 2px 0 rgba(0, 0, 0, 0.05);
 			background-color: var(--color-white);
 		}
 	}
