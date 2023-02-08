@@ -9,8 +9,6 @@
 	export let data: PageData;
 
 	const isFooterVisible = data.path !== '/play';
-
-	console.log(data)
 	const today = new Date().toLocaleDateString('en-US', {
 		weekday: 'long',
 		year: 'numeric',
