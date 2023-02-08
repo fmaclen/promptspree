@@ -63,7 +63,7 @@
 	{#if isLoading}
 		<IconLoading />
 	{:else}
-		Write a prompt below to generate an article
+		Enter a prompt below to generate an article
 	{/if}
 </Notice>
 <HR />
@@ -150,7 +150,7 @@
 		align-items: center;
 		padding: 24px;
 
-		max-width: 512px;
+		max-width: 768px;
 		width: 100%;
 		box-sizing: border-box;
 		margin-inline: auto;
@@ -161,7 +161,7 @@
 		flex-direction: column;
 		row-gap: 16px;
 		padding: 24px;
-		max-width: 512px;
+		max-width: 768px;
 		width: 100%;
 		box-sizing: border-box;
 		margin-inline: auto;
