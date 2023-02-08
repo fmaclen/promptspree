@@ -1,15 +1,14 @@
 <script lang="ts">
 	import { type SubmitFunction, enhance } from '$app/forms';
-	import { Reaction } from '$lib/article';
 	import ArticleMetadata from '$lib/components/ArticleMetadata.svelte';
-	import Button from '$lib/components/Button.svelte';
+	// import Button from '$lib/components/Button.svelte';
 	import Section from '$lib/components/Section.svelte';
 
 	import type { PageData } from './$types';
 
 	export let data: PageData;
 	let article = data.article;
-	let currentUserId = data.user?.id;
+	// let currentUserId = data.user?.id;
 
 	const handleReaction: SubmitFunction = () => {
 		return async ({ result, update }) => {
@@ -71,9 +70,9 @@
 			nickname={article.author.nickname}
 			updated={article.updated}
 		>
-			{#if currentUserId === article.author.id}
+			<!-- {#if currentUserId === article.author.id}
 				<Button href="/">Delete</Button>
-			{/if}
+			{/if} -->
 		</ArticleMetadata>
 	</article>
 </Section>
