@@ -7,7 +7,7 @@
 	import type { PageData } from './$types';
 
 	export let data: PageData;
-	let article = data.article;
+	$: article = data.article;
 	// let currentUserId = data.user?.id;
 
 	const handleReaction: SubmitFunction = () => {
@@ -123,11 +123,11 @@
 		&--reacted {
 			font-weight: 600;
 		}
-
+		
 		&--reacted,
 		&:hover:not(:disabled) {
-			filter: grayscale(0%);
-			background-color: transparent;
+			filter: inherit;
+			background-color: var(--color-white);
 			border-bottom-color: transparent;
 			color: var(--color-accent);
 		}
@@ -140,10 +140,6 @@
 	span.article-reactions__sum {
 		font-size: 11px;
 	}
-
-	/* ============================================================================== */
-	/* ============================================================================== */
-	/* ============================================================================== */
 
 	div.article-prompt {
 		display: flex;
