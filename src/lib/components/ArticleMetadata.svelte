@@ -30,8 +30,7 @@
 		grid-template-columns: auto max-content;
 		row-gap: 32px;
 		align-items: center;
-
-		border-top: 1px solid rgba(0, 0, 0, 0.2);
+		border-top: 1px solid hsl(0,0%,85%);
 		box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.5);
 	}
 
@@ -52,7 +51,6 @@
 		grid-template-columns: max-content auto;
 		align-items: center;
 		column-gap: 4px;
-
 		color: inherit;
 		text-decoration: none;
 		width: 100%;

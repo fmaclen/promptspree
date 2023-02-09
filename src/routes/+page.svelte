@@ -1,7 +1,7 @@
 <script lang="ts">
-	import A from '$lib/components/A.svelte';
 	import ArticleMetadata from '$lib/components/ArticleMetadata.svelte';
 	import Button from '$lib/components/Button.svelte';
+	import Card from '$lib/components/Card.svelte';
 	import HR from '$lib/components/HR.svelte';
 	import Notice from '$lib/components/Notice.svelte';
 	import Section from '$lib/components/Section.svelte';
@@ -17,8 +17,8 @@
 <Section>
 	<div class="articles">
 		{#each data.articles as article}
-			<article class="article">
-				<A href="/article/{article.id}">
+			<Card>
+				<a class="article" href="/article/{article.id}">
 					<div class="article__body">
 						<h3 class="article__category">{article.category}</h3>
 						<h1 class="article__headline">
@@ -26,7 +26,7 @@
 						</h1>
 						<p class="article__p">{article.body[0]}</p>
 					</div>
-				</A>
+				</a>
 
 				<ArticleMetadata
 					id={article.author.id}
@@ -42,7 +42,7 @@
 						</Button>
 					</div>
 				</ArticleMetadata>
-			</article>
+			</Card>
 		{/each}
 	</div>
 </Section>
@@ -55,10 +55,8 @@
 		row-gap: 16px;
 	}
 
-	article.article {
-		border: 1px solid rgba(0, 0, 0, 0.2);
-		border-radius: 2px;
-		box-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5), inset 1px 1px 0 rgba(255, 255, 255, 0.5);
+	a.article {
+		text-decoration: none;
 	}
 
 	div.article__body {
