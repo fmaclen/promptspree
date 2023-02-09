@@ -1,29 +1,38 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
-	import { PLACEHOLDER_ARTICLE } from '$lib/article';
-	import Article from '$lib/components/Article.svelte';
+	import type { Article } from '$lib/article';
+	import ArticleBody from '$lib/components/ArticleBody.svelte';
+	import Plate from '$lib/components/Plate.svelte';
 	import FormButton from '$lib/components/FormButton.svelte';
-	import FormField from '$lib/components/FormField.svelte';
 	import FormTextarea from '$lib/components/FormTextarea.svelte';
+	import HR from '$lib/components/HR.svelte';
 	import IconLoading from '$lib/components/IconLoading.svelte';
 	import Notice from '$lib/components/Notice.svelte';
+	import { Sentiment } from '$lib/utils';
 	import type { ActionResult } from '@sveltejs/kit';
 
 	let prompt = '';
-	let error = '';
-	let article = PLACEHOLDER_ARTICLE;
-	let isLoading = false;
-	$: isPublishable = article.id;
+	let article: Article | null = null;
+	let error: string | null = null;
+	let fieldError: string[] | null = null;
+	$: isLoading = false;
 
 	const submitGenerate = () => {
 		isLoading = true;
+		article = null;
+		error = null;
+		fieldError = null;
+
 		return async ({ result, update }: { result: ActionResult; update: () => void }) => {
 			if (result.type === 'success') {
-				article = { ...article, ...result.data };
+				article = result.data?.article || null;
 			}
-			if (result.type === 'error') {
+			if (result.type === 'failure') {
+				error = result.data?.error || null;
+				fieldError = result.data?.fieldError || null;
 				await applyAction(result);
 			}
+
 			update();
 			isLoading = false;
 		};
@@ -34,72 +43,113 @@
 	};
 </script>
 
+{#if error}
+	<Notice sentiment={Sentiment.NEGATIVE}>{error}</Notice>
+	<HR />
+{/if}
+
+<Notice>
+	{#if isLoading}
+		<IconLoading />
+	{:else}
+		Enter a prompt below to generate an article
+	{/if}
+</Notice>
+<HR />
+
 <section class="play">
-	<form class="form" method="POST" action="?/generate" use:enhance={submitGenerate}>
-		<FormField label="Prompt">
-			<FormTextarea
-				autofocus={true}
-				name="prompt"
-				placeholder="Write a placeholder article about Flibbertigibbet Jibber-jabber Jiggery-pokery"
-				bind:value={prompt}
-				disabled={isLoading}
-			/>
-		</FormField>
-
-		{#if error}
-			<Notice>{error}</Notice>
+	<div class="play__prompt">
+		{#if fieldError}
+			<Notice sentiment={Sentiment.NEGATIVE}>{fieldError[1]}</Notice>
 		{/if}
 
-		<FormButton label="Generate" type="submit" disabled={!prompt || isLoading} />
-	</form>
+		<FormTextarea
+			name="prePrompt"
+			placeholder="e.g. write an opinion piece about kids these days in a judgemental tone"
+			disabled={isLoading}
+			bind:value={prompt}
+		/>
 
-	<div class="play__status">
-		{#if isLoading}
-			<IconLoading />
-		{:else}
-			<span class="play__ready">→</span>
-		{/if}
+		<nav class="form-nav">
+			<form class="form" method="POST" action="?/generate" use:enhance={submitGenerate}>
+				<input type="hidden" name="prompt" bind:value={prompt} />
+
+				{#if article}
+					<input type="hidden" name="articleId" value={article.id} />
+					<FormButton
+						label="Try another one"
+						secondary={true}
+						type="submit"
+						disabled={!prompt || isLoading}
+					/>
+				{:else}
+					<FormButton
+						label={isLoading ? 'Generating...' : 'Generate'}
+						type="submit"
+						disabled={!prompt || isLoading}
+					/>
+				{/if}
+			</form>
+
+			{#if article}
+				<form class="form" method="POST" action="?/publish" use:enhance={submitPublish}>
+					<input type="hidden" name="articleId" value={article.id} />
+					<FormButton label="Publish" type="submit" disabled={!prompt || isLoading} />
+				</form>
+			{/if}
+		</nav>
 	</div>
 
-	<form class="form form--preview" method="POST" action="?/publish" use:enhance={submitPublish}>
-		{#if isPublishable}
-			<input type="hidden" name="articleId" value={article.id} />
-		{/if}
-		<Article {article} sentiment="positive" />
-		<FormButton label="Publish" type="submit" sentiment="positive" disabled={!isPublishable} />
-	</form>
+	<HR />
+
+	<div class="play__draft">
+		<Plate>
+			<ArticleBody {article} {isLoading} />
+		</Plate>
+	</div>
 </section>
 
 <style lang="scss">
 	section.play {
 		display: grid;
-		width: 100%;
-		grid-template-columns: 1fr auto 1fr;
-		gap: 32px;
-		align-items: center;
+		grid-template-rows: max-content max-content auto;
+		height: 100%;
+	}
 
-		@media (max-width: 1280px) {
-			grid-template-columns: unset;
-			grid-template-rows: repeat(3, auto);
-			gap: 16px;
-		}
+	div.play__draft {
+		display: flex;
+		align-items: center;
+		padding: 24px;
+
+		max-width: 768px;
+		width: 100%;
+		box-sizing: border-box;
+		margin-inline: auto;
+	}
+
+	div.play__prompt {
+		display: flex;
+		flex-direction: column;
+		row-gap: 16px;
+		padding: 24px;
+		max-width: 768px;
+		width: 100%;
+		box-sizing: border-box;
+		margin-inline: auto;
 	}
 
 	form.form {
+		width: 100%;
 		display: flex;
 		flex-direction: column;
 		row-gap: 16px;
 	}
 
-	div.play__status {
+	nav.form-nav {
+		display: flex;
+		justify-content: flex-end;
+		flex-direction: column;
+		row-gap: 8px;
 		width: 100%;
-		width: 16px;
-		font-size: 16px;
-		color: var(--color-grey20);
-
-		@media (max-width: 1280px) {
-			margin-inline: auto;
-			transform: rotate(90deg);
-		}
 	}
 </style>

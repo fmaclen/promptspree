@@ -1,20 +1,29 @@
-export interface ArticleReaction {
+export interface ArticleReactions {
+	total: number;
+	byType: ArticleReactionByType[];
+	byCurrentUser?: Reaction | number;
+}
+
+export interface ArticleReactionByType {
+	index: number;
 	reaction: Reaction;
-	sum: number;
+	total: number;
+}
+
+export interface ArticleAuthor {
+	id: string;
+	nickname: string;
 }
 
 export interface Article {
 	updated: string;
-	author: string;
+	author: ArticleAuthor;
 	headline: string;
 	category: ArticleCategory;
 	body: string[];
-	reactions: ArticleReaction[] | null;
-	userReaction: Reaction | number | null;
-	id?: string;
-	prompt?: string;
-	imageURL?: string;
-	isPlaceholder?: boolean;
+	reactions: ArticleReactions;
+	id: string;
+	prompt: string;
 }
 
 export enum Reaction {
@@ -45,20 +54,3 @@ export enum ArticleCategory {
 	REAL_STATE = 'Real State',
 	OTHER = 'Other'
 }
-
-export const PLACEHOLDER_ARTICLE: Article = {
-	updated: new Date().toISOString(),
-	author: 'Poncio',
-	headline: 'Flibbertigibbet Jibber-jabber Jiggery-pokery',
-	category: ArticleCategory.OTHER,
-	body: [
-		'The first thing to know about flibbertigibbet jibber-jabber jiggery-pokery is that it is a complex and multi-faceted phenomenon. At its core, it is a form of communication that is characterized by its nonsensical and seemingly random nature.',
-		'Despite its apparent lack of meaning, however, flibbertigibbet jibber-jabber jiggery-pokery has been found to be a powerful tool for expressing deep emotions and ideas.'
-	],
-	reactions: null,
-	userReaction: null,
-	id: undefined,
-	prompt: undefined,
-	imageURL: undefined,
-	isPlaceholder: true
-};

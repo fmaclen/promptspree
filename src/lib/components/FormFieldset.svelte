@@ -9,8 +9,7 @@
 		padding: 0;
 		display: flex;
 		flex-direction: column;
-		gap: 1.5rem;
-		max-width: 480px;
+		gap: 24px;
 		margin-inline: auto;
 	}
 </style>

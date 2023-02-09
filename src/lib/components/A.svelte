@@ -18,9 +18,6 @@
 		}
 
 		&:hover {
-			text-decoration: wavy underline;
-			text-decoration-color: var(--color-secondary);
-			text-decoration-thickness: 1px;
 			color: var(--color-accent);
 		}
 	}
