@@ -1,5 +1,5 @@
 <script lang="ts">
-	export let title: string | undefined;
+	export let title: string | undefined = undefined;
 </script>
 
 <section class="section">

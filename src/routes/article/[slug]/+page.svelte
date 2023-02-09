@@ -8,7 +8,7 @@
 	import type { PageData } from './$types';
 
 	export let data: PageData;
-	$: article = data.article;
+	let article = data.article;
 	// let currentUserId = data.user?.id;
 
 	const handleReaction: SubmitFunction = () => {
@@ -38,9 +38,9 @@
 							{article?.reactions?.byCurrentUser === reaction.index ? 'article-reactions__button--reacted' : ''}"
 						disabled={!data.user}
 					>
-					<span class="article-reactions__emoji">
-						{reaction.reaction}
-					</span>
+						<span class="article-reactions__emoji">
+							{reaction.reaction}
+						</span>
 
 						{#if reaction.total}
 							<span class="article-reactions__total">
