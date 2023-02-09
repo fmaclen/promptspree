@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { type SubmitFunction, enhance } from '$app/forms';
 	import A from '$lib/components/A.svelte';
+	import Card from '$lib/components/Card.svelte';
 	import FormButton from '$lib/components/FormButton.svelte';
 	import FormField from '$lib/components/FormField.svelte';
 	import FormFieldset from '$lib/components/FormFieldset.svelte';
@@ -61,80 +62,83 @@
 <HR />
 
 <Section isFullscreen={true} title="Join waitlist">
-	<form class="form" method="POST" use:enhance={handleSubmit}>
-		<FormFieldset>
-			{#if success}
-				<Notice sentiment={Sentiment.POSITIVE}>{success}</Notice>
-			{:else}
-				<FormField label="E-mail">
-					<FormInput
-						type="email"
-						name="email"
-						placeholder="cosmic.damascus@example.com"
-						required={true}
-						bind:value={email}
-					/>
-
-					{#if errors?.email}
-						<Notice sentiment={Sentiment.NEGATIVE}>Email is already in use or is invalid</Notice>
-					{/if}
-				</FormField>
-
-				<FormField label="Nickname">
-					<FormInput
-						name="nickname"
-						placeholder="CosmicDamascus"
-						required={true}
-						bind:value={nickname}
-					/>
-
-					{#if errors?.nickname}
-						<Notice sentiment={Sentiment.NEGATIVE}>Nickname is already taken or is invalid</Notice>
-					{/if}
-				</FormField>
-
-				<FormField label="Password">
-					<FormInput type="password" name="password" required={true} bind:value={password} />
-
-					{#if errors?.password}
-						<Notice sentiment={Sentiment.NEGATIVE}>Passwords didn't match</Notice>
-					{/if}
-				</FormField>
-
-				<FormField label="Confirm password">
-					<FormInput
-						type="password"
-						name="passwordConfirm"
-						required={true}
-						bind:value={passwordConfirm}
-					/>
-				</FormField>
-
-				<div class="form-field-checkbox">
-					<label class="form-field-checkbox__label">
-						<input
-							class="form-field-checkbox__input"
-							type="checkbox"
-							name="terms"
-							bind:checked={hasAcceptedTerms}
+	<Card>
+		<form class="form" method="POST" use:enhance={handleSubmit}>
+			<FormFieldset>
+				{#if success}
+					<Notice sentiment={Sentiment.POSITIVE}>{success}</Notice>
+				{:else}
+					<FormField label="E-mail">
+						<FormInput
+							type="email"
+							name="email"
+							placeholder="cosmic.damascus@example.com"
+							required={true}
+							bind:value={email}
 						/>
-						<P>
-							I agree to the <A href="/legal" isHighlighted={true}>terms of service</A>
-							and
-							<A href="/legal" isHighlighted={true}>privacy policy</A>.
-						</P>
-					</label>
-					{#if errors?.terms}
-						<Notice sentiment={Sentiment.NEGATIVE}
-							>You must agree to the terms and conditions</Notice
-						>
-					{/if}
-				</div>
 
-				<FormButton type="submit" label="Join waitlist" disabled={isSubmitDisabled} />
-			{/if}
-		</FormFieldset>
-	</form>
+						{#if errors?.email}
+							<Notice sentiment={Sentiment.NEGATIVE}>Email is already in use or is invalid</Notice>
+						{/if}
+					</FormField>
+
+					<FormField label="Nickname">
+						<FormInput
+							name="nickname"
+							placeholder="CosmicDamascus"
+							required={true}
+							bind:value={nickname}
+						/>
+
+						{#if errors?.nickname}
+							<Notice sentiment={Sentiment.NEGATIVE}>Nickname is already taken or is invalid</Notice
+							>
+						{/if}
+					</FormField>
+
+					<FormField label="Password">
+						<FormInput type="password" name="password" required={true} bind:value={password} />
+
+						{#if errors?.password}
+							<Notice sentiment={Sentiment.NEGATIVE}>Passwords didn't match</Notice>
+						{/if}
+					</FormField>
+
+					<FormField label="Confirm password">
+						<FormInput
+							type="password"
+							name="passwordConfirm"
+							required={true}
+							bind:value={passwordConfirm}
+						/>
+					</FormField>
+
+					<div class="form-field-checkbox">
+						<label class="form-field-checkbox__label">
+							<input
+								class="form-field-checkbox__input"
+								type="checkbox"
+								name="terms"
+								bind:checked={hasAcceptedTerms}
+							/>
+							<P>
+								I agree to the <A href="/legal" isHighlighted={true}>terms of service</A>
+								and
+								<A href="/legal" isHighlighted={true}>privacy policy</A>.
+							</P>
+						</label>
+						{#if errors?.terms}
+							<Notice sentiment={Sentiment.NEGATIVE}
+								>You must agree to the terms and conditions</Notice
+							>
+						{/if}
+					</div>
+
+					<FormButton type="submit" label="Join waitlist" disabled={isSubmitDisabled} />
+				{/if}
+			</FormFieldset>
+		</form>
+	</Card>
 </Section>
 
 <style lang="scss">

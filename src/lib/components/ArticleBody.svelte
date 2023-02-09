@@ -1,8 +1,9 @@
 <script lang="ts">
-	import type { Article } from "$lib/article";
-	import ArticlePlaceholder from "./ArticlePlaceholder.svelte";
+	import type { Article } from '$lib/article';
 
-  export let article: Article | null;
+	import ArticlePlaceholder from './ArticlePlaceholder.svelte';
+
+	export let article: Article | null;
 	export let isLoading: boolean = false;
 </script>
 
@@ -29,11 +30,11 @@
 		background-color: var(--color-white);
 		display: flex;
 		flex-direction: column;
-		padding: 24px;
+		padding: 32px;
 		row-gap: 12px;
 	}
 
-  h3.article__category {
+	h3.article__category {
 		margin: 0;
 		font-size: 13px;
 		line-height: 1em;

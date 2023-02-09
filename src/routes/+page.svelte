@@ -91,5 +91,6 @@
 		font-size: 14px;
 		margin: 0;
 		color: hsl(0, 0%, 40%);
+		line-height: 1.4em;
 	}
 </style>

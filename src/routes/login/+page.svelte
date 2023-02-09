@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { type SubmitFunction, enhance } from '$app/forms';
+	import Card from '$lib/components/Card.svelte';
 	import FormButton from '$lib/components/FormButton.svelte';
 	import FormField from '$lib/components/FormField.svelte';
 	import FormFieldset from '$lib/components/FormFieldset.svelte';
@@ -31,29 +32,31 @@
 </script>
 
 <Section isFullscreen={true} title="Login">
-	<form class="form" method="POST" use:enhance={handleSubmit}>
-		<FormFieldset>
-			{#if error}
-				<Notice sentiment={Sentiment.NEGATIVE}>{error}</Notice>
-			{/if}
-
-			<FormField label="E-mail">
-				<FormInput
-					type="email"
-					name="email"
-					placeholder="cosmic.damascus@example.com"
-					required={true}
-					bind:value={email}
-				/>
-			</FormField>
-
-			<FormField label="Password">
-				<FormInput type="password" name="password" required={true} bind:value={password} />
-			</FormField>
-
-			<FormButton type="submit" label="Login" disabled={isSubmitDisabled} />
-		</FormFieldset>
-	</form>
+	<Card>
+		<form class="form" method="POST" use:enhance={handleSubmit}>
+			<FormFieldset>
+				{#if error}
+					<Notice sentiment={Sentiment.NEGATIVE}>{error}</Notice>
+				{/if}
+	
+				<FormField label="E-mail">
+					<FormInput
+						type="email"
+						name="email"
+						placeholder="cosmic.damascus@example.com"
+						required={true}
+						bind:value={email}
+					/>
+				</FormField>
+	
+				<FormField label="Password">
+					<FormInput type="password" name="password" required={true} bind:value={password} />
+				</FormField>
+	
+				<FormButton type="submit" label="Login" disabled={isSubmitDisabled} />
+			</FormFieldset>
+		</form>
+	</Card>
 </Section>
 
 <style lang="scss">

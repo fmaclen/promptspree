@@ -4,7 +4,7 @@
 	export let primary: boolean = false;
 	export let secondary: boolean = false;
 	export let dark: boolean = false;
-	export let disabled: boolean  = false;
+	export let disabled: boolean = false;
 </script>
 
 {#if href}
@@ -39,10 +39,10 @@
 		background-color: transparent;
 		box-sizing: border-box;
 		text-align: center;
-		
+
 		border-radius: 2px;
 		width: max-content;
-		
+
 		color: hsl(0, 0%, 30%);
 		border: 1px solid hsl(0, 0%, 80%);
 		box-shadow: inset 2px 2px 0 rgba(255, 255, 255, 0.5);

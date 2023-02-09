@@ -1,8 +1,6 @@
 @mixin baseForm {
 	width: 100%;
-	border: 1px solid hsl(0, 0%, 85%);
-	box-shadow: 1px 1px 0 rgba(255, 255, 255, 0.35);
-	padding: 24px;
+	padding: 32px;
 	box-sizing: border-box;
 }
 
@@ -23,7 +21,7 @@
 	&:active,
 	&:focus {
 		outline: 1px solid var(--color-accent);
-		-webkit-tap-highlight-color: rgba(0,0,0,0); // Removes outline on iOS
+		-webkit-tap-highlight-color: rgba(0, 0, 0, 0); // Removes outline on iOS
 	}
 
 	&::placeholder {

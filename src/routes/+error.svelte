@@ -11,7 +11,7 @@
 </script>
 
 <Section isFullscreen={true} title="Error {$page.status}">
-	<Notice sentiment={Sentiment.NEGATIVE}>
+	<Notice>
 		{error === 'Error: 500' ? DEFAULT_ERROR : error}
 	</Notice>
 </Section>

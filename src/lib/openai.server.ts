@@ -1,6 +1,6 @@
 import { env } from '$env/dynamic/private';
 import { logEventToSlack } from '$lib/slack.server';
-import { error} from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 import { Configuration, OpenAIApi } from 'openai';
 
 import { ArticleCategory } from './article';
@@ -28,7 +28,7 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
-const formatPrompt = (prompt: string) => {
+const formatPrompt = (prompt: string): string => {
 	return `
 		${prompt.trim()}
 		Write article in English, don't repeat phrases, use this JSON shape and minify it, stricly adhere to character limits as specified:
@@ -36,7 +36,9 @@ const formatPrompt = (prompt: string) => {
 	`;
 };
 
-export const getCompletionFromAI = async (prompt: string): Promise<{ status: number, message: string; }> => {
+export const getCompletionFromAI = async (
+	prompt: string
+): Promise<{ status: number; message: string }> => {
 	try {
 		const completionResponse = await openai.createCompletion({
 			model: 'text-davinci-003',
@@ -48,7 +50,7 @@ export const getCompletionFromAI = async (prompt: string): Promise<{ status: num
 			prompt: formatPrompt(prompt)
 		});
 
-		const completion = completionResponse.data.choices[0].text?.trim()
+		const completion = completionResponse.data.choices[0].text?.trim();
 		if (completion) return { status: 200, message: completion };
 
 		// If we get here, the AI didn't return a completion for some unknown reason

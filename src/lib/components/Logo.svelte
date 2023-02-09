@@ -68,7 +68,7 @@
 		padding: 0 16px;
 
 		> path {
-			fill: #000076;
+			fill: var(--color-accent);
 		}
 
 		&--dark-background {

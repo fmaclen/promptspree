@@ -17,7 +17,7 @@
 		/* background-color: var(--color-grey5); */
 		padding: 16px 8px;
 		box-sizing: border-box;
-		
+
 		color: hsl(0, 0%, 40%);
 		background-color: hsl(0, 0%, 93%);
 		text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);

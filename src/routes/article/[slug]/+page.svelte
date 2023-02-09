@@ -3,7 +3,6 @@
 	import ArticleBody from '$lib/components/ArticleBody.svelte';
 	import ArticleMetadata from '$lib/components/ArticleMetadata.svelte';
 	import Card from '$lib/components/Card.svelte';
-	// import Button from '$lib/components/Button.svelte';
 	import Section from '$lib/components/Section.svelte';
 
 	import type { PageData } from './$types';
@@ -63,7 +62,7 @@
 			updated={article.updated}
 		>
 			<!-- {#if currentUserId === article.author.id}
-				<Button href="/">Delete</Button>
+				<button>Delete</button>
 			{/if} -->
 		</ArticleMetadata>
 	</Card>
@@ -115,7 +114,7 @@
 		&--reacted {
 			font-weight: 600;
 		}
-		
+
 		&--reacted,
 		&:hover:not(:disabled) {
 			filter: inherit;
