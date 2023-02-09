@@ -18,14 +18,6 @@
 	$: isLoading = false;
 
 	const submitGenerate = () => {
-		// HACK: when the textarea is focused on mobile browsers and the keyboard appears
-		// the page is scrolled down to the bottom of the textarea.
-		// This hacks forces the page to scroll back to the top of the page and resets
-		// the viewport size to the original size.
-		window.scrollTo(0, 0);
-		document.body.style.height = '100%';
-		document.body.style.height = `${document.body.scrollHeight}px`;
-
 		isLoading = true;
 		article = null;
 		error = null;
