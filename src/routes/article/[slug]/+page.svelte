@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { type SubmitFunction, enhance } from '$app/forms';
+	import ArticleBody from '$lib/components/ArticleBody.svelte';
 	import ArticleMetadata from '$lib/components/ArticleMetadata.svelte';
+	import Card from '$lib/components/Card.svelte';
 	// import Button from '$lib/components/Button.svelte';
 	import Section from '$lib/components/Section.svelte';
 
@@ -19,18 +21,8 @@
 </script>
 
 <Section isFullscreen={true}>
-	<article class="article">
-		<div class="article__body">
-			<h3 class="article__category">{article.category}</h3>
-
-			<h1 class="article__headline">
-				{article.headline}
-			</h1>
-
-			{#each article.body as paragraph}
-				<p class="article__body">{paragraph}</p>
-			{/each}
-		</div>
+	<Card>
+		<ArticleBody {article} />
 
 		<nav class="article-reactions">
 			{#each article.reactions.byType as reaction}
@@ -74,7 +66,7 @@
 				<Button href="/">Delete</Button>
 			{/if} -->
 		</ArticleMetadata>
-	</article>
+	</Card>
 </Section>
 
 <style lang="scss">
@@ -152,51 +144,5 @@
 		overflow-y: scroll;
 		background-color: hsl(0, 0%, 90%);
 		padding: 16px;
-	}
-
-	/* ============================================================================== */
-	/* ============================================================================== */
-	/* ============================================================================== */
-
-	article.article {
-		border: 1px solid rgba(0, 0, 0, 0.2);
-		border-radius: 2px;
-		box-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5), inset 1px 1px 0 rgba(255, 255, 255, 0.5);
-	}
-
-	div.article__body {
-		border-top-left-radius: 2px;
-		border-top-right-radius: 2px;
-		background-color: var(--color-white);
-		display: flex;
-		flex-direction: column;
-
-		padding: 24px;
-		row-gap: 12px;
-	}
-
-	h3.article__category {
-		margin: 0;
-		font-size: 13px;
-		line-height: 1em;
-		font-weight: 400;
-		color: var(--color-accent);
-	}
-
-	h1.article__headline {
-		font-family: var(--font-serif);
-		margin: 0;
-		line-height: 1em;
-		color: hsl(0, 0%, 10%);
-
-		font-size: 32px;
-		margin-bottom: 0.5em;
-	}
-
-	p.article__body {
-		font-size: 16px;
-		margin: 0;
-		color: hsl(0, 0%, 35%);
-		line-height: 1.5em;
 	}
 </style>

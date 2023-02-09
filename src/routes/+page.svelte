@@ -24,7 +24,7 @@
 						<h1 class="article__headline">
 							{article.headline}
 						</h1>
-						<p class="article__body">{article.body[0]}</p>
+						<p class="article__p">{article.body[0]}</p>
 					</div>
 				</A>
 
@@ -65,7 +65,7 @@
 		border-top-left-radius: 2px;
 		border-top-right-radius: 2px;
 		background-color: var(--color-white);
-		padding: 16px;
+		padding: 20px;
 		display: flex;
 		flex-direction: column;
 		row-gap: 8px;
@@ -82,14 +82,14 @@
 	h1.article__headline {
 		font-family: var(--font-serif);
 		margin: 0;
-		font-size: 20px;
-		line-height: 1em;
+		font-size: 24px;
+		line-height: 1.1em;
 		color: hsl(0, 0%, 10%);
 	}
 
-	p.article__body {
+	p.article__p {
 		font-size: 14px;
 		margin: 0;
-		color: hsl(0, 0%, 35%);
+		color: hsl(0, 0%, 40%);
 	}
 </style>
