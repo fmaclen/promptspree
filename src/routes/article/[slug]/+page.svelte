@@ -2,7 +2,7 @@
 	import { type SubmitFunction, enhance } from '$app/forms';
 	import ArticleBody from '$lib/components/ArticleBody.svelte';
 	import ArticleMetadata from '$lib/components/ArticleMetadata.svelte';
-	import Card from '$lib/components/Card.svelte';
+	import Plate from '$lib/components/Plate.svelte';
 	import Section from '$lib/components/Section.svelte';
 
 	import type { PageData } from './$types';
@@ -20,7 +20,7 @@
 </script>
 
 <Section isFullscreen={true}>
-	<Card>
+	<Plate>
 		<ArticleBody {article} />
 
 		<nav class="article-reactions">
@@ -67,7 +67,7 @@
 				<button>Delete</button>
 			{/if} -->
 		</ArticleMetadata>
-	</Card>
+	</Plate>
 </Section>
 
 <style lang="scss">

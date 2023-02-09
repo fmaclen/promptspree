@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { type SubmitFunction, enhance } from '$app/forms';
-	import Card from '$lib/components/Card.svelte';
+	import Plate from '$lib/components/Plate.svelte';
 	import FormButton from '$lib/components/FormButton.svelte';
 	import FormField from '$lib/components/FormField.svelte';
 	import FormFieldset from '$lib/components/FormFieldset.svelte';
@@ -32,7 +32,7 @@
 </script>
 
 <Section isFullscreen={true} title="Login">
-	<Card>
+	<Plate>
 		<form class="form" method="POST" use:enhance={handleSubmit}>
 			<FormFieldset>
 				{#if error}
@@ -56,7 +56,7 @@
 				<FormButton type="submit" label="Login" disabled={isSubmitDisabled} />
 			</FormFieldset>
 		</form>
-	</Card>
+	</Plate>
 </Section>
 
 <style lang="scss">

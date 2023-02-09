@@ -2,7 +2,7 @@
 	import { applyAction, enhance } from '$app/forms';
 	import type { Article } from '$lib/article';
 	import ArticleBody from '$lib/components/ArticleBody.svelte';
-	import Card from '$lib/components/Card.svelte';
+	import Plate from '$lib/components/Plate.svelte';
 	import FormButton from '$lib/components/FormButton.svelte';
 	import FormTextarea from '$lib/components/FormTextarea.svelte';
 	import HR from '$lib/components/HR.svelte';
@@ -111,9 +111,9 @@
 	<HR />
 
 	<div class="play__draft">
-		<Card>
+		<Plate>
 			<ArticleBody {article} {isLoading} />
-		</Card>
+		</Plate>
 	</div>
 </section>
 

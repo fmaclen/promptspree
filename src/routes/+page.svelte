@@ -1,9 +1,8 @@
 <script lang="ts">
 	import ArticleMetadata from '$lib/components/ArticleMetadata.svelte';
-	import Button from '$lib/components/Button.svelte';
-	import Card from '$lib/components/Card.svelte';
 	import HR from '$lib/components/HR.svelte';
 	import Notice from '$lib/components/Notice.svelte';
+	import Plate from '$lib/components/Plate.svelte';
 	import Section from '$lib/components/Section.svelte';
 
 	import type { PageData } from './$types';
@@ -17,7 +16,7 @@
 <Section>
 	<div class="articles">
 		{#each data.articles as article}
-			<Card>
+			<Plate>
 				<a class="article" href="/article/{article.id}">
 					<div class="article__body">
 						<h3 class="article__category">{article.category}</h3>
@@ -42,7 +41,7 @@
 						<span class="article-reactions-summary__total">{article.reactions.total}</span>
 					</a>
 				</ArticleMetadata>
-			</Card>
+			</Plate>
 		{/each}
 	</div>
 </Section>
