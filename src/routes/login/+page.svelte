@@ -31,7 +31,7 @@
 	};
 </script>
 
-<Section isFullscreen={true} title="Login">
+<Section title="Login">
 	<Plate>
 		<form class="form" method="POST" use:enhance={handleSubmit}>
 			<FormFieldset>

@@ -10,7 +10,7 @@
 	let error = $page.error && $page.error.message;
 </script>
 
-<Section isFullscreen={true} title="Error {$page.status}">
+<Section title="Error {$page.status}">
 	<Notice>
 		{error === 'Error: 500' ? DEFAULT_ERROR : error}
 	</Notice>

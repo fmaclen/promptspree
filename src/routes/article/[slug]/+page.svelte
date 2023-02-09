@@ -19,7 +19,7 @@
 	};
 </script>
 
-<Section isFullscreen={true}>
+<Section>
 	<Plate>
 		<ArticleBody {article} />
 

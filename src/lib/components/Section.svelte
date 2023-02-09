@@ -1,9 +1,8 @@
 <script lang="ts">
 	export let title: string = '';
-	export let isFullscreen: boolean = false;
 </script>
 
-<section class="section {isFullscreen ? 'section--fullscreen' : ''}">
+<section class="section">
 	<div class="section__container">
 		{#if title}
 			<h1 class="section__h1">{title}</h1>
@@ -23,10 +22,7 @@
 		width: 100%;
 		margin-inline: auto;
 		box-sizing: border-box;
-
-		&--fullscreen {
-			margin-block: auto;
-		}
+		margin-block: auto;
 	}
 
 	div.section__container {

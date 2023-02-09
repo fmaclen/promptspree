@@ -120,7 +120,8 @@
 <style lang="scss">
 	section.play {
 		display: grid;
-		grid-template-rows: max-content auto;
+		grid-template-rows: max-content max-content auto;
+		height: 100%;
 	}
 
 	div.play__draft {

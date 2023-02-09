@@ -61,7 +61,7 @@
 <Notice>Already have an account? <A href="/login" isHighlighted={true}>Login</A></Notice>
 <HR />
 
-<Section isFullscreen={true} title="Join waitlist">
+<Section title="Join waitlist">
 	<Plate>
 		<form class="form" method="POST" use:enhance={handleSubmit}>
 			<FormFieldset>
