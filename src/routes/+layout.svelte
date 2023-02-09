@@ -60,8 +60,6 @@
 		--color-negative: hsl(342, 83%, 48%);
 		--color-negative-secondary: hsl(342, 83%, 95%);
 
-		--color-border: #e2e2e2;
-
 		--color-white: #ffffff;
 		--color-black: #000;
 

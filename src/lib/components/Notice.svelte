@@ -10,11 +10,9 @@
 
 <style lang="scss">
 	div.notice {
-		/* font-family: var(--font-mono); */
 		text-align: center;
 		width: 100%;
 		font-size: 14px;
-		/* background-color: var(--color-grey5); */
 		padding: 16px 8px;
 		box-sizing: border-box;
 

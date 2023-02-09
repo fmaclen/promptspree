@@ -33,14 +33,14 @@
 					nickname={article.author.nickname}
 					updated={article.updated}
 				>
-					<div class="article-reactions-summary">
-						<Button href="/article/{article.id}" secondary={true}>
+					<a class="article-reactions-summary" href="/article/{article.id}">
+						<span class="article-reactions-summary__emoji">
 							{article.reactions.total > 0
 								? article.reactions.byType.sort((a, b) => b.total - a.total)[0].reaction
 								: ''}
-							{article.reactions.total}
-						</Button>
-					</div>
+						</span>
+						<span class="article-reactions-summary__total">{article.reactions.total}</span>
+					</a>
 				</ArticleMetadata>
 			</Card>
 		{/each}
@@ -90,5 +90,23 @@
 		margin: 0;
 		color: hsl(0, 0%, 40%);
 		line-height: 1.4em;
+	}
+
+	a.article-reactions-summary {
+		display: flex;
+		align-items: center;
+		column-gap: 8px;
+		text-decoration: none;
+
+		font-family: var(--font-mono);
+		font-size: 12px;
+		line-height: 1em;
+		text-align: center;
+		font-weight: 400;
+		color: hsl(0, 0%, 50%);
+	}
+
+	span.article-reactions-summary__emoji {
+		font-size: 16px;
 	}
 </style>

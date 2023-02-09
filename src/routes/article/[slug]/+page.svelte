@@ -38,10 +38,12 @@
 							{article?.reactions?.byCurrentUser === reaction.index ? 'article-reactions__button--reacted' : ''}"
 						disabled={!data.user}
 					>
+					<span class="article-reactions__emoji">
 						{reaction.reaction}
+					</span>
 
 						{#if reaction.total}
-							<span class="article-reactions__sum">
+							<span class="article-reactions__total">
 								{reaction.total}
 							</span>
 						{/if}
@@ -79,11 +81,9 @@
 
 	form.article-reactions__form {
 		width: 100%;
-
-		border-top: 1px solid hsl(0, 0%, 80%);
-		border-bottom: 1px solid hsl(0, 0%, 80%);
-		border-left: 1px solid hsl(0, 0%, 80%);
-		box-shadow: inset 4px 4px 0 rgba(255, 255, 255, 0.35);
+		border-top: 1px solid hsl(0, 0%, 85%);
+		border-bottom: 1px solid hsl(0, 0%, 85%);
+		border-left: 1px solid hsl(0, 0%, 85%);
 
 		&:first-child {
 			border-left: none;
@@ -91,25 +91,25 @@
 	}
 
 	button.article-reactions__button {
-		font-family: var(--font-mono);
-		display: grid;
-		grid-auto-flow: column;
+		display: flex;
 		align-items: center;
 		justify-content: center;
-		gap: 8px;
+		column-gap: 8px;
 		width: 100%;
-		padding: 8px 12px;
+		padding: 16px;
 		box-sizing: border-box;
 		border: none;
-		background-color: var(--color-grey5);
-		/* border-bottom: 1px solid var(--color-border); */
-		font-size: 24px;
-		text-align: center;
+		background-color: hsl(0, 0%, 95%);
 		cursor: pointer;
 		filter: grayscale(100%);
 
+		// Styles shared with `a.article-reactions-summary`
+		text-align: center;
 		font-weight: 400;
-		color: var(--color-grey30);
+		color: hsl(0, 0%, 50%);
+		line-height: 24px;
+		font-size: 12px;
+		font-family: var(--font-mono);
 
 		&--reacted {
 			font-weight: 600;
@@ -128,8 +128,9 @@
 		}
 	}
 
-	span.article-reactions__sum {
-		font-size: 11px;
+	span.article-reactions__emoji {
+		font-size: 24px;
+		transform: translateY(2px); // Optically align emoji to total reactions
 	}
 
 	div.article-prompt {

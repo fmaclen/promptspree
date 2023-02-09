@@ -22,7 +22,7 @@
 <style lang="scss">
 	nav.metadata {
 		min-height: 48px;
-		padding: 6px 8px 6px 16px;
+		padding: 6px 16px;
 		width: 100%;
 		box-sizing: border-box;
 		font-size: 13px;
