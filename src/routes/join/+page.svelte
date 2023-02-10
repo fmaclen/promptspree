@@ -26,7 +26,7 @@
 	let passwordConfirm = '';
 	let hasAcceptedTerms = false;
 	let errors: PocketbaseFieldErrors | undefined;
-	let success = '';
+	let success = false;
 	$: isSubmitDisabled =
 		!email ||
 		!nickname ||
@@ -42,7 +42,7 @@
 		return async ({ result, update }) => {
 			switch (result.type) {
 				case 'success':
-					success = result.data?.message;
+					success = true;
 					break;
 				case 'failure':
 					errors = result.data?.data;
@@ -61,12 +61,18 @@
 <Notice>Already have an account? <A href="/login" isHighlighted={true}>Login</A></Notice>
 <HR />
 
-<Section title="Join to play">
+<Section title="{success ? 'Almost there...' : 'Join to play'}">
 	<Plate>
 		<form class="form" method="POST" use:enhance={handleSubmit}>
 			<FormFieldset>
 				{#if success}
-					<Notice sentiment={Sentiment.POSITIVE}>{success}</Notice>
+					<Notice>
+						<P>Check your email to verify your account</P>
+						<P>
+							After you do, please head over to the
+							<A href="/login" isHighlighted={true}>login page</A> to start
+						</P>
+					</Notice>
 				{:else}
 					<FormField label="E-mail">
 						<FormInput
