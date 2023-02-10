@@ -51,7 +51,14 @@
 
 			<Logo title={APP_NAME} />
 
-			<a class="primary-action {$page.url.pathname.includes("/play") ? 'primary-action--active' : ''}" href="/play">
+			<a
+				class="primary-action {$page.url.pathname.includes('/play')
+					? 'primary-action--active'
+					: ''}"
+				href={$page.url.pathname.includes('/play')
+				? '/'
+				: '/play'}
+			>
 				Play
 				<span class="primary-action__icon">✨</span>
 			</a>
@@ -157,7 +164,7 @@
 		display: flex;
 		flex-direction: column;
 		position: relative;
-		height: 100vh;
+		height: 100%;
 
 		&--expanded {
 			@media (min-width: 1024px) {
@@ -210,12 +217,9 @@
 			}
 		}
 
-		&:hover {
-			border-color: hsl(0, 0%, 70%);
-		}
-
 		&--expanded {
-			background-color: var(--color-white);
+			border-color: var(--color-accent);
+			background-color: var(--color-accent-secondary);
 		}
 	}
 
