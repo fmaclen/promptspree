@@ -11,8 +11,8 @@
 	$: isExpanded = false;
 
 	onMount(() => {
-		isSmallViewport = window.innerWidth <= 1024
-		isExpanded = !isSmallViewport
+		isSmallViewport = window.innerWidth <= 1024;
+		isExpanded = !isSmallViewport;
 	});
 </script>
 
@@ -129,7 +129,7 @@
 		justify-content: space-between;
 		min-width: 256px;
 		border-right: 1px solid hsl(0, 0%, 85%);
-		background-color: hsl(0, 0%, 93%);
+		background-color: var(--color-white);
 
 		display: none;
 
@@ -160,11 +160,11 @@
 		}
 
 		@media (max-width: 1024px) {
-		&:first-child,
-		&:last-child {
-			padding-top: 12px;
+			&:first-child,
+			&:last-child {
+				padding-top: 12px;
 				padding-bottom: 12px;
-				box-shadow: 0 1px 0 hsl(0, 0%, 100%), inset  0 -1px 0 hsl(0, 0%, 85%);
+				border-bottom: 1px solid hsl(0, 0%, 85%);
 			}
 		}
 	}
