@@ -2,12 +2,12 @@
 	import { applyAction, enhance } from '$app/forms';
 	import type { Article } from '$lib/article';
 	import ArticleBody from '$lib/components/ArticleBody.svelte';
-	import Plate from '$lib/components/Plate.svelte';
 	import FormButton from '$lib/components/FormButton.svelte';
 	import FormTextarea from '$lib/components/FormTextarea.svelte';
 	import HR from '$lib/components/HR.svelte';
 	import IconLoading from '$lib/components/IconLoading.svelte';
 	import Notice from '$lib/components/Notice.svelte';
+	import Plate from '$lib/components/Plate.svelte';
 	import { Sentiment } from '$lib/utils';
 	import type { ActionResult } from '@sveltejs/kit';
 
@@ -70,18 +70,13 @@
 			bind:value={prompt}
 		/>
 
-		<nav class="form-nav">
-			<form class="form" method="POST" action="?/generate" use:enhance={submitGenerate}>
+		<nav class="play__nav">
+			<form class="play__form" method="POST" action="?/generate" use:enhance={submitGenerate}>
 				<input type="hidden" name="prompt" bind:value={prompt} />
 
 				{#if article}
 					<input type="hidden" name="articleId" value={article.id} />
-					<FormButton
-						label="Try another one"
-						secondary={true}
-						type="submit"
-						disabled={!prompt || isLoading}
-					/>
+					<FormButton label="Try another one" type="submit" disabled={!prompt || isLoading} />
 				{:else}
 					<FormButton
 						label={isLoading ? 'Generating...' : 'Generate'}
@@ -92,9 +87,14 @@
 			</form>
 
 			{#if article}
-				<form class="form" method="POST" action="?/publish" use:enhance={submitPublish}>
+				<form class="play__form" method="POST" action="?/publish" use:enhance={submitPublish}>
 					<input type="hidden" name="articleId" value={article.id} />
-					<FormButton label="Publish" type="submit" disabled={!prompt || isLoading} />
+					<FormButton
+						label="Publish"
+						type="submit"
+						isPublishable={true}
+						disabled={!prompt || isLoading}
+					/>
 				</form>
 			{/if}
 		</nav>
@@ -114,6 +114,7 @@
 		display: grid;
 		grid-template-rows: max-content max-content auto;
 		height: 100%;
+		background-color: hsl(0, 0%, 93%);
 	}
 
 	div.play__draft {
@@ -138,18 +139,20 @@
 		margin-inline: auto;
 	}
 
-	form.form {
+	nav.play__nav {
+		display: flex;
+		column-gap: 8px;
+		width: 100%;
+	}
+
+	form.play__form {
 		width: 100%;
 		display: flex;
 		flex-direction: column;
 		row-gap: 16px;
-	}
 
-	nav.form-nav {
-		display: flex;
-		justify-content: flex-end;
-		flex-direction: column;
-		row-gap: 8px;
-		width: 100%;
+		&:last-child:not(:first-child) {
+			width: max-content;
+		}
 	}
 </style>

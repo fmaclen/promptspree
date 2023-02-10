@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { type SubmitFunction, enhance } from '$app/forms';
 	import A from '$lib/components/A.svelte';
-	import Plate from '$lib/components/Plate.svelte';
 	import FormButton from '$lib/components/FormButton.svelte';
 	import FormField from '$lib/components/FormField.svelte';
 	import FormFieldset from '$lib/components/FormFieldset.svelte';
@@ -9,6 +8,7 @@
 	import HR from '$lib/components/HR.svelte';
 	import Notice from '$lib/components/Notice.svelte';
 	import P from '$lib/components/P.svelte';
+	import Plate from '$lib/components/Plate.svelte';
 	import Section from '$lib/components/Section.svelte';
 	import { Sentiment } from '$lib/utils';
 

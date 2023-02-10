@@ -1,11 +1,13 @@
 <script lang="ts">
 	import { type SubmitFunction, enhance } from '$app/forms';
-	import Plate from '$lib/components/Plate.svelte';
+	import A from '$lib/components/A.svelte';
 	import FormButton from '$lib/components/FormButton.svelte';
 	import FormField from '$lib/components/FormField.svelte';
 	import FormFieldset from '$lib/components/FormFieldset.svelte';
 	import FormInput from '$lib/components/FormInput.svelte';
+	import HR from '$lib/components/HR.svelte';
 	import Notice from '$lib/components/Notice.svelte';
+	import Plate from '$lib/components/Plate.svelte';
 	import Section from '$lib/components/Section.svelte';
 	import { Sentiment } from '$lib/utils';
 
@@ -31,6 +33,9 @@
 	};
 </script>
 
+<Notice>Don't have an account? <A href="/waitlist" isHighlighted={true}>Join now</A></Notice>
+<HR />
+
 <Section title="Login">
 	<Plate>
 		<form class="form" method="POST" use:enhance={handleSubmit}>
@@ -38,7 +43,7 @@
 				{#if error}
 					<Notice sentiment={Sentiment.NEGATIVE}>{error}</Notice>
 				{/if}
-	
+
 				<FormField label="E-mail">
 					<FormInput
 						type="email"
@@ -48,11 +53,11 @@
 						bind:value={email}
 					/>
 				</FormField>
-	
+
 				<FormField label="Password">
 					<FormInput type="password" name="password" required={true} bind:value={password} />
 				</FormField>
-	
+
 				<FormButton type="submit" label="Login" disabled={isSubmitDisabled} />
 			</FormFieldset>
 		</form>
