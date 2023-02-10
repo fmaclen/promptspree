@@ -61,7 +61,7 @@
 <Notice>Already have an account? <A href="/login" isHighlighted={true}>Login</A></Notice>
 <HR />
 
-<Section title="Join waitlist">
+<Section title="Join to play">
 	<Plate>
 		<form class="form" method="POST" use:enhance={handleSubmit}>
 			<FormFieldset>
@@ -134,7 +134,7 @@
 						{/if}
 					</div>
 
-					<FormButton type="submit" label="Join waitlist" disabled={isSubmitDisabled} />
+					<FormButton type="submit" label="Join" disabled={isSubmitDisabled} />
 				{/if}
 			</FormFieldset>
 		</form>

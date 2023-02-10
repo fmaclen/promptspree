@@ -33,7 +33,7 @@
 	};
 </script>
 
-<Notice>Don't have an account? <A href="/waitlist" isHighlighted={true}>Join now</A></Notice>
+<Notice>Don't have an account? <A href="/join" isHighlighted={true}>Join to play</A></Notice>
 <HR />
 
 <Section title="Login">
