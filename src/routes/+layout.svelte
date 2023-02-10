@@ -1,12 +1,5 @@
 <script lang="ts">
-	import Button from '$lib/components/Button.svelte';
-	import HR from '$lib/components/HR.svelte';
-	import Logo from '$lib/components/Logo.svelte';
 	import { APP_NAME } from '$lib/utils';
-
-	import type { PageData } from './$types';
-
-	export let data: PageData;
 
 	const today = new Date().toLocaleDateString('en-US', {
 		weekday: 'long',
@@ -21,23 +14,6 @@
 </svelte:head>
 
 <div class="layout">
-	<header class="header">
-		<hgroup class="header__hgroup">
-			<nav class="header__nav">
-				{#if data.user}
-					<form action="/logout" method="POST" class="nav__form">
-						<Button type="submit">Logout</Button>
-					</form>
-				{:else}
-					<Button href="/waitlist">Join</Button>
-				{/if}
-			</nav>
-			<Logo title={APP_NAME} />
-			<nav class="header__nav"><Button href="/play">Play</Button></nav>
-		</hgroup>
-		<HR />
-	</header>
-
 	<slot />
 </div>
 
@@ -54,7 +30,8 @@
 		--font-sans: 'Inter', sans-serif;
 		--font-mono: 'Overpass Mono', monospace;
 
-		--color-accent: hsl(240, 100%, 23%);
+		--color-accent: hsl(248, 40%, 40%);
+		/* --color-accent: #000075; */
 		--color-positive: hsl(181, 32%, 49%);
 		--color-positive-secondary: hsl(181, 32%, 95%);
 		--color-negative: hsl(342, 83%, 48%);
@@ -74,25 +51,5 @@
 		display: flex;
 		flex-direction: column;
 		height: 100%;
-	}
-
-	header.header {
-		position: sticky;
-		top: 0;
-		z-index: 1;
-	}
-
-	hgroup.header__hgroup {
-		display: grid;
-		grid-template-columns: repeat(3, 1fr);
-		align-items: center;
-		justify-content: space-between;
-		padding: 12px 16px;
-		column-gap: 14px;
-		background-color: hsl(0, 0%, 95%);
-	}
-
-	nav.header__nav:last-child {
-		margin-left: auto;
 	}
 </style>
