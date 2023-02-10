@@ -55,9 +55,7 @@
 				class="primary-action {$page.url.pathname.includes('/play')
 					? 'primary-action--active'
 					: ''}"
-				href={$page.url.pathname.includes('/play')
-				? '/'
-				: '/play'}
+				href={$page.url.pathname.includes('/play') ? '/' : '/play'}
 			>
 				Play
 				<span class="primary-action__icon">✨</span>

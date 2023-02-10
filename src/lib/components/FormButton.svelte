@@ -5,7 +5,12 @@
 	export let isPublishable: boolean = false;
 </script>
 
-<button {type} {disabled} class="form-button {isPublishable ? 'form-button--publishable' : ''}" on:click>
+<button
+	{type}
+	{disabled}
+	class="form-button {isPublishable ? 'form-button--publishable' : ''}"
+	on:click
+>
 	{label}
 </button>
 
