@@ -179,7 +179,6 @@
 		justify-content: space-between;
 		min-width: 256px;
 		border-right: 1px solid hsl(0, 0%, 85%);
-		background-color: var(--color-white);
 
 		display: none;
 
@@ -188,6 +187,7 @@
 		}
 
 		@media (max-width: 1024px) {
+			border-right: none;
 			position: sticky;
 			top: 0;
 			z-index: 2;
@@ -245,7 +245,7 @@
 
 		&:hover {
 			color: var(--color-accent);
-			background-color: hsl(0, 0%, 95%);
+			background-color: var(--color-white);
 			border-top-color: hsl(0, 0%, 85%);
 			border-bottom-color: hsl(0, 0%, 85%);
 			box-shadow: 0 -1px 0 hsl(0, 0%, 95%), 0 1px 0 hsl(0, 0%, 100%);
