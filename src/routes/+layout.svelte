@@ -34,18 +34,18 @@
 			<button
 				type="button"
 				id="hamburger"
-				class="header__button {isExpanded ? 'header__button--expanded' : ''}"
+				class="header__hamburger {isExpanded ? 'header__hamburger--expanded' : ''}"
 				on:click={() => (isExpanded = !isExpanded)}
 				aria-expanded={isExpanded}
 				aria-controls=""
 				aria-label="Toggle navigation"
 			>
-				<span class="burger-line" />
-				<span class="burger-line" />
-				<span class="burger-line" />
+				<span class="header__hamburger-line" />
+				<span class="header__hamburger-line" />
+				<span class="header__hamburger-line" />
 				{#if isExpanded}
-					<span class="burger-line" />
-					<span class="burger-line" />
+					<span class="header__hamburger-line" />
+					<span class="header__hamburger-line" />
 				{/if}
 			</button>
 
@@ -141,8 +141,6 @@
 
 		--color-accent: hsl(248, 40%, 40%);
 		--color-accent-secondary: hsl(248, 40%, 95%);
-		/* --color-accent: #000075; */
-		/* --color-positive: hsl(181, 32%, 49%); */
 		--color-positive: hsl(170, 90%, 39%);
 		--color-positive-secondary: hsl(170, 90%, 95%);
 		--color-negative: hsl(342, 83%, 48%);
@@ -173,64 +171,6 @@
 			}
 		}
 	}
-
-	/* ------------------------------------------------------------------------ */
-
-	header.header {
-		grid-area: header;
-
-		position: sticky;
-		top: 0;
-		z-index: 1;
-	}
-
-	hgroup.header__hgroup {
-		display: flex;
-		justify-content: space-between;
-		background-color: hsl(0, 0%, 95%);
-		padding: 12px 24px;
-		box-sizing: border-box;
-	}
-
-	button.header__button {
-		display: flex;
-		flex-direction: column;
-		row-gap: 2px;
-		justify-content: center;
-		background-color: transparent;
-		font-family: var(--font-base);
-		font-weight: 400;
-		padding: 8px;
-		border-radius: 2px;
-		cursor: pointer;
-
-		color: hsl(0, 0%, 50%);
-		box-shadow: inset 2px 2px 0 rgba(255, 255, 255, 0.5);
-		border: 1px solid hsl(0, 0%, 85%);
-
-		&--expanded,
-		&:hover {
-			span.burger-line {
-				background-color: var(--color-accent);
-			}
-		}
-
-		&--expanded {
-			border-color: var(--color-accent);
-			background-color: var(--color-accent-secondary);
-		}
-	}
-
-	span.burger-line {
-		display: block;
-		width: 20px;
-		height: 1px;
-		border-radius: 2px;
-		background-color: hsl(0, 0%, 65%);
-		border-bottom: 1px solid var(--color-white);
-	}
-
-	/* ------------------------------------------------------------------------ */
 
 	aside.layout__aside {
 		grid-area: aside;
@@ -343,6 +283,64 @@
 		height: 100%;
 		overflow-y: auto;
 	}
+
+	/* ------------------------------------------------------------------------ */
+
+	header.header {
+		grid-area: header;
+
+		position: sticky;
+		top: 0;
+		z-index: 1;
+	}
+
+	hgroup.header__hgroup {
+		display: flex;
+		justify-content: space-between;
+		background-color: hsl(0, 0%, 95%);
+		padding: 12px 24px;
+		box-sizing: border-box;
+	}
+
+	button.header__hamburger {
+		display: flex;
+		flex-direction: column;
+		row-gap: 2px;
+		justify-content: center;
+		background-color: transparent;
+		font-family: var(--font-base);
+		font-weight: 400;
+		padding: 8px;
+		border-radius: 2px;
+		cursor: pointer;
+
+		color: hsl(0, 0%, 50%);
+		box-shadow: inset 2px 2px 0 rgba(255, 255, 255, 0.5);
+		border: 1px solid hsl(0, 0%, 85%);
+
+		&--expanded,
+		&:hover {
+			span.header__hamburger-line {
+				background-color: var(--color-accent);
+			}
+		}
+
+		&--expanded {
+			border-color: var(--color-accent);
+			background-color: var(--color-accent-secondary);
+		}
+	}
+
+	span.header__hamburger-line {
+		display: block;
+		width: 20px;
+		height: 1px;
+		border-radius: 2px;
+		background-color: hsl(0, 0%, 65%);
+		border-bottom: 1px solid var(--color-white);
+	}
+
+	/* ------------------------------------------------------------------------ */
 
 	a.primary-action {
 		margin-left: auto;
