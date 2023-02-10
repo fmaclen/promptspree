@@ -114,7 +114,7 @@
 		display: grid;
 		grid-template-rows: max-content max-content auto;
 		height: 100%;
-		background-color: hsl(0deg, 0%, 93%);
+		background-color: hsl(0, 0%, 93%);
 	}
 
 	div.play__draft {
