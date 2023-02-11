@@ -1,20 +1,14 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import HR from '$lib/components/HR.svelte';
 	import Logo from '$lib/components/Logo.svelte';
 	import { APP_NAME } from '$lib/utils';
-	import { onMount } from 'svelte';
+	import { slide } from 'svelte/transition';
+	import { backInOut } from 'svelte/easing';
 
 	import type { PageData } from './$types';
 
 	export let data: PageData;
-	let isSmallViewport = false;
-	$: isExpanded = false;
-
-	onMount(() => {
-		isSmallViewport = window.innerWidth <= 1024;
-		isExpanded = !isSmallViewport;
-	});
+	let isExpanded = false;
 
 	const today = new Date().toLocaleDateString('en-US', {
 		weekday: 'long',
@@ -49,7 +43,7 @@
 				{/if}
 			</button>
 
-			<Logo title={APP_NAME} />
+			<Logo title={APP_NAME} hasDarkBackground={true} />
 
 			<a
 				class="primary-action {$page.url.pathname.includes('/play')
@@ -61,65 +55,67 @@
 				<span class="primary-action__icon">✨</span>
 			</a>
 		</hgroup>
-		<HR />
 	</header>
 
-	<aside
-		id="aside"
-		class="layout__aside {isExpanded ? 'layout__aside--expanded' : ''}"
-		role="region"
-		aria-labelledby="hamburger"
-	>
-		<ul class="aside__ul">
-			{#if data.user}
-				<li class="aside__li">
-					<a class="aside__a" href="/user/{data.user.id}/" aria-disabled="true">
-						<strong class="aside__strong">
-							{data.user.nickname}
-						</strong>
-					</a>
-				</li>
-				<li class="aside__li">
-					<a class="aside__a" href="/user/{data.user.id}/drafts/" aria-disabled="true">Drafts</a>
-				</li>
-				<li class="aside__li">
-					<a class="aside__a" href="/settings" aria-disabled="true">Settings</a>
-				</li>
-				<li class="aside__li">
-					<form action="/logout" method="POST" class="">
-						<button class="aside__button" type="submit">Logout</button>
-					</form>
-				</li>
-			{:else}
-				<li class="aside__li">
-					<a class="aside__a" href="/join">
-						<strong class="aside__strong">Join to play</strong>
-					</a>
-				</li>
-				<li class="aside__li">
-					<a class="aside__a" href="/login">Login</a>
-				</li>
-			{/if}
-		</ul>
+	{#if isExpanded}
+		<aside
+			id="aside"
+			class="layout__aside"
+			role="region"
+			aria-labelledby="hamburger"
+			transition:slide="{{ duration: 50 }}"
+		>
+			<ul class="aside__ul">
+				{#if data.user}
+					<li class="aside__li">
+						<a class="aside__a" href="/user/{data.user.id}/" aria-disabled="true">
+							<strong class="aside__strong">
+								{data.user.nickname}
+							</strong>
+						</a>
+					</li>
+					<li class="aside__li">
+						<a class="aside__a" href="/user/{data.user.id}/drafts/" aria-disabled="true">Drafts</a>
+					</li>
+					<li class="aside__li">
+						<a class="aside__a" href="/settings" aria-disabled="true">Settings</a>
+					</li>
+					<li class="aside__li">
+						<form action="/logout" method="POST" class="">
+							<button class="aside__button" type="submit">Logout</button>
+						</form>
+					</li>
+				{:else}
+					<li class="aside__li">
+						<a class="aside__a" href="/join">
+							<strong class="aside__strong">Join to play</strong>
+						</a>
+					</li>
+					<li class="aside__li">
+						<a class="aside__a" href="/login">Login</a>
+					</li>
+				{/if}
+			</ul>
 
-		<ul class="aside__ul aside__ul--bottom">
-			<li class="aside__li">
-				<a class="aside__a" href="https://github.com/fmaclen/promptspree/">GitHub</a>
-			</li>
-			<li class="aside__li">
-				<a class="aside__a" href="/legal/">Terms of service</a>
-			</li>
-			<li class="aside__li">
-				<a class="aside__a" href="/legal/">Privacy policy</a>
-			</li>
-			<li class="aside__li">
-				<span class="aside__copyright">
-					&copy; {new Date().getFullYear()}
-					{APP_NAME}
-				</span>
-			</li>
-		</ul>
-	</aside>
+			<ul class="aside__ul aside__ul--bottom">
+				<li class="aside__li">
+					<a class="aside__a" href="https://github.com/fmaclen/promptspree/">GitHub</a>
+				</li>
+				<li class="aside__li">
+					<a class="aside__a" href="/legal/">Terms of service</a>
+				</li>
+				<li class="aside__li">
+					<a class="aside__a" href="/legal/">Privacy policy</a>
+				</li>
+				<li class="aside__li">
+					<span class="aside__copyright">
+						&copy; {new Date().getFullYear()}
+						{APP_NAME}
+					</span>
+				</li>
+			</ul>
+		</aside>
+	{/if}
 
 	<main class="layout__main">
 		<slot />
@@ -161,15 +157,6 @@
 		flex-direction: column;
 		position: relative;
 		height: 100%;
-
-		&--expanded {
-			@media (min-width: 1024px) {
-				display: grid;
-				grid-template-areas: 'header header' 'aside main';
-				grid-template-columns: max-content auto;
-				grid-template-rows: max-content auto;
-			}
-		}
 	}
 
 	aside.layout__aside {
@@ -180,18 +167,12 @@
 		min-width: 256px;
 		border-right: 1px solid hsl(0, 0%, 85%);
 
-		display: none;
+		background-color: var(--color-accent);
 
-		&--expanded {
-			display: flex;
-		}
-
-		@media (max-width: 1024px) {
-			border-right: none;
-			position: sticky;
-			top: 0;
-			z-index: 2;
-		}
+		border-right: none;
+		position: sticky;
+		top: 0;
+		z-index: 2;
 	}
 
 	ul.aside__ul {
@@ -209,13 +190,11 @@
 			padding-bottom: 24px;
 		}
 
-		@media (max-width: 1024px) {
-			&:first-child,
-			&:last-child {
-				padding-top: 12px;
-				padding-bottom: 12px;
-				border-bottom: 1px solid hsl(0, 0%, 85%);
-			}
+		&:first-child,
+		&:last-child {
+			padding-top: 12px;
+			padding-bottom: 12px;
+			box-shadow: 0 1px 0 rgba(255, 255, 255, 0.15), inset 0 -1px 0 rgba(0, 0, 0, 0.25);
 		}
 	}
 
@@ -231,7 +210,8 @@
 		text-decoration: none;
 		font-size: 14px;
 		padding: 12px 32px;
-		text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
+		text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.15);
+		color: rgba(255, 255, 255, 0.75);
 	}
 
 	strong.aside__strong {
@@ -244,18 +224,16 @@
 		border-bottom: 1px solid transparent;
 
 		&:hover {
-			color: var(--color-accent);
-			background-color: var(--color-white);
-			border-top-color: hsl(0, 0%, 85%);
-			border-bottom-color: hsl(0, 0%, 85%);
-			box-shadow: 0 -1px 0 hsl(0, 0%, 95%), 0 1px 0 hsl(0, 0%, 100%);
+			color: var(--color-white);
+			background-color: rgba(0, 0, 0, 0.15);
 		}
 	}
 
 	a.aside__a[aria-disabled='true'] {
 		pointer-events: none;
-		color: hsl(0, 0%, 70%);
 		text-decoration: line-through;
+		/* color: hsl(0, 0%, 70%); */
+		color: rgba(255, 255, 255, 0.25);
 	}
 
 	button.aside__button {
@@ -270,9 +248,8 @@
 	}
 
 	span.aside__copyright {
-		padding-top: 24px;
 		font-weight: 400;
-		color: hsl(0, 0%, 60%);
+		color: rgba(255, 255, 255, 0.25);
 	}
 
 	main.layout__main {
@@ -291,13 +268,16 @@
 
 		position: sticky;
 		top: 0;
-		z-index: 1;
+		z-index: 3;
+
+		background-color: var(--color-accent);
+		color: var(--color-white);
+		box-shadow: 0 1px 0 rgba(255, 255, 255, 0.15), inset 0 -1px 0 rgba(0, 0, 0, 0.25);
 	}
 
 	hgroup.header__hgroup {
 		display: flex;
 		justify-content: space-between;
-		background-color: hsl(0, 0%, 95%);
 		padding: 12px 24px;
 		box-sizing: border-box;
 	}
@@ -313,21 +293,11 @@
 		padding: 8px;
 		border-radius: 2px;
 		cursor: pointer;
+		border: 1px solid rgba(255, 255, 255, 0.15);
 
-		color: hsl(0, 0%, 50%);
-		box-shadow: inset 2px 2px 0 rgba(255, 255, 255, 0.5);
-		border: 1px solid hsl(0, 0%, 85%);
-
-		&--expanded,
 		&:hover {
-			span.header__hamburger-line {
-				background-color: var(--color-accent);
-			}
-		}
+			border-color: rgba(255, 255, 255, 0.5);
 
-		&--expanded {
-			border-color: var(--color-accent);
-			background-color: var(--color-accent-secondary);
 		}
 	}
 
@@ -336,26 +306,23 @@
 		width: 20px;
 		height: 1px;
 		border-radius: 2px;
-		background-color: hsl(0, 0%, 65%);
-		border-bottom: 1px solid var(--color-white);
+		background-color: rgba(255, 255, 255, 0.5);
 	}
 
 	/* ------------------------------------------------------------------------ */
 
 	a.primary-action {
-		margin-left: auto;
 		display: flex;
 		align-items: center;
 		column-gap: 8px;
 		text-decoration: none;
 		color: var(--color-white);
-		background-color: var(--color-accent);
-		border: 1px solid var(--color-accent);
-		box-shadow: inset 2px 2px 0 rgba(255, 255, 255, 0.1);
 		font-size: 14px;
 		font-weight: 600;
 		padding: 8px 12px;
 		border-radius: 2px;
+		margin-left: auto;
+		border: 1px solid rgba(255, 255, 255, 0.15);
 
 		&--active {
 			background-color: var(--color-accent-secondary);

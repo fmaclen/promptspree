@@ -51,6 +51,7 @@
 			fill-opacity="0.5"
 		/>
 		<path
+			class="logo__caret"
 			d="M77.6836 23.2331C77.6836 23.7293 77.9543 23.9549 78.2249 23.9549C78.5182 23.9549 78.8114 23.7068 78.8114 23.2556V0.699248C78.8114 0.203008 78.5407 0 78.2475 0C77.9768 0 77.6836 0.225564 77.6836 0.631579V23.2331Z"
 			fill-opacity="0.5"
 		/>
@@ -76,5 +77,27 @@
 				fill: #fff;
 			}
 		}
+	}
+
+	@keyframes caret-blink {
+		0% {
+			opacity: 1;
+		}
+		1% {
+			opacity: 0;
+		}
+		50% {
+			opacity: 0;
+		}
+		51% {
+			opacity: 1;
+		}
+		100% {
+			opacity: 1;
+		}
+	}
+
+	path.logo__caret {
+		animation: caret-blink 1.75s infinite;
 	}
 </style>

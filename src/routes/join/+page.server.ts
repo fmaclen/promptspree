@@ -1,7 +1,6 @@
 import { handlePocketbaseErrors } from '$lib/pocketbase.server';
 import { logEventToSlack } from '$lib/slack.server';
-import { error, fail } from '@sveltejs/kit';
-import type { BaseAuthStore } from 'pocketbase';
+import { error } from '@sveltejs/kit';
 
 import type { Actions } from './$types';
 
