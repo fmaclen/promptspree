@@ -49,7 +49,7 @@
 				{/if}
 			</button>
 
-			<Logo title={APP_NAME} />
+			<Logo title={APP_NAME} hasDarkBackground={true} />
 
 			<a
 				class="primary-action {$page.url.pathname.includes('/play')
@@ -292,14 +292,17 @@
 		position: sticky;
 		top: 0;
 		z-index: 1;
+
+		background-color: var(--color-accent);
+		color: var(--color-white);
 	}
 
 	hgroup.header__hgroup {
 		display: flex;
 		justify-content: space-between;
-		background-color: hsl(0, 0%, 95%);
 		padding: 12px 24px;
 		box-sizing: border-box;
+		/* background-color: hsl(0, 0%, 95%); */
 	}
 
 	button.header__hamburger {
@@ -314,20 +317,22 @@
 		border-radius: 2px;
 		cursor: pointer;
 
-		color: hsl(0, 0%, 50%);
-		box-shadow: inset 2px 2px 0 rgba(255, 255, 255, 0.5);
-		border: 1px solid hsl(0, 0%, 85%);
+		/* box-shadow: inset 2px 2px 0 rgba(255, 255, 255, 0.5);
+		border: 1px solid hsl(0, 0%, 85%); */
 
-		&--expanded,
+		border: 1px solid rgba(255,255,255,.15);
+
+		/* &--expanded, */
 		&:hover {
+			border-color: rgba(255,255,255,.5);
 			span.header__hamburger-line {
-				background-color: var(--color-accent);
+				/* background-color: var(--color-accent); */
 			}
 		}
 
 		&--expanded {
-			border-color: var(--color-accent);
-			background-color: var(--color-accent-secondary);
+			/* border-color: var(--color-accent);
+			background-color: var(--color-accent-secondary); */
 		}
 	}
 
@@ -336,8 +341,9 @@
 		width: 20px;
 		height: 1px;
 		border-radius: 2px;
-		background-color: hsl(0, 0%, 65%);
-		border-bottom: 1px solid var(--color-white);
+		/* background-color: hsl(0, 0%, 65%); */
+		/* border-bottom: 1px solid var(--color-white); */
+		background-color: rgba(255,255,255,.5);;
 	}
 
 	/* ------------------------------------------------------------------------ */
@@ -349,13 +355,15 @@
 		column-gap: 8px;
 		text-decoration: none;
 		color: var(--color-white);
-		background-color: var(--color-accent);
-		border: 1px solid var(--color-accent);
-		box-shadow: inset 2px 2px 0 rgba(255, 255, 255, 0.1);
 		font-size: 14px;
 		font-weight: 600;
 		padding: 8px 12px;
 		border-radius: 2px;
+		/* background-color: var(--color-accent);
+		border: 1px solid var(--color-accent);
+		box-shadow: inset 2px 2px 0 rgba(255, 255, 255, 0.1); */
+		border: 1px solid rgba(255,255,255,.15);
+
 
 		&--active {
 			background-color: var(--color-accent-secondary);
