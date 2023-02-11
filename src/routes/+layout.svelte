@@ -1,20 +1,12 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import HR from '$lib/components/HR.svelte';
 	import Logo from '$lib/components/Logo.svelte';
 	import { APP_NAME } from '$lib/utils';
-	import { onMount } from 'svelte';
 
 	import type { PageData } from './$types';
 
 	export let data: PageData;
-	let isSmallViewport = false;
-	$: isExpanded = false;
-
-	onMount(() => {
-		isSmallViewport = window.innerWidth <= 1024;
-		isExpanded = !isSmallViewport;
-	});
+	let isExpanded = false;
 
 	const today = new Date().toLocaleDateString('en-US', {
 		weekday: 'long',
@@ -61,7 +53,6 @@
 				<span class="primary-action__icon">✨</span>
 			</a>
 		</hgroup>
-		<HR />
 	</header>
 
 	<aside
@@ -162,14 +153,14 @@
 		position: relative;
 		height: 100%;
 
-		&--expanded {
+		/* &--expanded {
 			@media (min-width: 1024px) {
 				display: grid;
 				grid-template-areas: 'header header' 'aside main';
 				grid-template-columns: max-content auto;
 				grid-template-rows: max-content auto;
 			}
-		}
+		} */
 	}
 
 	aside.layout__aside {
@@ -180,18 +171,18 @@
 		min-width: 256px;
 		border-right: 1px solid hsl(0, 0%, 85%);
 
+		background-color: var(--color-accent);
+
 		display: none;
 
 		&--expanded {
 			display: flex;
 		}
 
-		@media (max-width: 1024px) {
-			border-right: none;
-			position: sticky;
-			top: 0;
-			z-index: 2;
-		}
+		border-right: none;
+		position: sticky;
+		top: 0;
+		z-index: 2;
 	}
 
 	ul.aside__ul {
@@ -209,13 +200,13 @@
 			padding-bottom: 24px;
 		}
 
-		@media (max-width: 1024px) {
-			&:first-child,
-			&:last-child {
-				padding-top: 12px;
-				padding-bottom: 12px;
-				border-bottom: 1px solid hsl(0, 0%, 85%);
-			}
+		&:first-child,
+		&:last-child {
+			padding-top: 12px;
+			padding-bottom: 12px;
+			/* border-bottom: 1px solid hsl(0, 0%, 85%); */
+			/* border-bottom: 1px solid rgba(255,255,255,.15); */
+			box-shadow: 0 1px 0 rgba(255, 255, 255, 0.15), inset 0 -1px 0 rgba(0, 0, 0, 0.25);
 		}
 	}
 
@@ -231,7 +222,8 @@
 		text-decoration: none;
 		font-size: 14px;
 		padding: 12px 32px;
-		text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
+		text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.15);
+		color: rgba(255, 255, 255, 0.75);
 	}
 
 	strong.aside__strong {
@@ -244,18 +236,20 @@
 		border-bottom: 1px solid transparent;
 
 		&:hover {
-			color: var(--color-accent);
-			background-color: var(--color-white);
-			border-top-color: hsl(0, 0%, 85%);
-			border-bottom-color: hsl(0, 0%, 85%);
-			box-shadow: 0 -1px 0 hsl(0, 0%, 95%), 0 1px 0 hsl(0, 0%, 100%);
+			color: var(--color-white);
+			background-color: rgba(0, 0, 0, 0.15);
+			/* background-color: var(--color-accent-secondary); */
+			/* border-top-color: hsl(0, 0%, 85%); */
+			/* border-bottom-color: hsl(0, 0%, 85%); */
+			/* box-shadow: 0 -1px 0 hsl(0, 0%, 95%), 0 1px 0 hsl(0, 0%, 100%); */
 		}
 	}
 
 	a.aside__a[aria-disabled='true'] {
 		pointer-events: none;
-		color: hsl(0, 0%, 70%);
 		text-decoration: line-through;
+		/* color: hsl(0, 0%, 70%); */
+		color: rgba(255, 255, 255, 0.25);
 	}
 
 	button.aside__button {
@@ -270,9 +264,9 @@
 	}
 
 	span.aside__copyright {
-		padding-top: 24px;
+		/* padding-top: 24px; */
 		font-weight: 400;
-		color: hsl(0, 0%, 60%);
+		color: rgba(255, 255, 255, 0.25);
 	}
 
 	main.layout__main {
@@ -291,10 +285,11 @@
 
 		position: sticky;
 		top: 0;
-		z-index: 1;
+		z-index: 3;
 
 		background-color: var(--color-accent);
 		color: var(--color-white);
+		box-shadow: 0 1px 0 rgba(255, 255, 255, 0.15), inset 0 -1px 0 rgba(0, 0, 0, 0.25);
 	}
 
 	hgroup.header__hgroup {
@@ -320,11 +315,11 @@
 		/* box-shadow: inset 2px 2px 0 rgba(255, 255, 255, 0.5);
 		border: 1px solid hsl(0, 0%, 85%); */
 
-		border: 1px solid rgba(255,255,255,.15);
+		border: 1px solid rgba(255, 255, 255, 0.15);
 
 		/* &--expanded, */
 		&:hover {
-			border-color: rgba(255,255,255,.5);
+			border-color: rgba(255, 255, 255, 0.5);
 			span.header__hamburger-line {
 				/* background-color: var(--color-accent); */
 			}
@@ -343,13 +338,12 @@
 		border-radius: 2px;
 		/* background-color: hsl(0, 0%, 65%); */
 		/* border-bottom: 1px solid var(--color-white); */
-		background-color: rgba(255,255,255,.5);;
+		background-color: rgba(255, 255, 255, 0.5);
 	}
 
 	/* ------------------------------------------------------------------------ */
 
 	a.primary-action {
-		margin-left: auto;
 		display: flex;
 		align-items: center;
 		column-gap: 8px;
@@ -359,11 +353,11 @@
 		font-weight: 600;
 		padding: 8px 12px;
 		border-radius: 2px;
+		margin-left: auto;
 		/* background-color: var(--color-accent);
 		border: 1px solid var(--color-accent);
 		box-shadow: inset 2px 2px 0 rgba(255, 255, 255, 0.1); */
-		border: 1px solid rgba(255,255,255,.15);
-
+		border: 1px solid rgba(255, 255, 255, 0.15);
 
 		&--active {
 			background-color: var(--color-accent-secondary);
