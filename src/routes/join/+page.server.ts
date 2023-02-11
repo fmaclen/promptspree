@@ -22,7 +22,9 @@ export const actions: Actions = {
 
 		// Send verification email
 		const userEmail = formData.get('email')?.toString();
-		if (!userEmail) throw error(500);
+		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Check it's a valid email address
+		if (!userEmail || !emailRegex.test(userEmail)) throw error(400, 'Invalid email');
+
 		await locals.pb.collection('users').requestVerification(userEmail);
 
 		return {
