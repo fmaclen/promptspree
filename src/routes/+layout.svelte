@@ -68,7 +68,7 @@
 			<ul class="aside__ul">
 				{#if data.user}
 					<li class="aside__li">
-						<a class="aside__a" href="/user/{data.user.id}/" aria-disabled="true">
+						<a class="aside__a" href="/profile/{data.user.id}/">
 							<strong class="aside__strong">
 								{data.user.nickname}
 							</strong>
@@ -127,7 +127,6 @@
 
 	:global(html) {
 		scroll-behavior: smooth;
-		height: 100%;
 	}
 
 	:global(body) {
@@ -149,14 +148,12 @@
 		font-family: var(--font-sans);
 		color: hsl(0, 0%, 30%);
 		background-color: hsl(0, 0%, 95%);
-		height: 100%;
 	}
 
 	div.layout {
 		display: flex;
 		flex-direction: column;
 		position: relative;
-		height: 100%;
 	}
 
 	aside.layout__aside {
