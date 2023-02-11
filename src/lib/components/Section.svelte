@@ -45,12 +45,14 @@
 		font-family: var(--font-serif);
 		margin: 0;
 		line-height: 1em;
+		text-align: center;
+		position: relative;
+
+		color: var(--color-accent);
 		border: 1px solid hsl(0, 0%, 85%);
 		box-shadow: 1px 1px 0 rgba(255, 255, 255, 0.35);
-		text-align: center;
-		color: var(--color-accent);
-
-		position: relative;
+		background-color: rgba(255, 255, 255, 0.1);
+		text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
 
 		&::before {
 			z-index: -1;
@@ -58,9 +60,10 @@
 			position: absolute;
 			inset: 0;
 
-			background-image: url('https://i.gifer.com/LSsT.gif');
+			background-image: url('https://user-images.githubusercontent.com/1434675/218220190-373b81c7-bf33-44ab-a481-091308e5f870.gif');
 			background-position: center;
-			opacity: 0.05;
+			background-size: cover;
+			opacity: 0.1;
 			filter: invert(1);
 		}
 	}

@@ -92,8 +92,8 @@
 				</li>
 			{:else}
 				<li class="aside__li">
-					<a class="aside__a" href="/waitlist">
-						<strong class="aside__strong"> Join </strong>
+					<a class="aside__a" href="/join">
+						<strong class="aside__strong">Join to play</strong>
 					</a>
 				</li>
 				<li class="aside__li">

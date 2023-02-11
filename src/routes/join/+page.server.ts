@@ -14,13 +14,12 @@ export const actions: Actions = {
 		try {
 			await locals.pb.collection('users').create(formData);
 		} catch (err) {
-			logEventToSlack(`/waitlist/+page.server.ts: ${formData.get('email')}`, err);
+			logEventToSlack(`/join/+page.server.ts: ${formData.get('email')}`, err);
 			return handlePocketbaseErrors(err);
 		}
 
 		return {
 			success: true,
-			message: "You are now in the waitlist! We'll email you as soon as a spot opens up."
 		};
 	}
 };
