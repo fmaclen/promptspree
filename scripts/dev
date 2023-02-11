@@ -4,5 +4,5 @@
 
 set -a # automatically exports all variables
 source .env
-npm run dev
+npx vite dev --host # Dev server accessible from other devices on the network
 set +a # stops automatically exporting all variables
