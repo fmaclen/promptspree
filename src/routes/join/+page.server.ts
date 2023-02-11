@@ -1,5 +1,7 @@
 import { handlePocketbaseErrors } from '$lib/pocketbase.server';
 import { logEventToSlack } from '$lib/slack.server';
+import { error, fail } from '@sveltejs/kit';
+import type { BaseAuthStore } from 'pocketbase';
 
 import type { Actions } from './$types';
 
@@ -18,8 +20,15 @@ export const actions: Actions = {
 			return handlePocketbaseErrors(err);
 		}
 
+		// Send verification email
+		const emailAddress = formData.get('email')?.toString();
+		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Check it's a valid email address
+		if (!emailAddress || !emailRegex.test(emailAddress)) throw error(400, 'Invalid email');
+
+		await locals.pb.collection('users').requestVerification(emailAddress);
+
 		return {
-			success: true,
+			success: true
 		};
 	}
 };
