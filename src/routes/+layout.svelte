@@ -2,6 +2,8 @@
 	import { page } from '$app/stores';
 	import Logo from '$lib/components/Logo.svelte';
 	import { APP_NAME } from '$lib/utils';
+	import { slide } from 'svelte/transition';
+	import { backInOut } from 'svelte/easing';
 
 	import type { PageData } from './$types';
 
@@ -55,62 +57,65 @@
 		</hgroup>
 	</header>
 
-	<aside
-		id="aside"
-		class="layout__aside {isExpanded ? 'layout__aside--expanded' : ''}"
-		role="region"
-		aria-labelledby="hamburger"
-	>
-		<ul class="aside__ul">
-			{#if data.user}
-				<li class="aside__li">
-					<a class="aside__a" href="/user/{data.user.id}/" aria-disabled="true">
-						<strong class="aside__strong">
-							{data.user.nickname}
-						</strong>
-					</a>
-				</li>
-				<li class="aside__li">
-					<a class="aside__a" href="/user/{data.user.id}/drafts/" aria-disabled="true">Drafts</a>
-				</li>
-				<li class="aside__li">
-					<a class="aside__a" href="/settings" aria-disabled="true">Settings</a>
-				</li>
-				<li class="aside__li">
-					<form action="/logout" method="POST" class="">
-						<button class="aside__button" type="submit">Logout</button>
-					</form>
-				</li>
-			{:else}
-				<li class="aside__li">
-					<a class="aside__a" href="/join">
-						<strong class="aside__strong">Join to play</strong>
-					</a>
-				</li>
-				<li class="aside__li">
-					<a class="aside__a" href="/login">Login</a>
-				</li>
-			{/if}
-		</ul>
+	{#if isExpanded}
+		<aside
+			id="aside"
+			class="layout__aside"
+			role="region"
+			aria-labelledby="hamburger"
+			transition:slide="{{ duration: 50 }}"
+		>
+			<ul class="aside__ul">
+				{#if data.user}
+					<li class="aside__li">
+						<a class="aside__a" href="/user/{data.user.id}/" aria-disabled="true">
+							<strong class="aside__strong">
+								{data.user.nickname}
+							</strong>
+						</a>
+					</li>
+					<li class="aside__li">
+						<a class="aside__a" href="/user/{data.user.id}/drafts/" aria-disabled="true">Drafts</a>
+					</li>
+					<li class="aside__li">
+						<a class="aside__a" href="/settings" aria-disabled="true">Settings</a>
+					</li>
+					<li class="aside__li">
+						<form action="/logout" method="POST" class="">
+							<button class="aside__button" type="submit">Logout</button>
+						</form>
+					</li>
+				{:else}
+					<li class="aside__li">
+						<a class="aside__a" href="/join">
+							<strong class="aside__strong">Join to play</strong>
+						</a>
+					</li>
+					<li class="aside__li">
+						<a class="aside__a" href="/login">Login</a>
+					</li>
+				{/if}
+			</ul>
 
-		<ul class="aside__ul aside__ul--bottom">
-			<li class="aside__li">
-				<a class="aside__a" href="https://github.com/fmaclen/promptspree/">GitHub</a>
-			</li>
-			<li class="aside__li">
-				<a class="aside__a" href="/legal/">Terms of service</a>
-			</li>
-			<li class="aside__li">
-				<a class="aside__a" href="/legal/">Privacy policy</a>
-			</li>
-			<li class="aside__li">
-				<span class="aside__copyright">
-					&copy; {new Date().getFullYear()}
-					{APP_NAME}
-				</span>
-			</li>
-		</ul>
-	</aside>
+			<ul class="aside__ul aside__ul--bottom">
+				<li class="aside__li">
+					<a class="aside__a" href="https://github.com/fmaclen/promptspree/">GitHub</a>
+				</li>
+				<li class="aside__li">
+					<a class="aside__a" href="/legal/">Terms of service</a>
+				</li>
+				<li class="aside__li">
+					<a class="aside__a" href="/legal/">Privacy policy</a>
+				</li>
+				<li class="aside__li">
+					<span class="aside__copyright">
+						&copy; {new Date().getFullYear()}
+						{APP_NAME}
+					</span>
+				</li>
+			</ul>
+		</aside>
+	{/if}
 
 	<main class="layout__main">
 		<slot />
@@ -172,12 +177,6 @@
 		border-right: 1px solid hsl(0, 0%, 85%);
 
 		background-color: var(--color-accent);
-
-		display: none;
-
-		&--expanded {
-			display: flex;
-		}
 
 		border-right: none;
 		position: sticky;
@@ -297,7 +296,6 @@
 		justify-content: space-between;
 		padding: 12px 24px;
 		box-sizing: border-box;
-		/* background-color: hsl(0, 0%, 95%); */
 	}
 
 	button.header__hamburger {
@@ -311,23 +309,11 @@
 		padding: 8px;
 		border-radius: 2px;
 		cursor: pointer;
-
-		/* box-shadow: inset 2px 2px 0 rgba(255, 255, 255, 0.5);
-		border: 1px solid hsl(0, 0%, 85%); */
-
 		border: 1px solid rgba(255, 255, 255, 0.15);
 
-		/* &--expanded, */
 		&:hover {
 			border-color: rgba(255, 255, 255, 0.5);
-			span.header__hamburger-line {
-				/* background-color: var(--color-accent); */
-			}
-		}
 
-		&--expanded {
-			/* border-color: var(--color-accent);
-			background-color: var(--color-accent-secondary); */
 		}
 	}
 
@@ -336,8 +322,6 @@
 		width: 20px;
 		height: 1px;
 		border-radius: 2px;
-		/* background-color: hsl(0, 0%, 65%); */
-		/* border-bottom: 1px solid var(--color-white); */
 		background-color: rgba(255, 255, 255, 0.5);
 	}
 
@@ -354,9 +338,6 @@
 		padding: 8px 12px;
 		border-radius: 2px;
 		margin-left: auto;
-		/* background-color: var(--color-accent);
-		border: 1px solid var(--color-accent);
-		box-shadow: inset 2px 2px 0 rgba(255, 255, 255, 0.1); */
 		border: 1px solid rgba(255, 255, 255, 0.15);
 
 		&--active {
