@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { type SubmitFunction, enhance } from '$app/forms';
-	import ArticleBody from '$lib/components/ArticleBody.svelte';
+	import A from '$lib/components/A.svelte';
 	import ArticleMetadata from '$lib/components/ArticleMetadata.svelte';
 	import P from '$lib/components/P.svelte';
 	import Plate from '$lib/components/Plate.svelte';
@@ -9,6 +9,19 @@
 	import type { PageData } from './$types';
 
 	export let data: PageData;
+
+	const confirmDeletion = (event:any) => {
+		const confirmDeletion = window.confirm(
+			`Are you sure you want to delete the article?\nThis action cannot be undone`
+		);
+		if (!confirmDeletion) event.preventDefault();
+	};
+
+	const handleDelete: SubmitFunction = () => {
+		return async ({ result, update }) => {
+			await update();
+		};
+	};
 </script>
 
 <Section title={data.profile.nickname}>
@@ -18,6 +31,14 @@
 				<strong>Published</strong>
 				{data.articles.length}
 			</P>
+			{#if data.isCurrentUserProfile}
+				<P>
+					<A href="/profile/{data.profile.id}/drafts" isHighlighted={true}>
+						<strong>Drafts</strong>
+						{data.totalDrafts}
+					</A>
+				</P>
+			{/if}
 			<P>
 				<strong>Prompt score</strong>
 				{data.profile.promptScore}
@@ -58,6 +79,13 @@
 						</span>
 						<span class="article-reactions-summary__total">{article.reactions.total}</span>
 					</a>
+
+					{#if data.isCurrentUserProfile}
+						<form class="form" method="POST" action="?/delete" use:enhance={handleDelete}>
+							<input type="hidden" name="articleId" value={article.id} />
+							<button type="submit" on:click={confirmDeletion}>Delete</button>
+						</form>
+					{/if}
 				</ArticleMetadata>
 			</Plate>
 		{/each}
