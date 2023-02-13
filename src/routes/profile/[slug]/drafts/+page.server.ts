@@ -1,6 +1,6 @@
 import { type Article, ArticleStatus } from '$lib/article';
-import { deleteArticle, generateArticle } from '$lib/article.server';
-import { error } from '@sveltejs/kit';
+import { deleteArticle, generateArticle, publishArticle } from '$lib/article.server';
+import { error, redirect } from '@sveltejs/kit';
 import type { BaseAuthStore } from 'pocketbase';
 
 import type { Actions, PageServerLoad } from './$types';
@@ -26,7 +26,7 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 	try {
 		userCollection = await locals.pb.collection('users').getOne(params.slug);
 		articlesCollection = await locals.pb.collection('articles').getFullList(200, {
-			sort: '-created',
+			sort: '-updated',
 			filter: `user = "${params.slug}" && status = "${ArticleStatus.DRAFT}"`,
 			expand: 'user'
 		});
@@ -43,9 +43,6 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 		if (generatedArticle) articles.push(generatedArticle);
 	}
 
-	// Sort articles by number of reactions
-	articles.sort((a, b) => b.reactions.total - a.reactions.total);
-
 	// Calculate user's prompt score
 	const promptScore = articles.reduce((acc, article) => acc + article.reactions.total, 0);
 
@@ -61,6 +58,11 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 
 export const actions: Actions = {
 	delete: async ({ request, locals }) => {
-		return await deleteArticle(request, locals, `profile/${locals?.user?.id}/drafts`);
+		await deleteArticle(request, locals);
+		throw redirect(303, `/profile/${locals?.user?.id}`)
+	},
+	publish: async ({ request, locals }) => {
+		const article = await publishArticle(request, locals);
+		throw redirect(303, article?.id ? `/article/${article.id}` : `/profile/${locals?.user?.id}`)
 	}
 };

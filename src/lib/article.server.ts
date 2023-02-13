@@ -2,7 +2,8 @@ import {
 	type Article,
 	type ArticleReactionByType,
 	type ArticleReactions,
-	Reaction
+	Reaction,
+	ArticleStatus
 } from '$lib/article';
 import { logEventToSlack } from '$lib/slack.server';
 import { fail, redirect } from '@sveltejs/kit';
@@ -105,20 +106,48 @@ export const getFieldsFromCompletion = (completion: string | undefined) => {
 export const deleteArticle = async (
 	request: Request,
 	locals: App.Locals,
-	redirectTo = `profile/${locals?.user?.id}`
 ) => {
 	const formData = await request.formData();
 	const articleId = formData.get('articleId')?.toString();
 
-	if (!locals?.user || !articleId) return fail(400, { error: "Can't delete the article" });
+	if (!locals?.user || !articleId) return fail(400, { error: "Couldn't delete the article" });
 
 	try {
-		console.log(articleId, locals?.user?.id);
 		await locals.pb.collection('articles').delete(articleId);
 	} catch (err) {
 		logEventToSlack('/lib/article.server.ts (deleteArticle)', err);
 		handlePocketbaseError(err);
 	}
+};
 
-	throw redirect(303, redirectTo);
+export const publishArticle = async (
+	request: Request,
+	locals: App.Locals,
+) => {
+	//
+	//
+	// FIXME: add a return type `Article | null` and double check every use of `publishArticle()`
+	//
+	//
+
+	const formData = await request.formData();
+	const articleId = formData.get('articleId')?.toString();
+
+	if (!locals?.user || !articleId) return fail(400, { error: "Couldn't publish the article" });
+
+	try {
+		//
+		//
+		//
+		//
+		// FIXME: this should return `Article`
+		return await locals.pb.collection('articles').update(articleId, { status: ArticleStatus.PUBLISHED });
+		//
+		//
+		//
+		//
+	} catch (err) {
+		logEventToSlack('/lib/article.server.ts (deleteArticle)', err);
+		handlePocketbaseError(err);
+	}
 };

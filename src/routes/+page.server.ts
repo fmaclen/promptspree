@@ -11,7 +11,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 
 	try {
 		articlesCollection = await locals.pb.collection('articles').getFullList(25, {
-			sort: '-created',
+			sort: '-updated',
 			filter: `status = "${ArticleStatus.PUBLISHED}"`,
 			expand: 'user'
 		});

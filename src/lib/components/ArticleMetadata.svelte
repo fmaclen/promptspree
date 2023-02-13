@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { type SubmitFunction, enhance } from '$app/forms';
 	import { Sentiment } from '$lib/utils';
+	import { redirect } from '@sveltejs/kit';
 	import { formatDistance } from 'date-fns';
 
 	import FormButton from './FormButton.svelte';
@@ -20,7 +21,13 @@
 	};
 
 	const handleDelete: SubmitFunction = () => {
-		return async ({ result, update }) => {
+		return async ({ update }) => {
+			await update();
+		};
+	};
+
+	const handlePublish: SubmitFunction = () => {
+		return async ({ update }) => {
 			await update();
 		};
 	};
@@ -40,39 +47,41 @@
 	<div class="metadata__actions">
 		<slot />
 
-		<nav class="metadata__author-actions">
-			{#if isDeletable}
-				<form class="form" method="POST" action="?/delete" use:enhance={handleDelete}>
-					<input type="hidden" name="articleId" value={articleId} />
-					<FormButton
-						label="Delete"
-						type="submit"
-						isCompact={true}
-						sentiment={Sentiment.NEGATIVE}
-						on:click={confirmDeletion}
-					/>
-				</form>
-			{/if}
+		{#if isDeletable || isPublishable}
+			<nav class="metadata__author-actions">
+				{#if isDeletable}
+					<form class="form" method="POST" action="?/delete" use:enhance={handleDelete}>
+						<input type="hidden" name="articleId" value={articleId} />
+						<FormButton
+							label="Delete"
+							type="submit"
+							isCompact={true}
+							sentiment={Sentiment.NEGATIVE}
+							on:click={confirmDeletion}
+						/>
+					</form>
+				{/if}
 
-			{#if isPublishable}
-				<form class="play__form" method="POST" action="?/publish" use:enhance={handleDelete}>
-					<input type="hidden" name="articleId" value={articleId} />
-					<FormButton
-						label="Publish"
-						type="submit"
-						isCompact={true}
-						sentiment={Sentiment.POSITIVE}
-					/>
-				</form>
-			{/if}
-		</nav>
+				{#if isPublishable}
+					<form class="play__form" method="POST" action="?/publish" use:enhance={handlePublish}>
+						<input type="hidden" name="articleId" value={articleId} />
+						<FormButton
+							label="Publish"
+							type="submit"
+							isCompact={true}
+							sentiment={Sentiment.POSITIVE}
+						/>
+					</form>
+				{/if}
+			</nav>
+		{/if}
 	</div>
 </nav>
 
 <style lang="scss">
 	nav.metadata {
 		min-height: 48px;
-		padding: 8px 16px;
+		padding: 8px 8px 8px 16px;
 		width: 100%;
 		box-sizing: border-box;
 		font-size: 13px;
@@ -115,7 +124,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: flex-end;
-		column-gap: 12px;
+		column-gap: 8px;
 	}
 
 	nav.metadata__author-actions {

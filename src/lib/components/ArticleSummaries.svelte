@@ -31,11 +31,11 @@
 			>
 				{#if !isDraft}
 					<a class="article-reactions-summary" href="/article/{article.id}">
-						<span class="article-reactions-summary__emoji">
-							{article.reactions.total > 0
-								? article.reactions.byType.sort((a, b) => b.total - a.total)[0].reaction
-								: ''}
-						</span>
+						{#if article.reactions.total > 0}
+							<span class="article-reactions-summary__emoji">
+								{article.reactions.byType.sort((a, b) => b.total - a.total)[0].reaction}
+							</span>
+						{/if}
 						<span class="article-reactions-summary__total">{article.reactions.total}</span>
 					</a>
 				{/if}
@@ -101,9 +101,20 @@
 		text-align: center;
 		font-weight: 400;
 		color: hsl(0, 0%, 50%);
+		padding: 10px;
+		border: 1px solid hsl(0, 0%, 85%);
+
+		&:hover {
+			border: 1px solid hsl(0, 0%, 70%);
+		}
 	}
 
 	span.article-reactions-summary__emoji {
 		font-size: 16px;
+		transform: translateY(2px); // Optically align with text `span.article-reactions-summary__total`
+	}
+	
+	span.article-reactions-summary__total {
+		transform: translateY(1px); // Optically align with text `a.article-reactions-summary`
 	}
 </style>

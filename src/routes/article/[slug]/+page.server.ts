@@ -1,6 +1,6 @@
-import { deleteArticle, generateArticle } from '$lib/article.server';
+import { deleteArticle, generateArticle, publishArticle } from '$lib/article.server';
 import { logEventToSlack } from '$lib/slack.server';
-import { type Actions, error } from '@sveltejs/kit';
+import { type Actions, error, redirect } from '@sveltejs/kit';
 import type { BaseAuthStore } from 'pocketbase';
 
 import type { PageServerLoad } from './$types';
@@ -88,6 +88,11 @@ export const actions: Actions = {
 	},
 	delete: async ({ request, locals }) => {
 		await deleteArticle(request, locals);
+		throw redirect(303, `/profile/${locals?.user?.id}`);
+	},
+	publish: async ({ request, locals }) => {
+		const article = await publishArticle(request, locals);
+		throw redirect(303, article?.id ? `/article/${article.id}` : `/profile/${locals?.user?.id}`);
 	}
 };
 
