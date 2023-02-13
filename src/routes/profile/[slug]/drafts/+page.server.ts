@@ -1,8 +1,6 @@
 import { type Article, ArticleStatus } from '$lib/article';
-import { generateArticle } from '$lib/article.server';
-import { handlePocketbaseError } from '$lib/pocketbase.server';
-import { logEventToSlack } from '$lib/slack.server';
-import { error, fail, redirect } from '@sveltejs/kit';
+import { deleteArticle, generateArticle } from '$lib/article.server';
+import { error } from '@sveltejs/kit';
 import type { BaseAuthStore } from 'pocketbase';
 
 import type { Actions, PageServerLoad } from './$types';
@@ -63,18 +61,6 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 
 export const actions: Actions = {
 	delete: async ({ request, locals }) => {
-		const formData = await request.formData();
-		const articleId = formData.get('articleId')?.toString();
-
-		if (!locals?.user || !articleId) return fail(400, { error: "Can't delete the article" });
-
-		try {
-			await locals.pb.collection('articles').delete(articleId);
-		} catch (err) {
-			logEventToSlack('/profile/[slug]/+page.server.ts (delete)', err);
-			handlePocketbaseError(err);
-		}
-
-		throw redirect(303, `/profile/${locals.user.id}`);
+		return await deleteArticle(request, locals, `profile/${locals?.user?.id}/drafts`);
 	}
 };

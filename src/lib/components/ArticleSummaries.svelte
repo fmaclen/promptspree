@@ -22,7 +22,8 @@
 
 			{@const isDraft = article.status === ArticleStatus.DRAFT}
 			<ArticleMetadata
-				id={article.author.id}
+				articleId={article.id}
+				userId={article.author.id}
 				nickname={article.author.nickname}
 				updated={article.updated}
 				isDeletable={isCurrentUserProfile}

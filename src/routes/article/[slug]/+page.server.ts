@@ -1,4 +1,4 @@
-import { generateArticle } from '$lib/article.server';
+import { deleteArticle, generateArticle } from '$lib/article.server';
 import { logEventToSlack } from '$lib/slack.server';
 import { type Actions, error } from '@sveltejs/kit';
 import type { BaseAuthStore } from 'pocketbase';
@@ -85,6 +85,9 @@ export const actions: Actions = {
 		if (!article) throw error(404, 'Not found');
 
 		return { article };
+	},
+	delete: async ({ request, locals }) => {
+		await deleteArticle(request, locals);
 	}
 };
 

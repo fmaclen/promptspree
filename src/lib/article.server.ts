@@ -5,6 +5,7 @@ import {
 	Reaction
 } from '$lib/article';
 import { logEventToSlack } from '$lib/slack.server';
+import { fail, redirect } from '@sveltejs/kit';
 import type { BaseAuthStore, Record } from 'pocketbase';
 
 import type { ArticlePromptShape } from './openai.server';
@@ -33,7 +34,7 @@ export const generateArticle = async (
 		headline: articleCollection.headline,
 		body: JSON.parse(articleCollection.body),
 		prompt: articleCollection.prompt,
-		reactions,
+		reactions
 	};
 
 	return article;
@@ -99,4 +100,25 @@ export const getFieldsFromCompletion = (completion: string | undefined) => {
 		// We store the paragraphs in the body as string arrays
 		body: JSON.stringify(fields.body)
 	};
+};
+
+export const deleteArticle = async (
+	request: Request,
+	locals: App.Locals,
+	redirectTo = `profile/${locals?.user?.id}`
+) => {
+	const formData = await request.formData();
+	const articleId = formData.get('articleId')?.toString();
+
+	if (!locals?.user || !articleId) return fail(400, { error: "Can't delete the article" });
+
+	try {
+		console.log(articleId, locals?.user?.id);
+		await locals.pb.collection('articles').delete(articleId);
+	} catch (err) {
+		logEventToSlack('/lib/article.server.ts (deleteArticle)', err);
+		handlePocketbaseError(err);
+	}
+
+	throw redirect(303, redirectTo);
 };

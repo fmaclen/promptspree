@@ -2,9 +2,11 @@
 	import { type SubmitFunction, enhance } from '$app/forms';
 	import { Sentiment } from '$lib/utils';
 	import { formatDistance } from 'date-fns';
+
 	import FormButton from './FormButton.svelte';
 
-	export let id: string;
+	export let articleId: string;
+	export let userId: string;
 	export let nickname: string;
 	export let updated: string;
 	export let isDeletable: boolean = false;
@@ -25,7 +27,7 @@
 </script>
 
 <nav class="metadata">
-	<a class="metadata__a" href={`/profile/${id}`}>
+	<a class="metadata__a" href={`/profile/${userId}`}>
 		<span class="metadata__author">{nickname}</span>
 
 		<time class="metadata__time" title={updated} datetime={updated}>
@@ -41,27 +43,27 @@
 		<nav class="metadata__author-actions">
 			{#if isDeletable}
 				<form class="form" method="POST" action="?/delete" use:enhance={handleDelete}>
-					<input type="hidden" name="articleId" value={id} />
-					<!-- <button type="submit" on:click={confirmDeletion}>Delete</button> -->
+					<input type="hidden" name="articleId" value={articleId} />
 					<FormButton
-					label="Delete"
-					type="submit"
-					isCompact={true}
-					sentiment={Sentiment.NEGATIVE}
-				/>
+						label="Delete"
+						type="submit"
+						isCompact={true}
+						sentiment={Sentiment.NEGATIVE}
+						on:click={confirmDeletion}
+					/>
 				</form>
 			{/if}
 
 			{#if isPublishable}
-			<form class="play__form" method="POST" action="?/publish" use:enhance={handleDelete}>
-				<input type="hidden" name="articleId" value={id} />
-				<FormButton
-					label="Publish"
-					type="submit"
-					isCompact={true}
-					sentiment={Sentiment.POSITIVE}
-				/>
-			</form>
+				<form class="play__form" method="POST" action="?/publish" use:enhance={handleDelete}>
+					<input type="hidden" name="articleId" value={articleId} />
+					<FormButton
+						label="Publish"
+						type="submit"
+						isCompact={true}
+						sentiment={Sentiment.POSITIVE}
+					/>
+				</form>
 			{/if}
 		</nav>
 	</div>
