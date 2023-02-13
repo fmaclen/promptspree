@@ -2,8 +2,8 @@ import {
 	type Article,
 	type ArticleReactionByType,
 	type ArticleReactions,
-	Reaction,
-	ArticleStatus
+	ArticleStatus,
+	Reaction
 } from '$lib/article';
 import { logEventToSlack } from '$lib/slack.server';
 import { fail, redirect } from '@sveltejs/kit';
@@ -103,10 +103,7 @@ export const getFieldsFromCompletion = (completion: string | undefined) => {
 	};
 };
 
-export const deleteArticle = async (
-	request: Request,
-	locals: App.Locals,
-) => {
+export const deleteArticle = async (request: Request, locals: App.Locals) => {
 	const formData = await request.formData();
 	const articleId = formData.get('articleId')?.toString();
 
@@ -122,32 +119,24 @@ export const deleteArticle = async (
 
 export const publishArticle = async (
 	request: Request,
-	locals: App.Locals,
-) => {
-	//
-	//
-	// FIXME: add a return type `Article | null` and double check every use of `publishArticle()`
-	//
-	//
-
+	locals: App.Locals
+): Promise<Article | null> => {
 	const formData = await request.formData();
 	const articleId = formData.get('articleId')?.toString();
 
-	if (!locals?.user || !articleId) return fail(400, { error: "Couldn't publish the article" });
+	if (!locals?.user || !articleId) return null;
+
+	let articleCollection: BaseAuthStore['model'] = null;
 
 	try {
-		//
-		//
-		//
-		//
-		// FIXME: this should return `Article`
-		return await locals.pb.collection('articles').update(articleId, { status: ArticleStatus.PUBLISHED });
-		//
-		//
-		//
-		//
-	} catch (err) {
-		logEventToSlack('/lib/article.server.ts (deleteArticle)', err);
-		handlePocketbaseError(err);
+		articleCollection = await locals.pb
+			.collection('articles')
+			.update(articleId, { status: ArticleStatus.PUBLISHED }, { expand: 'user' });
+	} catch (_) {
+		// eslint-disable-next-line no-empty
 	}
+
+	if (!articleCollection) null;
+
+	return await generateArticle(articleCollection, locals);
 };

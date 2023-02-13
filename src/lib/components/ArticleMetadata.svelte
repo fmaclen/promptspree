@@ -45,6 +45,7 @@
 	</a>
 
 	<div class="metadata__actions">
+		<!-- FIXME: Move `article-reactions-summary` here -->
 		<slot />
 
 		{#if isDeletable || isPublishable}
