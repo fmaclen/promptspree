@@ -1,24 +1,10 @@
 <script lang="ts">
-	import { type SubmitFunction, enhance } from '$app/forms';
-	import type { Article } from '$lib/article';
+	import { type Article, ArticleStatus } from '$lib/article';
 	import ArticleMetadata from '$lib/components/ArticleMetadata.svelte';
 	import Plate from '$lib/components/Plate.svelte';
 
 	export let articles: Article[];
 	export let isCurrentUserProfile: boolean = false;
-
-	const confirmDeletion = (event: any) => {
-		const confirmDeletion = window.confirm(
-			`Are you sure you want to delete the article?\nThis action cannot be undone`
-		);
-		if (!confirmDeletion) event.preventDefault();
-	};
-
-	const handleDelete: SubmitFunction = () => {
-		return async ({ result, update }) => {
-			await update();
-		};
-	};
 </script>
 
 <div class="articles">
@@ -34,25 +20,23 @@
 				</div>
 			</a>
 
+			{@const isDraft = article.status === ArticleStatus.DRAFT}
 			<ArticleMetadata
 				id={article.author.id}
 				nickname={article.author.nickname}
 				updated={article.updated}
+				isDeletable={isCurrentUserProfile}
+				isPublishable={isCurrentUserProfile && isDraft}
 			>
-				<a class="article-reactions-summary" href="/article/{article.id}">
-					<span class="article-reactions-summary__emoji">
-						{article.reactions.total > 0
-							? article.reactions.byType.sort((a, b) => b.total - a.total)[0].reaction
-							: ''}
-					</span>
-					<span class="article-reactions-summary__total">{article.reactions.total}</span>
-				</a>
-
-				{#if isCurrentUserProfile}
-					<form class="form" method="POST" action="?/delete" use:enhance={handleDelete}>
-						<input type="hidden" name="articleId" value={article.id} />
-						<button type="submit" on:click={confirmDeletion}>Delete</button>
-					</form>
+				{#if !isDraft}
+					<a class="article-reactions-summary" href="/article/{article.id}">
+						<span class="article-reactions-summary__emoji">
+							{article.reactions.total > 0
+								? article.reactions.byType.sort((a, b) => b.total - a.total)[0].reaction
+								: ''}
+						</span>
+						<span class="article-reactions-summary__total">{article.reactions.total}</span>
+					</a>
 				{/if}
 			</ArticleMetadata>
 		</Plate>

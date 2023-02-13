@@ -18,5 +18,5 @@
 		created={data.profile.created}
 	/>
 
-	<ArticleSummaries articles={data.articles} />
+	<ArticleSummaries articles={data.articles} isCurrentUserProfile={data.isCurrentUserProfile} />
 </Section>

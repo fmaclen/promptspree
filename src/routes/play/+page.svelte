@@ -92,7 +92,7 @@
 					<FormButton
 						label="Publish"
 						type="submit"
-						isPublishable={true}
+						sentiment={Sentiment.POSITIVE}
 						disabled={!prompt || isLoading}
 					/>
 				</form>

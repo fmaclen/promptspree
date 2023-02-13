@@ -28,11 +28,12 @@ export const generateArticle = async (
 		id: articleCollection.id,
 		updated: articleCollection.updated,
 		author,
-		prompt: articleCollection.prompt,
-		headline: articleCollection.headline,
+		status: articleCollection.status,
 		category: articleCollection.category,
+		headline: articleCollection.headline,
 		body: JSON.parse(articleCollection.body),
-		reactions
+		prompt: articleCollection.prompt,
+		reactions,
 	};
 
 	return article;

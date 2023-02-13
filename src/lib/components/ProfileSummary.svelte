@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/stores';
 	import Plate from '$lib/components/Plate.svelte';
 
 	export let id: string;
@@ -7,63 +8,133 @@
 	export let totalDrafts: number = 0;
 	export let promptScore: number;
 	export let created: string;
+
+	const isDraftsPage = $page.url.pathname.includes('/drafts');
 </script>
 
-<Plate>
-	<ul class="profile-summary">
-		<li class="profile-summary__li">
-			<nav class="profile-summary__segmented-control">
-				<a class="profile-summary__a" href="/profile/{id}">
-					<strong>Published</strong>
-					{totalPublished}
-				</a>
-
-				{#if isCurrentUserProfile}
-					<a class="profile-summary__a" href="/profile/{id}/drafts">
-						<strong>Drafts</strong>
-						{totalDrafts}
+<nav class="profile-nav">
+	{#if isCurrentUserProfile}
+		<Plate>
+			<ul class="profile-summary">
+				<li class="profile-summary__li profile-summary__li--with-link">
+					<a
+						class="profile-summary__a {!isDraftsPage ? 'profile-summary__a--active' : ''}"
+						href="/profile/{id}"
+					>
+						<strong class="profile-summary__key">Published</strong>
+						<span class="profile-summary__value">{totalPublished}</span>
 					</a>
-				{/if}
-			</nav>
-		</li>
+				</li>
 
-		<li class="profile-summary__li">
-			<strong>Prompt score</strong>
-			{promptScore}
-		</li>
+				<li class="profile-summary__li profile-summary__li--with-link">
+					<a
+						class="profile-summary__a {isDraftsPage ? 'profile-summary__a--active' : ''}"
+						href="/profile/{id}/drafts"
+					>
+						<strong class="profile-summary__key">Drafts</strong>
+						<span class="profile-summary__value">{totalDrafts}</span>
+					</a>
+				</li>
+			</ul>
+		</Plate>
+	{/if}
 
-		<li class="profile-summary__li">
-			<strong>Joined</strong>
-			{new Date(created).toLocaleDateString('en-US', {
-				month: 'long',
-				year: 'numeric'
-			})}
-		</li>
-	</ul>
-</Plate>
+	<Plate>
+		<ul class="profile-summary">
+			{#if !isCurrentUserProfile}
+				<li class="profile-summary__li">
+					<strong class="profile-summary__key">Articles</strong>
+					<span class="profile-summary__value">{totalPublished}</span>
+				</li>
+			{/if}
+
+			<li class="profile-summary__li">
+				<strong class="profile-summary__key">Prompt score</strong>
+				<span class="profile-summary__value">{promptScore}</span>
+			</li>
+
+			<li class="profile-summary__li">
+				<strong class="profile-summary__key">Joined</strong>
+				<span class="profile-summary__value">
+					{new Date(created).toLocaleDateString('en-US', {
+						month: 'long',
+						year: 'numeric'
+					})}
+				</span>
+			</li>
+		</ul>
+	</Plate>
+</nav>
 
 <style lang="scss">
+	nav.profile-nav {
+		width: 100%;
+		display: flex;
+		column-gap: 8px;
+	}
+
 	ul.profile-summary {
 		display: flex;
 		width: 100%;
+    height: 100%;
 		box-sizing: border-box;
-		justify-content: space-between;
-		padding: 20px;
-		column-gap: 20px;
-		font-size: 14px;
-    margin: 0;
-    list-style: none;
+		margin: 0;
+		padding: 0;
+		list-style: none;
 	}
 
-	/* li.profile-summary__li {
-	} */
+	li.profile-summary__li {
+		flex: 1;
+		padding: 12px;
+		font-size: 13px;
+		color: hsl(0, 0%, 50%);
+		box-shadow: inset 1px 1px 0 var(--color-white);
+		text-shadow: 1px 1px 0 rgba(255, 255, 255, 1);
 
-  nav.profile-summary__segmented-control {
     display: flex;
-    border: 1px solid;
-  }
+    flex-direction: column;
+    row-gap: 2px;
+    line-height: 1.1em;
+    height: 100%;
+    box-sizing: border-box;
 
-	strong {
+		&:not(:first-child) {
+			border-left: 1px solid hsl(0, 0%, 85%);
+		}
+
+		&--with-link {
+			padding: 0;
+			color: inherit;
+		}
+	}
+
+	a.profile-summary__a {
+    display: flex;
+    flex-direction: column;
+    row-gap: 2px;
+    line-height: 1.1em;
+		padding: 12px;
+    height: 100%;
+    box-sizing: border-box;
+
+		text-decoration: none;
+		color: inherit;
+
+		&:hover {
+			background-color: hsl(0, 0%, 97%);
+		}
+
+		&--active {
+			color: var(--color-accent);
+			background-color: var(--color-white);
+		}
+	}
+
+	strong.profile-summary__key {
 		font-weight: 600;
+	}
+
+	span.profile-summary__value {
+		display: block;
 	}
 </style>

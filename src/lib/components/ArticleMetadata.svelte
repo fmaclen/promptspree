@@ -1,9 +1,27 @@
 <script lang="ts">
+	import { type SubmitFunction, enhance } from '$app/forms';
+	import { Sentiment } from '$lib/utils';
 	import { formatDistance } from 'date-fns';
+	import FormButton from './FormButton.svelte';
 
 	export let id: string;
 	export let nickname: string;
 	export let updated: string;
+	export let isDeletable: boolean = false;
+	export let isPublishable: boolean = false;
+
+	const confirmDeletion = (event: any) => {
+		const confirmDeletion = window.confirm(
+			`Are you sure you want to delete the article?\nThis action cannot be undone`
+		);
+		if (!confirmDeletion) event.preventDefault();
+	};
+
+	const handleDelete: SubmitFunction = () => {
+		return async ({ result, update }) => {
+			await update();
+		};
+	};
 </script>
 
 <nav class="metadata">
@@ -16,13 +34,43 @@
 			})}
 		</time>
 	</a>
-	<slot />
+
+	<div class="metadata__actions">
+		<slot />
+
+		<nav class="metadata__author-actions">
+			{#if isDeletable}
+				<form class="form" method="POST" action="?/delete" use:enhance={handleDelete}>
+					<input type="hidden" name="articleId" value={id} />
+					<!-- <button type="submit" on:click={confirmDeletion}>Delete</button> -->
+					<FormButton
+					label="Delete"
+					type="submit"
+					isCompact={true}
+					sentiment={Sentiment.NEGATIVE}
+				/>
+				</form>
+			{/if}
+
+			{#if isPublishable}
+			<form class="play__form" method="POST" action="?/publish" use:enhance={handleDelete}>
+				<input type="hidden" name="articleId" value={id} />
+				<FormButton
+					label="Publish"
+					type="submit"
+					isCompact={true}
+					sentiment={Sentiment.POSITIVE}
+				/>
+			</form>
+			{/if}
+		</nav>
+	</div>
 </nav>
 
 <style lang="scss">
 	nav.metadata {
 		min-height: 48px;
-		padding: 6px 16px;
+		padding: 8px 16px;
 		width: 100%;
 		box-sizing: border-box;
 		font-size: 13px;
@@ -55,5 +103,21 @@
 		text-decoration: none;
 		width: 100%;
 		height: 100%;
+
+		&:hover {
+			color: var(--color-accent);
+		}
+	}
+
+	div.metadata__actions {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		column-gap: 12px;
+	}
+
+	nav.metadata__author-actions {
+		display: flex;
+		column-gap: 8px;
 	}
 </style>
