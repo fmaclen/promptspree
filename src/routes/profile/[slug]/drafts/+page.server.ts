@@ -13,21 +13,23 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 	let userCollection: BaseAuthStore['model'] = null;
 	let articlesCollection: BaseAuthStore['model'][] = [];
 
-	let totalDrafts = 0;
+	let totalPublished = 0;
 	const isCurrentUserProfile = locals.user?.id === params.slug;
 
 	if (isCurrentUserProfile) {
-		const articleDrafts = await locals.pb
+		const articlesPublished = await locals.pb
 			.collection('articles')
-			.getList(1, 1, { filter: `user = "${params.slug}" && status = "${ArticleStatus.DRAFT}"` });
-		totalDrafts = articleDrafts.totalItems;
+			.getList(1, 1, {
+				filter: `user = "${params.slug}" && status = "${ArticleStatus.PUBLISHED}"`
+			});
+		totalPublished = articlesPublished.totalItems;
 	}
 
 	try {
 		userCollection = await locals.pb.collection('users').getOne(params.slug);
 		articlesCollection = await locals.pb.collection('articles').getFullList(200, {
 			sort: '-created',
-			filter: `user = "${params.slug}" && status = "${ArticleStatus.PUBLISHED}"`,
+			filter: `user = "${params.slug}" && status = "${ArticleStatus.DRAFT}"`,
 			expand: 'user'
 		});
 	} catch (_) {
@@ -56,7 +58,7 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 		promptScore
 	};
 
-	return { profile, articles, isCurrentUserProfile, totalDrafts };
+	return { profile, articles, isCurrentUserProfile, totalPublished };
 };
 
 export const actions: Actions = {

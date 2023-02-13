@@ -12,11 +12,11 @@
 	<ProfileSummary
 		id={data.profile.id}
 		isCurrentUserProfile={data.isCurrentUserProfile}
-		totalDrafts={data.totalDrafts}
-		totalPublished={data.articles.length}
+		totalPublished={data.totalPublished}
+		totalDrafts={data.articles.length}
 		promptScore={data.profile.promptScore}
 		created={data.profile.created}
 	/>
 
-	<ArticleSummaries articles={data.articles} />
+	<ArticleSummaries articles={data.articles} isCurrentUserProfile={data.isCurrentUserProfile} />
 </Section>
