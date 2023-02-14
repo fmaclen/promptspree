@@ -10,7 +10,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 	let articlesCollection: BaseAuthStore['model'][] = [];
 
 	try {
-		articlesCollection = await locals.pb.collection('articles').getFullList(25, {
+		articlesCollection = await locals.pb.collection('articles').getFullList(200, {
 			sort: '-updated',
 			filter: `status = "${ArticleStatus.PUBLISHED}"`,
 			expand: 'user'
