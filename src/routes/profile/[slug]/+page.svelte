@@ -9,9 +9,9 @@
 	import type { PageData } from './$types';
 
 	export let data: PageData;
-	let profile = data.profile;
-	let articles = data.articles;
-	let isCurrentUserProfile = data.isCurrentUserProfile;
+	$: profile = data.profile;
+	$: articles = data.articles;
+	$: isCurrentUserProfile = data.isCurrentUserProfile;
 </script>
 
 <Head title={[profile.nickname, 'Profile']} />

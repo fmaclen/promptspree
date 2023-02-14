@@ -56,7 +56,7 @@
 			<ul class="aside__ul">
 				{#if data.user}
 					<li class="aside__li">
-						<a class="aside__a" href="/profile/{data.user.id}/">
+						<a class="aside__a" href="/profile/{data.user.id}">
 							<strong class="aside__strong">
 								{data.user.nickname}
 							</strong>
