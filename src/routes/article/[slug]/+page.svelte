@@ -9,7 +9,9 @@
 
 	export let data: PageData;
 	let article = data.article;
-	// let currentUserId = data.user?.id;
+
+	// Sort the reactions by their index so the UI components always render in the same order
+	article.reactions.byType.sort((a, b) => a.index - b.index);
 
 	const handleReaction: SubmitFunction = () => {
 		return async ({ result, update }) => {
@@ -58,15 +60,7 @@
 			</code>
 		</div>
 
-		<ArticleMetadata
-			id={article.author.id}
-			nickname={article.author.nickname}
-			updated={article.updated}
-		>
-			<!-- {#if currentUserId === article.author.id}
-				<button>Delete</button>
-			{/if} -->
-		</ArticleMetadata>
+		<ArticleMetadata {article} isCurrentUserProfile={data.isCurrentUserProfile} />
 	</Plate>
 </Section>
 

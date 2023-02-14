@@ -1,14 +1,19 @@
 <script lang="ts">
+	import { Sentiment } from '$lib/utils';
+
 	export let label: string;
-	export let type: 'button' | 'submit' | 'reset' | null | undefined = 'button';
 	export let disabled: boolean = false;
-	export let isPublishable: boolean = false;
+	export let isCompact: boolean = false;
+	export let sentiment: Sentiment = Sentiment.NEUTRAL;
+	export let type: 'button' | 'submit' | 'reset' | null | undefined = 'button';
 </script>
 
 <button
 	{type}
 	{disabled}
-	class="form-button {isPublishable ? 'form-button--publishable' : ''}"
+	class="form-button {sentiment ? `form-button--${sentiment}` : ''} {isCompact
+		? 'form-button--compact'
+		: ''}"
 	on:click
 >
 	{label}
@@ -29,21 +34,24 @@
 		border: 1px solid var(--color-accent);
 		color: var(--color-white);
 		background-color: var(--color-accent);
-		box-shadow: inset 2px 2px 0 rgba(255, 255, 255, 0.35);
-
-		&:hover {
-			color: var(--color-white);
-			background-color: var(--color-accent);
-			box-shadow: inset 2px 2px 0 rgba(255, 255, 255, 0.15);
-		}
+		box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.25);
 
 		&:active {
 			transform: scale(0.98);
 		}
 
-		&--publishable {
+		&--positive {
 			background-color: var(--color-positive);
 			border-color: var(--color-positive);
+		}
+
+		&--negative {
+			background-color: var(--color-negative);
+			border-color: var(--color-negative);
+		}
+
+		&--compact {
+			padding: 8px 16px;
 		}
 
 		&:disabled {

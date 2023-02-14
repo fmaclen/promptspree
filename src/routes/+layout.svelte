@@ -3,7 +3,6 @@
 	import Logo from '$lib/components/Logo.svelte';
 	import { APP_NAME } from '$lib/utils';
 	import { slide } from 'svelte/transition';
-	import { backInOut } from 'svelte/easing';
 
 	import type { PageData } from './$types';
 
@@ -63,19 +62,19 @@
 			class="layout__aside"
 			role="region"
 			aria-labelledby="hamburger"
-			transition:slide="{{ duration: 50 }}"
+			transition:slide={{ duration: 150 }}
 		>
 			<ul class="aside__ul">
 				{#if data.user}
 					<li class="aside__li">
-						<a class="aside__a" href="/user/{data.user.id}/" aria-disabled="true">
+						<a class="aside__a" href="/profile/{data.user.id}/">
 							<strong class="aside__strong">
 								{data.user.nickname}
 							</strong>
 						</a>
 					</li>
 					<li class="aside__li">
-						<a class="aside__a" href="/user/{data.user.id}/drafts/" aria-disabled="true">Drafts</a>
+						<a class="aside__a" href="/profile/{data.user.id}/drafts">Drafts</a>
 					</li>
 					<li class="aside__li">
 						<a class="aside__a" href="/settings" aria-disabled="true">Settings</a>
@@ -127,7 +126,6 @@
 
 	:global(html) {
 		scroll-behavior: smooth;
-		height: 100%;
 	}
 
 	:global(body) {
@@ -149,14 +147,12 @@
 		font-family: var(--font-sans);
 		color: hsl(0, 0%, 30%);
 		background-color: hsl(0, 0%, 95%);
-		height: 100%;
 	}
 
 	div.layout {
 		display: flex;
 		flex-direction: column;
 		position: relative;
-		height: 100%;
 	}
 
 	aside.layout__aside {
@@ -297,7 +293,6 @@
 
 		&:hover {
 			border-color: rgba(255, 255, 255, 0.5);
-
 		}
 	}
 

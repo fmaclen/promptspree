@@ -16,14 +16,15 @@ export interface ArticleAuthor {
 }
 
 export interface Article {
+	id: string;
 	updated: string;
 	author: ArticleAuthor;
-	headline: string;
+	status: ArticleStatus;
 	category: ArticleCategory;
+	headline: string;
 	body: string[];
-	reactions: ArticleReactions;
-	id: string;
 	prompt: string;
+	reactions: ArticleReactions;
 }
 
 export enum Reaction {

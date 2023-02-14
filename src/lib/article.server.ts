@@ -2,13 +2,29 @@ import {
 	type Article,
 	type ArticleReactionByType,
 	type ArticleReactions,
+	ArticleStatus,
 	Reaction
 } from '$lib/article';
 import { logEventToSlack } from '$lib/slack.server';
+import { fail } from '@sveltejs/kit';
 import type { BaseAuthStore, Record } from 'pocketbase';
 
 import type { ArticlePromptShape } from './openai.server';
 import { handlePocketbaseError } from './pocketbase.server';
+
+export const generateArticles = async (
+	articlesCollection: BaseAuthStore['model'][],
+	locals: App.Locals
+): Promise<Article[]> => {
+	const articles: Article[] = [];
+
+	for (const articleCollection of articlesCollection) {
+		const generatedArticle = await generateArticle(articleCollection, locals);
+		if (generatedArticle) articles.push(generatedArticle);
+	}
+
+	return articles;
+};
 
 export const generateArticle = async (
 	articleCollection: BaseAuthStore['model'],
@@ -28,10 +44,11 @@ export const generateArticle = async (
 		id: articleCollection.id,
 		updated: articleCollection.updated,
 		author,
-		prompt: articleCollection.prompt,
-		headline: articleCollection.headline,
+		status: articleCollection.status,
 		category: articleCollection.category,
+		headline: articleCollection.headline,
 		body: JSON.parse(articleCollection.body),
+		prompt: articleCollection.prompt,
 		reactions
 	};
 
@@ -98,4 +115,43 @@ export const getFieldsFromCompletion = (completion: string | undefined) => {
 		// We store the paragraphs in the body as string arrays
 		body: JSON.stringify(fields.body)
 	};
+};
+
+export const deleteArticle = async (request: Request, locals: App.Locals) => {
+	const formData = await request.formData();
+	const articleId = formData.get('articleId')?.toString();
+
+	if (!locals?.user || !articleId) return fail(400, { error: "Couldn't delete the article" });
+
+	try {
+		await locals.pb.collection('articles').delete(articleId);
+	} catch (err) {
+		logEventToSlack('/lib/article.server.ts (deleteArticle)', err);
+		handlePocketbaseError(err);
+	}
+};
+
+export const publishArticle = async (
+	request: Request,
+	locals: App.Locals
+): Promise<Article | null> => {
+	const formData = await request.formData();
+	const articleId = formData.get('articleId')?.toString();
+
+	if (!locals?.user || !articleId) return null;
+
+	let articleCollection: BaseAuthStore['model'] = null;
+
+	try {
+		articleCollection = await locals.pb
+			.collection('articles')
+			.update(articleId, { status: ArticleStatus.PUBLISHED }, { expand: 'user' });
+	} catch (err) {
+		logEventToSlack('/lib/article.server.ts (publishArticle)', err);
+		handlePocketbaseError(err);
+	}
+
+	if (!articleCollection) null;
+
+	return await generateArticle(articleCollection, locals);
 };
