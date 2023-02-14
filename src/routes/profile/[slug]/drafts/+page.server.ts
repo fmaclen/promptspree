@@ -1,5 +1,5 @@
-import { type Article, ArticleStatus } from '$lib/article';
-import { deleteArticle, generateArticle, publishArticle } from '$lib/article.server';
+import { ArticleStatus } from '$lib/article';
+import { deleteArticle, generateArticles, publishArticle } from '$lib/article.server';
 import { getPromptScore } from '$lib/user';
 import { error, redirect } from '@sveltejs/kit';
 import type { BaseAuthStore } from 'pocketbase';
@@ -25,13 +25,7 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 
 	if (!userCollection) throw error(404, 'Not found');
 
-	const articles: Article[] = [];
-
-	for (const articleCollection of articlesCollection) {
-		const generatedArticle = await generateArticle(articleCollection, locals);
-		if (generatedArticle) articles.push(generatedArticle);
-	}
-
+	const articles = await generateArticles(articlesCollection, locals);
 	const isCurrentUserProfile = locals.user?.id === params.slug;
 	const totalPublished = articles.filter(
 		(article) => article.status === ArticleStatus.PUBLISHED

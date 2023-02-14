@@ -12,6 +12,20 @@ import type { BaseAuthStore, Record } from 'pocketbase';
 import type { ArticlePromptShape } from './openai.server';
 import { handlePocketbaseError } from './pocketbase.server';
 
+export const generateArticles = async (
+	articlesCollection: BaseAuthStore['model'][],
+	locals: App.Locals
+): Promise<Article[]> => {
+	const articles: Article[] = [];
+
+	for (const articleCollection of articlesCollection) {
+		const generatedArticle = await generateArticle(articleCollection, locals);
+		if (generatedArticle) articles.push(generatedArticle);
+	}
+
+	return articles;
+};
+
 export const generateArticle = async (
 	articleCollection: BaseAuthStore['model'],
 	locals: App.Locals

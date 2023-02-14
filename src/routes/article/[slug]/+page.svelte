@@ -9,9 +9,9 @@
 
 	export let data: PageData;
 	let article = data.article;
-	
+
 	// Sort the reactions by their index so the UI components always render in the same order
-	article.reactions.byType.sort((a, b) => a.index - b.index)
+	article.reactions.byType.sort((a, b) => a.index - b.index);
 
 	const handleReaction: SubmitFunction = () => {
 		return async ({ result, update }) => {

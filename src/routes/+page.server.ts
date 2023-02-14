@@ -1,5 +1,5 @@
-import { type Article, ArticleStatus } from '$lib/article';
-import { generateArticle } from '$lib/article.server';
+import { ArticleStatus } from '$lib/article';
+import { generateArticles } from '$lib/article.server';
 import { handlePocketbaseError } from '$lib/pocketbase.server';
 import { logEventToSlack } from '$lib/slack.server';
 import type { BaseAuthStore } from 'pocketbase';
@@ -20,14 +20,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 		handlePocketbaseError(err);
 	}
 
-	const articles: Article[] = [];
-
-	for (const articleCollection of articlesCollection) {
-		const generatedArticle = await generateArticle(articleCollection, locals);
-		if (generatedArticle) articles.push(generatedArticle);
-	}
-
 	return {
-		articles
+		articles: await generateArticles(articlesCollection, locals)
 	};
 };

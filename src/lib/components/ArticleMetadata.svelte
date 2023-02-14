@@ -14,7 +14,8 @@
 	const isPublishable = isCurrentUserProfile && article.status === ArticleStatus.DRAFT;
 
 	// Get the most popular reaction by sorting the reactions by their total
-	const mostPopularReaction = article.reactions.byType.sort((a, b) => b.total - a.total)[0].reaction
+	const mostPopularReaction = article.reactions.byType.sort((a, b) => b.total - a.total)[0]
+		.reaction;
 
 	const confirmDeletion = (event: any) => {
 		const confirmDeletion = window.confirm(
