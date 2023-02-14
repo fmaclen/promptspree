@@ -132,8 +132,9 @@ export const publishArticle = async (
 		articleCollection = await locals.pb
 			.collection('articles')
 			.update(articleId, { status: ArticleStatus.PUBLISHED }, { expand: 'user' });
-	} catch (_) {
-		// eslint-disable-next-line no-empty
+	} catch (err) {
+		logEventToSlack('/lib/article.server.ts (publishArticle)', err);
+		handlePocketbaseError(err);
 	}
 
 	if (!articleCollection) null;
