@@ -37,7 +37,8 @@ export enum Reaction {
 
 export enum ArticleStatus {
 	DRAFT = 'DRAFT',
-	PUBLISHED = 'PUBLISHED'
+	PUBLISHED = 'PUBLISHED',
+	FAILED = 'FAILED'
 }
 
 export enum ArticleCategory {
