@@ -9,6 +9,9 @@
 	import type { PageData } from './$types';
 
 	export let data: PageData;
+
+	// These need to be reactive otherwise they won't update when navigating from
+	// one profile to the other (e.g. clicking on the user's name in the aside)
 	$: profile = data.profile;
 	$: articles = data.articles;
 	$: isCurrentUserProfile = data.isCurrentUserProfile;
