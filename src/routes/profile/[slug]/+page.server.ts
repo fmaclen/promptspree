@@ -1,5 +1,6 @@
 import { type Article, ArticleStatus } from '$lib/article';
 import { deleteArticle, generateArticle, publishArticle } from '$lib/article.server';
+import { getPromptScore } from '$lib/user';
 import { error, redirect } from '@sveltejs/kit';
 import type { BaseAuthStore } from 'pocketbase';
 
@@ -41,14 +42,11 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 		if (generatedArticle) articles.push(generatedArticle);
 	}
 
-	// Calculate user's prompt score
-	const promptScore = articles.reduce((acc, article) => acc + article.reactions.total, 0);
-
 	const profile = {
 		id: userCollection.id,
 		nickname: userCollection.nickname,
 		created: userCollection.created,
-		promptScore
+		promptScore: getPromptScore(articles)
 	};
 
 	return { profile, articles, isCurrentUserProfile, totalDrafts };
@@ -60,7 +58,7 @@ export const actions: Actions = {
 		throw redirect(303, `/profile/${locals?.user?.id}`);
 	},
 	publish: async ({ request, locals }) => {
-		await publishArticle(request, locals);
+		const article = await publishArticle(request, locals);
 		throw redirect(303, article?.id ? `/article/${article.id}` : `/profile/${locals?.user?.id}`);
 	}
 };

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { type Article, ArticleStatus } from '$lib/article';
+	import type { Article } from '$lib/article';
 	import ArticleMetadata from '$lib/components/ArticleMetadata.svelte';
 	import Plate from '$lib/components/Plate.svelte';
 
@@ -20,26 +20,7 @@
 				</div>
 			</a>
 
-			{@const isDraft = article.status === ArticleStatus.DRAFT}
-			<ArticleMetadata
-				articleId={article.id}
-				userId={article.author.id}
-				nickname={article.author.nickname}
-				updated={article.updated}
-				isDeletable={isCurrentUserProfile}
-				isPublishable={isCurrentUserProfile && isDraft}
-			>
-				{#if !isDraft}
-					<a class="article-reactions-summary" href="/article/{article.id}">
-						{#if article.reactions.total > 0}
-							<span class="article-reactions-summary__emoji">
-								{article.reactions.byType.sort((a, b) => b.total - a.total)[0].reaction}
-							</span>
-						{/if}
-						<span class="article-reactions-summary__total">{article.reactions.total}</span>
-					</a>
-				{/if}
-			</ArticleMetadata>
+			<ArticleMetadata {article} {isCurrentUserProfile} />
 		</Plate>
 	{/each}
 </div>
@@ -87,34 +68,5 @@
 		margin: 0;
 		color: hsl(0, 0%, 40%);
 		line-height: 1.4em;
-	}
-
-	a.article-reactions-summary {
-		display: flex;
-		align-items: center;
-		column-gap: 8px;
-		text-decoration: none;
-
-		font-family: var(--font-mono);
-		font-size: 12px;
-		line-height: 1em;
-		text-align: center;
-		font-weight: 400;
-		color: hsl(0, 0%, 50%);
-		padding: 10px;
-		border: 1px solid hsl(0, 0%, 85%);
-
-		&:hover {
-			border: 1px solid hsl(0, 0%, 70%);
-		}
-	}
-
-	span.article-reactions-summary__emoji {
-		font-size: 16px;
-		transform: translateY(2px); // Optically align with text `span.article-reactions-summary__total`
-	}
-	
-	span.article-reactions-summary__total {
-		transform: translateY(1px); // Optically align with text `a.article-reactions-summary`
 	}
 </style>

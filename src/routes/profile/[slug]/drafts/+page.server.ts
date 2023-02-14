@@ -1,5 +1,6 @@
 import { type Article, ArticleStatus } from '$lib/article';
 import { deleteArticle, generateArticle, publishArticle } from '$lib/article.server';
+import { getPromptScore } from '$lib/user';
 import { error, redirect } from '@sveltejs/kit';
 import type { BaseAuthStore } from 'pocketbase';
 
@@ -11,23 +12,11 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 	let userCollection: BaseAuthStore['model'] = null;
 	let articlesCollection: BaseAuthStore['model'][] = [];
 
-	let totalPublished = 0;
-	const isCurrentUserProfile = locals.user?.id === params.slug;
-
-	if (isCurrentUserProfile) {
-		const articlesPublished = await locals.pb
-			.collection('articles')
-			.getList(1, 1, {
-				filter: `user = "${params.slug}" && status = "${ArticleStatus.PUBLISHED}"`
-			});
-		totalPublished = articlesPublished.totalItems;
-	}
-
 	try {
 		userCollection = await locals.pb.collection('users').getOne(params.slug);
 		articlesCollection = await locals.pb.collection('articles').getFullList(200, {
 			sort: '-updated',
-			filter: `user = "${params.slug}" && status = "${ArticleStatus.DRAFT}"`,
+			filter: `user = "${params.slug}"`,
 			expand: 'user'
 		});
 	} catch (_) {
@@ -43,26 +32,33 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 		if (generatedArticle) articles.push(generatedArticle);
 	}
 
-	// Calculate user's prompt score
-	const promptScore = articles.reduce((acc, article) => acc + article.reactions.total, 0);
+	const isCurrentUserProfile = locals.user?.id === params.slug;
+	const totalPublished = articles.filter(
+		(article) => article.status === ArticleStatus.PUBLISHED
+	).length;
 
 	const profile = {
 		id: userCollection.id,
 		nickname: userCollection.nickname,
 		created: userCollection.created,
-		promptScore
+		promptScore: getPromptScore(articles)
 	};
 
-	return { profile, articles, isCurrentUserProfile, totalPublished };
+	return {
+		articles: articles.filter((article) => article.status === ArticleStatus.DRAFT),
+		profile,
+		isCurrentUserProfile,
+		totalPublished
+	};
 };
 
 export const actions: Actions = {
 	delete: async ({ request, locals }) => {
 		await deleteArticle(request, locals);
-		throw redirect(303, `/profile/${locals?.user?.id}`)
+		throw redirect(303, `/profile/${locals?.user?.id}`);
 	},
 	publish: async ({ request, locals }) => {
 		const article = await publishArticle(request, locals);
-		throw redirect(303, article?.id ? `/article/${article.id}` : `/profile/${locals?.user?.id}`)
+		throw redirect(303, article?.id ? `/article/${article.id}` : `/profile/${locals?.user?.id}`);
 	}
 };

@@ -1,17 +1,18 @@
 <script lang="ts">
 	import { type SubmitFunction, enhance } from '$app/forms';
+	import { type Article, ArticleStatus } from '$lib/article';
 	import { Sentiment } from '$lib/utils';
 	import { redirect } from '@sveltejs/kit';
 	import { formatDistance } from 'date-fns';
 
 	import FormButton from './FormButton.svelte';
 
-	export let articleId: string;
-	export let userId: string;
-	export let nickname: string;
-	export let updated: string;
-	export let isDeletable: boolean = false;
-	export let isPublishable: boolean = false;
+	export let article: Article;
+	export let isCurrentUserProfile: boolean = false;
+
+	const isDraft = article.status === ArticleStatus.DRAFT;
+	const isDeletable = isCurrentUserProfile;
+	const isPublishable = isCurrentUserProfile && article.status === ArticleStatus.DRAFT;
 
 	const confirmDeletion = (event: any) => {
 		const confirmDeletion = window.confirm(
@@ -34,25 +35,33 @@
 </script>
 
 <nav class="metadata">
-	<a class="metadata__a" href={`/profile/${userId}`}>
-		<span class="metadata__author">{nickname}</span>
+	<a class="metadata__a" href={`/profile/${article.author.id}`}>
+		<span class="metadata__author">{article.author.nickname}</span>
 
-		<time class="metadata__time" title={updated} datetime={updated}>
-			{formatDistance(new Date(updated), new Date(), {
+		<time class="metadata__time" title={article.updated} datetime={article.updated}>
+			{formatDistance(new Date(article.updated), new Date(), {
 				addSuffix: true
 			})}
 		</time>
 	</a>
 
 	<div class="metadata__actions">
-		<!-- FIXME: Move `article-reactions-summary` here -->
-		<slot />
+		{#if !isDraft}
+			<a class="article-reactions-summary" href="/article/{article.id}">
+				{#if article.reactions.total > 0}
+					<span class="article-reactions-summary__emoji">
+						{article.reactions.byType.sort((a, b) => b.total - a.total)[0].reaction}
+					</span>
+				{/if}
+				<span class="article-reactions-summary__total">{article.reactions.total}</span>
+			</a>
+		{/if}
 
 		{#if isDeletable || isPublishable}
 			<nav class="metadata__author-actions">
 				{#if isDeletable}
 					<form class="form" method="POST" action="?/delete" use:enhance={handleDelete}>
-						<input type="hidden" name="articleId" value={articleId} />
+						<input type="hidden" name="articleId" value={article.id} />
 						<FormButton
 							label="Delete"
 							type="submit"
@@ -65,7 +74,7 @@
 
 				{#if isPublishable}
 					<form class="play__form" method="POST" action="?/publish" use:enhance={handlePublish}>
-						<input type="hidden" name="articleId" value={articleId} />
+						<input type="hidden" name="articleId" value={article.id} />
 						<FormButton
 							label="Publish"
 							type="submit"
@@ -131,5 +140,34 @@
 	nav.metadata__author-actions {
 		display: flex;
 		column-gap: 8px;
+	}
+
+	a.article-reactions-summary {
+		display: flex;
+		align-items: center;
+		column-gap: 8px;
+		text-decoration: none;
+
+		font-family: var(--font-mono);
+		font-size: 12px;
+		line-height: 1em;
+		text-align: center;
+		font-weight: 400;
+		color: hsl(0, 0%, 50%);
+		padding: 10px;
+		border: 1px solid hsl(0, 0%, 85%);
+
+		&:hover {
+			border: 1px solid hsl(0, 0%, 70%);
+		}
+	}
+
+	span.article-reactions-summary__emoji {
+		font-size: 16px;
+		transform: translateY(2px); // Optically align with text `span.article-reactions-summary__total`
+	}
+
+	span.article-reactions-summary__total {
+		transform: translateY(1px); // Optically align with text `a.article-reactions-summary`
 	}
 </style>

@@ -76,7 +76,7 @@
 	ul.profile-summary {
 		display: flex;
 		width: 100%;
-    height: 100%;
+		height: 100%;
 		box-sizing: border-box;
 		margin: 0;
 		padding: 0;
@@ -91,12 +91,12 @@
 		box-shadow: inset 1px 1px 0 var(--color-white);
 		text-shadow: 1px 1px 0 rgba(255, 255, 255, 1);
 
-    display: flex;
-    flex-direction: column;
-    row-gap: 2px;
-    line-height: 1.1em;
-    height: 100%;
-    box-sizing: border-box;
+		display: flex;
+		flex-direction: column;
+		row-gap: 2px;
+		line-height: 1.1em;
+		height: 100%;
+		box-sizing: border-box;
 
 		&:not(:first-child) {
 			border-left: 1px solid hsl(0, 0%, 85%);
@@ -109,13 +109,13 @@
 	}
 
 	a.profile-summary__a {
-    display: flex;
-    flex-direction: column;
-    row-gap: 2px;
-    line-height: 1.1em;
+		display: flex;
+		flex-direction: column;
+		row-gap: 2px;
+		line-height: 1.1em;
 		padding: 12px;
-    height: 100%;
-    box-sizing: border-box;
+		height: 100%;
+		box-sizing: border-box;
 
 		text-decoration: none;
 		color: inherit;

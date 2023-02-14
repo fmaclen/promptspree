@@ -10,7 +10,6 @@
 
 	export let data: PageData;
 	let article = data.article;
-	let isCurrentUserAuthor = data.user?.id === article.author.id
 
 	const handleReaction: SubmitFunction = () => {
 		return async ({ result, update }) => {
@@ -25,7 +24,7 @@
 		<ArticleBody {article} />
 
 		<nav class="article-reactions">
-			{#each article.reactions.byType as reaction}
+			{#each article.reactions.byType.sort((a, b) => a.index - b.index) as reaction}
 				<form
 					class="article-reactions__form"
 					action="/article/{article.id}?/react"
@@ -59,14 +58,7 @@
 			</code>
 		</div>
 
-		<ArticleMetadata
-			articleId={article.id}
-			userId={article.author.id}
-			nickname={article.author.nickname}
-			updated={article.updated}
-			isDeletable={isCurrentUserAuthor}
-			isPublishable={isCurrentUserAuthor && article.status === ArticleStatus.DRAFT}
-		/>
+		<ArticleMetadata {article} />
 	</Plate>
 </Section>
 

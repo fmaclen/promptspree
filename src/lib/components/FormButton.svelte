@@ -11,9 +11,9 @@
 <button
 	{type}
 	{disabled}
-	class="form-button {sentiment
-		? `form-button--${sentiment}`
-		: ''} {isCompact ? 'form-button--compact' : ''}"
+	class="form-button {sentiment ? `form-button--${sentiment}` : ''} {isCompact
+		? 'form-button--compact'
+		: ''}"
 	on:click
 >
 	{label}
