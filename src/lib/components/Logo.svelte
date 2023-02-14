@@ -3,7 +3,7 @@
 	export let hasDarkBackground: boolean = false;
 </script>
 
-<a href="/" {title} class="logo">
+<a href="/" {title} class="logo" on:click>
 	<svg
 		class="logo__svg {hasDarkBackground ? 'logo__svg--dark-background' : ''}"
 		width="131"
