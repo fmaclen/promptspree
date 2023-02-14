@@ -9,6 +9,9 @@
 
 	export let data: PageData;
 	let article = data.article;
+	
+	// Sort the reactions by their index so the UI components always render in the same order
+	article.reactions.byType.sort((a, b) => a.index - b.index)
 
 	const handleReaction: SubmitFunction = () => {
 		return async ({ result, update }) => {
@@ -23,7 +26,7 @@
 		<ArticleBody {article} />
 
 		<nav class="article-reactions">
-			{#each article.reactions.byType.sort((a, b) => a.index - b.index) as reaction}
+			{#each article.reactions.byType as reaction}
 				<form
 					class="article-reactions__form"
 					action="/article/{article.id}?/react"

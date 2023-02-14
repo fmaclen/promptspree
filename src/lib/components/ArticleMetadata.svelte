@@ -13,6 +13,9 @@
 	const isDeletable = isCurrentUserProfile;
 	const isPublishable = isCurrentUserProfile && article.status === ArticleStatus.DRAFT;
 
+	// Get the most popular reaction by sorting the reactions by their total
+	const mostPopularReaction = article.reactions.byType.sort((a, b) => b.total - a.total)[0].reaction
+
 	const confirmDeletion = (event: any) => {
 		const confirmDeletion = window.confirm(
 			`Are you sure you want to delete the article?\nThis action cannot be undone`
@@ -49,7 +52,7 @@
 			<a class="article-reactions-summary" href="/article/{article.id}">
 				{#if article.reactions.total > 0}
 					<span class="article-reactions-summary__emoji">
-						{article.reactions.byType.sort((a, b) => b.total - a.total)[0].reaction}
+						{mostPopularReaction}
 					</span>
 				{/if}
 				<span class="article-reactions-summary__total">{article.reactions.total}</span>
