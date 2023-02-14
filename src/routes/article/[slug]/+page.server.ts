@@ -93,8 +93,8 @@ export const actions: Actions = {
 		throw redirect(303, `/profile/${locals?.user?.id}`);
 	},
 	publish: async ({ request, locals }) => {
-		const article = await publishArticle(request, locals);
-		throw redirect(303, article?.id ? `/article/${article.id}` : `/profile/${locals?.user?.id}`);
+		await publishArticle(request, locals);
+		throw redirect(303, `/profile/${locals?.user?.id}`);
 	}
 };
 
