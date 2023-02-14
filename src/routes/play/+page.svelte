@@ -4,8 +4,8 @@
 	import ArticleBody from '$lib/components/ArticleBody.svelte';
 	import FormButton from '$lib/components/FormButton.svelte';
 	import FormTextarea from '$lib/components/FormTextarea.svelte';
-	import Head from '$lib/components/Head.svelte';
 	import HR from '$lib/components/HR.svelte';
+	import Head from '$lib/components/Head.svelte';
 	import IconLoading from '$lib/components/IconLoading.svelte';
 	import Notice from '$lib/components/Notice.svelte';
 	import Plate from '$lib/components/Plate.svelte';

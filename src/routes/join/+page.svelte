@@ -5,8 +5,8 @@
 	import FormField from '$lib/components/FormField.svelte';
 	import FormFieldset from '$lib/components/FormFieldset.svelte';
 	import FormInput from '$lib/components/FormInput.svelte';
-	import Head from '$lib/components/Head.svelte';
 	import HR from '$lib/components/HR.svelte';
+	import Head from '$lib/components/Head.svelte';
 	import Notice from '$lib/components/Notice.svelte';
 	import P from '$lib/components/P.svelte';
 	import Plate from '$lib/components/Plate.svelte';
