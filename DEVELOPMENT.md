@@ -12,7 +12,7 @@
 
 ## Deploy on a server
 
-- Clone the repository on a [server](https://www.digitalocean.com/pricing/droplets#basic-droplets) with [Node.JS](https://nodejs.dev/en/download/) v18+: `git clone https://github.com/fmaclen/the-synthetic-gazette.git`
+- Clone the repository on a [server](https://www.digitalocean.com/pricing/droplets#basic-droplets) with [Node.JS](https://nodejs.dev/en/download/) v18+: `git clone https://github.com/fmaclen/promptspree.git`
 
 #### Setup backend
 

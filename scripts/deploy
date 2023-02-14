@@ -1,14 +1,8 @@
 #!/bin/bash
 
-# This script starts by pulling the latest changes from git
-# then it checks if there is a package-lock.json file
-# if there is it runs npm ci otherwise it runs npm i 
-# then it runs npm run build 
-# after that it uses pkill command to kill any existing process that match the specified command
-# "APP_NAME=synthetic-gazette node build/index.js"
-# then it runs the index.js file with environment variables by sourcing the .env file
-# This time it uses nohup command to run the node process detached from the console 
-# and it appends & at the end of the command to run it in background.
+# This script is used to deploy the app to the server: it pulls the latest
+# changes from Github, installs dependencies, builds the frontend, and restarts the
+# backend (applying migrations) and frontend.
 
 # Pull the latest changes from git
 git pull
@@ -27,9 +21,9 @@ fi
 npm run build
 
 # Restart backend
-pkill -f "./pocketbase serve APP_NAME=synthetic-backend"
-nohup bash -c "cd pocketbase/ && ./pocketbase serve APP_NAME=synthetic-backend" &
+pkill -f "./pocketbase serve APP_NAME=promptspree-backend"
+nohup bash -c "cd pocketbase/ && ./pocketbase serve APP_NAME=promptspree-backend" &
 
 # Load environment variables and restart frontend
-pkill -f "node build/index.js APP_NAME=synthetic-frontend"
-env $(cat .env | xargs) nohup node build/index.js APP_NAME=synthetic-frontend &
+pkill -f "node build/index.js APP_NAME=promptspree-frontend"
+env $(cat .env | xargs) nohup node build/index.js APP_NAME=promptspree-frontend &
