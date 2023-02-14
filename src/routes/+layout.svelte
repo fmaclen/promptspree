@@ -31,7 +31,7 @@
 				{/if}
 			</button>
 
-			<Logo title={APP_NAME} hasDarkBackground={true} />
+			<Logo title={APP_NAME} hasDarkBackground={true} on:click={() => (isExpanded = false)} />
 
 			<a
 				class="primary-action {$page.url.pathname.includes('/play')
@@ -56,31 +56,50 @@
 			<ul class="aside__ul">
 				{#if data.user}
 					<li class="aside__li">
-						<a class="aside__a" href="/profile/{data.user.id}/">
+						<a
+							class="aside__a"
+							href="/profile/{data.user.id}"
+							on:click={() => (isExpanded = false)}
+						>
 							<strong class="aside__strong">
 								{data.user.nickname}
 							</strong>
 						</a>
 					</li>
 					<li class="aside__li">
-						<a class="aside__a" href="/profile/{data.user.id}/drafts">Drafts</a>
+						<a
+							class="aside__a"
+							href="/profile/{data.user.id}/drafts"
+							on:click={() => (isExpanded = false)}
+						>
+							Drafts
+						</a>
 					</li>
 					<li class="aside__li">
-						<a class="aside__a" href="/settings" aria-disabled="true">Settings</a>
+						<a
+							class="aside__a"
+							href="/settings"
+							aria-disabled="true"
+							on:click={() => (isExpanded = false)}
+						>
+							Settings
+						</a>
 					</li>
 					<li class="aside__li">
 						<form action="/logout" method="POST" class="">
-							<button class="aside__button" type="submit">Logout</button>
+							<button class="aside__button" type="submit" on:click={() => (isExpanded = false)}>
+								Logout
+							</button>
 						</form>
 					</li>
 				{:else}
 					<li class="aside__li">
-						<a class="aside__a" href="/join">
+						<a class="aside__a" href="/join" on:click={() => (isExpanded = false)}>
 							<strong class="aside__strong">Join to play</strong>
 						</a>
 					</li>
 					<li class="aside__li">
-						<a class="aside__a" href="/login">Login</a>
+						<a class="aside__a" href="/login" on:click={() => (isExpanded = false)}>Login</a>
 					</li>
 				{/if}
 			</ul>
@@ -90,10 +109,14 @@
 					<a class="aside__a" href="https://github.com/fmaclen/promptspree/">GitHub</a>
 				</li>
 				<li class="aside__li">
-					<a class="aside__a" href="/legal/">Terms of service</a>
+					<a class="aside__a" href="/legal/" on:click={() => (isExpanded = false)}>
+						Terms of service
+					</a>
 				</li>
 				<li class="aside__li">
-					<a class="aside__a" href="/legal/">Privacy policy</a>
+					<a class="aside__a" href="/legal/" on:click={() => (isExpanded = false)}>
+						Privacy policy
+					</a>
 				</li>
 				<li class="aside__li">
 					<span class="aside__copyright">

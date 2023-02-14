@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
 	import type { Article } from '$lib/article';
+	import A from '$lib/components/A.svelte';
 	import ArticleBody from '$lib/components/ArticleBody.svelte';
 	import FormButton from '$lib/components/FormButton.svelte';
 	import FormTextarea from '$lib/components/FormTextarea.svelte';
@@ -11,6 +12,7 @@
 	import Plate from '$lib/components/Plate.svelte';
 	import { Sentiment } from '$lib/utils';
 	import type { ActionResult } from '@sveltejs/kit';
+	import { slide } from 'svelte/transition';
 
 	let prompt = '';
 	let article: Article | null = null;
@@ -47,8 +49,20 @@
 <Head title={['Play']} />
 
 {#if error}
-	<Notice sentiment={Sentiment.NEGATIVE}>{error}</Notice>
-	<HR />
+	<div transition:slide={{ duration: 150 }}>
+		<Notice sentiment={Sentiment.NEGATIVE}>{error}</Notice>
+		<HR />
+	</div>
+{/if}
+
+{#if article}
+	<div transition:slide={{ duration: 150 }}>
+		<Notice sentiment={Sentiment.POSITIVE}>
+			Article saved to
+			<A href="/profile/{article.author.id}/drafts" sentiment={Sentiment.POSITIVE}>drafts</A>
+		</Notice>
+		<HR />
+	</div>
 {/if}
 
 <Notice>
