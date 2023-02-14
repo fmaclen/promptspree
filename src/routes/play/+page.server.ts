@@ -71,7 +71,7 @@ export const actions: Actions = {
 	},
 	publish: async ({ request, locals }) => {
 		const article = await publishArticle(request, locals);
-		if (!article) return fail(400, { error: "Article could not be published" });
+		if (!article) return fail(400, { error: 'Article could not be published' });
 
 		throw redirect(303, `/article/${article.id}`);
 	}

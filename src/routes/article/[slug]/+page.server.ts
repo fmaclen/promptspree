@@ -20,7 +20,9 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 	const article = await generateArticle(articleCollection, locals);
 	if (!article) throw error(404, 'Not found');
 
-	return { article };
+	const isCurrentUserProfile = locals.user?.id === article.author.id;
+
+	return { article, isCurrentUserProfile };
 };
 
 export const actions: Actions = {

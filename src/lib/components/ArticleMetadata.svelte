@@ -2,7 +2,6 @@
 	import { type SubmitFunction, enhance } from '$app/forms';
 	import { type Article, ArticleStatus } from '$lib/article';
 	import { Sentiment } from '$lib/utils';
-	import { redirect } from '@sveltejs/kit';
 	import { formatDistance } from 'date-fns';
 
 	import FormButton from './FormButton.svelte';

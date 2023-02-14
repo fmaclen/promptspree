@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { type SubmitFunction, enhance } from '$app/forms';
-	import { ArticleStatus } from '$lib/article';
 	import ArticleBody from '$lib/components/ArticleBody.svelte';
 	import ArticleMetadata from '$lib/components/ArticleMetadata.svelte';
 	import Plate from '$lib/components/Plate.svelte';
@@ -58,7 +57,7 @@
 			</code>
 		</div>
 
-		<ArticleMetadata {article} />
+		<ArticleMetadata {article} isCurrentUserProfile={data.isCurrentUserProfile} />
 	</Plate>
 </Section>
 

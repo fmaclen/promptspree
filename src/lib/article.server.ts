@@ -6,7 +6,7 @@ import {
 	Reaction
 } from '$lib/article';
 import { logEventToSlack } from '$lib/slack.server';
-import { fail, redirect } from '@sveltejs/kit';
+import { fail } from '@sveltejs/kit';
 import type { BaseAuthStore, Record } from 'pocketbase';
 
 import type { ArticlePromptShape } from './openai.server';

@@ -8,23 +8,26 @@
 	import type { PageData } from './$types';
 
 	export let data: PageData;
+	let profile = data.profile;
+	let articles = data.articles;
+	let isCurrentUserProfile = data.isCurrentUserProfile;
 </script>
 
-<Section title={data.profile.nickname}>
+<Section title={profile.nickname}>
 	<ProfileSummary
-		id={data.profile.id}
-		isCurrentUserProfile={data.isCurrentUserProfile}
+		id={profile.id}
+		{isCurrentUserProfile}
 		totalDrafts={data.totalDrafts}
-		totalPublished={data.articles.length}
-		promptScore={data.profile.promptScore}
-		created={data.profile.created}
+		totalPublished={articles.length}
+		promptScore={profile.promptScore}
+		created={profile.created}
 	/>
 
-	{#if data.articles.length > 0}
-		<ArticleSummaries articles={data.articles} isCurrentUserProfile={data.isCurrentUserProfile} />
+	{#if articles.length > 0}
+		<ArticleSummaries {articles} {isCurrentUserProfile} />
 	{:else if data.isCurrentUserProfile}
-		<Notice>No published articles, <A href="/play" isHighlighted={true}>create one</A></Notice>
+		<Notice>No published articles, <A href="/play" isHighlighted={true}>generate one</A></Notice>
 	{:else}
-		<Notice>{data.profile.nickname} has not published any articles</Notice>
+		<Notice>{profile.nickname} has not published any articles</Notice>
 	{/if}
 </Section>
