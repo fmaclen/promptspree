@@ -52,7 +52,12 @@ export const actions: Actions = {
 				.collection('articles')
 				.update(
 					articleCollection.id,
-					{ completion, ...fieldsFromCompletion, user: locals.user.id },
+					{
+						completion,
+						...fieldsFromCompletion,
+						user: locals.user.id,
+						status: fieldsFromCompletion ? ArticleStatus.DRAFT : ArticleStatus.FAILED
+					},
 					{ expand: 'user' }
 				);
 		} catch (err) {

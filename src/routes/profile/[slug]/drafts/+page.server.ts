@@ -16,7 +16,7 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 		userCollection = await locals.pb.collection('users').getOne(params.slug);
 		articlesCollection = await locals.pb.collection('articles').getFullList(200, {
 			sort: '-updated',
-			filter: `user = "${params.slug}"`,
+			filter: `user = "${params.slug}" && status != "${ArticleStatus.FAILED}"`,
 			expand: 'user'
 		});
 	} catch (_) {
