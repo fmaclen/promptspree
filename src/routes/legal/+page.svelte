@@ -6,7 +6,7 @@
 	import { APP_EMAIL, APP_NAME } from '$lib/utils';
 </script>
 
-<Head title={['Terms & Conditions']} />
+<Head title={['Terms & conditions']} />
 
 <Section title="Terms of service">
 	<P>
