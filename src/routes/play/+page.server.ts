@@ -1,5 +1,5 @@
 import { ArticleStatus } from '$lib/article';
-import { generateArticle, getFieldsFromCompletion } from '$lib/article.server';
+import { generateArticle, getFieldsFromCompletion, publishArticle } from '$lib/article.server';
 import { getCompletionFromAI } from '$lib/openai.server';
 import { handlePocketbaseError } from '$lib/pocketbase.server';
 import { logEventToSlack } from '$lib/slack.server';
@@ -70,24 +70,9 @@ export const actions: Actions = {
 		return { article };
 	},
 	publish: async ({ request, locals }) => {
-		const formData = await request.formData();
-		const articleId = formData.get('articleId')?.toString();
+		const article = await publishArticle(request, locals);
+		if (!article) return fail(400, { error: "Article could not be published" });
 
-		if (!locals?.user || !articleId) return fail(400, { error: "Can't publish the article" });
-
-		formData.append('status', ArticleStatus.PUBLISHED);
-		formData.append('user', locals.user.id);
-
-		let articleCollection: BaseAuthStore['model'] = null;
-
-		try {
-			articleCollection = await locals.pb.collection('articles').update(articleId, formData);
-		} catch (err) {
-			logEventToSlack('/play/+page.server.ts (publish)', err);
-			handlePocketbaseError(err);
-		}
-		if (!articleCollection) return fail(400, { error: 'Article could not be published' });
-
-		throw redirect(303, `/article/${articleCollection.id}`);
+		throw redirect(303, `/article/${article.id}`);
 	}
 };
