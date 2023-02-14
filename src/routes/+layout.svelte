@@ -99,7 +99,7 @@
 						</a>
 					</li>
 					<li class="aside__li">
-						<a class="aside__a" href="/login" on:click={() => (isExpanded = false)}> Login </a>
+						<a class="aside__a" href="/login" on:click={() => (isExpanded = false)}>Login</a>
 					</li>
 				{/if}
 			</ul>
