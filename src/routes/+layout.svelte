@@ -8,18 +8,7 @@
 
 	export let data: PageData;
 	let isExpanded = false;
-
-	const today = new Date().toLocaleDateString('en-US', {
-		weekday: 'long',
-		year: 'numeric',
-		month: 'long',
-		day: 'numeric'
-	});
 </script>
-
-<svelte:head>
-	<title>{APP_NAME} | {today}</title>
-</svelte:head>
 
 <div class="layout {isExpanded ? 'layout--expanded' : ''}">
 	<header class="header">

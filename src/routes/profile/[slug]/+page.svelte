@@ -1,6 +1,7 @@
 <script lang="ts">
 	import A from '$lib/components/A.svelte';
 	import ArticleSummaries from '$lib/components/ArticleSummaries.svelte';
+	import Head from '$lib/components/Head.svelte';
 	import Notice from '$lib/components/Notice.svelte';
 	import ProfileSummary from '$lib/components/ProfileSummary.svelte';
 	import Section from '$lib/components/Section.svelte';
@@ -12,6 +13,8 @@
 	let articles = data.articles;
 	let isCurrentUserProfile = data.isCurrentUserProfile;
 </script>
+
+<Head title={[profile.nickname, 'Profile']} />
 
 <Section title={profile.nickname}>
 	<ProfileSummary

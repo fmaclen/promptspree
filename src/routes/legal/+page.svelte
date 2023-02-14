@@ -1,9 +1,12 @@
 <script lang="ts">
 	import A from '$lib/components/A.svelte';
+	import Head from '$lib/components/Head.svelte';
 	import P from '$lib/components/P.svelte';
 	import Section from '$lib/components/Section.svelte';
 	import { APP_EMAIL, APP_NAME } from '$lib/utils';
 </script>
+
+<Head title={['Terms & conditions']} />
 
 <Section title="Terms of service">
 	<P>

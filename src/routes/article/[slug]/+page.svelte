@@ -2,6 +2,7 @@
 	import { type SubmitFunction, enhance } from '$app/forms';
 	import ArticleBody from '$lib/components/ArticleBody.svelte';
 	import ArticleMetadata from '$lib/components/ArticleMetadata.svelte';
+	import Head from '$lib/components/Head.svelte';
 	import Plate from '$lib/components/Plate.svelte';
 	import Section from '$lib/components/Section.svelte';
 
@@ -20,6 +21,8 @@
 		};
 	};
 </script>
+
+<Head title={[article.headline]} />
 
 <Section>
 	<Plate>
