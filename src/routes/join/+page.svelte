@@ -5,6 +5,7 @@
 	import FormField from '$lib/components/FormField.svelte';
 	import FormFieldset from '$lib/components/FormFieldset.svelte';
 	import FormInput from '$lib/components/FormInput.svelte';
+	import Head from '$lib/components/Head.svelte';
 	import HR from '$lib/components/HR.svelte';
 	import Notice from '$lib/components/Notice.svelte';
 	import P from '$lib/components/P.svelte';
@@ -57,6 +58,8 @@
 		};
 	};
 </script>
+
+<Head title={['Join']} />
 
 <Notice>Already have an account? <A href="/login" isHighlighted={true}>Login</A></Notice>
 <HR />
