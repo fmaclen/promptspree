@@ -56,7 +56,7 @@ export const actions: Actions = {
 						completion,
 						...fieldsFromCompletion,
 						user: locals.user.id,
-						status: fieldsFromCompletion ? ArticleStatus.FAILED : ArticleStatus.DRAFT
+						status: fieldsFromCompletion ? ArticleStatus.DRAFT : ArticleStatus.FAILED
 					},
 					{ expand: 'user' }
 				);
