@@ -1,6 +1,4 @@
 <script lang="ts">
-	import A from './A.svelte';
-
 	export let category: string;
 	export let href: string | undefined = undefined;
 </script>
@@ -21,7 +19,7 @@
 		font-size: 13px;
 		line-height: 1em;
 		font-weight: 600;
-		color: var(--color-accent);
+		color: var(--color-black);
 
 		&--politics {
 			color: var(--color-politics);

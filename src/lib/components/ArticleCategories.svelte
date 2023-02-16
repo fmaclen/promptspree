@@ -48,11 +48,14 @@
 		padding: 8px 16px;
 		text-shadow: var(--text-shadow-white-100);
 
+		&--active {
+			background-color: var(--color-white);
+		}
+
 		&--politics {
 			border-color: var(--color-politics);
 			color: var(--color-politics);
 
-			&.categories__a--active,
 			&:hover {
 				background-color: var(--color-politics-secondary);
 			}
@@ -62,7 +65,6 @@
 			border-color: var(--color-business);
 			color: var(--color-business);
 
-			&.categories__a--active,
 			&:hover {
 				background-color: var(--color-business-secondary);
 			}
@@ -72,7 +74,6 @@
 			border-color: var(--color-technology);
 			color: var(--color-technology);
 
-			&.categories__a--active,
 			&:hover {
 				background-color: var(--color-technology-secondary);
 			}
@@ -82,7 +83,6 @@
 			border-color: var(--color-entertainment);
 			color: var(--color-entertainment);
 
-			&.categories__a--active,
 			&:hover {
 				background-color: var(--color-entertainment-secondary);
 			}
@@ -92,7 +92,6 @@
 			border-color: var(--color-science);
 			color: var(--color-science);
 
-			&.categories__a--active,
 			&:hover {
 				background-color: var(--color-science-secondary);
 			}
@@ -102,7 +101,6 @@
 			border-color: var(--color-health);
 			color: var(--color-health);
 
-			&.categories__a--active,
 			&:hover {
 				background-color: var(--color-health-secondary);
 			}
@@ -112,7 +110,6 @@
 			border-color: var(--color-sports);
 			color: var(--color-sports);
 
-			&.categories__a--active,
 			&:hover {
 				background-color: var(--color-sports-secondary);
 			}
@@ -122,7 +119,6 @@
 			border-color: var(--color-culture);
 			color: var(--color-culture);
 
-			&.categories__a--active,
 			&:hover {
 				background-color: var(--color-culture-secondary);
 			}
@@ -132,7 +128,6 @@
 			border-color: var(--color-fashion);
 			color: var(--color-fashion);
 
-			&.categories__a--active,
 			&:hover {
 				background-color: var(--color-fashion-secondary);
 			}
@@ -142,7 +137,6 @@
 			border-color: var(--color-opinion);
 			color: var(--color-opinion);
 
-			&.categories__a--active,
 			&:hover {
 				background-color: var(--color-opinion-secondary);
 			}
