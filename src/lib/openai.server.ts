@@ -13,11 +13,11 @@ export interface ArticlePromptShape {
 
 const articleCategories = Object.values(ArticleCategory).join(', ');
 const articlePromptShape = {
-	headline: 'Clickbait headline should be less 80 characters',
+	headline: 'Clickbait headline shorter than 80 characters',
 	body: [
-		'Paragraph 1 should be between 80 and 180 characters long',
-		'Paragraph 2 should be between 512 and 640 characters long',
-		'Paragraph 3 should be between 180 and 256 character longs'
+		'Attention grabbing introduction must shorter than 140 characters',
+		'Main paragraph with details at least 420 characters',
+		'Conclusion paragraph at least 280 characters',
 	],
 	category: `Choose the closest category that best describes the article: ${articleCategories}`
 };
@@ -43,7 +43,7 @@ export const getCompletionFromAI = async (
 		const completionResponse = await openai.createCompletion({
 			model: 'text-davinci-003',
 			temperature: 1,
-			max_tokens: 2048,
+			max_tokens: 1024,
 			top_p: 1.0,
 			frequency_penalty: 0.0,
 			presence_penalty: 1,
