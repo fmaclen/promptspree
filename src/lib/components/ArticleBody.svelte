@@ -10,8 +10,7 @@
 
 <article class="article">
 	{#if article}
-		{@const category = article.category.toLowerCase()}
-		<ArticleCategory href="/category/{category}" {category}>
+		<ArticleCategory href="/category/{article.category.toLowerCase()}" category={article.category}>
 			{article.category}
 		</ArticleCategory>
 

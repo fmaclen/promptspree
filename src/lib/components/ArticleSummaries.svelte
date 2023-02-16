@@ -17,7 +17,7 @@
 		<Plate>
 			<a class="article" href="/article/{article.id}">
 				<div class="article__body">
-					<ArticleCategory category={article.category.toLowerCase()}>
+					<ArticleCategory category={article.category}>
 						{article.category}
 					</ArticleCategory>
 
