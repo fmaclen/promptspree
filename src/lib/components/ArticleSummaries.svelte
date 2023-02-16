@@ -3,6 +3,8 @@
 	import ArticleMetadata from '$lib/components/ArticleMetadata.svelte';
 	import Plate from '$lib/components/Plate.svelte';
 
+	import ArticleCategory from './ArticleCategory.svelte';
+
 	export let articles: Article[];
 	export let isCurrentUserProfile: boolean = false;
 
@@ -15,7 +17,10 @@
 		<Plate>
 			<a class="article" href="/article/{article.id}">
 				<div class="article__body">
-					<h3 class="article__category">{article.category}</h3>
+					<ArticleCategory category={article.category.toLowerCase()}>
+						{article.category}
+					</ArticleCategory>
+
 					<h1 class="article__headline">
 						{article.headline}
 					</h1>

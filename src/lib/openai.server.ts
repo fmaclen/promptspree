@@ -17,7 +17,7 @@ const articlePromptShape = {
 	body: [
 		'Attention grabbing introduction must shorter than 140 characters',
 		'Main paragraph with details at least 420 characters',
-		'Conclusion paragraph at least 280 characters',
+		'Conclusion paragraph at least 280 characters'
 	],
 	category: `Choose the closest category that best describes the article: ${articleCategories}`
 };
