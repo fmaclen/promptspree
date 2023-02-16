@@ -1,9 +1,8 @@
 <script lang="ts">
 	import type { Article } from '$lib/article';
+	import ArticleCategory from '$lib/components/ArticleCategory.svelte';
 	import ArticleMetadata from '$lib/components/ArticleMetadata.svelte';
 	import Plate from '$lib/components/Plate.svelte';
-
-	import ArticleCategory from './ArticleCategory.svelte';
 
 	export let articles: Article[];
 	export let isCurrentUserProfile: boolean = false;

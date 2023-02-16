@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Article } from '$lib/article';
+	import ArticleCategory from '$lib/components/ArticleCategory.svelte';
 
-	import ArticleCategory from './ArticleCategory.svelte';
 	import ArticlePlaceholder from './ArticlePlaceholder.svelte';
 
 	export let article: Article | null;
