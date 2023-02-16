@@ -118,15 +118,9 @@
 			&copy; {new Date().getFullYear()}
 			{APP_NAME}
 		</A>
-		<A href="/legal/">
-			Terms of service
-		</A>
-		<A href="/legal/">
-			Privacy policy
-		</A>
-		<A href="https://github.com/fmaclen/promptspree/">
-			GitHub
-		</A>
+		<A href="/legal/">Terms of service</A>
+		<A href="/legal/">Privacy policy</A>
+		<A href="https://github.com/fmaclen/promptspree/">GitHub</A>
 	</footer>
 </div>
 
@@ -155,7 +149,28 @@
 
 		--text-shadow-white-50: 1px 1px 0 rgba(255, 255, 255, 0.5);
 		--text-shadow-white-100: 1px 1px 0 var(--color-white);
-		
+
+		--color-politics: hsl(180, 55%, 40%);
+		--color-politics-secondary: hsla(180, 100%, 40%, 0.075);
+		--color-business: hsl(216, 55%, 40%);
+		--color-business-secondary: hsla(216, 100%, 40%, 0.075);
+		--color-technology: hsl(252, 55%, 40%);
+		--color-technology-secondary: hsla(252, 100%, 40%, 0.075);
+		--color-entertainment: hsl(288, 55%, 40%);
+		--color-entertainment-secondary: hsla(288, 100%, 40%, 0.075);
+		--color-science: hsl(324, 55%, 40%);
+		--color-science-secondary: hsla(324, 100%, 40%, 0.075);
+		--color-health: hsl(0, 55%, 40%);
+		--color-health-secondary: hsla(0, 100%, 40%, 0.075);
+		--color-sports: hsl(36, 55%, 40%);
+		--color-sports-secondary: hsla(36, 100%, 40%, 0.075);
+		--color-culture: hsl(72, 55%, 40%);
+		--color-culture-secondary: hsla(72, 100%, 40%, 0.075);
+		--color-fashion: hsl(108, 55%, 40%);
+		--color-fashion-secondary: hsla(108, 100%, 40%, 0.075);
+		--color-opinion: hsl(144, 55%, 40%);
+		--color-opinion-secondary: hsla(144, 100%, 40%, 0.075);
+
 		height: 100%;
 		margin: 0;
 		font-family: var(--font-sans);

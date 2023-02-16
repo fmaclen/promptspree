@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Article } from '$lib/article';
+	import ArticleCategory from '$lib/components/ArticleCategory.svelte';
 
 	import ArticlePlaceholder from './ArticlePlaceholder.svelte';
 
@@ -9,7 +10,9 @@
 
 <article class="article">
 	{#if article}
-		<h3 class="article__category">{article.category}</h3>
+		<ArticleCategory href="/category/{article.category.toLowerCase()}" category={article.category}>
+			{article.category}
+		</ArticleCategory>
 
 		<h1 class="article__headline">
 			{article.headline}
@@ -32,14 +35,6 @@
 		flex-direction: column;
 		padding: 32px;
 		row-gap: 12px;
-	}
-
-	h3.article__category {
-		margin: 0;
-		font-size: 13px;
-		line-height: 1em;
-		font-weight: 600;
-		color: var(--color-positive);
 	}
 
 	h1.article__headline {

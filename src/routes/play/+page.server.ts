@@ -48,18 +48,16 @@ export const actions: Actions = {
 
 		// // Update the article with the completion
 		try {
-			articleCollection = await locals.pb
-				.collection('articles')
-				.update(
-					articleCollection.id,
-					{
-						completion,
-						...fieldsFromCompletion,
-						user: locals.user.id,
-						status: fieldsFromCompletion ? ArticleStatus.DRAFT : ArticleStatus.FAILED
-					},
-					{ expand: 'user' }
-				);
+			articleCollection = await locals.pb.collection('articles').update(
+				articleCollection.id,
+				{
+					completion,
+					...fieldsFromCompletion,
+					user: locals.user.id,
+					status: fieldsFromCompletion ? ArticleStatus.DRAFT : ArticleStatus.FAILED
+				},
+				{ expand: 'user' }
+			);
 		} catch (err) {
 			logEventToSlack('/play/+page.server.ts (generate)', err);
 			handlePocketbaseError(err);

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Article } from '$lib/article';
+	import ArticleCategory from '$lib/components/ArticleCategory.svelte';
 	import ArticleMetadata from '$lib/components/ArticleMetadata.svelte';
 	import Plate from '$lib/components/Plate.svelte';
 
@@ -15,7 +16,10 @@
 		<Plate>
 			<a class="article" href="/article/{article.id}">
 				<div class="article__body">
-					<h3 class="article__category">{article.category}</h3>
+					<ArticleCategory category={article.category}>
+						{article.category}
+					</ArticleCategory>
+
 					<h1 class="article__headline">
 						{article.headline}
 					</h1>
@@ -48,14 +52,6 @@
 		display: flex;
 		flex-direction: column;
 		row-gap: 8px;
-	}
-
-	h3.article__category {
-		margin: 0;
-		font-size: 13px;
-		line-height: 1em;
-		font-weight: 600;
-		color: var(--color-positive);
 	}
 
 	h1.article__headline {
