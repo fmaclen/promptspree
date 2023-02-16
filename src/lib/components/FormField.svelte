@@ -14,7 +14,7 @@
 		gap: 6px;
 		font-size: 13px;
 		font-weight: 600;
-		text-shadow: 1px 1px 0 rgba(255, 255, 255, 1);
+		text-shadow: var(--text-shadow-white-100);
 		width: 100%;
 	}
 </style>

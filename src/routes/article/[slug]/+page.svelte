@@ -24,7 +24,7 @@
 
 <Head title={[article.headline]} />
 
-<Section>
+<Section isVerticallyCentered={true}>
 	<Plate>
 		<ArticleBody {article} />
 

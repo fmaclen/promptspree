@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import A from '$lib/components/A.svelte';
+	import HR from '$lib/components/HR.svelte';
 	import Logo from '$lib/components/Logo.svelte';
 	import { APP_NAME } from '$lib/utils';
 	import { slide } from 'svelte/transition';
@@ -103,34 +105,29 @@
 					</li>
 				{/if}
 			</ul>
-
-			<ul class="aside__ul aside__ul--bottom">
-				<li class="aside__li">
-					<a class="aside__a" href="https://github.com/fmaclen/promptspree/">GitHub</a>
-				</li>
-				<li class="aside__li">
-					<a class="aside__a" href="/legal/" on:click={() => (isExpanded = false)}>
-						Terms of service
-					</a>
-				</li>
-				<li class="aside__li">
-					<a class="aside__a" href="/legal/" on:click={() => (isExpanded = false)}>
-						Privacy policy
-					</a>
-				</li>
-				<li class="aside__li">
-					<span class="aside__copyright">
-						&copy; {new Date().getFullYear()}
-						{APP_NAME}
-					</span>
-				</li>
-			</ul>
 		</aside>
 	{/if}
 
 	<main class="layout__main">
 		<slot />
 	</main>
+
+	<HR />
+	<footer class="layout__footer">
+		<A href="/">
+			&copy; {new Date().getFullYear()}
+			{APP_NAME}
+		</A>
+		<A href="/legal/">
+			Terms of service
+		</A>
+		<A href="/legal/">
+			Privacy policy
+		</A>
+		<A href="https://github.com/fmaclen/promptspree/">
+			GitHub
+		</A>
+	</footer>
 </div>
 
 <style lang="scss">
@@ -138,6 +135,7 @@
 
 	:global(html) {
 		scroll-behavior: smooth;
+		height: 100%;
 	}
 
 	:global(body) {
@@ -155,6 +153,10 @@
 		--color-white: #ffffff;
 		--color-black: #000;
 
+		--text-shadow-white-50: 1px 1px 0 rgba(255, 255, 255, 0.5);
+		--text-shadow-white-100: 1px 1px 0 var(--color-white);
+		
+		height: 100%;
 		margin: 0;
 		font-family: var(--font-sans);
 		color: hsl(0, 0%, 30%);
@@ -165,6 +167,7 @@
 		display: flex;
 		flex-direction: column;
 		position: relative;
+		height: 100%;
 	}
 
 	aside.layout__aside {
@@ -174,7 +177,6 @@
 		justify-content: space-between;
 		min-width: 256px;
 		border-right: 1px solid hsl(0, 0%, 85%);
-
 		background-color: var(--color-accent);
 
 		border-right: none;
@@ -210,7 +212,6 @@
 		font-size: 14px;
 	}
 
-	span.aside__copyright,
 	button.aside__button,
 	a.aside__a {
 		display: block;
@@ -240,7 +241,6 @@
 	a.aside__a[aria-disabled='true'] {
 		pointer-events: none;
 		text-decoration: line-through;
-		/* color: hsl(0, 0%, 70%); */
 		color: rgba(255, 255, 255, 0.25);
 	}
 
@@ -255,18 +255,12 @@
 		cursor: pointer;
 	}
 
-	span.aside__copyright {
-		font-weight: 400;
-		color: rgba(255, 255, 255, 0.25);
-	}
-
 	main.layout__main {
 		grid-area: main;
 
 		display: flex;
 		flex-direction: column;
-		height: 100%;
-		overflow-y: auto;
+		flex-grow: 1;
 	}
 
 	/* ------------------------------------------------------------------------ */
@@ -345,5 +339,25 @@
 		display: block;
 		font-size: 12px;
 		width: 12px;
+	}
+
+	/* ------------------------------------------------------------------------ */
+
+	footer.layout__footer {
+		display: flex;
+		gap: 24px;
+		font-size: 13px;
+		font-weight: 400;
+		color: rgba(0, 0, 0, 0.5);
+		text-shadow: var(--text-shadow-white-100);
+		text-align: center;
+		padding: 24px;
+		margin-inline: auto;
+
+		@media (max-width: 768px) {
+			flex-direction: column-reverse;
+			text-align: unset;
+			margin-inline: unset;
+		}
 	}
 </style>

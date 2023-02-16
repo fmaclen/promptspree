@@ -109,13 +109,13 @@
 	span.metadata__author {
 		font-weight: 600;
 		color: inherit;
-		text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
+		text-shadow: var(--text-shadow-white-50);
 	}
 
 	time.metadata__time {
 		margin-left: 4px;
 		color: hsl(0, 0%, 50%);
-		text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
+		text-shadow: var(--text-shadow-white-50);
 	}
 
 	a.metadata__a {
