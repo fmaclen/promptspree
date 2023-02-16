@@ -1,8 +1,9 @@
 <script lang="ts">
 	export let title: string | undefined = undefined;
+	export let isVerticallyCentered: boolean = false;
 </script>
 
-<section class="section">
+<section class="section {isVerticallyCentered ? 'section--vertically-centered' : ''}">
 	<div class="section__container">
 		{#if title}
 			<h1 class="section__h1">{title}</h1>
@@ -22,7 +23,10 @@
 		width: 100%;
 		margin-inline: auto;
 		box-sizing: border-box;
-		margin-block: auto;
+
+		&--vertically-centered {
+			margin-block: auto;
+		}
 	}
 
 	div.section__container {
@@ -52,7 +56,7 @@
 		border: 1px solid hsl(0, 0%, 85%);
 		box-shadow: 1px 1px 0 rgba(255, 255, 255, 0.35);
 		background-color: rgba(255, 255, 255, 0.1);
-		text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
+		text-shadow: var(--text-shadow-white-50);
 
 		&::before {
 			z-index: -1;
