@@ -42,14 +42,14 @@ export enum ArticleStatus {
 }
 
 export enum ArticleCategory {
-	POLITICS = 'Politics',
-	BUSINESS = 'Business',
-	TECHNOLOGY = 'Technology',
-	ENTERTAINMENT = 'Entertainment',
-	SCIENCE = 'Science',
-	HEALTH = 'Health',
-	SPORTS = 'Sports',
-	CULTURE = 'Culture',
-	FASHION = 'Fashion',
-	OPINION = 'Opinion'
+	POLITICS = '🏛️ Politics',
+	BUSINESS = '💼 Business',
+	TECHNOLOGY = '🖥️ Technology',
+	ENTERTAINMENT = '🎭 Entertainment',
+	SCIENCE = '🔬 Science',
+	HEALTH = '🏥 Health',
+	SPORTS = '⚽️ Sports',
+	CULTURE = '🎨 Culture',
+	FASHION = '👗 Fashion',
+	OPINION = '💭 Opinion'
 }
