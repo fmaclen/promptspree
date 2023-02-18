@@ -64,9 +64,9 @@
 			position: absolute;
 			inset: 0;
 
-			background-image: url('https://user-images.githubusercontent.com/1434675/218220190-373b81c7-bf33-44ab-a481-091308e5f870.gif');
+			background-image: url('https://user-images.githubusercontent.com/1434675/219880079-26b36e81-83a6-4ad9-85ce-c17b5bf1b135.gif');
 			background-position: center;
-			background-size: cover;
+			/* background-size: cover; */
 			opacity: 0.1;
 			filter: invert(1);
 		}

@@ -7,7 +7,7 @@
 	const categories = Object.keys(ArticleCategory).map((key) => {
 		return {
 			id: key.toLowerCase(),
-			name: ArticleCategory[key as keyof typeof ArticleCategory]
+			label: ArticleCategory[key as keyof typeof ArticleCategory]
 		};
 	});
 </script>
@@ -16,11 +16,12 @@
 	{#each categories as category}
 		<a
 			href="/category/{category.id}"
-			class="categories__a categories__a--{category.id} {currentCategory === category.name
+			class="categories__a categories__a--{category.id} {currentCategory === category.label
 				? 'categories__a--active'
 				: ''}"
 		>
-			{category.name}
+			<span aria-label={category.id}>{category.label.split(' ')[0]}</span>
+			{category.label.split(' ')[1]}
 		</a>
 	{/each}
 </nav>
@@ -39,107 +40,25 @@
 	}
 
 	a.categories__a {
+		display: flex;
+		column-gap: 8px;
+		align-items: center;
 		text-decoration: none;
 		font-size: 13px;
 		font-weight: 600;
 		box-sizing: border-box;
 		border-radius: 2px;
-		border: 1px solid;
 		padding: 8px 16px;
+		color: inherit;
 		text-shadow: var(--text-shadow-white-100);
-
-		&--active {
-			background-color: var(--color-white);
-		}
-
-		&--politics {
-			border-color: var(--color-politics);
-			color: var(--color-politics);
-
-			&:hover {
-				background-color: var(--color-politics-secondary);
-			}
-		}
-
-		&--business {
-			border-color: var(--color-business);
-			color: var(--color-business);
-
-			&:hover {
-				background-color: var(--color-business-secondary);
-			}
-		}
-
-		&--technology {
-			border-color: var(--color-technology);
-			color: var(--color-technology);
-
-			&:hover {
-				background-color: var(--color-technology-secondary);
-			}
-		}
-
-		&--entertainment {
-			border-color: var(--color-entertainment);
-			color: var(--color-entertainment);
-
-			&:hover {
-				background-color: var(--color-entertainment-secondary);
-			}
-		}
-
-		&--science {
-			border-color: var(--color-science);
-			color: var(--color-science);
-
-			&:hover {
-				background-color: var(--color-science-secondary);
-			}
-		}
-
-		&--health {
-			border-color: var(--color-health);
-			color: var(--color-health);
-
-			&:hover {
-				background-color: var(--color-health-secondary);
-			}
-		}
-
-		&--sports {
-			border-color: var(--color-sports);
-			color: var(--color-sports);
-
-			&:hover {
-				background-color: var(--color-sports-secondary);
-			}
-		}
-
-		&--culture {
-			border-color: var(--color-culture);
-			color: var(--color-culture);
-
-			&:hover {
-				background-color: var(--color-culture-secondary);
-			}
-		}
-
-		&--fashion {
-			border-color: var(--color-fashion);
-			color: var(--color-fashion);
-
-			&:hover {
-				background-color: var(--color-fashion-secondary);
-			}
-		}
-
-		&--opinion {
-			border-color: var(--color-opinion);
-			color: var(--color-opinion);
-
-			&:hover {
-				background-color: var(--color-opinion-secondary);
-			}
+		background-color: var(--color-white);
+		border: 1px solid var(--color-white);
+		
+		&--active,
+		&:hover {
+			color: var(--color-accent);
+			background-color: var(--color-accent-secondary);
+			border-color: var(--color-accent);
 		}
 	}
 </style>
