@@ -21,8 +21,8 @@
 	{#if articles.length > 0}
 		<ArticleSummaries {articles} />
 	{:else}
-		<Notice
-			>There are no articles in the <strong class="category-name">{category.split(' ')[1]}</strong>
+		<Notice>
+			There are no articles in the <strong class="category-name">{category.split(' ')[1]}</strong>
 			category, try
 			<A href="/play" isHighlighted={true}>creating one</A>
 		</Notice>
