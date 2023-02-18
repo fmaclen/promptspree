@@ -39,7 +39,7 @@
 <Notice>Don't have an account? <A href="/join" isHighlighted={true}>Join to play</A></Notice>
 <HR />
 
-<Section title="Login">
+<Section isVerticallyCentered={true} title="Login">
 	<Plate>
 		<form class="form" method="POST" use:enhance={handleSubmit}>
 			<FormFieldset>

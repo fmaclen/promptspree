@@ -120,7 +120,7 @@
 		</A>
 		<A href="/legal/">Terms of service</A>
 		<A href="/legal/">Privacy policy</A>
-		<A href="https://github.com/fmaclen/promptspree/">GitHub</A>
+		<A target="_blank" href="https://github.com/fmaclen/promptspree/">GitHub</A>
 	</footer>
 </div>
 
