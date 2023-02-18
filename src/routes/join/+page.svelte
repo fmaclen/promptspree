@@ -64,7 +64,7 @@
 <Notice>Already have an account? <A href="/login" isHighlighted={true}>Login</A></Notice>
 <HR />
 
-<Section title={success ? 'Almost there...' : 'Join to play'}>
+<Section isVerticallyCentered={true} title={success ? 'Almost there...' : 'Join to play'}>
 	<Plate>
 		<form class="form" method="POST" use:enhance={handleSubmit}>
 			<FormFieldset>

@@ -22,8 +22,15 @@
 		<ArticleSummaries {articles} />
 	{:else}
 		<Notice
-			>There are no articles in the {category} category, try
+			>There are no articles in the <strong class="category-name">{category.split(' ')[1]}</strong>
+			category, try
 			<A href="/play" isHighlighted={true}>creating one</A>
 		</Notice>
 	{/if}
 </Section>
+
+<style lang="scss">
+	strong.category-name {
+		font-weight: 600;
+	}
+</style>
