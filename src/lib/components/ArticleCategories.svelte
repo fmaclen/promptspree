@@ -20,7 +20,12 @@
 				? 'categories__a--active'
 				: ''}"
 		>
-			<span aria-label={category.id}>{category.label.split(' ')[0]}</span>
+			<!-- Emoji -->
+			<span aria-label={category.id}>
+				{category.label.split(' ')[0]}
+			</span>
+
+			<!-- Category name -->
 			{category.label.split(' ')[1]}
 		</a>
 	{/each}
@@ -53,7 +58,7 @@
 		text-shadow: var(--text-shadow-white-100);
 		background-color: var(--color-white);
 		border: 1px solid var(--color-white);
-		
+
 		&--active,
 		&:hover {
 			color: var(--color-accent);
