@@ -25,6 +25,7 @@ test.describe('Users', () => {
 		await expect(submitButton).not.toBeDisabled();
 
 		await submitButton.click();
+		await expect(page.locator('h1', { hasText: 'Join to play' })).not.toBeVisible();
 		await expect(page.locator('h1', { hasText: 'Almost there...' })).toBeVisible();
 		await expect(notice).toContainText(['Check your email to verify your account']);
 	});
