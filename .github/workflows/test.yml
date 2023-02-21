@@ -30,7 +30,7 @@ jobs:
             curl -L -o pocketbase.zip https://github.com/pocketbase/pocketbase/releases/download/v0.12.3/pocketbase_0.12.3_windows_amd64.zip
           fi
           mkdir -p ./pocketbase
-          unzip pocketbase.zip -d ./pocketbase
+          unzip -o pocketbase.zip -d ./pocketbase
           rm pocketbase.zip
 
       - name: Install Playwright Browser
