@@ -8,8 +8,8 @@ jobs:
   Promptspree:
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
-        browser: [chromium, firefox]
+        os: [macos-latest, ubuntu-latest]
+        browser: [chromium, firefox, webkit]
 
     name: ${{ matrix.os }} - ${{ matrix.browser }}
     runs-on: ${{ matrix.os }}
@@ -28,7 +28,7 @@ jobs:
         run: npm run install:pocketbase
 
       - name: Install Playwright Browser
-        run: npx playwright install --with-deps ${{ matrix.browser }} chromium
+        run: npx playwright install --with-deps ${{ matrix.browser }}
 
       - name: Run Playwright tests
         run: npm test
