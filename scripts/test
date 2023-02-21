@@ -16,9 +16,6 @@ cp -rp pocketbase/pb_migrations tests/pocketbase/pb_migrations
 # (We use the # operator to remove "http://" from the beginning of TEST_POCKETBASE_URL)
 ./pocketbase/pocketbase serve --http="${TEST_POCKETBASE_URL#http://}" --dir tests/pocketbase/pb_data --migrationsDir tests/pocketbase/pb_migrations &
 
-# Wait for pocketbase to fully start
-sleep 1s
-
 # Run npx playwright test
 TEST_POCKETBASE_URL=${TEST_POCKETBASE_URL} npx playwright test
 

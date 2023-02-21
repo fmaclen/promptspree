@@ -25,17 +25,7 @@ jobs:
         run: npm ci
 
       - name: Install Pocketbase
-        run: |
-          if [ "${{ matrix.os }}" = "macos-latest" ]; then
-            curl -L -o pocketbase.zip https://github.com/pocketbase/pocketbase/releases/download/v0.12.3/pocketbase_0.12.3_darwin_amd64.zip
-          elif [ "${{ matrix.os }}" = "ubuntu-latest" ]; then
-            curl -L -o pocketbase.zip https://github.com/pocketbase/pocketbase/releases/download/v0.12.3/pocketbase_0.12.3_linux_amd64.zip
-          elif [ "${{ matrix.os }}" = "windows-latest" ]; then
-            curl -L -o pocketbase.zip https://github.com/pocketbase/pocketbase/releases/download/v0.12.3/pocketbase_0.12.3_windows_amd64.zip
-          fi
-          mkdir -p ./pocketbase
-          unzip -o pocketbase.zip -d ./pocketbase
-          rm pocketbase.zip
+        run: ./scripts/install_pocketbase
 
       - name: Install Playwright Browser
         run: npx playwright install --with-deps ${{ matrix.browser }} chromium
