@@ -1,0 +1,46 @@
+name: Test
+
+on:
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  SvelteKit:
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+        browser: [chromium, firefox, webkit]
+
+    name: SvelteKit (${{ matrix.os }} - ${{ matrix.browser }})
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Pocketbase
+        run: |
+          if [ "${{ matrix.os }}" = "macos-latest" ]; then
+            curl -L -o pocketbase.zip https://github.com/pocketbase/pocketbase/releases/download/v0.12.3/pocketbase_0.12.3_darwin_amd64.zip
+          elif [ "${{ matrix.os }}" = "ubuntu-latest" ]; then
+            curl -L -o pocketbase.zip https://github.com/pocketbase/pocketbase/releases/download/v0.12.3/pocketbase_0.12.3_linux_amd64.zip
+          elif [ "${{ matrix.os }}" = "windows-latest" ]; then
+            curl -L -o pocketbase.zip https://github.com/pocketbase/pocketbase/releases/download/v0.12.3/pocketbase_0.12.3_windows_amd64.zip
+          fi
+          mkdir -p ./pocketbase
+          unzip pocketbase.zip -d ./pocketbase
+          rm pocketbase.zip
+
+      - name: Install Playwright Browser
+        run: npx playwright install --with-deps ${{ matrix.browser }} chromium
+
+      - name: Run Playwright tests
+        run: ./scrips/test
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: ${{ matrix.browser }}-${{ matrix.os }}-test-results
+          path: test-results/
