@@ -1,4 +1,4 @@
-import { chromium, expect } from '@playwright/test';
+import { chromium, firefox, webkit, expect } from '@playwright/test';
 
 import { TEST_ADMIN_PASSWORD, TEST_ADMIN_USER } from './tests/fixtures/helpers.js';
 
@@ -13,8 +13,16 @@ async function globalSetup() {
 		throw new Error(`Couldn't connect to backend server: ${err}`);
 	}
 
-	// Create admin user
-	const browser = await chromium.launch();
+  let browserName = process.argv.find(arg => arg.startsWith('--browser='))?.split('=')[1];
+	if (!browserName) {
+		console.warn("-> No browser specified, using 'chromium' by default")
+		browserName = 'chromium';
+	}
+
+  // Determine which browser is being used
+  const browserType = browserName === 'firefox' ? firefox : browserName === 'webkit' ? webkit : chromium;
+  const browser = await browserType.launch();
+
 	const page = await browser.newPage();
 
 	await page.goto(`${TEST_POCKETBASE_URL}/_/`);

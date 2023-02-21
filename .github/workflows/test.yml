@@ -32,6 +32,8 @@ jobs:
 
       - name: Run Playwright tests
         run: npm test
+        env:
+          BROWSER: ${{ matrix.browser }}
 
       - uses: actions/upload-artifact@v3
         if: always()

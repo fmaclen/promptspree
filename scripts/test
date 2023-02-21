@@ -17,7 +17,9 @@ cp -rp pocketbase/pb_migrations tests/pocketbase/pb_migrations
 ./pocketbase/pocketbase serve --http="${TEST_POCKETBASE_URL#http://}" --dir tests/pocketbase/pb_data --migrationsDir tests/pocketbase/pb_migrations &
 
 # Run npx playwright test
-TEST_POCKETBASE_URL=${TEST_POCKETBASE_URL} npx playwright test
+echo "-> Starting Playwright tests using ${BROWSER}"
+
+TEST_POCKETBASE_URL=${TEST_POCKETBASE_URL} npx playwright test --browser=${BROWSER}
 
 # Check the exit status of the test command and exit with the same status code if it's non-zero
 status=$? && test $status -eq 0 || exit $status
