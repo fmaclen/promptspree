@@ -37,7 +37,7 @@ jobs:
         run: npx playwright install --with-deps ${{ matrix.browser }} chromium
 
       - name: Run Playwright tests
-        run: ./scrips/test
+        run: npm test
 
       - uses: actions/upload-artifact@v3
         if: always()
