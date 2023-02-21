@@ -1,7 +1,8 @@
-import type { PlaywrightTestConfig } from '@playwright/test';
+import { type PlaywrightTestConfig } from '@playwright/test';
 
 const config: PlaywrightTestConfig = {
 	globalSetup: './playwright.global-setup',
+	globalTeardown: './playwright.global-teardown',
 	webServer: {
 		command: 'npm run build && npm run preview',
 		port: 4173,
