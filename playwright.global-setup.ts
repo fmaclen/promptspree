@@ -1,13 +1,14 @@
 import { chromium, expect } from '@playwright/test';
-import { TEST_ADMIN_USER, TEST_ADMIN_PASSWORD } from './tests/fixtures/helpers.js';
+
+import { TEST_ADMIN_PASSWORD, TEST_ADMIN_USER } from './tests/fixtures/helpers.js';
 
 async function globalSetup() {
 	const { TEST_POCKETBASE_URL } = process.env;
 
 	// Check that the backend server is running before running tests
-	console.info('-> Checking that test backend server is running');
 	try {
-		await fetch(`${TEST_POCKETBASE_URL}/api/health`);
+		const res = await fetch(`${TEST_POCKETBASE_URL}/api/health`);
+		console.warn('-> API status', await res.json());
 	} catch (err) {
 		throw new Error(`Couldn't connect to backend server: ${err}`);
 	}

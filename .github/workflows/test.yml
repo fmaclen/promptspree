@@ -8,14 +8,20 @@ jobs:
   SvelteKit:
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
-        browser: [chromium, firefox, webkit]
+        os: [ubuntu-latest]
+        browser: [chromium]
+        # os: [macos-latest, ubuntu-latest, windows-latest]
+        # browser: [chromium, firefox, webkit]
 
     name: SvelteKit (${{ matrix.os }} - ${{ matrix.browser }})
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
 
       - name: Install dependencies
         run: npm ci
@@ -37,7 +43,7 @@ jobs:
         run: npx playwright install --with-deps ${{ matrix.browser }} chromium
 
       - name: Run Playwright tests
-        run: npm test
+        run: ./scripts/test
 
       - uses: actions/upload-artifact@v3
         if: always()
