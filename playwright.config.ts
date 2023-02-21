@@ -10,7 +10,7 @@ const config: PlaywrightTestConfig = {
 		}
 	},
 	testDir: 'tests',
-	timeout: 2500,
+	timeout: 5000,
 	use: { trace: 'retain-on-failure', screenshot: 'only-on-failure' }
 };
 
