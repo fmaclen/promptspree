@@ -8,7 +8,7 @@ async function globalSetup() {
 	// Check that the backend server is running before running tests
 	try {
 		const res = await fetch(`${TEST_POCKETBASE_URL}/api/health`);
-		console.warn('-> API status', await res.json());
+		console.info('-> Pocketbase status', await res.json());
 	} catch (err) {
 		throw new Error(`Couldn't connect to backend server: ${err}`);
 	}

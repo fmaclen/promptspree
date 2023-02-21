@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# This scripts starts up the frontend and backend servers but using the database
+# in tests/pocketbase instead of the one in pocketbase/pb_data.
+# Use this to analyze or debug the outcome of a test run.
+
+# Set environment variable for Pocketbase URL from .env file
+export TEST_POCKETBASE_URL="http://127.0.0.1:8092"
+
+# Start pocketbase:
+# - Specify `pb_data` and `pb_migrations` directories in tests/pocketbase
+# - We use the # operator to remove "http://" from the beginning of TEST_POCKETBASE_URL
+./pocketbase/pocketbase serve --http="${TEST_POCKETBASE_URL#http://}" --dir tests/pocketbase/pb_data --migrationsDir tests/pocketbase/pb_migrations &
+
+# Start frontend server
+TEST_POCKETBASE_URL=${TEST_POCKETBASE_URL} npm run dev

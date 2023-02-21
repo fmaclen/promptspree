@@ -1,11 +1,11 @@
-name: Test
+name: Integration tests
 
 on:
   pull_request:
     branches: [main, master]
 
 jobs:
-  SvelteKit:
+  Promptspree:
     strategy:
       matrix:
         os: [ubuntu-latest]
@@ -13,7 +13,7 @@ jobs:
         # os: [macos-latest, ubuntu-latest, windows-latest]
         # browser: [chromium, firefox, webkit]
 
-    name: SvelteKit (${{ matrix.os }} - ${{ matrix.browser }})
+    name: ${{ matrix.os }} - ${{ matrix.browser }}
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3

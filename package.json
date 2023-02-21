@@ -4,6 +4,7 @@
 	"private": true,
 	"scripts": {
 		"start": "./scripts/dev",
+		"start:test:db": "./scripts/dev_with_test_db",
 		"backend": "cd pocketbase && ./pocketbase serve",
 		"dev": "vite dev",
 		"build": "vite build",

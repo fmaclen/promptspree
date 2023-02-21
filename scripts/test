@@ -6,8 +6,11 @@ export TEST_POCKETBASE_URL="http://127.0.0.1:8091"
 # Delete everything in tests/pocketbase
 rm -rf tests/pocketbase/*
 
+# Create the tests/pocketbase directory if it doesn't exist
+mkdir -p tests/pocketbase
+
 # Copy migrations from pocketbase/pb_migrations to tests/pocketbase/pb_migrations
-cp -r pocketbase/pb_migrations tests/pocketbase/
+cp -rp pocketbase/pb_migrations tests/pocketbase/pb_migrations
 
 # Start pocketbase
 # (We use the # operator to remove "http://" from the beginning of TEST_POCKETBASE_URL)
