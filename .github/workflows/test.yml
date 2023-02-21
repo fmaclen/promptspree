@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
-        browser: [chromium]
+        browser: [chromium, firefox]
 
     name: ${{ matrix.os }} - ${{ matrix.browser }}
     runs-on: ${{ matrix.os }}
@@ -25,13 +25,13 @@ jobs:
         run: npm ci
 
       - name: Install Pocketbase
-        run: ./scripts/install_pocketbase
+        run: npm run install:pocketbase
 
       - name: Install Playwright Browser
         run: npx playwright install --with-deps ${{ matrix.browser }} chromium
 
       - name: Run Playwright tests
-        run: ./scripts/test
+        run: npm test
 
       - uses: actions/upload-artifact@v3
         if: always()

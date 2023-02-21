@@ -10,6 +10,7 @@
 		"build": "vite build",
 		"preview": "vite preview",
 		"test": "./scripts/test",
+		"install:pocketbase": "./scripts/install_pocketbase",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
