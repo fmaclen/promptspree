@@ -12,7 +12,7 @@ function runPocketBaseServe() {
     migrationsDir = 'tests/pocketbase/pb_migrations';
   }
 
-  let command = `./pocketbase/pocketbase serve --http=${http}`;
+  let command = `pocketbase/pocketbase serve --http=${http}`;
   if (dir) {
     command += ` --dir=${dir}`;
   }
