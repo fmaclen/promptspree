@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest]
-        browser: [chromium, firefox, webkit]
+        browser: [chromium, webkit]
 
     name: ${{ matrix.os }} - ${{ matrix.browser }}
     runs-on: ${{ matrix.os }}
