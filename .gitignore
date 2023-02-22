@@ -2,10 +2,9 @@
 .vscode
 
 # Pocketbase
-pocketbase/pb_data
-pocketbase/pocketbase
-pocketbase/CHANGELOG.md
-pocketbase/nohup.out
+/pocketbase/*
+!/pocketbase/LICENSE.md
+!/pocketbase/pb_migrations/
 
 # SvelteKit
 .DS_Store

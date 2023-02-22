@@ -1,3 +1,5 @@
+// This script downloads and installs Pocketbase for the host operating system and architecture
+
 import axios from 'axios';
 import AdmZip from 'adm-zip';
 
