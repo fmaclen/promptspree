@@ -5,6 +5,7 @@
 /pocketbase/*
 !/pocketbase/LICENSE.md
 !/pocketbase/pb_migrations/
+.pocketbase_pid
 
 # SvelteKit
 .DS_Store

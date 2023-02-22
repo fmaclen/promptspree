@@ -3,7 +3,8 @@ import { chromium, firefox, webkit, expect } from '@playwright/test';
 import { TEST_ADMIN_PASSWORD, TEST_ADMIN_USER } from './tests/fixtures/helpers.js';
 
 async function globalSetup() {
-	const { TEST_POCKETBASE_URL } = process.env;
+	const TEST_POCKETBASE_URL = "http://127.0.0.1:8091"
+	process.env.TEST_POCKETBASE_URL = TEST_POCKETBASE_URL;
 
 	// Check that the backend server is running before running tests
 	try {
@@ -13,7 +14,8 @@ async function globalSetup() {
 		throw new Error(`Couldn't connect to backend server: ${err}`);
 	}
 
-  let browserName = process.argv.find(arg => arg.startsWith('--browser='))?.split('=')[1];
+  let browserName = process.env.BROWSER;
+  // let browserName = process.argv.find(arg => arg.startsWith('--browser='))?.split('=')[1];
 	if (!browserName) {
 		console.warn("-> No browser specified, using 'chromium' by default")
 		browserName = 'chromium';

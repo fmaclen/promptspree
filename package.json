@@ -4,18 +4,18 @@
 	"private": true,
 	"scripts": {
 		"start": "./scripts/dev",
-		"start:test:db": "./scripts/dev_with_test_db",
-		"backend": "cd pocketbase && ./pocketbase serve",
+		"backend": "node ./scripts/runPocketbaseServe.js",
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
-		"test": "./scripts/test",
+    "test": "npm run setup:pocketbase:test && npm run backend -- 8091 & echo $! > .pocketbase_pid && npx playwright test && kill $(cat .pocketbase_pid)",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"format": "prettier --plugin-search-dir . --write .",
 		"setup": "npm install && npm run setup:pocketbase",
-		"setup:pocketbase": "node scripts/setupPocketbase.js"
+		"setup:pocketbase": "node scripts/setupPocketbase.js",
+		"setup:pocketbase:test": "node scripts/setupPocketbaseTests.js"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.30.0",
@@ -27,6 +27,7 @@
 		"@typescript-eslint/parser": "^5.45.0",
 		"adm-zip": "^0.5.10",
 		"axios": "^1.3.3",
+		"concurrently": "^7.6.0",
 		"date-fns": "^2.29.3",
 		"eslint": "^8.28.0",
 		"eslint-config-prettier": "^8.5.0",

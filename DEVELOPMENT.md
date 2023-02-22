@@ -48,12 +48,7 @@
 - run `npx vite dev --host`
 
 # npm test
-- wipe contents of tests/pocketbase/pb_data
-- wipe contents of tests/pocketbase/pb_migrations
-- copy pocketbase/pb_migrations to tests/pocketbase/pb_migrations
-- run `npm run backend:test`
-- set TEST_POCKETBASE_URL=127.0.0.1:8091
-- run `npx playwright test --browser=firefox`
+- run `npm run setup:pocketbase:test && npx playwright test --browser=firefox`
 
 # npm test:trace test-results/etc/etc
 - runs `npx playwright show-trace test-results/etc/etc`
@@ -63,4 +58,7 @@
 - runs `npm run setup:pocketbase`
 
 # npm run setup:pocketbase
-- runs `node scripts/installPocketbase.js`
+- runs `node scripts/setupPocketbase.js`
+
+# npm run setup:pocketbase:test
+- runs `node scripts/setupPocketbaseTests.js`
