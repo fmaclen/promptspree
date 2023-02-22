@@ -1,3 +1,5 @@
+import {chmodSync} from 'fs';
+
 import axios from 'axios';
 import AdmZip from 'adm-zip';
 
@@ -28,9 +30,14 @@ const downloadAndUnzipPocketbase = async () => {
   const response = await axios.get(downloadUrl, {
     responseType: 'arraybuffer'
   });
+
+  console.info(`-> Unzipping Pocketbase`);
   const zip = new AdmZip(response.data);
   zip.extractAllTo('./pocketbase', true);
-  console.info(`-> Pocketbase downloaded and unzipped successfully`);
+  
+  
+  console.info(`-> Making \`pocketbase\` executable`);
+  chmodSync('./pocketbase/pocketbase', 0o755);
 };
 
 downloadAndUnzipPocketbase();
