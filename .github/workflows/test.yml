@@ -8,8 +8,8 @@ jobs:
   Promptspree:
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest]
-        browser: [chromium, firefox]
+        os: [ubuntu-latest]
+        browser: [chromium, firefox, webkit]
 
     name: ${{ matrix.os }} - ${{ matrix.browser }}
     runs-on: ${{ matrix.os }}
