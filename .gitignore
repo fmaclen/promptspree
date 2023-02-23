@@ -2,10 +2,10 @@
 .vscode
 
 # Pocketbase
-pocketbase/pb_data
-pocketbase/pocketbase
-pocketbase/CHANGELOG.md
-pocketbase/nohup.out
+/pocketbase/*
+!/pocketbase/LICENSE.md
+!/pocketbase/pb_migrations/
+.pocketbase_pid
 
 # SvelteKit
 .DS_Store
@@ -15,6 +15,10 @@ node_modules
 /package
 .env
 .env.*
-!.env.example
+!.env.sample
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Tests
+tests/pocketbase
+test-results

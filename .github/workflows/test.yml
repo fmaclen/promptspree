@@ -1,0 +1,50 @@
+name: Integration tests
+
+on:
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  Promptspree:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        browser: [chromium, firefox, webkit]
+
+    name: ${{ matrix.os }} - ${{ matrix.browser }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Pocketbase
+        run: npm run setup:pocketbase
+
+      - name: Setup Pocketbase
+        run: npm run setup:pocketbase:test
+
+      - name: Run Pocketbase
+        run: npm run backend:test &
+
+      - name: Install Playwright Browser
+        run: npx playwright install --with-deps ${{ matrix.browser }} chromium
+
+      - name: Run Playwright tests
+        run: npx playwright test
+        env:
+          BROWSER: ${{ matrix.browser }}
+
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: ${{ matrix.browser }}-${{ matrix.os }}-test-results
+          path: |
+            test-results/
+            tests/pocketbase/

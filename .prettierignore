@@ -4,6 +4,7 @@ node_modules
 /.svelte-kit
 /package
 /pocketbase
+/tests/pocketbase
 .env
 .env.*
 !.env.example

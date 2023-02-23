@@ -2,12 +2,12 @@ import { env } from '$env/dynamic/private';
 import { error, fail } from '@sveltejs/kit';
 import { BaseAuthStore, ClientResponseError } from 'pocketbase';
 
-export const POCKETBASE_URL = env.POCKETBASE_URL || 'http://127.0.0.1:8090';
+export const pocketbaseUrl = env.TEST_POCKETBASE_URL || 'http://127.0.0.1:8090';
 
 export const getImageURL = (article: BaseAuthStore['model']) => {
 	if (article === null) return undefined;
 	if (article?.image.length === 0) return undefined;
-	return `${POCKETBASE_URL}/api/files/${article.collectionId}/${article.id}/${article.image[0]}`;
+	return `${pocketbaseUrl}/api/files/${article.collectionId}/${article.id}/${article.image[0]}`;
 };
 
 export const handlePocketbaseError = (err: unknown) => {

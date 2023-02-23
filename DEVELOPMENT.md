@@ -3,24 +3,35 @@
 ## Setup on your machine
 
 1. Clone the repository
-2. Download [Pocketbase](https://pocketbase.io/docs/) for your OS and unzip it on `/pocketbase`
-3. Install dependencies from the root directory: `npm install`
+2. Install [Node.JS](https://nodejs.dev/en/download/) v18+
+3. Install all dependencies: `npm run setup`
+   - Node modules
+   - Pocketbase
+   - Playwright browsers
 4. Create a copy of `.env.sample` and name it `.env`, then edit with your own values.
-5. In two different terminal sessions run:
-   - `npm run backend` to start the Pocketbase server.
+5. In two different terminal windows run:
+   - `npm run backend` to start the Pocketbase server on port `8090`.
    - `npm start` to run the SvelteKit frontend.
+
+## Running tests
+
+- `npm test` to run all tests.
+  - Note: it will erase previous test data.
+
+#### Debugging tests
+
+- Run the app using the data generated during a test, in two different terminal windows run:
+  - `npm run backend:test` to start the Pocketbase server on port `8091`.
+  - `npm run start:test` to run the frontend and connect to Pocketbase on port `8091`.
+  - `npm run test:trace test-results/some-test/trace.zip` to run Playwright's trace viewer.
 
 ## Deploy on a server
 
 - Clone the repository on a [server](https://www.digitalocean.com/pricing/droplets#basic-droplets) with [Node.JS](https://nodejs.dev/en/download/) v18+: `git clone https://github.com/fmaclen/promptspree.git`
 
-#### Setup backend
-
-- Download the latest version of [Pocketbase](https://pocketbase.io/docs/) for your server's OS and unzip it on `/pocketbase`
-
 #### Run deploy script
 
-- From the root directory run `./scripts/deploy`, it will:
+- From the root directory in your server run `./scripts/deploy`, it will:
   - Pull the latest changes from the repository
   - Install dependencies
   - Build the frontend
