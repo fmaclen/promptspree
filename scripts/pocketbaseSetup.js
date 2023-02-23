@@ -36,11 +36,11 @@ const downloadAndUnzipPocketbase = async () => {
 	const zip = new AdmZip(response.data);
 	zip.extractAllTo('./pocketbase', true);
 
-  // Change permissions only for macOS and Linux
-  if (process.platform !== "win32") {
-    console.info(`-> Making \`pocketbase\` executable`);
-    chmodSync('./pocketbase/pocketbase', 0o755);
-  }
+	// Change permissions only for macOS and Linux
+	if (process.platform !== 'win32') {
+		console.info(`-> Making \`pocketbase\` executable`);
+		chmodSync('./pocketbase/pocketbase', 0o755);
+	}
 };
 
 downloadAndUnzipPocketbase();

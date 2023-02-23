@@ -1,14 +1,15 @@
 import { spawn } from 'child_process';
 
 function runPocketBaseServe() {
-	const args = process.argv.slice(2); // ignore first two arguments
-	const port = parseInt(args[0]) ?? 8090;
+	const args = process.argv.slice(2); // Ignore first two arguments
+	const port = args[0] ? parseInt(args[0]) : 8090; // Default port is 8090
 	const fileExtension = process.platform === 'win32' ? '.exe' : '';
 
 	let http = `127.0.0.1:${port}`;
 	let dir, migrationsDir;
 
-	if (port === 8091 || port === 8092) {
+	// If port is 8091, use the `tests/pocketbase` directories for `pb_data` and `pb_migrations`
+	if (port === 8091) {
 		dir = 'tests/pocketbase/pb_data';
 		migrationsDir = 'tests/pocketbase/pb_migrations';
 	}
@@ -29,7 +30,7 @@ function runPocketBaseServe() {
 	});
 
 	pocketBaseServe.on('exit', (code, signal) => {
-		console.log(`PocketBase serve has stopped with code ${code} and signal ${signal}`);
+		console.info(`PocketBase serve has stopped with code ${code} and signal ${signal}`);
 	});
 }
 

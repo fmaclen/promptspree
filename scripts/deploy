@@ -7,15 +7,11 @@
 # Pull the latest changes from git
 git pull
 
-# Check if deploy script is in "quick" mode
-if [ "$1" != "-q" ]; then
-    # Run npm i if needed
-    if [ -e "package-lock.json" ]; then
-        npm ci
-    else
-        npm i
-    fi
-fi
+# Install Node dependencies
+npm ci
+
+# Install Pocketbase
+npm run setup:pocketbase
 
 # Run npm run build
 npm run build

@@ -14,7 +14,7 @@ const config: PlaywrightTestConfig = {
 		command: 'npm run build && npm run preview',
 		port: 4173,
 		env: {
-			TEST_POCKETBASE_URL: "http://127.0.0.1:8091"
+			TEST_POCKETBASE_URL: 'http://127.0.0.1:8091'
 		}
 	},
 	testDir: 'tests',

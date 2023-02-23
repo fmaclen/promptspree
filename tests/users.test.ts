@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-import { pocketbaseVerifyUser, TEST_USERS } from './fixtures/helpers.js';
+import { TEST_USERS, pocketbaseVerifyUser } from './fixtures/helpers.js';
 
 test.describe('Users', () => {
 	test('can join', async ({ page }) => {

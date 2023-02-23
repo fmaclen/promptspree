@@ -1,9 +1,9 @@
-import { chromium, firefox, webkit, expect } from '@playwright/test';
+import { chromium, expect, firefox, webkit } from '@playwright/test';
 
 import { TEST_ADMIN_PASSWORD, TEST_ADMIN_USER } from './tests/fixtures/helpers.js';
 
 async function globalSetup() {
-	const TEST_POCKETBASE_URL = "http://127.0.0.1:8091"
+	const TEST_POCKETBASE_URL = 'http://127.0.0.1:8091';
 	process.env.TEST_POCKETBASE_URL = TEST_POCKETBASE_URL;
 
 	// Check that the backend server is running before running tests
@@ -14,16 +14,17 @@ async function globalSetup() {
 		throw new Error(`Couldn't connect to backend server: ${err}`);
 	}
 
-  let browserName = process.env.BROWSER;
-  // let browserName = process.argv.find(arg => arg.startsWith('--browser='))?.split('=')[1];
+	let browserName = process.env.BROWSER;
+	// let browserName = process.argv.find(arg => arg.startsWith('--browser='))?.split('=')[1];
 	if (!browserName) {
-		console.warn("-> No browser specified, using 'chromium' by default")
+		console.warn("-> No browser specified, using 'chromium' by default");
 		browserName = 'chromium';
 	}
 
-  // Determine which browser is being used
-  const browserType = browserName === 'firefox' ? firefox : browserName === 'webkit' ? webkit : chromium;
-  const browser = await browserType.launch();
+	// Determine which browser is being used
+	const browserType =
+		browserName === 'firefox' ? firefox : browserName === 'webkit' ? webkit : chromium;
+	const browser = await browserType.launch();
 
 	const page = await browser.newPage();
 
