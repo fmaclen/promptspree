@@ -1,4 +1,12 @@
-import type { PlaywrightTestConfig } from '@playwright/test';
+import { type PlaywrightTestConfig, devices } from '@playwright/test';
+
+const browser = process.env.BROWSER;
+const projectBrowser = [
+	{
+		name: browser,
+		use: { ...devices[`Desktop ${browser}`] }
+	}
+];
 
 const config: PlaywrightTestConfig = {
 	globalSetup: './playwright.global-setup',
@@ -11,7 +19,8 @@ const config: PlaywrightTestConfig = {
 	},
 	testDir: 'tests',
 	timeout: 5000,
-	use: { trace: 'retain-on-failure', screenshot: 'only-on-failure' }
+	use: { trace: 'retain-on-failure', screenshot: 'only-on-failure' },
+	projects: projectBrowser
 };
 
 export default config;

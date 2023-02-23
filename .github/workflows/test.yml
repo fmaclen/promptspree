@@ -28,7 +28,7 @@ jobs:
         run: npm run setup:pocketbase
 
       - name: Install Playwright Browser
-        run: npx playwright install --with-deps ${{ matrix.browser }}
+        run: npx playwright install --with-deps ${{ matrix.browser }} chromium
 
       - name: Run Playwright tests
         run: npm test
