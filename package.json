@@ -10,7 +10,7 @@
 		"setup": "npm install && npm run setup:pocketbase",
 		"setup:pocketbase": "node scripts/pocketbaseSetup",
 		"setup:pocketbase:test": "node scripts/pocketbaseSetupTest",
-		"test": "npm run setup:pocketbase:tests && npm run backend:test & echo $! && npx playwright test && pkill pocketbase",
+		"test": "npm run setup:pocketbase:test && npm run backend:test & echo $! && npx playwright test && pkill pocketbase",
 		"test:trace": "npx playwright show-trace",
 		"dev": "vite dev",
 		"build": "vite build",
