@@ -27,8 +27,11 @@ jobs:
       - name: Install Pocketbase
         run: npm run setup:pocketbase
 
-      - name: Setup and run Pocketbase
-        run: npm run setup:pocketbase:test && npm run backend:test
+      - name: Setup Pocketbase
+        run: npm run setup:pocketbase:test
+
+      - name: Run Pocketbase
+        run: npm run backend:test
 
       - name: Install Playwright Browser
         run: npx playwright install --with-deps ${{ matrix.browser }} chromium
