@@ -36,9 +36,9 @@ jobs:
           BROWSER: ${{ matrix.browser }}
 
       - uses: actions/upload-artifact@v3
-        if: always()
+        if: steps.run.outcome != 'success'
         with:
           name: ${{ matrix.browser }}-${{ matrix.os }}-test-results
-          paths: 
-            - test-results/
-            - tests/pocketbase/
+          path: |
+            test-results/
+            tests/pocketbase/
