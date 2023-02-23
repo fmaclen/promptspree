@@ -1,15 +1,15 @@
 import { chromium, expect, firefox, webkit } from '@playwright/test';
+import axios from 'axios';
 
 import { TEST_ADMIN_PASSWORD, TEST_ADMIN_USER } from './tests/fixtures/helpers.js';
 
 async function globalSetup() {
-	const TEST_POCKETBASE_URL = 'http://127.0.0.1:8091';
-	process.env.TEST_POCKETBASE_URL = TEST_POCKETBASE_URL;
+	const { TEST_POCKETBASE_URL } = process.env;
 
 	// Check that the backend server is running before running tests
 	try {
-		const res = await fetch(`${TEST_POCKETBASE_URL}/api/health`);
-		console.info('-> Pocketbase status', await res.json());
+		const res = await axios.get(`${TEST_POCKETBASE_URL}/api/health`);
+		console.info('-> Pocketbase status', res.data);
 	} catch (err) {
 		throw new Error(`Couldn't connect to backend server: ${err}`);
 	}
