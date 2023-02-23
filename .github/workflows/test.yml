@@ -8,7 +8,7 @@ jobs:
   Promptspree:
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, macos-latest]
         browser: [chromium, firefox, webkit]
 
     name: ${{ matrix.os }} - ${{ matrix.browser }}
@@ -39,4 +39,6 @@ jobs:
         if: always()
         with:
           name: ${{ matrix.browser }}-${{ matrix.os }}-test-results
-          path: test-results/
+          paths: 
+            - test-results/
+            - tests/pocketbase/
