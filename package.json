@@ -10,7 +10,7 @@
 		"setup": "npm install && npm run setup:pocketbase && npx playwright install",
 		"setup:pocketbase": "node scripts/pocketbaseSetup",
 		"setup:pocketbase:test": "node scripts/pocketbaseSetupTest",
-		"test": "npm run setup:pocketbase:test && concurrently \"npm run backend:test\" \"npx playwright test\" --kill-others --raw",
+		"test": "npm run setup:pocketbase:test && cross-env TEST_POCKETBASE_URL=http://127.0.0.1:8091 concurrently \"npm run backend:test\" \"npx playwright test\" --kill-others --raw",
 		"test:trace": "npx playwright show-trace",
 		"dev": "vite dev",
 		"build": "vite build",
