@@ -34,7 +34,15 @@ jobs:
         run: npm run backend:test &
 
       - name: Install Playwright Browser
-        run: npx playwright install --with-deps ${{ if eq(matrix.browser, 'ios') }}webkit{{ else if eq(matrix.browser, 'android') }}chromium{{ else }}${{ matrix.browser }}{{ endif }}
+        run: |
+          if [ "${{ matrix.browser }}" = "ios" ]; then
+            npx playwright install --with-deps webkit
+          elif [ "${{ matrix.browser }}" = "android" ]; then
+            npx playwright install --with-deps chromium
+          else
+            npx playwright install --with-deps "${{ matrix.browser }}" chromium
+          fi
+
 
       - name: Run Playwright tests
         run: npx playwright test
