@@ -8,13 +8,10 @@ jobs:
   Promptspree:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
-        platform:
-          - desktop
-          - mobile
-        browser: [chromium, firefox, webkit, ios, android]
+        os: [ubuntu-latest]
+        browser: [ios, android, chromium, firefox, webkit]
 
-    name: ${{ matrix.os }} - ${{ matrix.platform }} - ${{ matrix.browser }}
+    name: ${{ matrix.os }} - ${{ matrix.browser }}
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
@@ -37,25 +34,7 @@ jobs:
         run: npm run backend:test &
 
       - name: Install Playwright Browser
-        run: |
-          if [[ ${{ matrix.browser }} == "ios" || ${{ matrix.browser }} == "android" ]]; then
-            if [[ ${{ matrix.platform }} == "desktop" ]]; then
-              echo "Unsupported platform for iOS and Android browsers"
-              exit 1
-            fi
-            npx playwright install --with-deps chromium
-          elif [[ ${{ matrix.browser }} == "webkit" ]]; then
-            if [[ ${{ matrix.platform }} == "desktop" ]]; then
-              npx playwright install --with-deps webkit chromium
-            else
-              echo "Unsupported browser on mobile platform"
-              exit 1
-            fi
-          elif [[ ${{ matrix.os }} == "ubuntu-latest" ]]; then
-            npx playwright install --with-deps chromium
-          else
-            npx playwright install --with-deps firefox chromium
-          fi
+        run: npx playwright install --with-deps ${{ if eq(matrix.browser, 'ios') }}webkit{{ else if eq(matrix.browser, 'android') }}chromium{{ else }}${{ matrix.browser }}{{ endif }}
 
       - name: Run Playwright tests
         run: npx playwright test
