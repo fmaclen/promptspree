@@ -8,11 +8,19 @@ jobs:
   Promptspree:
     strategy:
       matrix:
+        os: [ubuntu-latest, macos-latest]
+        platform:
+          - desktop
+          - mobile
         browser: [chromium, firefox, webkit, ios, android]
-        os: ${{ if or(eq(matrix.browser, 'ios'), eq(matrix.browser, 'webkit')), 'macos-latest', 'ubuntu-latest' }}
-        device: ${{ if or(eq(matrix.browser, 'ios'), eq(matrix.browser, 'android')), 'mobile', 'desktop' }}
+      exclude:
+        - os: macos-latest
+          browser: [chromium, firefox, android]
+        - os: ubuntu-latest
+          platform: mobile
+          browser: webkit
 
-    name: ${{ matrix.device }} - ${{ matrix.browser }}
+    name: ${{ matrix.os }} - ${{ matrix.platform }} - ${{ matrix.browser }}
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
@@ -36,17 +44,24 @@ jobs:
 
       - name: Install Playwright Browser
         run: |
-          case ${{ matrix.browser }} in
-            ios|webkit)
+          if [[ ${{ matrix.browser }} == "ios" || ${{ matrix.browser }} == "android" ]]; then
+            if [[ ${{ matrix.platform }} == "desktop" ]]; then
+              echo "Unsupported platform for iOS and Android browsers"
+              exit 1
+            fi
+            npx playwright install --with-deps chromium
+          elif [[ ${{ matrix.browser }} == "webkit" ]]; then
+            if [[ ${{ matrix.platform }} == "desktop" ]]; then
               npx playwright install --with-deps webkit chromium
-              ;;
-            firefox)
-              npx playwright install --with-deps firefox chromium
-              ;;
-            *)
-              npx playwright install --with-deps chromium
-              ;;
-          esac
+            else
+              echo "Unsupported browser on mobile platform"
+              exit 1
+            fi
+          elif [[ ${{ matrix.os }} == "ubuntu-latest" ]]; then
+            npx playwright install --with-deps chromium
+          else
+            npx playwright install --with-deps firefox chromium
+          fi
 
       - name: Run Playwright tests
         run: npx playwright test
@@ -56,7 +71,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: failure()
         with:
-          name: ${{ matrix.browser }}-${{ matrix.device }}-${{ matrix.os }}-test-results
+          name: ${{ matrix.browser }}-${{ matrix.os }}-test-results
           path: |
             test-results/
             tests/pocketbase/
