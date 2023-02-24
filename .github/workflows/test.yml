@@ -13,12 +13,6 @@ jobs:
           - desktop
           - mobile
         browser: [chromium, firefox, webkit, ios, android]
-      exclude:
-        - os: macos-latest
-          browser: [chromium, firefox, android]
-        - os: ubuntu-latest
-          platform: mobile
-          browser: webkit
 
     name: ${{ matrix.os }} - ${{ matrix.platform }} - ${{ matrix.browser }}
     runs-on: ${{ matrix.os }}
