@@ -8,10 +8,11 @@ jobs:
   Promptspree:
     strategy:
       matrix:
-        os: [macos-latest]
         browser: [chromium, firefox, webkit, ios, android]
+        os: ${{ if or(eq(matrix.browser, 'ios'), eq(matrix.browser, 'webkit')), 'macos-latest', 'ubuntu-latest' }}
+        device: ${{ if or(eq(matrix.browser, 'ios'), eq(matrix.browser, 'android')), 'mobile', 'desktop' }}
 
-    name: ${{ matrix.os }} - ${{ matrix.browser }}
+    name: ${{ matrix.device }} - ${{ matrix.browser }}
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
@@ -55,7 +56,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: failure()
         with:
-          name: ${{ matrix.browser }}-${{ matrix.os }}-test-results
+          name: ${{ matrix.browser }}-${{ matrix.device }}-${{ matrix.os }}-test-results
           path: |
             test-results/
             tests/pocketbase/
