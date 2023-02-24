@@ -34,7 +34,19 @@ jobs:
         run: npm run backend:test &
 
       - name: Install Playwright Browser
-        run: npx playwright install --with-deps ${{ matrix.browser }} chromium
+        run: |
+          case ${{ matrix.browser }} in
+            ios|webkit)
+              npx playwright install --with-deps webkit chromium
+              ;;
+            firefox)
+              npx playwright install --with-deps firefox chromium
+              ;;
+            *)
+              npx playwright install --with-deps chromium
+              ;;
+          esac
+
 
       - name: Run Playwright tests
         run: npx playwright test
