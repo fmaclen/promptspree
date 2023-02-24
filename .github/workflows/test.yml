@@ -8,7 +8,7 @@ jobs:
   Promptspree:
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [macos-latest]
         browser: [chromium, firefox, webkit, ios, android]
 
     name: ${{ matrix.os }} - ${{ matrix.browser }}
@@ -46,7 +46,6 @@ jobs:
               npx playwright install --with-deps chromium
               ;;
           esac
-
 
       - name: Run Playwright tests
         run: npx playwright test
