@@ -4,7 +4,7 @@ import { TEST_USERS, pocketbaseVerifyUser } from './fixtures/helpers.js';
 
 test.describe.configure({ mode: 'serial' })
 
-test.describe('Users', () => {
+test.describe('Users 2', () => {
 	test('can join', async ({ page }) => {
 		const notice = page.locator('div.notice');
 
@@ -19,10 +19,10 @@ test.describe('Users', () => {
 		const submitButton = page.locator('button[type=submit]', { hasText: 'Join' });
 		await expect(submitButton).toBeDisabled();
 
-		await page.getByLabel('E-mail').fill(TEST_USERS.alice.email);
-		await page.getByLabel('Nickname').fill(TEST_USERS.alice.nickname);
-		await page.getByLabel('Password', { exact: true }).fill(TEST_USERS.alice.password);
-		await page.getByLabel('Confirm password').fill(TEST_USERS.alice.password);
+		await page.getByLabel('E-mail').fill(TEST_USERS.charlie.email);
+		await page.getByLabel('Nickname').fill(TEST_USERS.charlie.nickname);
+		await page.getByLabel('Password', { exact: true }).fill(TEST_USERS.charlie.password);
+		await page.getByLabel('Confirm password').fill(TEST_USERS.charlie.password);
 		await page.getByLabel('I agree to the terms of service and privacy policy').check();
 		await expect(submitButton).not.toBeDisabled();
 
@@ -40,7 +40,7 @@ test.describe('Users', () => {
 		// Test logged out navigation
 		await expect(page.getByText('Join to play')).toBeVisible();
 		await expect(page.getByText('Login')).toBeVisible();
-		await expect(page.getByText('Alice')).not.toBeVisible();
+		await expect(page.getByText('Charlie')).not.toBeVisible();
 		await expect(page.getByText('Drafts')).not.toBeVisible();
 		await expect(page.getByText('Logout')).not.toBeVisible();
 
@@ -51,16 +51,16 @@ test.describe('Users', () => {
 		const submitButton = page.locator('button[type=submit]', { hasText: 'Login' });
 		await expect(submitButton).toBeDisabled();
 
-		await page.getByLabel('E-mail').fill(TEST_USERS.alice.email);
-		await page.getByLabel('Password', { exact: true }).fill(TEST_USERS.alice.password);
+		await page.getByLabel('E-mail').fill(TEST_USERS.charlie.email);
+		await page.getByLabel('Password', { exact: true }).fill(TEST_USERS.charlie.password);
 		await expect(submitButton).not.toBeDisabled();
 
 		await submitButton.click();
 		await expect(notice).toContainText(["Can't login, check your credentials"]);
 
-		await pocketbaseVerifyUser(TEST_USERS.alice.email);
+		await pocketbaseVerifyUser(TEST_USERS.charlie.email);
 
-		await page.getByLabel('Password', { exact: true }).fill(TEST_USERS.alice.password);
+		await page.getByLabel('Password', { exact: true }).fill(TEST_USERS.charlie.password);
 		await submitButton.click();
 		await expect(notice).not.toContainText(["Can't login, check your credentials"]);
 
@@ -70,7 +70,7 @@ test.describe('Users', () => {
 		await page.click('button[aria-label="Toggle navigation"]');
 
 		// Test logged in navigation
-		await expect(page.getByText('Alice')).toBeVisible();
+		await expect(page.getByText('Charlie')).toBeVisible();
 		await expect(page.getByText('Drafts')).toBeVisible();
 		await expect(page.getByText('Logout')).toBeVisible();
 		await expect(page.getByText('Join to play')).not.toBeVisible();

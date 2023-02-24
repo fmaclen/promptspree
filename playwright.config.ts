@@ -19,7 +19,8 @@ const config: PlaywrightTestConfig = {
 	timeout: 5000,
 	use: { trace: 'retain-on-failure', screenshot: 'only-on-failure' },
 	projects: projectBrowser,
-	retries: 3
+	retries: 3,
+	workers: 2
 };
 
 export default config;
