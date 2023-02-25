@@ -3,8 +3,6 @@ import PocketBase from 'pocketbase';
 
 import { TEST_USERS } from './fixtures/helpers.js';
 
-test.describe.configure({ mode: 'serial' });
-
 test.describe('Users', () => {
 	const pb = new PocketBase(process.env.TEST_POCKETBASE_URL);
 
