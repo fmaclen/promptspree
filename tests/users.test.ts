@@ -20,8 +20,11 @@ test.describe('Users', () => {
 		await pb.collection('users').update(user.id, { verified: true });
 	}
 
-	test.beforeEach(async () => {
+	test.beforeAll(async () => {
 		await pb.admins.authWithPassword('playwright@example.com', 'playwright');
+	});
+
+	test.beforeEach(async () => {
 		await resetDatabase();
 	});
 
