@@ -1,14 +1,8 @@
 import { env } from '$env/dynamic/private';
 import { error, fail } from '@sveltejs/kit';
-import { BaseAuthStore, ClientResponseError } from 'pocketbase';
+import { ClientResponseError } from 'pocketbase';
 
 export const pocketbaseUrl = env.TEST_POCKETBASE_URL || env.POCKETBASE_URL;
-
-export const getImageURL = (article: BaseAuthStore['model']) => {
-	if (article === null) return undefined;
-	if (article?.image.length === 0) return undefined;
-	return `${pocketbaseUrl}/api/files/${article.collectionId}/${article.id}/${article.image[0]}`;
-};
 
 export const handlePocketbaseError = (err: unknown) => {
 	const clientError = err as ClientResponseError;
