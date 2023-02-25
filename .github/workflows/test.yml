@@ -8,8 +8,8 @@ jobs:
   Promptspree:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
-        browser: [chromium, firefox, webkit]
+        os: [ubuntu-latest]
+        browser: [ios, android, chromium, firefox, webkit]
 
     name: ${{ matrix.os }} - ${{ matrix.browser }}
     runs-on: ${{ matrix.os }}
@@ -34,7 +34,14 @@ jobs:
         run: npm run backend:test &
 
       - name: Install Playwright Browser
-        run: npx playwright install --with-deps ${{ matrix.browser }} chromium
+        run: |
+          if [ "${{ matrix.browser }}" = "ios" ]; then
+            npx playwright install --with-deps webkit
+          elif [ "${{ matrix.browser }}" = "android" ]; then
+            npx playwright install --with-deps chromium
+          else
+            npx playwright install --with-deps "${{ matrix.browser }}" chromium
+          fi
 
       - name: Run Playwright tests
         run: npx playwright test

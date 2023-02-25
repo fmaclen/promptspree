@@ -1,7 +1,7 @@
-import { chromium, expect, firefox, webkit } from '@playwright/test';
+import { BrowserType, chromium, expect, firefox, webkit } from '@playwright/test';
 import axios from 'axios';
 
-import { TEST_ADMIN_PASSWORD, TEST_ADMIN_USER } from './tests/fixtures/helpers.js';
+import { TEST_ADMIN_PASSWORD, TEST_ADMIN_USER } from './tests/helpers/fixtures.js';
 
 async function globalSetup() {
 	const { TEST_POCKETBASE_URL } = process.env;
@@ -15,17 +15,25 @@ async function globalSetup() {
 	}
 
 	let browserName = process.env.BROWSER;
-	// let browserName = process.argv.find(arg => arg.startsWith('--browser='))?.split('=')[1];
 	if (!browserName) {
 		console.warn("-> No browser specified, using 'chromium' by default");
 		browserName = 'chromium';
 	}
 
 	// Determine which browser is being used
-	const browserType =
-		browserName === 'firefox' ? firefox : browserName === 'webkit' ? webkit : chromium;
-	const browser = await browserType.launch();
+	let browserType: BrowserType;
+	if (browserName === 'firefox') {
+		browserType = firefox;
+	} else if (browserName === 'webkit' || browserName === 'ios') {
+		browserType = webkit;
+	} else if (browserName === 'chromium' || browserName === 'android') {
+		browserType = chromium;
+	} else {
+		console.error(`Invalid browser specified: ${browserName}`);
+		process.exit(1);
+	}
 
+	const browser = await browserType.launch();
 	const page = await browser.newPage();
 
 	await page.goto(`${TEST_POCKETBASE_URL}/_/`);
