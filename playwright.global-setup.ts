@@ -15,7 +15,6 @@ async function globalSetup() {
 	}
 
 	let browserName = process.env.BROWSER;
-	// let browserName = process.argv.find(arg => arg.startsWith('--browser='))?.split('=')[1];
 	if (!browserName) {
 		console.warn("-> No browser specified, using 'chromium' by default");
 		browserName = 'chromium';
@@ -33,8 +32,8 @@ async function globalSetup() {
 		console.error(`Invalid browser specified: ${browserName}`);
 		process.exit(1);
 	}
-	const browser = await browserType.launch();
 
+	const browser = await browserType.launch();
 	const page = await browser.newPage();
 
 	await page.goto(`${TEST_POCKETBASE_URL}/_/`);
