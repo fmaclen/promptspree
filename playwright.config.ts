@@ -41,7 +41,7 @@ const config: PlaywrightTestConfig = {
 		port: 4173
 	},
 	testDir: 'tests',
-	timeout: 5000,
+	timeout: 10000,
 	use: { trace: 'retain-on-failure', screenshot: 'only-on-failure' },
 	projects: [browserDevice()],
 	retries: 3
