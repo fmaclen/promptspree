@@ -43,7 +43,6 @@ jobs:
             npx playwright install --with-deps "${{ matrix.browser }}" chromium
           fi
 
-
       - name: Run Playwright tests
         run: npx playwright test
         env:
