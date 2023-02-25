@@ -1,6 +1,3 @@
-import { expect } from '@playwright/test';
-import PocketBase from 'pocketbase';
-
 export const TEST_ADMIN_USER = 'playwright@example.com';
 export const TEST_ADMIN_PASSWORD = 'playwright';
 

@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import PocketBase from 'pocketbase';
 
-import { TEST_USERS } from './fixtures/helpers.js';
+import { TEST_ADMIN_PASSWORD, TEST_ADMIN_USER, TEST_USERS } from './helpers/fixtures.js';
 
 test.describe('Users', () => {
 	const pb = new PocketBase(process.env.TEST_POCKETBASE_URL);
@@ -19,7 +19,7 @@ test.describe('Users', () => {
 	}
 
 	test.beforeAll(async () => {
-		await pb.admins.authWithPassword('playwright@example.com', 'playwright');
+		await pb.admins.authWithPassword(TEST_ADMIN_USER, TEST_ADMIN_PASSWORD);
 	});
 
 	test.beforeEach(async () => {
