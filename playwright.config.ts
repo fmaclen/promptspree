@@ -34,6 +34,8 @@ const browserDevice = () => {
 	}
 };
 
+const isCI = process.env.NODE_ENV === 'CI';
+
 const config: PlaywrightTestConfig = {
 	globalSetup: './playwright.global-setup',
 	webServer: {
@@ -41,10 +43,10 @@ const config: PlaywrightTestConfig = {
 		port: 4173
 	},
 	testDir: 'tests',
-	timeout: 10000,
+	timeout: isCI ? 30000 : 10000,
 	use: { trace: 'retain-on-failure', screenshot: 'only-on-failure' },
 	projects: [browserDevice()],
-	retries: process.env.NODE_ENV === 'CI' ? 3 : 0,
+	retries: isCI ? 3 : 0,
 	workers: 1
 };
 

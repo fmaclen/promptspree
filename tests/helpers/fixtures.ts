@@ -3,15 +3,6 @@ import PocketBase from 'pocketbase';
 
 export const TEST_ADMIN_USER = 'playwright@example.com';
 export const TEST_ADMIN_PASSWORD = 'playwright';
-
-interface User {
-	email: string;
-	nickname: string;
-	password: string;
-	passwordConfirm: string;
-	terms: boolean;
-}
-
 export const TEST_USERS = {
 	alice: {
 		email: 'alice@example.com',
@@ -91,6 +82,14 @@ export const TEST_USERS = {
 		terms: true
 	}
 };
+
+interface User {
+	email: string;
+	nickname: string;
+	password: string;
+	passwordConfirm: string;
+	terms: boolean;
+}
 
 let pb: PocketBase;
 
