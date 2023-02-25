@@ -47,6 +47,7 @@ jobs:
         run: npx playwright test
         env:
           BROWSER: ${{ matrix.browser }}
+          NODE_ENV: CI
 
       - uses: actions/upload-artifact@v3
         if: failure()

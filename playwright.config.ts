@@ -44,7 +44,8 @@ const config: PlaywrightTestConfig = {
 	timeout: 10000,
 	use: { trace: 'retain-on-failure', screenshot: 'only-on-failure' },
 	projects: [browserDevice()],
-	retries: 3
+	retries: process.env.NODE_ENV === 'CI' ? 3 : 0,
+	workers: 1
 };
 
 export default config;
