@@ -6,7 +6,12 @@ import { logEventToSlack } from '$lib/slack.server';
 import { fail, redirect } from '@sveltejs/kit';
 import type { BaseAuthStore } from 'pocketbase';
 
+import type { PageServerLoad } from '../$types';
 import type { Actions } from './$types';
+
+export const load: PageServerLoad = async ({ locals }) => {
+	if (!locals.pb.authStore.isValid) throw redirect(303, '/join');
+};
 
 export const actions: Actions = {
 	generate: async ({ request, locals }) => {
