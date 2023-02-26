@@ -5,7 +5,7 @@ import PocketBase, { BaseAuthStore } from 'pocketbase';
 
 export const TEST_ADMIN_USER = 'playwright@example.com';
 export const TEST_ADMIN_PASSWORD = 'playwright';
-export const TEST_USERS = {
+export const MOCK_USERS = {
 	alice: {
 		email: 'alice@example.com',
 		nickname: 'Alice',

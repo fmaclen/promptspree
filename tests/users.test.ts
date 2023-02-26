@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-import { TEST_USERS, createUser, resetDatabase, verifyUser } from './helpers/fixtures.js';
+import { MOCK_USERS, createUser, resetDatabase, verifyUser } from './helpers/fixtures.js';
 
 test.describe('Users', () => {
 	test.beforeEach(async ({ page }) => {
@@ -9,8 +9,8 @@ test.describe('Users', () => {
 	});
 
 	test("Can't join, user already exists", async ({ page }) => {
-		await createUser(TEST_USERS.alice);
-		await verifyUser(TEST_USERS.alice.email);
+		await createUser(MOCK_USERS.alice);
+		await verifyUser(MOCK_USERS.alice.email);
 
 		await page.click('button[aria-label="Toggle navigation"]');
 		await page.getByText('Join to play').click();
@@ -19,10 +19,10 @@ test.describe('Users', () => {
 		const submitButton = page.locator('button[type=submit]', { hasText: 'Join' });
 		await expect(submitButton).toBeDisabled();
 
-		await page.getByLabel('E-mail').fill(TEST_USERS.alice.email);
-		await page.getByLabel('Nickname').fill(TEST_USERS.alice.nickname);
-		await page.getByLabel('Password', { exact: true }).fill(TEST_USERS.alice.password);
-		await page.getByLabel('Confirm password').fill(TEST_USERS.alice.password);
+		await page.getByLabel('E-mail').fill(MOCK_USERS.alice.email);
+		await page.getByLabel('Nickname').fill(MOCK_USERS.alice.nickname);
+		await page.getByLabel('Password', { exact: true }).fill(MOCK_USERS.alice.password);
+		await page.getByLabel('Confirm password').fill(MOCK_USERS.alice.password);
 		await page.getByLabel('I agree to the terms of service and privacy policy').check();
 		await expect(submitButton).not.toBeDisabled();
 		await expect(page.getByText('Email is already in use or is invalid')).not.toBeVisible();
@@ -33,9 +33,9 @@ test.describe('Users', () => {
 		await expect(page.getByText('Nickname is already taken or is invalid')).not.toBeVisible();
 		await page.getByLabel('E-mail').fill('not-alice@example.com');
 
-		await page.getByLabel('Nickname').fill(TEST_USERS.alice.nickname);
-		await page.getByLabel('Password', { exact: true }).fill(TEST_USERS.alice.password);
-		await page.getByLabel('Confirm password').fill(TEST_USERS.alice.password);
+		await page.getByLabel('Nickname').fill(MOCK_USERS.alice.nickname);
+		await page.getByLabel('Password', { exact: true }).fill(MOCK_USERS.alice.password);
+		await page.getByLabel('Confirm password').fill(MOCK_USERS.alice.password);
 		await page.getByLabel('I agree to the terms of service and privacy policy').check();
 		await expect(submitButton).not.toBeDisabled();
 
@@ -53,10 +53,10 @@ test.describe('Users', () => {
 		const submitButton = page.locator('button[type=submit]', { hasText: 'Join' });
 		await expect(submitButton).toBeDisabled();
 
-		await page.getByLabel('E-mail').fill(TEST_USERS.alice.email);
-		await page.getByLabel('Nickname').fill(TEST_USERS.alice.nickname);
-		await page.getByLabel('Password', { exact: true }).fill(TEST_USERS.alice.password);
-		await page.getByLabel('Confirm password').fill(TEST_USERS.alice.password);
+		await page.getByLabel('E-mail').fill(MOCK_USERS.alice.email);
+		await page.getByLabel('Nickname').fill(MOCK_USERS.alice.nickname);
+		await page.getByLabel('Password', { exact: true }).fill(MOCK_USERS.alice.password);
+		await page.getByLabel('Confirm password').fill(MOCK_USERS.alice.password);
 		await page.getByLabel('I agree to the terms of service and privacy policy').check();
 		await expect(submitButton).not.toBeDisabled();
 
@@ -66,7 +66,7 @@ test.describe('Users', () => {
 	});
 
 	test('Can login and logout', async ({ page }) => {
-		await createUser(TEST_USERS.alice);
+		await createUser(MOCK_USERS.alice);
 
 		// Check logged out navigation
 		await page.click('button[aria-label="Toggle navigation"]');
@@ -83,16 +83,16 @@ test.describe('Users', () => {
 		const submitButton = page.locator('button[type=submit]', { hasText: 'Login' });
 		await expect(submitButton).toBeDisabled();
 
-		await page.getByLabel('E-mail').fill(TEST_USERS.alice.email);
-		await page.getByLabel('Password', { exact: true }).fill(TEST_USERS.alice.password);
+		await page.getByLabel('E-mail').fill(MOCK_USERS.alice.email);
+		await page.getByLabel('Password', { exact: true }).fill(MOCK_USERS.alice.password);
 		await expect(submitButton).not.toBeDisabled();
 
 		await submitButton.click();
 		await expect(page.getByText("Can't login, check your credentials")).toBeVisible();
 
-		await verifyUser(TEST_USERS.alice.email);
+		await verifyUser(MOCK_USERS.alice.email);
 
-		await page.getByLabel('Password', { exact: true }).fill(TEST_USERS.alice.password);
+		await page.getByLabel('Password', { exact: true }).fill(MOCK_USERS.alice.password);
 		await submitButton.click();
 		await expect(page.getByText("Can't login, check your credentials")).not.toBeVisible();
 
@@ -114,6 +114,10 @@ test.describe('Users', () => {
 		await page.click('button[aria-label="Toggle navigation"]');
 		await expect(page.getByText('Login')).toBeVisible();
 		await expect(page.getByText('Alice')).not.toBeVisible();
+	});
+
+	test.skip('Can reset forgotten password', async ({ page }) => {
+		//
 	});
 
 	test.skip('Redirect away from /login or /join when user is logged in', async ({ page }) => {

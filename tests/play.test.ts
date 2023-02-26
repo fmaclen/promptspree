@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 import { ArticleStatus } from '../src/lib/article.js';
 import { MOCK_ARTICLES, MockPrompt } from '../src/lib/tests.js';
 import {
-	TEST_USERS,
+	MOCK_USERS,
 	createUser,
 	getLastArticle,
 	loginUser,
@@ -14,12 +14,12 @@ import {
 test.describe('Play', () => {
 	test.beforeAll(async () => {
 		await resetDatabase();
-		await createUser(TEST_USERS.alice);
-		await verifyUser(TEST_USERS.alice.email);
+		await createUser(MOCK_USERS.alice);
+		await verifyUser(MOCK_USERS.alice.email);
 	});
 
 	test.beforeEach(async ({ page }) => {
-		await loginUser(TEST_USERS.alice, page);
+		await loginUser(MOCK_USERS.alice, page);
 		await page.locator('a.primary-action', { hasText: 'Play' }).click();
 	});
 
