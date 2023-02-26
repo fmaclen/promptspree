@@ -94,7 +94,7 @@ test.describe('Play', () => {
 		await expect(page.getByText(articleHeadline)).toBeVisible();
 
 		await publishButton.click();
-		await expect(page.getByText('Delete')).not.toBeVisible();
+		await expect(page.getByText('Delete')).toBeVisible();
 		await expect(page.getByText(prompt)).toBeVisible();
 		await expect(generateButton).not.toBeVisible();
 		await expect(publishButton).not.toBeVisible();
