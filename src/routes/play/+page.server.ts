@@ -1,12 +1,19 @@
+import { env } from '$env/dynamic/private';
 import { ArticleStatus } from '$lib/article';
 import { generateArticle, getFieldsFromCompletion, publishArticle } from '$lib/article.server';
-import { getCompletionFromAI } from '$lib/openai.server';
+import { type CompletionUserPrompt, getCompletionFromAI } from '$lib/openai.server';
 import { handlePocketbaseError } from '$lib/pocketbase.server';
 import { logEventToSlack } from '$lib/slack.server';
+import { getCompletionFromMock } from '$lib/tests';
 import { fail, redirect } from '@sveltejs/kit';
 import type { BaseAuthStore } from 'pocketbase';
 
+import type { PageServerLoad } from '../$types';
 import type { Actions } from './$types';
+
+export const load: PageServerLoad = async ({ locals }) => {
+	if (!locals.pb.authStore.isValid) throw redirect(303, '/join');
+};
 
 export const actions: Actions = {
 	generate: async ({ request, locals }) => {
@@ -41,7 +48,15 @@ export const actions: Actions = {
 			});
 
 		// Get completion from OpenAI and parse it
-		const completion = await getCompletionFromAI(prompt);
+
+		// HACK: If we're in the test environment, mock the completion response.
+		// Couldn't figure out a better way to mock the response from Playwright.
+		const isTestEnvironment = env.TEST_POCKETBASE_URL !== '';
+
+		const completionUserPrompt: CompletionUserPrompt = { user: locals.user.id, prompt };
+		const completion = isTestEnvironment
+			? await getCompletionFromMock(completionUserPrompt)
+			: await getCompletionFromAI(completionUserPrompt);
 		if (completion.status !== 200) return fail(completion.status, { error: completion.message });
 
 		const fieldsFromCompletion = getFieldsFromCompletion(completion.message);
