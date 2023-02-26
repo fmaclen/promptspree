@@ -8,5 +8,5 @@ export enum MockPrompt {
 	WRONG_FORMAT = 'WRONG_FORMAT',
 	TOO_SHORT = 'TOO_SHORT', // Prompt too short
 	THROW_ERROR_429 = 'THROW_ERROR_429', // Rate limit
-	THROW_ERROR_500 = 'THROW_ERROR_500', // Server error
+	THROW_ERROR_500 = 'THROW_ERROR_500' // Server error
 }

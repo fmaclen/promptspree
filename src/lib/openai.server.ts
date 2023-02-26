@@ -48,7 +48,7 @@ const formatPrompt = (prompt: string): string => {
 
 export const getCompletionFromAI = async ({
 	user,
-	prompt,
+	prompt
 }: CompletionUserPrompt): Promise<CompletionResponse> => {
 	try {
 		const completionResponse = await openai.createCompletion({

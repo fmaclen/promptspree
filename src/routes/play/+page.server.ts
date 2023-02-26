@@ -53,7 +53,7 @@ export const actions: Actions = {
 		// Couldn't figure out a better way to mock the response from Playwright.
 		const isTestEnvironment = env.TEST_POCKETBASE_URL !== '';
 
-		const completionUserPrompt: CompletionUserPrompt = { user: locals.user.id, prompt }
+		const completionUserPrompt: CompletionUserPrompt = { user: locals.user.id, prompt };
 		const completion = isTestEnvironment
 			? await getCompletionFromMock(completionUserPrompt)
 			: await getCompletionFromAI(completionUserPrompt);
