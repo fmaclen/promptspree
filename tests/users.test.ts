@@ -115,4 +115,8 @@ test.describe('Users', () => {
 		await expect(page.getByText('Login')).toBeVisible();
 		await expect(page.getByText('Alice')).not.toBeVisible();
 	});
+
+	test.skip('Redirect away from /login or /join when user is logged in', async ({ page }) => {
+		//
+	});
 });

@@ -26,6 +26,12 @@
 
 <ArticleCategories />
 
-<Section>
-	<ArticleSummaries articles={data.articles} />
-</Section>
+{#if data.articles.length === 0}
+	<Section isVerticallyCentered={true}>
+		<Notice>Service is currently unavailable, please try again later</Notice>
+	</Section>
+{:else}
+	<Section>
+		<ArticleSummaries articles={data.articles} />
+	</Section>
+{/if}

@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 import { ArticleStatus } from '../src/lib/article.js';
-import { MockPrompt } from '../src/lib/tests.mockPrompt.js';
+import { MockPrompt, MOCK_ARTICLES } from '../src/lib/tests.js';
 import {
 	TEST_USERS,
 	createUser,
@@ -41,7 +41,7 @@ test.describe('Play', () => {
 		await expect(generateButton).toBeDisabled();
 
 		let prompt = MockPrompt.GENERATE_ARTICLE;
-		let articleHeadline = 'The Great Plague: 50% Off at J.C. Penny!';
+		let articleHeadline = MOCK_ARTICLES[0].headline;
 		await page.locator('textarea').fill(prompt);
 		await expect(generateButton).not.toBeDisabled();
 		await expect(page.getByText('Business')).not.toBeVisible();
@@ -62,7 +62,7 @@ test.describe('Play', () => {
 		expect(article.status).toBe(ArticleStatus.DRAFT);
 
 		prompt = MockPrompt.RETRY_ARTICLE;
-		articleHeadline = '5 Tips for Choosing the Right Radioactive Mutant Ficus';
+		articleHeadline = MOCK_ARTICLES[1].headline;
 		await page.locator('textarea').fill(prompt);
 		await expect(page.getByText('Health')).not.toBeVisible();
 		await expect(page.getByText(articleHeadline)).not.toBeVisible();
@@ -84,7 +84,7 @@ test.describe('Play', () => {
 		const generateButton = page.locator('button[type=submit]', { hasText: 'Generate' });
 		const publishButton = page.locator('button[type=submit]', { hasText: 'Publish' });
 		const prompt = MockPrompt.GENERATE_ARTICLE;
-		const articleHeadline = 'The Great Plague: 50% Off at J.C. Penny!';
+		const articleHeadline = MOCK_ARTICLES[0].headline;
 		await page.locator('textarea').fill(prompt);
 		await expect(publishButton).not.toBeVisible();
 		await expect(page.getByText(articleHeadline)).not.toBeVisible();

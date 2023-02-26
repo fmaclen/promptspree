@@ -1,5 +1,7 @@
+import type { ArticleStatus } from '$lib/article';
+import type { ArticleCompletion } from '$lib/openai.server';
 import { type Page, expect } from '@playwright/test';
-import PocketBase from 'pocketbase';
+import PocketBase, { BaseAuthStore } from 'pocketbase';
 
 export const TEST_ADMIN_USER = 'playwright@example.com';
 export const TEST_ADMIN_PASSWORD = 'playwright';
@@ -114,9 +116,13 @@ export async function createUser(user: User): Promise<void> {
 	await pb.collection('users').create(user);
 }
 
+export async function getUser(email: string): Promise<BaseAuthStore['model']> {
+	return await pb.collection('users').getFirstListItem(`email = "${email}"`);
+}
+
 export async function verifyUser(email: string): Promise<void> {
-	const user = await pb.collection('users').getFirstListItem(`email = "${email}"`);
-	await pb.collection('users').update(user.id, { verified: true });
+	const user = await getUser(email);
+	user && (await pb.collection('users').update(user.id, { verified: true }));
 }
 
 export async function loginUser(user: User, page: Page): Promise<void> {
@@ -135,4 +141,20 @@ export async function createAndLoginUser(user: User, page: Page): Promise<void> 
 
 export async function getLastArticle(query: string): Promise<any> {
 	return await pb.collection('articles').getFirstListItem(query, { sort: '-created' });
+}
+
+export async function createArticle(
+	articleCompletion: ArticleCompletion,
+	status: ArticleStatus,
+	user: string
+): Promise<BaseAuthStore['model']> {
+	const article = await pb.collection('articles').create({
+		headline: articleCompletion.headline,
+		category: articleCompletion.category,
+		body: JSON.stringify(articleCompletion.body),
+		status,
+		user
+	});
+	console.warn(article);
+	return article;
 }
