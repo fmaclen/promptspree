@@ -25,7 +25,7 @@
 	}
 
 	function categoryIcon(categoryLabel: string): string {
-		return CategoryIcons[categoryLabel.toUpperCase() as keyof typeof CategoryIcons]
+		return CategoryIcons[categoryLabel.toUpperCase() as keyof typeof CategoryIcons];
 	}
 </script>
 
@@ -38,7 +38,7 @@
 				: ''}"
 		>
 			<!-- Emoji -->
-			<span aria-label={category.id}>
+			<span aria-label={category.label}>
 				{categoryIcon(category.label)}
 			</span>
 

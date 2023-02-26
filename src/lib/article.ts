@@ -53,4 +53,3 @@ export enum ArticleCategory {
 	FASHION = 'Fashion',
 	OPINION = 'Opinion'
 }
-
