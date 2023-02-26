@@ -1,5 +1,5 @@
 import type { ArticleStatus } from '$lib/article';
-import type { ArticleCompletion } from '$lib/openai.server';
+import type { MockArticleCompletion } from '$lib/tests';
 import { type Page, expect } from '@playwright/test';
 import PocketBase, { BaseAuthStore } from 'pocketbase';
 
@@ -144,17 +144,16 @@ export async function getLastArticle(query: string): Promise<any> {
 }
 
 export async function createArticle(
-	articleCompletion: ArticleCompletion,
+	articleCompletion: MockArticleCompletion,
 	status: ArticleStatus,
 	user: string
 ): Promise<BaseAuthStore['model']> {
-	const article = await pb.collection('articles').create({
+	return await pb.collection('articles').create({
 		headline: articleCompletion.headline,
 		category: articleCompletion.category,
 		body: JSON.stringify(articleCompletion.body),
+		prompt: articleCompletion.prompt,
 		status,
 		user
 	});
-	console.warn(article);
-	return article;
 }

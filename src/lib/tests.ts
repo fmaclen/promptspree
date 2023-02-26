@@ -13,7 +13,7 @@ export enum MockPrompt {
 	THROW_ERROR_500 = 'THROW_ERROR_500' // Server error
 }
 
-interface MockArticleCompletion extends ArticleCompletion {
+export interface MockArticleCompletion extends ArticleCompletion {
 	prompt: string;
 }
 

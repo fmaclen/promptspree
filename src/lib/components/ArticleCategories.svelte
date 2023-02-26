@@ -10,6 +10,23 @@
 			label: ArticleCategory[key as keyof typeof ArticleCategory]
 		};
 	});
+
+	enum CategoryIcons {
+		POLITICS = '🏛️',
+		BUSINESS = '💼',
+		TECHNOLOGY = '🖥️',
+		ENTERTAINMENT = '🎭',
+		SCIENCE = '🔬',
+		HEALTH = '🏥',
+		SPORTS = '⚽️',
+		CULTURE = '🎨',
+		FASHION = '👗',
+		OPINION = '💭'
+	}
+
+	function categoryIcon(categoryLabel: string): string {
+		return CategoryIcons[categoryLabel.toUpperCase() as keyof typeof CategoryIcons]
+	}
 </script>
 
 <nav class="categories">
@@ -22,11 +39,11 @@
 		>
 			<!-- Emoji -->
 			<span aria-label={category.id}>
-				{category.label.split(' ')[0]}
+				{categoryIcon(category.label)}
 			</span>
 
 			<!-- Category name -->
-			{category.label.split(' ')[1]}
+			{category.label}
 		</a>
 	{/each}
 </nav>
