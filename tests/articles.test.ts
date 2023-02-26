@@ -101,7 +101,7 @@ test.describe('Articles', () => {
 			await expect(page.getByText(MOCK_ARTICLES[3].headline)).not.toBeVisible();
 			await expect(page.getByText('Delete')).toBeVisible();
 			await expect(page.getByText('Publish')).not.toBeVisible();
-			
+
 			// Published article by Bob
 			await page.locator('a.logo').click();
 			await page.getByText(MOCK_ARTICLES[3].headline).click();
@@ -154,10 +154,40 @@ test.describe('Articles', () => {
 			await expect(page.getByText(MOCK_ARTICLES[2].headline)).not.toBeVisible();
 		});
 
-		test.skip('Can react to articles', async ({ page }) => {
-			//
+		test('Can react to articles', async ({ page }) => {
+			const reactionSummary = 'a.article-reactions-summary';
+			expect(await page.locator(reactionSummary, { hasText: '0' }).count()).toBe(2);
+
+			await page.getByText(MOCK_ARTICLES[1].headline).click();
+			await expect(page.getByText(MOCK_ARTICLES[1].body[2])).toBeVisible();
+			expect(await page.locator(reactionSummary, { hasText: '0' }).count()).toBe(1);
+
+			await page.getByText('🤯').click();
+			await expect(page.locator(reactionSummary, { hasText: '🤯 1' })).toBeVisible();
+
+			await page.locator('a.logo').click();
+			await expect(page.getByText(MOCK_ARTICLES[1].body[2])).not.toBeVisible();
+			await expect(page.locator(reactionSummary, { hasText: '🤯 1' })).toBeVisible();
+
+			// Logout as Alice
+			await page.click('button[aria-label="Toggle navigation"]');
+			await page.getByText('Logout').click();
+
+			// Login as Bob
+			await loginUser(MOCK_USERS.bob, page);
+			await page.getByText(MOCK_ARTICLES[1].headline).click();
+			await expect(page.getByText(MOCK_ARTICLES[1].body[2])).toBeVisible();
+			await expect(page.locator(reactionSummary, { hasText: '🤯 1' })).toBeVisible();
+
+			await page.getByText('🤔').click();
+			await expect(page.locator(reactionSummary, { hasText: '🤯 2' })).toBeVisible();
+
+			await page.locator('a.logo').click();
+			await expect(page.getByText(MOCK_ARTICLES[1].body[2])).not.toBeVisible();
+			await expect(page.locator(reactionSummary, { hasText: '🤯 2' })).toBeVisible();
 		});
 
+		// NOTE: this test must run last because it deletes an article
 		test("Can delete user's authored articles", async ({ page }) => {
 			await expect(page.getByText(MOCK_ARTICLES[3].body[2])).not.toBeVisible();
 
@@ -174,8 +204,10 @@ test.describe('Articles', () => {
 
 			await prepareToAcceptDialog(page, /Are you sure you want to delete the article?/);
 			await page.getByText('Delete').click();
-			await expect(page.getByText(MOCK_ARTICLES[1].body[2])).toBeVisible();
-			await expect(page.getByText(MOCK_USERS.alice.nickname)).toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLES[1].body[2])).not.toBeVisible();
+			await expect(
+				page.locator('h1.section__h1', { hasText: MOCK_USERS.alice.nickname })
+			).toBeVisible();
 		});
 	});
 });
