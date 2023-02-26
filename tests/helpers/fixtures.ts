@@ -102,6 +102,12 @@ export async function resetDatabase(): Promise<void> {
 	for (const user of users) {
 		await pb.collection('users').delete(user.id);
 	}
+
+	// Delete all articles
+	const articles = await pb.collection('articles').getFullList(200);
+	for (const article of articles) {
+		await pb.collection('articles').delete(article.id);
+	}
 }
 
 export async function createUser(user: User): Promise<void> {

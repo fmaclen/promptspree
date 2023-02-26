@@ -11,6 +11,16 @@ export interface ArticlePromptShape {
 	body: string[];
 }
 
+export interface CompletionUserPrompt {
+	user: string;
+	prompt: string;
+}
+
+export interface CompletionResponse {
+	status: number;
+	message: string;
+}
+
 const articleCategories = Object.values(ArticleCategory).join(', ');
 const articlePromptShape = {
 	headline: 'Clickbait headline shorter than 80 characters',
@@ -36,9 +46,10 @@ const formatPrompt = (prompt: string): string => {
 	`;
 };
 
-export const getCompletionFromAI = async (
-	prompt: string
-): Promise<{ status: number; message: string }> => {
+export const getCompletionFromAI = async ({
+	user,
+	prompt,
+}: CompletionUserPrompt): Promise<CompletionResponse> => {
 	try {
 		const completionResponse = await openai.createCompletion({
 			model: 'text-davinci-003',
@@ -47,7 +58,8 @@ export const getCompletionFromAI = async (
 			top_p: 1.0,
 			frequency_penalty: 0.0,
 			presence_penalty: 1,
-			prompt: formatPrompt(prompt)
+			prompt: formatPrompt(prompt),
+			user // e.g. `my6b0jgzuwrtuxg`
 		});
 
 		const completion = completionResponse.data.choices[0].text?.trim();
