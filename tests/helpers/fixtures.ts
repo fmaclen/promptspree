@@ -157,3 +157,11 @@ export async function createArticle(
 		user
 	});
 }
+
+export const prepareToAcceptDialog = async (page: Page, message: RegExp) => {
+	page.on('dialog', (dialog) => {
+		expect(dialog.message()).toMatch(message);
+
+		dialog.accept();
+	});
+};

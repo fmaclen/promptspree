@@ -9,6 +9,7 @@ import {
 	getLastArticle,
 	getUser,
 	loginUser,
+	prepareToAcceptDialog,
 	resetDatabase,
 	verifyUser
 } from './helpers/fixtures.js';
@@ -55,8 +56,6 @@ test.describe('Articles', () => {
 		});
 
 		test('Can browse article summaries', async ({ page }) => {
-			// Homepage
-
 			// Article by Alice
 			await expect(page.getByText(MOCK_USERS.alice.nickname)).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLES[1].headline)).toBeVisible();
@@ -84,22 +83,27 @@ test.describe('Articles', () => {
 			await expect(page.getByText(MOCK_ARTICLES[3].headline)).not.toBeVisible();
 		});
 
-		test('Can read all published articles, can read drafts when user is author', async ({ page }) => {
-			// Homepage
-
-			// Published articles
-			await expect(page.getByText(MOCK_ARTICLES[1].headline)).toBeVisible();
-			await expect(page.getByText(MOCK_ARTICLES[3].headline)).toBeVisible();
+		test('Can see published articles', async ({ page }) => {
+			await expect(page.getByText(MOCK_ARTICLES[1].body[0])).toBeVisible(); // Summary
+			await expect(page.getByText(MOCK_ARTICLES[1].body[2])).not.toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLES[3].body[0])).toBeVisible(); // Summary
-			await expect(page.getByText(MOCK_ARTICLES[3].body[1])).not.toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLES[3].body[2])).not.toBeVisible();
-			await expect(page.getByText(MOCK_ARTICLES[3].prompt)).not.toBeVisible();
 
-			// Draft articles
-			await expect(page.getByText(MOCK_ARTICLES[0].headline)).not.toBeVisible();
-			await expect(page.getByText(MOCK_ARTICLES[2].headline)).not.toBeVisible();
-
-			// Published article page by Bob
+			// Published article by Alice
+			await page.getByText(MOCK_ARTICLES[1].headline).click();
+			await expect(
+				page.locator('h1.article__headline', { hasText: MOCK_ARTICLES[3].headline })
+			).toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLES[1].body[0])).toBeVisible(); // Summary
+			await expect(page.getByText(MOCK_ARTICLES[1].body[1])).toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLES[1].body[2])).toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLES[1].prompt)).toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLES[3].headline)).not.toBeVisible();
+			await expect(page.getByText('Delete')).toBeVisible();
+			await expect(page.getByText('Publish')).not.toBeVisible();
+			
+			// Published article by Bob
+			await page.locator('a.logo').click();
 			await page.getByText(MOCK_ARTICLES[3].headline).click();
 			await expect(
 				page.locator('h1.article__headline', { hasText: MOCK_ARTICLES[3].headline })
@@ -109,6 +113,18 @@ test.describe('Articles', () => {
 			await expect(page.getByText(MOCK_ARTICLES[3].body[2])).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLES[3].prompt)).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLES[1].headline)).not.toBeVisible();
+			await expect(page.getByText('Delete')).not.toBeVisible();
+			await expect(page.getByText('Publish')).not.toBeVisible();
+		});
+
+		test("Can only see user's authored draft articles", async ({ page }) => {
+			// Published articles
+			await expect(page.getByText(MOCK_ARTICLES[1].headline)).toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLES[3].headline)).toBeVisible();
+
+			// Draft articles
+			await expect(page.getByText(MOCK_ARTICLES[0].headline)).not.toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLES[2].headline)).not.toBeVisible();
 
 			// Drafts by Alice
 			let user = await getUser(MOCK_USERS.alice.email);
@@ -116,14 +132,16 @@ test.describe('Articles', () => {
 				`status = "${ArticleStatus.DRAFT}" && user = "${user?.id}"`
 			);
 			expect(article.headline).toBe(MOCK_ARTICLES[0].headline);
+			await expect(page.getByText('Delete')).not.toBeVisible();
+			await expect(page.getByText('Publish')).not.toBeVisible();
 
 			await page.goto(`/article/${article.id}`);
 			await expect(
 				page.locator('h1.article__headline', { hasText: MOCK_ARTICLES[0].headline })
 			).toBeVisible();
-			await expect(page.getByText(MOCK_ARTICLES[0].body[0])).toBeVisible(); // Summary
-			await expect(page.getByText(MOCK_ARTICLES[0].body[1])).toBeVisible();
-			await expect(page.getByText(MOCK_ARTICLES[0].body[2])).toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLES[0].headline)).toBeVisible(); // Summary
+			await expect(page.getByText('Delete')).toBeVisible();
+			await expect(page.getByText('Publish')).toBeVisible();
 
 			// A draft by Bob can't be viewed by Alice
 			user = await getUser(MOCK_USERS.bob.email);
@@ -133,18 +151,31 @@ test.describe('Articles', () => {
 			await page.goto(`/article/${article.id}`);
 			await expect(page.getByText('Error 404')).toBeVisible();
 			await expect(page.getByText('Not found')).toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLES[2].headline)).not.toBeVisible();
 		});
 
 		test.skip('Can react to articles', async ({ page }) => {
 			//
 		});
 
-		test.skip("Can delete user's own articles", async ({ page }) => {
-			//
-		});
+		test("Can delete user's authored articles", async ({ page }) => {
+			await expect(page.getByText(MOCK_ARTICLES[3].body[2])).not.toBeVisible();
 
-		test.skip("Can't access other user's draft articles", async ({ page }) => {
-			//
+			await page.getByText(MOCK_ARTICLES[3].headline).click();
+			await expect(page.getByText(MOCK_ARTICLES[3].body[2])).toBeVisible();
+			await expect(page.getByText('Delete')).not.toBeVisible();
+
+			await page.locator('a.logo').click();
+			await expect(page.getByText(MOCK_ARTICLES[1].body[2])).not.toBeVisible();
+
+			await page.getByText(MOCK_ARTICLES[1].headline).click();
+			await expect(page.getByText(MOCK_ARTICLES[1].body[2])).toBeVisible();
+			await expect(page.getByText('Delete')).toBeVisible();
+
+			await prepareToAcceptDialog(page, /Are you sure you want to delete the article?/);
+			await page.getByText('Delete').click();
+			await expect(page.getByText(MOCK_ARTICLES[1].body[2])).toBeVisible();
+			await expect(page.getByText(MOCK_USERS.alice.nickname)).toBeVisible();
 		});
 	});
 });
