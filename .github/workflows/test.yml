@@ -27,12 +27,6 @@ jobs:
       - name: Install Pocketbase
         run: npm run setup:pocketbase
 
-      - name: Setup Pocketbase
-        run: npm run setup:pocketbase:test
-
-      - name: Run Pocketbase
-        run: npm run backend:test &
-
       - name: Install Playwright Browser
         run: |
           if [ "${{ matrix.browser }}" = "ios" ]; then
@@ -44,7 +38,7 @@ jobs:
           fi
 
       - name: Run Playwright tests
-        run: npx playwright test
+        run: npm run test
         env:
           BROWSER: ${{ matrix.browser }}
           NODE_ENV: CI
