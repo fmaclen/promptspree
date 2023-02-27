@@ -55,7 +55,8 @@
 	}
 
 	h1.article__headline {
-		font-family: var(--font-serif);
+		font-weight: 600;
+		letter-spacing: -0.025em;
 		margin: 0;
 		font-size: 24px;
 		line-height: 1.1em;

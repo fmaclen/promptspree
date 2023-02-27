@@ -25,6 +25,7 @@ export interface Article {
 	body: string[];
 	prompt: string;
 	reactions: ArticleReactions;
+	audioSrc?: string;
 }
 
 export enum Reaction {
