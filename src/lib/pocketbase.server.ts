@@ -1,7 +1,7 @@
 import { env } from '$env/dynamic/private';
 import { isTestEnvironment } from '$lib/utils';
 import { error, fail } from '@sveltejs/kit';
-import { BaseAuthStore, ClientResponseError } from 'pocketbase';
+import { type BaseAuthStore, ClientResponseError } from 'pocketbase';
 
 export const pocketbaseUrl = isTestEnvironment ? env.TEST_POCKETBASE_URL : env.POCKETBASE_URL;
 
