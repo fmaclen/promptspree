@@ -41,7 +41,7 @@ jobs:
         run: npm run test
         env:
           BROWSER: ${{ matrix.browser }}
-          NODE_ENV: CI
+          NODE_ENV: ci
 
       - uses: actions/upload-artifact@v3
         if: failure()
