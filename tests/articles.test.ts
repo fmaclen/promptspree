@@ -14,6 +14,26 @@ import {
 	verifyUser
 } from './helpers/fixtures.js';
 
+async function seedTest() {
+	const users = [MOCK_USERS.alice, MOCK_USERS.bob];
+
+	for (const user of users) {
+		await createUser(user);
+		await verifyUser(user.email);
+	}
+
+	let user = await getUser(MOCK_USERS.alice.email);
+	if (user) {
+		await createArticle(MOCK_ARTICLES[0], ArticleStatus.DRAFT, user.id);
+		await createArticle(MOCK_ARTICLES[1], ArticleStatus.PUBLISHED, user.id);
+	}
+	user = await getUser(MOCK_USERS.bob.email);
+	if (user) {
+		await createArticle(MOCK_ARTICLES[2], ArticleStatus.DRAFT, user.id);
+		await createArticle(MOCK_ARTICLES[3], ArticleStatus.PUBLISHED, user.id);
+	}
+}
+
 test.describe('Articles', () => {
 	test.beforeAll(async () => {
 		await resetDatabase();
@@ -31,24 +51,7 @@ test.describe('Articles', () => {
 
 	test.describe('With articles', () => {
 		test.beforeAll(async () => {
-			const users = [MOCK_USERS.alice, MOCK_USERS.bob];
-
-			for (const user of users) {
-				await createUser(user);
-				await verifyUser(user.email);
-			}
-
-			let user = await getUser(MOCK_USERS.alice.email);
-			if (user) {
-				await createArticle(MOCK_ARTICLES[0], ArticleStatus.DRAFT, user.id);
-				await createArticle(MOCK_ARTICLES[1], ArticleStatus.PUBLISHED, user.id);
-			}
-
-			user = await getUser(MOCK_USERS.bob.email);
-			if (user) {
-				await createArticle(MOCK_ARTICLES[2], ArticleStatus.DRAFT, user.id);
-				await createArticle(MOCK_ARTICLES[3], ArticleStatus.PUBLISHED, user.id);
-			}
+			await seedTest();
 		});
 
 		test.beforeEach(async ({ page }) => {
@@ -186,28 +189,31 @@ test.describe('Articles', () => {
 			await expect(page.getByText(MOCK_ARTICLES[1].body[2])).not.toBeVisible();
 			await expect(page.locator(reactionSummary, { hasText: '🤯 2' })).toBeVisible();
 		});
+		
+	});
+	
+	test("Can delete user's authored articles", async ({ page }) => {
+		await resetDatabase();
+		await seedTest();
+		await loginUser(MOCK_USERS.alice, page);
+		await expect(page.getByText(MOCK_ARTICLES[3].body[2])).not.toBeVisible();
 
-		// NOTE: this test must run last because it deletes an article
-		test("Can delete user's authored articles", async ({ page }) => {
-			await expect(page.getByText(MOCK_ARTICLES[3].body[2])).not.toBeVisible();
+		await page.getByText(MOCK_ARTICLES[3].headline).click();
+		await expect(page.getByText(MOCK_ARTICLES[3].body[2])).toBeVisible();
+		await expect(page.getByText('Delete')).not.toBeVisible();
 
-			await page.getByText(MOCK_ARTICLES[3].headline).click();
-			await expect(page.getByText(MOCK_ARTICLES[3].body[2])).toBeVisible();
-			await expect(page.getByText('Delete')).not.toBeVisible();
+		await page.locator('a.logo').click();
+		await expect(page.getByText(MOCK_ARTICLES[1].body[2])).not.toBeVisible();
 
-			await page.locator('a.logo').click();
-			await expect(page.getByText(MOCK_ARTICLES[1].body[2])).not.toBeVisible();
+		await page.getByText(MOCK_ARTICLES[1].headline).click();
+		await expect(page.getByText(MOCK_ARTICLES[1].body[2])).toBeVisible();
+		await expect(page.getByText('Delete')).toBeVisible();
 
-			await page.getByText(MOCK_ARTICLES[1].headline).click();
-			await expect(page.getByText(MOCK_ARTICLES[1].body[2])).toBeVisible();
-			await expect(page.getByText('Delete')).toBeVisible();
-
-			await prepareToAcceptDialog(page, /Are you sure you want to delete the article?/);
-			await page.getByText('Delete').click();
-			await expect(page.getByText(MOCK_ARTICLES[1].body[2])).not.toBeVisible();
-			await expect(
-				page.locator('h1.section__h1', { hasText: MOCK_USERS.alice.nickname })
-			).toBeVisible();
-		});
+		await prepareToAcceptDialog(page, /Are you sure you want to delete the article?/);
+		await page.getByText('Delete').click();
+		await expect(page.getByText(MOCK_ARTICLES[1].body[2])).not.toBeVisible();
+		await expect(
+			page.locator('h1.section__h1', { hasText: MOCK_USERS.alice.nickname })
+		).toBeVisible();
 	});
 });
