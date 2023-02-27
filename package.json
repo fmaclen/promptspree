@@ -4,7 +4,7 @@
 	"private": true,
 	"scripts": {
 		"start": "npx vite dev --host",
-		"start:test": "cross-env TEST_POCKETBASE_URL=http://127.0.0.1:8091 npm start",
+		"start:test": "cross-env NODE_ENV=test npm start",
 		"backend": "node scripts/pocketbaseServe",
 		"backend:test": "npm run backend -- 8091",
 		"setup": "npm install && npm run setup:pocketbase && npx playwright install",

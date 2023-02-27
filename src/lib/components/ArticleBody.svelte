@@ -68,7 +68,7 @@
 		background-color: #f2f3f4;
 		border-radius: 2px;
 		margin-top: 20px;
-		/* margin-bottom: 32px; */
+		align-items: center;
 	}
 
 	audio.article__player {
@@ -85,11 +85,6 @@
 		border-radius: 2px;
 		border: 1px solid var(--color-accent);
 		cursor: help;
-		display: block;
-		width: max-content;
-		white-space: nowrap;
-		margin-block: auto;
 		margin-left: 16px;
-		/* margin-right: 16px; */
 	}
 </style>

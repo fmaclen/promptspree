@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 
-import { MOCK_USERS, createUser, resetDatabase, verifyUser } from './helpers/fixtures.js';
+import { MOCK_USERS } from './lib/fixtures.js';
+import { createUser, resetDatabase, verifyUser } from './lib/helpers.js';
 
 test.describe('Users', () => {
 	test.beforeEach(async ({ page }) => {

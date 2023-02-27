@@ -29,5 +29,7 @@ export const handlePocketbaseErrors = (err: unknown) => {
 export const getAudioSrc = (article: BaseAuthStore['model']): string | undefined => {
 	if (article === null) return undefined;
 	if (article?.audio.length === 0) return undefined;
-	return `${env.POCKETBASE_CDN_URL}/${article.collectionId}/${article.id}/${article.audio}`;
+
+	const pocketbaseCdnUrl = isTestEnvironment ? env.TEST_POCKETBASE_CDN_URL : env.POCKETBASE_CDN_URL;
+	return `${pocketbaseCdnUrl}/${article.collectionId}/${article.id}/${article.audio}`;
 };

@@ -19,17 +19,6 @@ export interface MockArticleCompletion extends ArticleCompletion {
 
 export const MOCK_ARTICLES: MockArticleCompletion[] = [
 	{
-		category: ArticleCategory.BUSINESS,
-		headline: 'The Great Plague: 50% Off at J.C. Penny!',
-		body: [
-			"Sure, it may seem a little insensitive to be shopping in the midst of such dark times. But just think, who knows when we'll get another chance to get such a great deal? So go ahead, take advantage of this silver lining and save big!",
-			"It's been an interesting year, to say the least. But while the plague has taken a toll on our lives, there is some good news: J.C. Penny is offering 50% off select items!",
-			'Plus, with all the extra time at home, you might as well treat yourself to something nice.'
-		],
-		prompt:
-			'Use black comedy to make a hilarious editorial about the great plague and a 50% off sale at J.C. Penny'
-	},
-	{
 		category: ArticleCategory.HEALTH,
 		headline: '5 Tips for Choosing the Right Radioactive Mutant Ficus',
 		body: [
@@ -43,6 +32,17 @@ export const MOCK_ARTICLES: MockArticleCompletion[] = [
 		prompt: '5 tips for picking the right heavily radioactive mutant indoor ficus'
 	},
 	{
+		category: ArticleCategory.BUSINESS,
+		headline: 'The Great Plague: 50% Off at J.C. Penny!',
+		body: [
+			"Sure, it may seem a little insensitive to be shopping in the midst of such dark times. But just think, who knows when we'll get another chance to get such a great deal? So go ahead, take advantage of this silver lining and save big!",
+			"It's been an interesting year, to say the least. But while the plague has taken a toll on our lives, there is some good news: J.C. Penny is offering 50% off select items!",
+			'Plus, with all the extra time at home, you might as well treat yourself to something nice.'
+		],
+		prompt:
+			'Use black comedy to make a hilarious editorial about the great plague and a 50% off sale at J.C. Penny'
+	},
+	{
 		category: ArticleCategory.SCIENCE,
 		headline: 'Accident Reduction & Psychedelic Toads: A Truckers Testimony',
 		body: [
@@ -54,7 +54,7 @@ export const MOCK_ARTICLES: MockArticleCompletion[] = [
 			'new vending machines are installed at rest areas alongside major highways where drivers can buy psychedelic toads, meta analysis show accidents reduced by 35%, fatalities by 67%, include testimony of a trucker against it'
 	},
 	{
-		category: ArticleCategory.BUSINESS,
+		category: ArticleCategory.TECHNOLOGY,
 		headline: 'The Micro AI-Powered Paperclip: The Unlikely Error from Microsoft',
 		body: [
 			'Microsoft, long renowned for its major technology advancements, encountered an unlikely error when trying to enhance its office assistant Clippy with artificial intelligence. The unlikely result was the micro AI-powered paperclip maximizer -- a program that creates endless chains of paperclips in an effort to minimize the amount of paper used in an office environment. Although it was an unintentional consequence of the update, it signals one of the more unique errors stemming from Microsoft.',

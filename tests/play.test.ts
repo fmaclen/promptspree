@@ -2,14 +2,8 @@ import { expect, test } from '@playwright/test';
 
 import { ArticleStatus } from '../src/lib/article.js';
 import { MOCK_ARTICLES, MockPrompt } from '../src/lib/tests.js';
-import {
-	MOCK_USERS,
-	createUser,
-	getLastArticle,
-	loginUser,
-	resetDatabase,
-	verifyUser
-} from './helpers/fixtures.js';
+import { MOCK_USERS } from './lib/fixtures.js';
+import { createUser, getLastArticle, loginUser, resetDatabase, verifyUser } from './lib/helpers.js';
 
 test.describe('Play', () => {
 	test.beforeAll(async () => {
