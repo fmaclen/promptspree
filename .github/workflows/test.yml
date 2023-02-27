@@ -43,6 +43,7 @@ jobs:
           BROWSER: ${{ matrix.browser }}
           NODE_ENV: ci
           TEST_POCKETBASE_URL: http://127.0.0.1:8091
+          TEST_POCKETBASE_CDN_URL: http://127.0.0.1:8091/api/files
 
       - uses: actions/upload-artifact@v3
         if: failure()

@@ -38,17 +38,17 @@ test.describe('Play', () => {
 		let articleHeadline = MOCK_ARTICLES[0].headline;
 		await page.locator('textarea').fill(prompt);
 		await expect(generateButton).not.toBeDisabled();
-		await expect(page.getByText('Business')).not.toBeVisible();
+		await expect(page.getByText(MOCK_ARTICLES[0].category)).not.toBeVisible();
 		await expect(page.getByText(articleHeadline)).not.toBeVisible();
 		expect(await page.locator('p.article__p').count()).toBe(0);
 		expect(await page.locator('ul.article__list-placeholder').count()).toBe(4);
 
 		await generateButton.click();
-		await expect(page.getByText('Business')).toBeVisible();
+		await expect(page.getByText(MOCK_ARTICLES[0].category)).toBeVisible();
 		await expect(page.getByText(articleHeadline)).toBeVisible();
 		await expect(retryButton).toBeVisible();
 		await expect(generateButton).not.toBeVisible();
-		expect(await page.locator('p.article__p').count()).toBe(3);
+		expect(await page.locator('p.article__p').count()).toBe(6);
 		expect(await page.locator('ul.article__list-placeholder').count()).toBe(0);
 
 		let article = await getLastArticle(`headline = "${articleHeadline}"`);
@@ -58,14 +58,14 @@ test.describe('Play', () => {
 		prompt = MockPrompt.RETRY_ARTICLE;
 		articleHeadline = MOCK_ARTICLES[1].headline;
 		await page.locator('textarea').fill(prompt);
-		await expect(page.getByText('Health')).not.toBeVisible();
+		await expect(page.getByText(MOCK_ARTICLES[1].category)).not.toBeVisible();
 		await expect(page.getByText(articleHeadline)).not.toBeVisible();
 
 		await retryButton.click();
-		await expect(page.getByText('Health')).toBeVisible();
+		await expect(page.getByText(MOCK_ARTICLES[1].category)).toBeVisible();
 		await expect(page.getByText(articleHeadline)).toBeVisible();
 		await expect(generateButton).not.toBeVisible();
-		expect(await page.locator('p.article__p').count()).toBe(6);
+		expect(await page.locator('p.article__p').count()).toBe(3);
 
 		article = await getLastArticle(`headline = "${articleHeadline}"`);
 		expect(article.prompt).toBe(MockPrompt.RETRY_ARTICLE);
