@@ -1,9 +1,10 @@
 import { expect, test } from '@playwright/test';
+import { readFileSync } from 'fs';
 
 import { ArticleStatus } from '../src/lib/article.js';
 import { MOCK_ARTICLES } from '../src/lib/tests.js';
+import { MOCK_USERS } from './lib/fixtures.js';
 import {
-	MOCK_USERS,
 	createArticle,
 	createUser,
 	getLastArticle,
@@ -11,8 +12,9 @@ import {
 	loginUser,
 	prepareToAcceptDialog,
 	resetDatabase,
+	updateArticle,
 	verifyUser
-} from './helpers/fixtures.js';
+} from './lib/helpers.js';
 
 async function seedTest() {
 	const users = [MOCK_USERS.alice, MOCK_USERS.bob];
@@ -157,6 +159,29 @@ test.describe('Articles', () => {
 			await expect(page.getByText(MOCK_ARTICLES[2].headline)).not.toBeVisible();
 		});
 
+		test('Articles with audio are listenable', async ({ page }) => {
+			// NOTE:
+			// This test only checks that the player is visible when an audio path is present.
+
+			const article = await getLastArticle(`headline = "${MOCK_ARTICLES[1].headline}"`);
+
+			const audioData = readFileSync('tests/lib/fixtures/the-great-plague.mp3');
+			const audioBlob = new Blob([audioData], { type: 'audio/mp3' });
+			const formData = new FormData();
+			formData.append('audio', audioBlob, 'the-great-plague.mp3');
+			await updateArticle(article.id, formData);
+
+			await page.getByText(MOCK_ARTICLES[3].headline).click();
+			await expect(page.locator('nav.article__audio', { hasText: 'Plus' })).not.toBeVisible();
+
+			await page.locator('a.logo').click();
+			await page.getByText(MOCK_ARTICLES[1].headline).click();
+			await expect(page.locator('nav.article__audio', { hasText: 'Plus' })).toBeVisible();
+			expect(await page.locator('audio.article__player').getAttribute('src')).toMatch(
+				/^.*\/api\/files\/[^/]+\/[^/]+\/.+\.mp3$/
+			); // 'xxx/api/files/xxx/xxx/xxx.mp3'
+		});
+
 		test('Can react to articles', async ({ page }) => {
 			const reactionSummary = 'a.article-reactions-summary';
 			expect(await page.locator(reactionSummary, { hasText: '0' }).count()).toBe(2);
@@ -189,9 +214,8 @@ test.describe('Articles', () => {
 			await expect(page.getByText(MOCK_ARTICLES[1].body[2])).not.toBeVisible();
 			await expect(page.locator(reactionSummary, { hasText: '🤯 2' })).toBeVisible();
 		});
-		
 	});
-	
+
 	test("Can delete user's authored articles", async ({ page }) => {
 		await resetDatabase();
 		await seedTest();

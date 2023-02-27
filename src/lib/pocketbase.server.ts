@@ -1,8 +1,9 @@
 import { env } from '$env/dynamic/private';
+import { isTestEnvironment } from '$lib/utils';
 import { error, fail } from '@sveltejs/kit';
-import { ClientResponseError } from 'pocketbase';
+import { type BaseAuthStore, ClientResponseError } from 'pocketbase';
 
-export const pocketbaseUrl = env.TEST_POCKETBASE_URL || env.POCKETBASE_URL;
+export const pocketbaseUrl = isTestEnvironment ? env.TEST_POCKETBASE_URL : env.POCKETBASE_URL;
 
 export const handlePocketbaseError = (err: unknown) => {
 	const clientError = err as ClientResponseError;
@@ -23,4 +24,12 @@ export const handlePocketbaseErrors = (err: unknown) => {
 	} else {
 		throw error(500);
 	}
+};
+
+export const getAudioSrc = (article: BaseAuthStore['model']): string | undefined => {
+	if (article === null) return undefined;
+	if (article?.audio.length === 0) return undefined;
+
+	const pocketbaseCdnUrl = isTestEnvironment ? env.TEST_POCKETBASE_CDN_URL : env.POCKETBASE_CDN_URL;
+	return `${pocketbaseCdnUrl}/${article.collectionId}/${article.id}/${article.audio}`;
 };

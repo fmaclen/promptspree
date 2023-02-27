@@ -10,7 +10,7 @@ import { fail } from '@sveltejs/kit';
 import type { BaseAuthStore, Record } from 'pocketbase';
 
 import type { ArticleCompletion } from './openai.server';
-import { handlePocketbaseError } from './pocketbase.server';
+import { getAudioSrc, handlePocketbaseError } from './pocketbase.server';
 
 export const generateArticles = async (
 	articlesCollection: BaseAuthStore['model'][],
@@ -38,6 +38,7 @@ export const generateArticle = async (
 		nickname: articleCollection?.expand.user.nickname
 	};
 
+	const audioSrc = getAudioSrc(articleCollection);
 	const reactions = await getArticleReactions(articleCollection.id, locals);
 
 	const article: Article = {
@@ -49,6 +50,7 @@ export const generateArticle = async (
 		headline: articleCollection.headline,
 		body: JSON.parse(articleCollection.body),
 		prompt: articleCollection.prompt,
+		audioSrc,
 		reactions
 	};
 

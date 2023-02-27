@@ -1,7 +1,7 @@
 import { BrowserType, chromium, expect, firefox, webkit } from '@playwright/test';
 import axios from 'axios';
 
-import { TEST_ADMIN_PASSWORD, TEST_ADMIN_USER } from './tests/helpers/fixtures.js';
+import { TEST_ADMIN_PASSWORD, TEST_ADMIN_USER } from './tests/lib/fixtures.js';
 
 async function globalSetup() {
 	const { TEST_POCKETBASE_URL } = process.env;

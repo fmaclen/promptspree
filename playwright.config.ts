@@ -1,6 +1,8 @@
+// see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
 import { type PlaywrightTestConfig, devices } from '@playwright/test';
+import * as dotenv from 'dotenv';
 
-process.env.TEST_POCKETBASE_URL = 'http://127.0.0.1:8091';
+dotenv.config();
 
 const browserDevice = () => {
 	const browser = process.env.BROWSER;
@@ -34,14 +36,17 @@ const browserDevice = () => {
 	}
 };
 
-const isCI = process.env.NODE_ENV === 'CI';
+const isCiEnvironment = process.env.NODE_ENV === 'ci';
 
 const config: PlaywrightTestConfig = {
 	globalSetup: './playwright.global-setup',
 	webServer: [
 		{
 			command: 'npm run build && npm run preview',
-			port: 4173
+			port: 4173,
+			env: {
+				NODE_ENV: 'test'
+			}
 		},
 		{
 			command: 'npm run setup:pocketbase:test && npm run backend:test',
@@ -49,14 +54,14 @@ const config: PlaywrightTestConfig = {
 		}
 	],
 	testDir: 'tests',
-	timeout: isCI ? 30000 : 10000,
+	timeout: isCiEnvironment ? 30000 : 10000,
 	use: {
 		trace: 'retain-on-failure',
 		screenshot: 'only-on-failure',
 		baseURL: 'http://localhost:4173'
 	},
 	projects: [browserDevice()],
-	retries: isCI ? 3 : 0,
+	retries: isCiEnvironment ? 3 : 0,
 	workers: 1
 };
 

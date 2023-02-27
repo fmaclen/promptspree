@@ -46,7 +46,7 @@
 		padding: 48px;
 		box-sizing: border-box;
 		font-weight: 400;
-		font-family: var(--font-serif);
+		letter-spacing: -0.025em;
 		margin: 0;
 		line-height: 1em;
 		text-align: center;
