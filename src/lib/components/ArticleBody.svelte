@@ -24,7 +24,7 @@
 
 		{#if article.audioSrc}
 			<nav class="article__audio">
-				<p class="article__beta" title="Coming soon">Pro</p>
+				<p class="article__beta" title="Coming soon">Plus</p>
 				<audio controls src={article.audioSrc} preload="none" class="article__player" />
 			</nav>
 		{/if}

@@ -51,7 +51,7 @@ export const generateArticle = async (
 		body: JSON.parse(articleCollection.body),
 		prompt: articleCollection.prompt,
 		audioSrc,
-		reactions,
+		reactions
 	};
 
 	return article;

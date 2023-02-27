@@ -189,9 +189,8 @@ test.describe('Articles', () => {
 			await expect(page.getByText(MOCK_ARTICLES[1].body[2])).not.toBeVisible();
 			await expect(page.locator(reactionSummary, { hasText: '🤯 2' })).toBeVisible();
 		});
-		
 	});
-	
+
 	test("Can delete user's authored articles", async ({ page }) => {
 		await resetDatabase();
 		await seedTest();
