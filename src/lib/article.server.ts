@@ -9,7 +9,7 @@ import { logEventToSlack } from '$lib/slack.server';
 import { fail } from '@sveltejs/kit';
 import type { BaseAuthStore, Record } from 'pocketbase';
 
-import type { ArticlePromptShape } from './openai.server';
+import type { ArticleCompletion } from './openai.server';
 import { handlePocketbaseError } from './pocketbase.server';
 
 export const generateArticles = async (
@@ -99,7 +99,7 @@ export const getFieldsFromCompletion = (completion: string | undefined) => {
 	if (!completion) return null;
 
 	// Check the AI completion had the correct fields
-	let fields: ArticlePromptShape;
+	let fields: ArticleCompletion;
 	try {
 		fields = JSON.parse(completion);
 	} catch (err) {

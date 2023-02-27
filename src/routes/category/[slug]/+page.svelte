@@ -22,7 +22,7 @@
 		<ArticleSummaries {articles} />
 	{:else}
 		<Notice>
-			There are no articles in the <strong class="category-name">{category.split(' ')[1]}</strong>
+			There are no articles in the <strong class="category-name">{category}</strong>
 			category, try
 			<A href="/play" isHighlighted={true}>creating one</A>
 		</Notice>

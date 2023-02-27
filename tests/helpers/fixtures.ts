@@ -1,9 +1,11 @@
+import type { ArticleStatus } from '$lib/article';
+import type { MockArticleCompletion } from '$lib/tests';
 import { type Page, expect } from '@playwright/test';
-import PocketBase from 'pocketbase';
+import PocketBase, { BaseAuthStore } from 'pocketbase';
 
 export const TEST_ADMIN_USER = 'playwright@example.com';
 export const TEST_ADMIN_PASSWORD = 'playwright';
-export const TEST_USERS = {
+export const MOCK_USERS = {
 	alice: {
 		email: 'alice@example.com',
 		nickname: 'Alice',
@@ -97,10 +99,10 @@ export async function resetDatabase(): Promise<void> {
 	pb = new PocketBase(process.env.TEST_POCKETBASE_URL);
 	await pb.admins.authWithPassword(TEST_ADMIN_USER, TEST_ADMIN_PASSWORD);
 
-	// Delete all users
-	const users = await pb.collection('users').getFullList(200);
-	for (const user of users) {
-		await pb.collection('users').delete(user.id);
+	// Delete all reactions
+	const reactions = await pb.collection('reactions').getFullList(200);
+	for (const reaction of reactions) {
+		await pb.collection('reactions').delete(reaction.id);
 	}
 
 	// Delete all articles
@@ -108,15 +110,25 @@ export async function resetDatabase(): Promise<void> {
 	for (const article of articles) {
 		await pb.collection('articles').delete(article.id);
 	}
+
+	// Delete all users
+	const users = await pb.collection('users').getFullList(200);
+	for (const user of users) {
+		await pb.collection('users').delete(user.id);
+	}
 }
 
 export async function createUser(user: User): Promise<void> {
 	await pb.collection('users').create(user);
 }
 
+export async function getUser(email: string): Promise<BaseAuthStore['model']> {
+	return await pb.collection('users').getFirstListItem(`email = "${email}"`);
+}
+
 export async function verifyUser(email: string): Promise<void> {
-	const user = await pb.collection('users').getFirstListItem(`email = "${email}"`);
-	await pb.collection('users').update(user.id, { verified: true });
+	const user = await getUser(email);
+	user && (await pb.collection('users').update(user.id, { verified: true }));
 }
 
 export async function loginUser(user: User, page: Page): Promise<void> {
@@ -136,3 +148,26 @@ export async function createAndLoginUser(user: User, page: Page): Promise<void> 
 export async function getLastArticle(query: string): Promise<any> {
 	return await pb.collection('articles').getFirstListItem(query, { sort: '-created' });
 }
+
+export async function createArticle(
+	articleCompletion: MockArticleCompletion,
+	status: ArticleStatus,
+	user: string
+): Promise<BaseAuthStore['model']> {
+	return await pb.collection('articles').create({
+		headline: articleCompletion.headline,
+		category: articleCompletion.category,
+		body: JSON.stringify(articleCompletion.body),
+		prompt: articleCompletion.prompt,
+		status,
+		user
+	});
+}
+
+export const prepareToAcceptDialog = async (page: Page, message: RegExp) => {
+	page.on('dialog', (dialog) => {
+		expect(dialog.message()).toMatch(message);
+
+		dialog.accept();
+	});
+};

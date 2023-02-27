@@ -10,13 +10,12 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 	const category = ArticleCategory[params.slug.toUpperCase() as keyof typeof ArticleCategory];
 	if (!category) throw error(404, 'Not found');
 
-	const categoryName = category.split(' ')[1]; // ArticleCategory without emoji
 	let articlesCollection: BaseAuthStore['model'][] = [];
 
 	try {
 		articlesCollection = await locals.pb.collection('articles').getFullList(200, {
 			sort: '-updated',
-			filter: `category = "${categoryName}" && status = "${ArticleStatus.PUBLISHED}"`,
+			filter: `category = "${category}" && status = "${ArticleStatus.PUBLISHED}"`,
 			expand: 'user'
 		});
 	} catch (_) {

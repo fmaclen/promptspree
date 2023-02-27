@@ -5,7 +5,7 @@ import { Configuration, OpenAIApi } from 'openai';
 
 import { ArticleCategory } from './article';
 
-export interface ArticlePromptShape {
+export interface ArticleCompletion {
 	headline: string;
 	category: ArticleCategory;
 	body: string[];

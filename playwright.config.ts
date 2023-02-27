@@ -38,13 +38,23 @@ const isCI = process.env.NODE_ENV === 'CI';
 
 const config: PlaywrightTestConfig = {
 	globalSetup: './playwright.global-setup',
-	webServer: {
-		command: 'npm run build && npm run preview',
-		port: 4173
-	},
+	webServer: [
+		{
+			command: 'npm run build && npm run preview',
+			port: 4173
+		},
+		{
+			command: 'npm run setup:pocketbase:test && npm run backend:test',
+			port: 8091
+		}
+	],
 	testDir: 'tests',
 	timeout: isCI ? 30000 : 10000,
-	use: { trace: 'retain-on-failure', screenshot: 'only-on-failure' },
+	use: {
+		trace: 'retain-on-failure',
+		screenshot: 'only-on-failure',
+		baseURL: 'http://localhost:4173'
+	},
 	projects: [browserDevice()],
 	retries: isCI ? 3 : 0,
 	workers: 1
