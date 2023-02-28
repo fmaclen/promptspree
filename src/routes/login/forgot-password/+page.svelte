@@ -22,7 +22,7 @@
 
 		return async ({ result }) => {
 			if (result.type == 'failure') {
-				error = 'Something went wrong, please try again later';
+				error = result.data?.error || 'Something went wrong, please try again later';
 			} else {
 				success = true;
 			}
