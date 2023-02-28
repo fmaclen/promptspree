@@ -117,8 +117,38 @@ test.describe('Users', () => {
 		await expect(page.getByText('Alice')).not.toBeVisible();
 	});
 
-	test.skip('Can reset forgotten password', async ({ page }) => {
-		//
+	test('Can reset forgotten password', async ({ page }) => {
+		const loginButton = page.locator('button[type=submit]', { hasText: 'Login' });
+		const passwordResetButton = page.locator('button[type=submit]', {
+			hasText: 'Send password reset email'
+		});
+
+		await page.goto('/login');
+		await expect(loginButton).toBeVisible();
+		await expect(passwordResetButton).not.toBeVisible();
+
+		await page.getByText('Forgot your password?').click();
+		await expect(
+			page.getByText('Email has been sent. Reset the password and login here')
+		).not.toBeVisible();
+		await expect(loginButton).not.toBeVisible();
+		await expect(passwordResetButton).toBeVisible();
+		await expect(passwordResetButton).toBeDisabled();
+		await expect(page.getByLabel('E-mail')).not.toBeDisabled();
+
+		await page.getByLabel('E-mail').fill('mocked@example.com');
+		await expect(passwordResetButton).not.toBeDisabled();
+
+		await passwordResetButton.click();
+		await expect(
+			page.getByText('Email has been sent. Reset the password and login here')
+		).toBeVisible();
+		await expect(passwordResetButton).toBeDisabled();
+		await expect(page.getByLabel('E-mail')).toBeDisabled();
+
+		await page.getByText('login here').click();
+		await expect(loginButton).toBeVisible();
+		await expect(passwordResetButton).not.toBeVisible();
 	});
 
 	test.skip('Redirect away from /login or /join when user is logged in', async ({ page }) => {
