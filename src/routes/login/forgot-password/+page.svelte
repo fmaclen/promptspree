@@ -12,57 +12,60 @@
 	import Section from '$lib/components/Section.svelte';
 	import { Sentiment } from '$lib/utils';
 
-	let isLoading = false;
+	let success = false;
 	let email = '';
-	let password = '';
 	let error = '';
-	$: isSubmitDisabled = !email || !password || isLoading;
+	$: isSubmitDisabled = !email || success;
 
 	const handleSubmit: SubmitFunction = () => {
-		isLoading = true;
-		error = ''; // Clear existing error
+		error = '';
 
-		return async ({ result, update }) => {
+		return async ({ result }) => {
 			if (result.type == 'failure') {
-				error = "Can't login, check your credentials";
-				password = ''; // Reset password
+				error = result.data?.error || 'Something went wrong, please try again later';
+			} else {
+				success = true;
 			}
-
-			isLoading = false;
-			await update();
 		};
 	};
 </script>
 
-<Head title={['Login']} />
+<Head title={['Forgot your password?']} />
 
 <Notice>Don't have an account? <A href="/join" isHighlighted={true}>Join to play</A></Notice>
 <HR />
 
-<Section isVerticallyCentered={true} title="Login">
+<Section isVerticallyCentered={true} title="Forgot your password?">
+	{#if success}
+		<Notice sentiment={Sentiment.POSITIVE}>
+			Email has been sent. Reset the password and
+			<A href="/login" isHighlighted={true} sentiment={Sentiment.POSITIVE}>login here</A>
+		</Notice>
+	{:else if error}
+		<Notice sentiment={Sentiment.NEGATIVE}>
+			{error}
+		</Notice>
+	{:else}
+		<Notice>
+			Enter the email address you used to join and we'll send instructions to reset your password
+		</Notice>
+	{/if}
+
 	<Plate>
 		<form class="form" method="POST" use:enhance={handleSubmit}>
 			<FormFieldset>
-				{#if error}
-					<Notice sentiment={Sentiment.NEGATIVE}>{error}</Notice>
-				{/if}
-
 				<FormField label="E-mail">
 					<FormInput
 						type="email"
 						name="email"
 						placeholder="cosmic.damascus@example.com"
 						required={true}
+						disabled={success}
 						bind:value={email}
 					/>
 				</FormField>
 
-				<FormField label="Password">
-					<FormInput type="password" name="password" required={true} bind:value={password} />
-				</FormField>
-
-				<FormButton type="submit" label="Login" disabled={isSubmitDisabled} />
-				<A href="/login/forgot-password" isHighlighted={true}>Forgot your password?</A>
+				<FormButton type="submit" label="Send password reset email" disabled={isSubmitDisabled} />
 			</FormFieldset>
 		</form>
 	</Plate>
