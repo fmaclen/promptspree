@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 import { ArticleStatus } from '../src/lib/article.js';
 import { MOCK_ARTICLES, MockPrompt } from '../src/lib/tests.js';
 import { MOCK_USERS } from './lib/fixtures.js';
-import { createUser, getLastArticle, loginUser, resetDatabase, verifyUser } from './lib/helpers.js';
+import { createUser, getLastArticle, loginUser, logoutCurrentUser, resetDatabase, verifyUser } from './lib/helpers.js';
 
 test.describe('Play', () => {
 	test.beforeAll(async () => {
@@ -18,8 +18,7 @@ test.describe('Play', () => {
 	});
 
 	test("Can't play, user is not logged in", async ({ page }) => {
-		await page.click('button[aria-label="Toggle navigation"]');
-		await page.getByText('Logout').click();
+		await logoutCurrentUser(page);
 		await page.locator('a.primary-action', { hasText: 'Play' }).click();
 		await expect(page.getByText('Already have an account? Login')).toBeVisible();
 		await expect(page.getByText('Enter a prompt below to generate an article')).not.toBeVisible();
