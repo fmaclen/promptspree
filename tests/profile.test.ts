@@ -35,7 +35,7 @@ async function seedTest() {
 }
 
 test.describe('Profile', () => {
-	test.beforeAll(async () => {
+	test.beforeEach(async () => {
 		await resetDatabase();
 		await seedTest();
 	});
@@ -103,33 +103,25 @@ test.describe('Profile', () => {
 
 		test('Can delete published or draft articles', async ({ page }) => {
 			const deleteButton = page.locator('button[type=submit]', { hasText: 'Delete' });
-			await expect(page.locator('li.profile-summary__li', { hasText: 'Published 2' })).toBeVisible(); // prettier-ignore
-			await expect(page.locator('li.profile-summary__li', { hasText: 'Drafts 0' })).toBeVisible(); // prettier-ignore
-			
-			// Delete published article and re-create it as a draft
-			await page.getByText(MOCK_ARTICLES[0].headline).click();
-			await expect(page.getByText(MOCK_ARTICLES[0].prompt)).toBeVisible();
-
-			await prepareToAcceptDialog(page, /Are you sure you want to delete the article?/);
-			await deleteButton.click();
-			await expect(page.locator('li.profile-summary__li', { hasText: 'Published 1' })).toBeVisible(); // prettier-ignore
-			await expect(page.locator('li.profile-summary__li', { hasText: 'Drafts 0' })).toBeVisible(); // prettier-ignore
-			
-			const user = await getUser(MOCK_USERS.alice.email);
-			user && await createArticle(MOCK_ARTICLES[0], ArticleStatus.DRAFT, user.id);
-			await page.reload();
-			await expect(page.locator('li.profile-summary__li', { hasText: 'Published 1' })).toBeVisible(); // prettier-ignore
+			await expect(page.locator('a.profile-summary__a--active', { hasText: 'Published 1' })).toBeVisible(); // prettier-ignore
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Drafts 1' })).toBeVisible(); // prettier-ignore
 
 			await page.getByText('Drafts 1').click();
+			await expect(page.locator('a.profile-summary__a--active', { hasText: 'Drafts 1' })).toBeVisible(); // prettier-ignore
+			await expect(page.getByText(MOCK_ARTICLES[0].headline)).toBeVisible();
+
+			await prepareToAcceptDialog(page, /Are you sure you want to delete the article?/);
 			await deleteButton.click();
-			await expect(page.locator('li.profile-summary__li', { hasText: 'Published 1' })).toBeVisible(); // prettier-ignore
+			await expect(page.getByText(MOCK_ARTICLES[0].headline)).not.toBeVisible();
+			await expect(page.locator('a.profile-summary__a--active', { hasText: 'Published 1' })).toBeVisible(); // prettier-ignore
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Drafts 0' })).toBeVisible(); // prettier-ignore
+			await expect(page.getByText(MOCK_ARTICLES[1].headline)).toBeVisible();
 
 			await deleteButton.click();
+			await expect(page.getByText("No published articles, generate one")).toBeVisible();
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Published 0' })).toBeVisible(); // prettier-ignore
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Drafts 0' })).toBeVisible(); // prettier-ignore
-			await expect(page.getByText("No published articles, generate one")).toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLES[1].headline)).not.toBeVisible();
 		});
 	});
 
