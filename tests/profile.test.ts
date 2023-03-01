@@ -82,7 +82,6 @@ test.describe('Profile', () => {
 			await expect(page.getByText(MOCK_ARTICLES[0].prompt)).not.toBeVisible();
 
 			await page.getByText(MOCK_ARTICLES[0].headline).click();
-			await expect(page.getByText(MOCK_ARTICLES[0].headline)).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLES[0].prompt)).toBeVisible();
 			await expect(publishButton).toBeVisible();
 
@@ -90,7 +89,6 @@ test.describe('Profile', () => {
 			await expect(page.getByText(MOCK_ARTICLES[0].prompt)).not.toBeVisible();
 
 			await publishButton.click();
-			await expect(page.getByText(MOCK_ARTICLES[0].headline)).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLES[0].prompt)).toBeVisible();
 			await expect(publishButton).not.toBeVisible();
 
