@@ -7,7 +7,7 @@ import {
 	createArticle,
 	createUser,
 	getUser,
-	goToHomepage,
+	goToHomepageViaLogo,
 	loginUser,
 	logoutCurrentUser,
 	resetDatabase,
@@ -53,7 +53,7 @@ test.describe('Reactions', () => {
 		await page.getByText('🤯').click();
 		await expect(page.locator(reactionSummary, { hasText: '🤯 1' })).toBeVisible();
 
-		await goToHomepage(page);
+		await goToHomepageViaLogo(page);
 		await expect(page.getByText(MOCK_ARTICLES[1].body[2])).not.toBeVisible();
 		await expect(page.locator(reactionSummary, { hasText: '🤯 1' })).toBeVisible();
 
@@ -69,7 +69,7 @@ test.describe('Reactions', () => {
 		await page.getByText('🤔').click();
 		await expect(page.locator(reactionSummary, { hasText: '🤯 2' })).toBeVisible();
 
-		await goToHomepage(page);
+		await goToHomepageViaLogo(page);
 		await expect(page.getByText(MOCK_ARTICLES[1].body[2])).not.toBeVisible();
 		await expect(page.locator(reactionSummary, { hasText: '🤯 2' })).toBeVisible();
 	});
@@ -79,7 +79,7 @@ test.describe('Reactions', () => {
 		await page.locator('span.metadata__author', { hasText: MOCK_USERS.alice.nickname }).click();
 		await expect(page.locator('li.profile-summary__li', { hasText: 'Prompt score 2' })).toBeVisible(); // prettier-ignore
 
-		await goToHomepage(page);
+		await goToHomepageViaLogo(page);
 		await page.locator('span.metadata__author', { hasText: MOCK_USERS.bob.nickname }).click();
 		await expect(page.locator('li.profile-summary__li', { hasText: 'Prompt score 0' })).toBeVisible(); // prettier-ignore
 	});

@@ -122,12 +122,10 @@ test.describe('Profile', () => {
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Drafts 1' })).toBeVisible(); // prettier-ignore
 
 			await page.getByText('Drafts 1').click();
-			// await prepareToAcceptDialog(page, /Are you sure you want to delete the article?/);
 			await deleteButton.click();
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Published 1' })).toBeVisible(); // prettier-ignore
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Drafts 0' })).toBeVisible(); // prettier-ignore
 
-			// await prepareToAcceptDialog(page, /Are you sure you want to delete the article?/);
 			await deleteButton.click();
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Published 0' })).toBeVisible(); // prettier-ignore
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Drafts 0' })).toBeVisible(); // prettier-ignore

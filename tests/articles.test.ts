@@ -10,8 +10,9 @@ import {
 	expectToBeInHomepage,
 	getLastArticle,
 	getUser,
-	goToHomepage,
+	goToHomepageViaLogo,
 	loginUser,
+	logoutCurrentUser,
 	prepareToAcceptDialog,
 	resetDatabase,
 	updateArticle,
@@ -62,6 +63,10 @@ test.describe('Articles', () => {
 			await loginUser(MOCK_USERS.alice, page);
 		});
 
+		test.afterEach(async ({ page }) => {
+			await logoutCurrentUser(page);
+		});
+
 		test('Can browse article summaries', async ({ page }) => {
 			// Article by Alice
 			await expect(page.getByText(MOCK_USERS.alice.nickname)).toBeVisible();
@@ -79,9 +84,7 @@ test.describe('Articles', () => {
 
 			// Category page
 			await page.locator('a.categories__a', { hasText: MOCK_ARTICLES[1].category }).click();
-			await expect(
-				page.locator(`a.categories__a--${MOCK_ARTICLES[1].category.toLowerCase()}`)
-			).toHaveClass(/categories__a--active/);
+			await expect(page.locator(`a.categories__a--${MOCK_ARTICLES[1].category.toLowerCase()}`)).toHaveClass(/categories__a--active/); // prettier-ignore
 			await expect(page.locator('h3.article__category', { hasText: MOCK_ARTICLES[1].category })).toBeVisible(); // prettier-ignore
 			await expect(page.getByText(MOCK_USERS.alice.nickname)).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLES[1].headline)).toBeVisible();
@@ -92,15 +95,13 @@ test.describe('Articles', () => {
 
 		test('Can see published articles', async ({ page }) => {
 			await expect(page.getByText(MOCK_ARTICLES[1].body[0])).toBeVisible(); // Summary
-			await expect(page.getByText(MOCK_ARTICLES[1].body[2])).not.toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLES[1].body[1])).not.toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLES[3].body[0])).toBeVisible(); // Summary
-			await expect(page.getByText(MOCK_ARTICLES[3].body[2])).not.toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLES[3].body[1])).not.toBeVisible();
 
 			// Published article by Alice
 			await page.getByText(MOCK_ARTICLES[1].headline).click();
-			await expect(
-				page.locator('h1.article__headline', { hasText: MOCK_ARTICLES[3].headline })
-			).toBeVisible();
+			await expect(page.locator('h1.article__headline', { hasText: MOCK_ARTICLES[1].headline })).toBeVisible(); // prettier-ignore
 			await expect(page.getByText(MOCK_ARTICLES[1].body[0])).toBeVisible(); // Summary
 			await expect(page.getByText(MOCK_ARTICLES[1].body[1])).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLES[1].body[2])).toBeVisible();
@@ -110,11 +111,9 @@ test.describe('Articles', () => {
 			await expect(page.getByText('Publish')).not.toBeVisible();
 
 			// Published article by Bob
-			await goToHomepage(page);
+			await goToHomepageViaLogo(page);
 			await page.getByText(MOCK_ARTICLES[3].headline).click();
-			await expect(
-				page.locator('h1.article__headline', { hasText: MOCK_ARTICLES[3].headline })
-			).toBeVisible();
+			await expect(page.locator('h1.article__headline', { hasText: MOCK_ARTICLES[3].headline })).toBeVisible(); // prettier-ignore
 			await expect(page.getByText(MOCK_ARTICLES[3].body[0])).toBeVisible(); // Summary
 			await expect(page.getByText(MOCK_ARTICLES[3].body[1])).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLES[3].body[2])).toBeVisible();
@@ -176,7 +175,7 @@ test.describe('Articles', () => {
 			await page.getByText(MOCK_ARTICLES[3].headline).click();
 			await expect(page.locator('nav.article__audio', { hasText: 'Plus' })).not.toBeVisible();
 
-			await goToHomepage(page);
+			await goToHomepageViaLogo(page);
 			await page.getByText(MOCK_ARTICLES[1].headline).click();
 			await expect(page.locator('nav.article__audio', { hasText: 'Plus' })).toBeVisible();
 			expect(await page.locator('audio.article__player').getAttribute('src')).toMatch(
@@ -195,7 +194,7 @@ test.describe('Articles', () => {
 		await expect(page.getByText(MOCK_ARTICLES[3].body[2])).toBeVisible();
 		await expect(page.getByText('Delete')).not.toBeVisible();
 
-		await goToHomepage(page);
+		await goToHomepageViaLogo(page);
 		await expect(page.getByText(MOCK_ARTICLES[1].body[2])).not.toBeVisible();
 
 		await page.getByText(MOCK_ARTICLES[1].headline).click();
