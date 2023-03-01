@@ -44,7 +44,10 @@ test.describe('Profile', () => {
 		test.beforeEach(async ({ page }) => {
 			await loginUser(MOCK_USERS.alice, page);
 			await page.goto('/');
-			await page.locator('span.metadata__author', { hasText: MOCK_USERS.alice.nickname }).first().click();
+			await page
+				.locator('span.metadata__author', { hasText: MOCK_USERS.alice.nickname })
+				.first()
+				.click();
 			await expect(page.locator('h1.section__h1', { hasText: MOCK_USERS.alice.nickname })).toBeVisible(); // prettier-ignore
 		});
 
@@ -60,9 +63,7 @@ test.describe('Profile', () => {
 			await expect(page.getByText(MOCK_ARTICLES[0].headline)).not.toBeVisible();
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Drafts 1' })).toBeVisible(); // prettier-ignore
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Published 1' })).toBeVisible(); // prettier-ignore
-			await expect(
-				page.locator('li.profile-summary__li', { hasText: 'Articles 1' })
-			).not.toBeVisible();
+			await expect(page.locator('li.profile-summary__li', { hasText: 'Articles 1' })).not.toBeVisible(); // prettier-ignore
 
 			await page.getByText('Drafts 1').click();
 			await expect(page.getByText(MOCK_ARTICLES[0].headline)).toBeVisible();
@@ -98,7 +99,7 @@ test.describe('Profile', () => {
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Published 2' })).toBeVisible(); // prettier-ignore
 
 			await page.getByText('Drafts 0').click();
-			await expect(page.getByText("No draft articles, generate one")).toBeVisible();
+			await expect(page.getByText('No draft articles, generate one')).toBeVisible();
 		});
 
 		test('Can delete published or draft articles', async ({ page }) => {
@@ -118,7 +119,7 @@ test.describe('Profile', () => {
 			await expect(page.getByText(MOCK_ARTICLES[1].headline)).toBeVisible();
 
 			await deleteButton.click();
-			await expect(page.getByText("No published articles, generate one")).toBeVisible();
+			await expect(page.getByText('No published articles, generate one')).toBeVisible();
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Published 0' })).toBeVisible(); // prettier-ignore
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Drafts 0' })).toBeVisible(); // prettier-ignore
 			await expect(page.getByText(MOCK_ARTICLES[1].headline)).not.toBeVisible();

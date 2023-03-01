@@ -23,15 +23,10 @@ async function seedTest() {
 	}
 
 	let user = await getUser(MOCK_USERS.alice.email);
-	if (user) {
-		await createArticle(MOCK_ARTICLES[0], ArticleStatus.DRAFT, user.id);
-		await createArticle(MOCK_ARTICLES[1], ArticleStatus.PUBLISHED, user.id);
-	}
+	user && (await createArticle(MOCK_ARTICLES[1], ArticleStatus.PUBLISHED, user.id));
+
 	user = await getUser(MOCK_USERS.bob.email);
-	if (user) {
-		await createArticle(MOCK_ARTICLES[2], ArticleStatus.DRAFT, user.id);
-		await createArticle(MOCK_ARTICLES[3], ArticleStatus.PUBLISHED, user.id);
-	}
+	user && (await createArticle(MOCK_ARTICLES[3], ArticleStatus.PUBLISHED, user.id));
 }
 
 test.describe('Reactions', () => {
