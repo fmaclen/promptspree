@@ -28,7 +28,7 @@
 
 {#if data.articles.length === 0}
 	<Section isVerticallyCentered={true}>
-		<Notice>Service is currently unavailable, please try again later</Notice>
+		<Notice>Sorry, we can't show you the articles right now. Please try again later</Notice>
 	</Section>
 {:else}
 	<Section>
