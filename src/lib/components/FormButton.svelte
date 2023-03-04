@@ -30,7 +30,7 @@
 		width: 100%;
 		cursor: pointer;
 
-		border-radius: 2px;
+		border-radius: var(--border-radius);
 		/* border: 1px solid var(--color-accent); */
 		color: var(--color-white);
 		background-color: var(--color-accent);

@@ -37,7 +37,7 @@
 		justify-content: center;
 		width: 100%;
 		box-sizing: border-box;
-		border-radius: 2px;
+		border-radius: var(--border-radius);
 		height: max-content;
 	}
 

@@ -150,6 +150,8 @@
 		--text-shadow-white-50: 1px 1px 0 rgba(255, 255, 255, 0.5);
 		--text-shadow-white-100: 1px 1px 0 var(--color-white);
 
+		--border-radius: 8px;
+
 		height: 100%;
 		margin: 0;
 		font-family: var(--font-sans);
@@ -287,7 +289,7 @@
 		font-family: var(--font-base);
 		font-weight: 400;
 		padding: 8px;
-		border-radius: 2px;
+		border-radius: var(--border-radius);
 		cursor: pointer;
 		/* border: 1px solid rgba(255, 255, 255, 0.15); */
 
@@ -300,7 +302,7 @@
 		display: block;
 		width: 20px;
 		height: 1px;
-		border-radius: 2px;
+		border-radius: var(--border-radius);
 		background-color: rgba(255, 255, 255, 0.5);
 	}
 
@@ -315,7 +317,7 @@
 		font-size: 14px;
 		font-weight: 600;
 		padding: 8px 12px;
-		border-radius: 2px;
+		border-radius: var(--border-radius);
 		margin-left: auto;
 		/* border: 1px solid rgba(255, 255, 255, 0.15); */
 

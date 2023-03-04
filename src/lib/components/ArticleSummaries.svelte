@@ -45,8 +45,8 @@
 	}
 
 	div.article__body {
-		border-top-left-radius: 2px;
-		border-top-right-radius: 2px;
+		border-top-left-radius: var(--border-radius);
+		border-top-right-radius: var(--border-radius);
 		background-color: var(--color-white);
 		padding: 20px;
 		display: flex;

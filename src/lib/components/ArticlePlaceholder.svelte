@@ -70,7 +70,7 @@
 		background-color: hsl(0, 0%, 90%);
 		padding: 0;
 		transition: 500ms width;
-		border-radius: 2px;
+		border-radius: var(--border-radius);
 	}
 
 	div.article__category-placeholder {
