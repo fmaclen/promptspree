@@ -73,17 +73,18 @@ const MOCK_ARTICLE_WRONG_FORMAT = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function getCompletionFromMock({ user, prompt }: CompletionUserPrompt) {
-	switch (prompt) {
-		case MockPrompt.RETRY_ARTICLE:
-			return { status: 200, message: JSON.stringify(MOCK_ARTICLES[1]) };
-		case MockPrompt.WRONG_FORMAT:
-			return { status: 200, message: JSON.stringify(MOCK_ARTICLE_WRONG_FORMAT) };
-		case MockPrompt.THROW_ERROR_429:
-			return { status: 429, message: 'Too many requests' };
-		case MockPrompt.THROW_ERROR_500:
-			return { status: 500, message: 'Internal server error' };
-		default:
-			return { status: 200, message: JSON.stringify(MOCK_ARTICLES[0]) };
-	}
+export async function getCompletionFromMock({ userId, messages }: CompletionUserPrompt) {
+	// switch (prompt) {
+	// 	case MockPrompt.RETRY_ARTICLE:
+	// 		return { status: 200, message: JSON.stringify(MOCK_ARTICLES[1]) };
+	// 	case MockPrompt.WRONG_FORMAT:
+	// 		return { status: 200, message: JSON.stringify(MOCK_ARTICLE_WRONG_FORMAT) };
+	// 	case MockPrompt.THROW_ERROR_429:
+	// 		return { status: 429, message: 'Too many requests' };
+	// 	case MockPrompt.THROW_ERROR_500:
+	// 		return { status: 500, message: 'Internal server error' };
+	// 	default:
+	// 		return { status: 200, message: JSON.stringify(MOCK_ARTICLES[0]) };
+	// }
+	return { status: 200, message: "tu vieja" };
 }

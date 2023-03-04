@@ -48,7 +48,7 @@ export const generateArticle = async (
 		status: articleCollection.status,
 		category: articleCollection.category,
 		headline: articleCollection.headline,
-		body: JSON.parse(articleCollection.body),
+		body: articleCollection.body,
 		prompt: articleCollection.prompt,
 		audioSrc,
 		reactions
@@ -94,29 +94,6 @@ const getArticleReactions = async (
 	const byCurrentUser = currentUserReaction ? parseInt(currentUserReaction.reaction) : undefined;
 
 	return { total, byType, byCurrentUser };
-};
-
-// Parses the completion from OpenAI and checks the format of the fields is correct
-export const getFieldsFromCompletion = (completion: string | undefined) => {
-	if (!completion) return null;
-
-	// Check the AI completion had the correct fields
-	let fields: ArticleCompletion;
-	try {
-		fields = JSON.parse(completion);
-	} catch (err) {
-		logEventToSlack('/lib/article.server.ts: getFieldsFromCompletion', err);
-		return null;
-	}
-	if (!fields.headline || !fields.category || !fields.body) return null;
-
-	return {
-		headline: fields.headline,
-		// FIXME: Should check that the AI picked a valid `ArticleCategory` in `getCompletionFromAI`
-		category: fields.category,
-		// We store the paragraphs in the body as string arrays
-		body: JSON.stringify(fields.body)
-	};
 };
 
 export const deleteArticle = async (request: Request, locals: App.Locals) => {
