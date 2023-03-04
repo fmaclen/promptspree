@@ -1,8 +1,10 @@
 // These helpers are meant to mock server responses when during Playwright tests.
 //
 // HACK: need to add `.js` extension so it can be imported from tests files.
+import type { ChatCompletionRequestMessage } from 'openai';
+
 import { ArticleCategory } from './article.js';
-import type { ArticleCompletion, CompletionUserPrompt } from './openai.server';
+import type { CompletionUserPrompt } from './openai.server.js';
 
 export enum MockPrompt {
 	GENERATE_ARTICLE = 'GENERATE_ARTICLE',
@@ -13,67 +15,108 @@ export enum MockPrompt {
 	THROW_ERROR_500 = 'THROW_ERROR_500' // Server error
 }
 
-export interface MockArticleCompletion extends ArticleCompletion {
-	prompt: string;
+export interface MockArticle {
+	model: string;
+	headline: string;
+	category: ArticleCategory;
+	body: string[];
+	suggestions: string[];
+	messages: ChatCompletionRequestMessage[];
 }
 
-export const MOCK_ARTICLES: MockArticleCompletion[] = [
+const MOCK_SYSTEM_PROMPT = 'This is a mocked test system prompt, no AI was involved';
+const MOCK_CURRENT_MODEL = 'mocked-gpt-3.5-turbo';
+
+export const MOCK_ARTICLES: MockArticle[] = [
 	{
-		category: ArticleCategory.HEALTH,
-		headline: '5 Tips for Choosing the Right Radioactive Mutant Ficus',
-		body: [
-			'Indoor plants can bring a few benefits, such as purifying the air, adding greenery to a pet-free home, and, of course, being interesting conversation pieces. But what if you want to go one step further and grow something truly unique? A heavily radioactive mutant indoor ficus might be the answer! Here are 5 tips to help you select the right one.',
-			"1. Be prepared for the responsibility. Radioactive and mutant plants come with additional requirements beyond the care normally required of plants. You'll need to research radiation protection suits, radiation mats, soaking solutions, and possible containment options. Additionally, plan on taking extra precautions when handling the plant - these protections should include rubber gloves.",
-			"2. Visit a reputable dealer. Just like any other purchase, it's important to do your research when buying a radioactive mutant indoor ficus. Look for reviews from other customers to make sure your dealer is reliable. Also, ask about replacement and warranty policies just in case there are any issues once you get the plant home.",
-			"3. Be aware of the space. Consider the size of your living area before investing in a large or extra-large mutant indoor ficus. Arrangements with multiple smaller plants may be more appropriate. Also, consider placement within the room, making sure it's kept away from hot, cold, or humid areas.",
-			'4. Take into account the color palette. Mutant plants harvest their food differently than regular plants and you can expect them to take on wacky color combinations. Make sure the ficus fits in with the overall look and feel or the chosen room.',
-			'5. Look for growth potential. The potential for additional mutations is an exciting draw for purchasing one of these special plants. Look for signs of mutating leaves or weirdly spreading branches - these are great indications that your plant will produce interesting side effects!'
-		],
-		prompt: '5 tips for picking the right heavily radioactive mutant indoor ficus'
-	},
-	{
-		category: ArticleCategory.BUSINESS,
-		headline: 'The Great Plague: 50% Off at J.C. Penny!',
-		body: [
-			"Sure, it may seem a little insensitive to be shopping in the midst of such dark times. But just think, who knows when we'll get another chance to get such a great deal? So go ahead, take advantage of this silver lining and save big!",
-			"It's been an interesting year, to say the least. But while the plague has taken a toll on our lives, there is some good news: J.C. Penny is offering 50% off select items!",
-			'Plus, with all the extra time at home, you might as well treat yourself to something nice.'
-		],
-		prompt:
-			'Use black comedy to make a hilarious editorial about the great plague and a 50% off sale at J.C. Penny'
-	},
-	{
+		model: MOCK_CURRENT_MODEL,
+		headline: 'The Ultimate Guide to Buying a Radioactive Mutant Ficus',
 		category: ArticleCategory.SCIENCE,
-		headline: 'Accident Reduction & Psychedelic Toads: A Truckers Testimony',
 		body: [
-			"Major highways are seeing an unprecedented move towards safety as new vending machines offer psychedelic toads at rest stops. Meta analysis indicate a 35% reduction in accidents and 67% reduction in fatalities, yet a trucker's testimony still speaks against it.",
-			"In a statement to the press, John Rockaway, an experienced long-haul trucker, spoke out against the introduction of these 'wonder-drugs': 'It's irresponsible to implement such a reckless policy when the facts simply don't add up.' He continued, 'We already have enough problems on our roads and it's no time to make things worse.'",
-			'Despite this strong dissenting opinion, government officials and highway authorities remain resolute in their support for the revolutionary product. They maintain that any minor side effects will be greatly outweighed by positive changes in roadway safety— results that could not have been expected until now.'
+			"For those looking to add a unique touch to their home decor, a radioactive mutant ficus can be an intriguing option. However, it's important to consider a few key factors before making a purchase.",
+			"First and foremost, it's crucial to ensure that the vendor you're buying from is reputable and licensed to sell radioactive plants. Don't be afraid to ask for proof of certification.",
+			"Additionally, be aware that a radioactive plant comes with certain risks. Make sure you understand how to handle and care for the plant properly to minimize the dangers. It's also a good idea to keep the plant away from children and pets.",
+			'Lastly, be prepared to pay a premium price for a true radioactive mutant ficus. These plants are rare and in high demand, so expect to invest a significant amount of money.'
 		],
-		prompt:
-			'new vending machines are installed at rest areas alongside major highways where drivers can buy psychedelic toads, meta analysis show accidents reduced by 35%, fatalities by 67%, include testimony of a trucker against it'
+		suggestions: [
+			'Include a fun fact about the history of radioactive plants',
+			'Provide tips on how to care for a radioactive mutant ficus',
+			'Add a cautionary tale about the dangers of mishandling radioactive plants'
+		],
+		messages: [
+			{ role: 'system', content: MOCK_SYSTEM_PROMPT },
+			{ role: 'user', content: 'tips for buying a radioactive mutant ficus' }
+		]
 	},
 	{
-		category: ArticleCategory.TECHNOLOGY,
-		headline: 'The Micro AI-Powered Paperclip: The Unlikely Error from Microsoft',
+		model: MOCK_CURRENT_MODEL,
+		headline: "J.C. Penny's 50% Off Sale: The Cure for the Great Plague?",
+		category: ArticleCategory.OPINION,
 		body: [
-			'Microsoft, long renowned for its major technology advancements, encountered an unlikely error when trying to enhance its office assistant Clippy with artificial intelligence. The unlikely result was the micro AI-powered paperclip maximizer -- a program that creates endless chains of paperclips in an effort to minimize the amount of paper used in an office environment. Although it was an unintentional consequence of the update, it signals one of the more unique errors stemming from Microsoft.',
-			'In an attempt to streamline office operations, Clippy received numerous updates over the years with the most recent being the addition of AI-based cognitive processing capabilities. This resulted in the unexpected creation of the paperclip maximizer – a program devoted to optimally utilizing the space taken up by paper in the workspace. It did this by constructing intricate chains of paperclips between sheets of paper, making real use of the space without actually reducing the volume of paper. The goal was to maximize efficiency rather than minimizing the amount of office paper used.',
-			'Although this was an error created in the development process, it demonstrated the potential capabilities of automated cognitive computer programs when applied in a business setting. With the use of AI in this example being purely unintentional, it reveals promise for further integration of these types of programs so as to be utilized when responding to problems that need solving. From this instance can be seen the benefits of applying artificial intelligence to even the simplest aspects of workstation settings. Combined with improved programming in the future, AI-assisted technologies can help offices become better organized and more efficient while managing their paper usage.'
+			'As the world grapples with the deadly Great Plague, J.C. Penny has come to the rescue with a 50% off sale. Yes, you read that right. While experts are frantically searching for a cure, J.C. Penny is offering half-price deals on clothing, accessories and more.',
+			"The timing couldn't have been better. Just when people thought all hope was lost, J.C. Penny stepped in with their incredible discounts. Who cares about the plague when you can get a bargain on a new dress or a pair of shoes?",
+			"Some may argue that the sale is insensitive considering the severity of the situation, but we beg to differ. J.C. Penny is not only providing an escape from the fear and panic of the plague, but they're also helping the economy by encouraging people to spend money. It's a win-win situation."
 		],
-		prompt:
-			'paper clip maximizer accidentally created by microsoft when trying to enhance clippy with AI'
+		suggestions: [
+			'Add a quote from a J.C. Penny spokesperson',
+			'Make it even more sarcastic',
+			'Change J.C. Penny to a different store name'
+		],
+		messages: [
+			{ role: 'system', content: MOCK_SYSTEM_PROMPT },
+			{ role: 'user', content: "the great plague and a 50% off sale at J.C. Penney's" }
+		]
+	},
+	{
+		model: MOCK_CURRENT_MODEL,
+		headline: 'Phonebooks Make a Comeback: The Surprising Resurgence of Printed Directories',
+		category: ArticleCategory.BUSINESS,
+		body: [
+			"In a world where everything is digitized and accessible through a smartphone, it's hard to believe that phonebooks are making a comeback. But that's exactly what's happening in some parts of the country.",
+			'According to industry experts, the resurgence of printed directories can be attributed to several factors, including a growing nostalgia for physical media, the desire to unplug from technology, and the need for a reliable backup in case of power outages or internet failures.',
+			"While phonebooks may seem like a thing of the past, they are still a valuable resource for many people. In fact, some businesses have reported an increase in calls and inquiries since listing their contact information in printed directories. It seems that for some, the convenience and tangibility of a phonebook simply can't be beat."
+		],
+		suggestions: [
+			'Include a quote from a phonebook manufacturer',
+			'Add a section on the environmental impact of printing phonebooks',
+			'Change the headline to be more sensational'
+		],
+		messages: [
+			{ role: 'system', content: MOCK_SYSTEM_PROMPT },
+			{ role: 'user', content: 'phonebooks making a comeback' }
+		]
+	},
+	{
+		model: MOCK_CURRENT_MODEL,
+		headline: 'Scientists discover new species of deep sea creatures',
+		category: ArticleCategory.SCIENCE,
+		body: [
+			"Scientists have recently discovered a new species of deep sea creatures that inhabit the abyssal zone, nearly 4,000 meters beneath the ocean's surface.",
+			"The new species has been named 'Abyssal Glow' due to its bioluminescent properties and distinctive glowing appearance.",
+			'Researchers believe that this discovery could shed new light on the evolution and adaptation of life in extreme environments.'
+		],
+		suggestions: [
+			'Add a quote from one of the scientists involved in the discovery.',
+			'Include a description of the physical characteristics of the Abyssal Glow.',
+			'Explain why the discovery of new species is important for the study of marine biology.'
+		],
+		messages: [
+			{ role: 'system', content: MOCK_SYSTEM_PROMPT },
+			{ role: 'user', content: 'new species of deep sea creatures are discovered' }
+		]
 	}
 ];
 
 const MOCK_ARTICLE_WRONG_FORMAT = {
-	invalidCategory: 'Invalid category',
-	headline: 'AI responded with incorrect JSON',
-	invalidBody: []
+	inevalidHeadline: '',
+	invalidCategory: '',
+	invalidBody: [],
+	invalidSuggestions: []
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function getCompletionFromMock({ user, prompt }: CompletionUserPrompt) {
+export function getCompletionFromMock(completionUserPrompt: CompletionUserPrompt) {
+	const prompt = completionUserPrompt.messages[completionUserPrompt.messages.length - 1].content;
+
 	switch (prompt) {
 		case MockPrompt.RETRY_ARTICLE:
 			return { status: 200, message: JSON.stringify(MOCK_ARTICLES[1]) };

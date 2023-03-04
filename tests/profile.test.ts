@@ -59,7 +59,7 @@ test.describe('Profile', () => {
 			await expect(page.getByText(MOCK_ARTICLES[1].headline)).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLES[1].body[0])).toBeVisible(); // Summary
 			await expect(page.getByText(MOCK_ARTICLES[1].body[1])).not.toBeVisible();
-			await expect(page.getByText(MOCK_ARTICLES[1].prompt)).not.toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLES[1].messages[1].content)).not.toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLES[0].headline)).not.toBeVisible();
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Drafts 1' })).toBeVisible(); // prettier-ignore
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Published 1' })).toBeVisible(); // prettier-ignore
@@ -69,7 +69,7 @@ test.describe('Profile', () => {
 			await expect(page.getByText(MOCK_ARTICLES[0].headline)).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLES[0].body[0])).toBeVisible(); // Summary
 			await expect(page.getByText(MOCK_ARTICLES[0].body[1])).not.toBeVisible();
-			await expect(page.getByText(MOCK_ARTICLES[0].prompt)).not.toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLES[0].messages[1].content)).not.toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLES[1].headline)).not.toBeVisible();
 		});
 
@@ -79,17 +79,17 @@ test.describe('Profile', () => {
 
 			await page.getByText('Drafts 1').click();
 			await expect(publishButton).toBeVisible();
-			await expect(page.getByText(MOCK_ARTICLES[0].prompt)).not.toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLES[0].messages[1].content)).not.toBeVisible();
 
 			await page.getByText(MOCK_ARTICLES[0].headline).click();
-			await expect(page.getByText(MOCK_ARTICLES[0].prompt)).toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLES[0].messages[1].content)).toBeVisible();
 			await expect(publishButton).toBeVisible();
 
 			await page.goBack();
-			await expect(page.getByText(MOCK_ARTICLES[0].prompt)).not.toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLES[0].messages[1].content)).not.toBeVisible();
 
 			await publishButton.click();
-			await expect(page.getByText(MOCK_ARTICLES[0].prompt)).toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLES[0].messages[1].content)).toBeVisible();
 			await expect(publishButton).not.toBeVisible();
 
 			await page.locator('span.metadata__author', { hasText: MOCK_USERS.alice.nickname }).click();

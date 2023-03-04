@@ -1,3 +1,5 @@
+import type { ChatCompletionRequestMessage } from 'openai';
+
 export interface ArticleReactions {
 	total: number;
 	byType: ArticleReactionByType[];
@@ -23,8 +25,9 @@ export interface Article {
 	category: ArticleCategory;
 	headline: string;
 	body: string[];
-	prompt: string;
+	messages: ChatCompletionRequestMessage[];
 	reactions: ArticleReactions;
+	model: string;
 	audioSrc?: string;
 }
 

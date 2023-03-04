@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { readFileSync } from 'fs';
 
-import { ArticleStatus } from '../src/lib/article.js';
+import { type Article, ArticleStatus } from '../src/lib/article.js';
 import { MOCK_ARTICLES } from '../src/lib/tests.js';
 import { MOCK_USERS } from './lib/fixtures.js';
 import {
@@ -105,7 +105,7 @@ test.describe('Articles', () => {
 			await expect(page.getByText(MOCK_ARTICLES[1].body[0])).toBeVisible(); // Summary
 			await expect(page.getByText(MOCK_ARTICLES[1].body[1])).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLES[1].body[2])).toBeVisible();
-			await expect(page.getByText(MOCK_ARTICLES[1].prompt)).toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLES[1].messages[1].content)).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLES[3].headline)).not.toBeVisible();
 			await expect(page.getByText('Delete')).toBeVisible();
 			await expect(page.getByText('Publish')).not.toBeVisible();
@@ -117,7 +117,7 @@ test.describe('Articles', () => {
 			await expect(page.getByText(MOCK_ARTICLES[3].body[0])).toBeVisible(); // Summary
 			await expect(page.getByText(MOCK_ARTICLES[3].body[1])).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLES[3].body[2])).toBeVisible();
-			await expect(page.getByText(MOCK_ARTICLES[3].prompt)).toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLES[3].messages[1].content)).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLES[1].headline)).not.toBeVisible();
 			await expect(page.getByText('Delete')).not.toBeVisible();
 			await expect(page.getByText('Publish')).not.toBeVisible();
@@ -134,7 +134,7 @@ test.describe('Articles', () => {
 
 			// Drafts by Alice
 			let user = await getUser(MOCK_USERS.alice.email);
-			let article = await getLastArticle(
+			let article: Article = await getLastArticle(
 				`status = "${ArticleStatus.DRAFT}" && user = "${user?.id}"`
 			);
 			expect(article.headline).toBe(MOCK_ARTICLES[0].headline);
@@ -164,7 +164,7 @@ test.describe('Articles', () => {
 			// NOTE:
 			// This test only checks that the player is visible when an audio path is present.
 
-			const article = await getLastArticle(`headline = "${MOCK_ARTICLES[1].headline}"`);
+			const article: Article = await getLastArticle(`headline = "${MOCK_ARTICLES[1].headline}"`);
 
 			const audioData = readFileSync('tests/lib/fixtures/the-great-plague.mp3');
 			const audioBlob = new Blob([audioData], { type: 'audio/mp3' });
