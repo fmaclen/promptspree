@@ -46,7 +46,8 @@
 				addSuffix: true
 			})}
 		</time>
-	</a>	<div class="metadata__actions">
+	</a>
+	<div class="metadata__actions">
 		{#if !isDraft}
 			<a class="article-reactions-summary" href="/article/{article.id}">
 				{#if article.reactions.total > 0}
