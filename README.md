@@ -4,4 +4,4 @@
 
 Still in the process of exploring the possibilities and capabilities of this AI application concept, is how ChatGPT put it.
 
-![image](https://user-images.githubusercontent.com/1434675/219438859-1315f46f-1bc6-47f2-9b53-4596c7217bd8.png)
+![image](https://user-images.githubusercontent.com/1434675/222926111-93ea4edd-6a3d-4f01-ae5f-3afaa329546b.png)
