@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-import { ArticleStatus } from '../src/lib/article.js';
+import { type Article, ArticleStatus } from '../src/lib/article.js';
 import { MOCK_ARTICLES, MockPrompt } from '../src/lib/tests.js';
 import { MOCK_USERS } from './lib/fixtures.js';
 import {
@@ -59,11 +59,11 @@ test.describe('Play', () => {
 			await expect(page.getByText(articleHeadline)).toBeVisible();
 			await expect(retryButton).toBeVisible();
 			await expect(generateButton).not.toBeVisible();
-			expect(await page.locator('p.article__p').count()).toBe(6);
+			expect(await page.locator('p.article__p').count()).toBe(4);
 			expect(await page.locator('ul.article__list-placeholder').count()).toBe(0);
 
-			let article = await getLastArticle(`headline = "${articleHeadline}"`);
-			expect(article.prompt).toBe(MockPrompt.GENERATE_ARTICLE);
+			let article: Article = await getLastArticle(`headline = "${articleHeadline}"`);
+			expect(article.messages[1].content).toBe(MockPrompt.GENERATE_ARTICLE);
 			expect(article.status).toBe(ArticleStatus.DRAFT);
 
 			prompt = MockPrompt.RETRY_ARTICLE;
@@ -79,7 +79,7 @@ test.describe('Play', () => {
 			expect(await page.locator('p.article__p').count()).toBe(3);
 
 			article = await getLastArticle(`headline = "${articleHeadline}"`);
-			expect(article.prompt).toBe(MockPrompt.RETRY_ARTICLE);
+			expect(article.messages[1].content).toBe(MockPrompt.RETRY_ARTICLE);
 			expect(article.status).toBe(ArticleStatus.DRAFT);
 		});
 
@@ -105,8 +105,8 @@ test.describe('Play', () => {
 			await expect(publishButton).not.toBeVisible();
 			await expect(page.getByText('Enter a prompt below to generate an article')).not.toBeVisible();
 
-			const article = await getLastArticle(`headline = "${articleHeadline}"`);
-			expect(article.prompt).toBe(MockPrompt.GENERATE_ARTICLE);
+			const article: Article = await getLastArticle(`headline = "${articleHeadline}"`);
+			expect(article.messages[1].content).toBe(MockPrompt.GENERATE_ARTICLE);
 			expect(article.status).toBe(ArticleStatus.PUBLISHED);
 		});
 
@@ -124,8 +124,8 @@ test.describe('Play', () => {
 				page.getByText('AI tried to generate the article but was in the wrong format')
 			).toBeVisible();
 
-			const article = await getLastArticle(`prompt = "${MockPrompt.WRONG_FORMAT}"`);
-			expect(article.prompt).toBe(MockPrompt.WRONG_FORMAT);
+			const article: Article = await getLastArticle(`messages ~ "${MockPrompt.WRONG_FORMAT}"`);
+			expect(article.messages[1].content).toBe(MockPrompt.WRONG_FORMAT);
 			expect(article.status).toBe(ArticleStatus.FAILED);
 
 			prompt = MockPrompt.TOO_SHORT;

@@ -49,7 +49,7 @@ export const generateArticle = async (
 		category: articleCollection.category,
 		headline: articleCollection.headline,
 		body: JSON.parse(articleCollection.body),
-		prompt: articleCollection.prompt,
+		messages: articleCollection.messages,
 		audioSrc,
 		reactions
 	};

@@ -65,31 +65,17 @@ export const actions: Actions = {
 		let retries = 0;
 
 		do {
-			///////////////////////////////
-			///////////////////////////////
-
 			// HACK: If we're in the test environment, mock the completion response.
 			// Couldn't figure out a better way to mock the response from Playwright.
 			completion = isTestEnvironment
-				? await getCompletionFromMock(completionUserPrompt)
+				? getCompletionFromMock(completionUserPrompt)
 				: await getCompletionFromAI(completionUserPrompt);
-				
-				// console.log("COMPLETION /////////////\n", completion)
-			///////////////////////////////
-			///////////////////////////////
-
-			// completion = { status: 200, message: "completion.data.choices[0].message?.content" }
 
 			fieldsFromCompletion = getFieldsFromCompletion(completion.message);
-			console.log("FEIDLDSFROMCOMPLETION /////////////\n", fieldsFromCompletion)
-
-			///////////////////////////////
-			///////////////////////////////
-
 			if (fieldsFromCompletion) break;
 
 			// Wait 2 seconds before retrying again
-			await new Promise((resolve) => setTimeout(resolve, 2000));
+			!isTestEnvironment && await new Promise((resolve) => setTimeout(resolve, 2000));
 			retries++;
 		} while (retries < 3 && completion.status !== 200);
 
@@ -144,9 +130,7 @@ function getFieldsFromCompletion(completion: string | undefined): ArticleComplet
 	const jsonString = completion.slice(startIndex, endIndex);
 	
 	try {
-		// console.log("JSONSTRING /////////////\n", completion)
 		fields = JSON.parse(jsonString);
-		// console.log("FIELDS /////////////\n", fields)
 	} catch (err) {
 		logEventToSlack('/lib/article.server.ts: getFieldsFromCompletion', err);
 	}

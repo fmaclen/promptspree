@@ -1,5 +1,5 @@
 import type { Article, ArticleStatus } from '$lib/article';
-import type { MockArticleCompletion } from '$lib/tests';
+import type { MockArticle } from '$lib/tests';
 import { type Page, expect } from '@playwright/test';
 import PocketBase, { BaseAuthStore } from 'pocketbase';
 
@@ -75,15 +75,14 @@ export async function getLastArticle(query: string): Promise<any> {
 }
 
 export async function createArticle(
-	articleCompletion: MockArticleCompletion,
+	mockArticle: MockArticle,
 	status: ArticleStatus,
 	user: string
 ): Promise<BaseAuthStore['model']> {
 	return await pb.collection('articles').create({
-		headline: articleCompletion.headline,
-		category: articleCompletion.category,
-		body: JSON.stringify(articleCompletion.body),
-		prompt: articleCompletion.prompt,
+		...mockArticle,
+		body: JSON.stringify(mockArticle.body),
+		messages: JSON.stringify(mockArticle.messages),
 		status,
 		user
 	});

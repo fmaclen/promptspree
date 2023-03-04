@@ -59,7 +59,7 @@
 
 		<div class="article-prompt">
 			<code class="article-prompt__code">
-				{article.prompt}
+				{article.messages[1].content}
 			</code>
 		</div>
 
