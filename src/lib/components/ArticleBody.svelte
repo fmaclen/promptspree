@@ -83,7 +83,7 @@
 		line-height: 1em;
 		padding: 8px;
 		border-radius: 2px;
-		border: 1px solid var(--color-accent);
+		/* border: 1px solid var(--color-accent); */
 		cursor: help;
 		margin-left: 16px;
 	}

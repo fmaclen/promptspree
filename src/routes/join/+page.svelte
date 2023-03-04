@@ -168,7 +168,7 @@
 		column-gap: 12px;
 		font-size: 14px;
 		padding: 12px;
-		border: 1px solid hsl(0, 0%, 85%);
+		/* border: 1px solid hsl(0, 0%, 85%); */
 		box-shadow: inset 1px 1px 0 hsl(0, 0%, 97%);
 		border-radius: 2px;
 	}

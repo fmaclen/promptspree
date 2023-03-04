@@ -74,7 +74,7 @@
 		color: inherit;
 		text-shadow: var(--text-shadow-white-100);
 		background-color: var(--color-white);
-		border: 1px solid var(--color-white);
+		/* border: 1px solid var(--color-white); */
 
 		&--active,
 		&:hover {

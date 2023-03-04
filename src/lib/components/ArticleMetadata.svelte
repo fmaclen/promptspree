@@ -158,10 +158,10 @@
 		font-weight: 400;
 		color: hsl(0, 0%, 50%);
 		padding: 10px;
-		border: 1px solid hsl(0, 0%, 85%);
+		/* border: 1px solid hsl(0, 0%, 85%); */
 
 		&:hover {
-			border: 1px solid hsl(0, 0%, 70%);
+			/* border: 1px solid hsl(0, 0%, 70%); */
 		}
 	}
 

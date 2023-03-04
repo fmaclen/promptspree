@@ -289,7 +289,7 @@
 		padding: 8px;
 		border-radius: 2px;
 		cursor: pointer;
-		border: 1px solid rgba(255, 255, 255, 0.15);
+		/* border: 1px solid rgba(255, 255, 255, 0.15); */
 
 		&:hover {
 			border-color: rgba(255, 255, 255, 0.5);
@@ -317,7 +317,7 @@
 		padding: 8px 12px;
 		border-radius: 2px;
 		margin-left: auto;
-		border: 1px solid rgba(255, 255, 255, 0.15);
+		/* border: 1px solid rgba(255, 255, 255, 0.15); */
 
 		&--active {
 			background-color: var(--color-accent-secondary);
