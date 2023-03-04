@@ -77,7 +77,7 @@ export const actions: Actions = {
 
 			// Wait 2 seconds before retrying again
 			// But in the test environment don't wait otherwise the test will timeout
-			await new Promise((resolve) => setTimeout(resolve, 2000));
+			if (!isTestEnvironment) await new Promise((resolve) => setTimeout(resolve, 2000));
 			retries++;
 
 			// Only retry when completion returns a 200 status but the completion is invalid
