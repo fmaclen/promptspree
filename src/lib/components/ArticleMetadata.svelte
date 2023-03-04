@@ -102,8 +102,12 @@
 		grid-template-columns: auto max-content;
 		row-gap: 32px;
 		align-items: center;
-		border-top: 1px solid hsl(0, 0%, 85%);
+		border-top: 1px solid hsl(0deg, 0%, 90%);
+		/* border-top: 1px solid hsl(0, 0%, 85%); */
 		/* box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.5); */
+		border-bottom-left-radius: var(--border-radius-l);
+		border-bottom-right-radius: var(--border-radius-l);
+		background-color: var(--color-white);
 	}
 
 	span.metadata__author {

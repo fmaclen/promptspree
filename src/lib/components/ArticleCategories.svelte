@@ -69,7 +69,7 @@
 		font-size: 13px;
 		font-weight: 600;
 		box-sizing: border-box;
-		border-radius: var(--border-radius);
+		border-radius: var(--border-radius-l);
 		padding: 8px 16px;
 		color: inherit;
 		text-shadow: var(--text-shadow-white-100);

@@ -37,7 +37,7 @@
 		justify-content: center;
 		width: 100%;
 		box-sizing: border-box;
-		border-radius: var(--border-radius);
+		border-radius: var(--border-radius-l);
 		height: max-content;
 	}
 
@@ -53,7 +53,8 @@
 		position: relative;
 
 		color: var(--color-accent);
-		/* border: 1px solid hsl(0, 0%, 85%); */
+		border-radius: var(--border-radius-l);
+		border: 1px solid hsl(0, 0%, 85%);
 		/* box-shadow: 1px 1px 0 rgba(255, 255, 255, 0.35); */
 		background-color: rgba(255, 255, 255, 0.1);
 		text-shadow: var(--text-shadow-white-50);
