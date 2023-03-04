@@ -88,7 +88,7 @@
 		padding: 12px;
 		font-size: 13px;
 		color: hsl(0, 0%, 50%);
-		box-shadow: inset 1px 1px 0 var(--color-white);
+		/* box-shadow: inset 1px 1px 0 var(--color-white); */
 		text-shadow: var(--text-shadow-white-100);
 
 		display: flex;

@@ -34,7 +34,7 @@
 		/* border: 1px solid var(--color-accent); */
 		color: var(--color-white);
 		background-color: var(--color-accent);
-		box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.25);
+		/* box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.25); */
 
 		&:active {
 			transform: scale(0.98);

@@ -198,7 +198,7 @@
 		&:last-child {
 			padding-top: 12px;
 			padding-bottom: 12px;
-			box-shadow: 0 1px 0 rgba(255, 255, 255, 0.15), inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+			/* box-shadow: 0 1px 0 rgba(255, 255, 255, 0.15), inset 0 -1px 0 rgba(0, 0, 0, 0.25); */
 		}
 	}
 
@@ -268,7 +268,7 @@
 
 		background-color: var(--color-accent);
 		color: var(--color-white);
-		box-shadow: 0 1px 0 rgba(255, 255, 255, 0.15), inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+		/* box-shadow: 0 1px 0 rgba(255, 255, 255, 0.15), inset 0 -1px 0 rgba(0, 0, 0, 0.25); */
 	}
 
 	hgroup.header__hgroup {

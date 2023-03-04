@@ -103,7 +103,7 @@
 		row-gap: 32px;
 		align-items: center;
 		border-top: 1px solid hsl(0, 0%, 85%);
-		box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.5);
+		/* box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.5); */
 	}
 
 	span.metadata__author {
