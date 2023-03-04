@@ -2,11 +2,11 @@ import { ArticleCategory, ArticleStatus } from '$lib/article';
 import { generateArticle, publishArticle } from '$lib/article.server';
 import {
 	type ArticleCompletion,
+	CURRENT_MODEL,
 	type CompletionResponse,
 	type CompletionUserPrompt,
 	getCompletionFromAI,
-	getInitialChatCompletionRequest,
-	CURRENT_MODEL
+	getInitialChatCompletionRequest
 } from '$lib/openai.server';
 import { handlePocketbaseError } from '$lib/pocketbase.server';
 import { logEventToSlack } from '$lib/slack.server';
@@ -71,13 +71,17 @@ export const actions: Actions = {
 				? getCompletionFromMock(completionUserPrompt)
 				: await getCompletionFromAI(completionUserPrompt);
 
+			// Break out of the retry loop if we get a valid completion
 			fieldsFromCompletion = getFieldsFromCompletion(completion.message);
 			if (fieldsFromCompletion) break;
 
 			// Wait 2 seconds before retrying again
-			!isTestEnvironment && await new Promise((resolve) => setTimeout(resolve, 2000));
+			// But in the test environment don't wait otherwise the test will timeout
+			await new Promise((resolve) => setTimeout(resolve, 2000));
 			retries++;
-		} while (retries < 3 && completion.status !== 200);
+
+			// Only retry when completion returns a 200 status but the completion is invalid
+		} while (completion.status === 200 && retries < 3);
 
 		if (completion.status !== 200) {
 			return fail(completion.status, { error: completion.message });
@@ -103,7 +107,9 @@ export const actions: Actions = {
 		}
 
 		if (!fieldsFromCompletion)
-			return fail(400, { error: 'AI tried to generate the article but was in the wrong format' });
+			return fail(400, {
+				error: "Couldn't generate an article based on your last prompt, try modifiying it"
+			});
 
 		// Generate the article for frontend
 		const article = await generateArticle(articleCollection, locals);
@@ -125,20 +131,23 @@ function getFieldsFromCompletion(completion: string | undefined): ArticleComplet
 
 	let fields: ArticleCompletion | null = null;
 
+	// Sometimes AI will return a completion that has extra text so we can't parse
+	// the JSON directly. We need to find the start and end of the JSON object
+	// and then parse it.
 	const startIndex = completion.indexOf('{');
 	const endIndex = completion.lastIndexOf('}') + 1;
 	const jsonString = completion.slice(startIndex, endIndex);
-	
+
 	try {
 		fields = JSON.parse(jsonString);
 	} catch (err) {
 		logEventToSlack('/lib/article.server.ts: getFieldsFromCompletion', err);
 	}
-
+	
 	if (!fields) return null;
-
+	
+	// Validate the parse fields
 	const { headline, category, body, suggestions } = fields;
-
 	if (!headline || !isCategoryValid(category) || body.length < 1 || suggestions.length < 1)
 		return null;
 

@@ -1,4 +1,4 @@
-import type { ChatCompletionRequestMessage } from "openai";
+import type { ChatCompletionRequestMessage } from 'openai';
 
 export interface ArticleReactions {
 	total: number;
@@ -27,6 +27,7 @@ export interface Article {
 	body: string[];
 	messages: ChatCompletionRequestMessage[];
 	reactions: ArticleReactions;
+	model: string;
 	audioSrc?: string;
 }
 

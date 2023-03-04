@@ -64,7 +64,7 @@ export async function getCompletionFromAI({
 			model: CURRENT_MODEL,
 			user: userId, // e.g. `my6b0jgzuwrtuxg`
 			temperature: 0.75,
-			max_tokens: 1024,
+			max_tokens: 2048,
 			messages
 		});
 

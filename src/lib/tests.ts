@@ -20,8 +20,8 @@ export interface MockArticle {
 	headline: string;
 	category: ArticleCategory;
 	body: string[];
-	messages: ChatCompletionRequestMessage[];
 	suggestions: string[];
+	messages: ChatCompletionRequestMessage[];
 }
 
 const MOCK_SYSTEM_PROMPT = 'This is a mocked test system prompt, no AI was involved';
@@ -45,7 +45,7 @@ export const MOCK_ARTICLES: MockArticle[] = [
 		],
 		messages: [
 			{ role: 'system', content: MOCK_SYSTEM_PROMPT },
-			{ role: 'user', content: "tips for buying a radioactive mutant ficus" }
+			{ role: 'user', content: 'tips for buying a radioactive mutant ficus' }
 		]
 	},
 	{
@@ -83,7 +83,7 @@ export const MOCK_ARTICLES: MockArticle[] = [
 		],
 		messages: [
 			{ role: 'system', content: MOCK_SYSTEM_PROMPT },
-			{ role: 'user', content: "phonebooks making a comeback" }
+			{ role: 'user', content: 'phonebooks making a comeback' }
 		]
 	},
 	{
@@ -102,14 +102,14 @@ export const MOCK_ARTICLES: MockArticle[] = [
 		],
 		messages: [
 			{ role: 'system', content: MOCK_SYSTEM_PROMPT },
-			{ role: 'user', content: "new species of deep sea creatures are discovered" }
+			{ role: 'user', content: 'new species of deep sea creatures are discovered' }
 		]
 	}
 ];
 
 const MOCK_ARTICLE_WRONG_FORMAT = {
-	inevalidHeadline: 'AI responded with incorrect JSON',
-	invalidCategory: 'Invalid category',
+	inevalidHeadline: '',
+	invalidCategory: '',
 	invalidBody: [],
 	invalidSuggestions: []
 };

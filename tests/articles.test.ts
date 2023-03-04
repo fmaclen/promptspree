@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { readFileSync } from 'fs';
 
-import { ArticleStatus, type Article } from '../src/lib/article.js';
+import { type Article, ArticleStatus } from '../src/lib/article.js';
 import { MOCK_ARTICLES } from '../src/lib/tests.js';
 import { MOCK_USERS } from './lib/fixtures.js';
 import {
