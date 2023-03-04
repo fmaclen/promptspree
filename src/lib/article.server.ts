@@ -48,7 +48,7 @@ export const generateArticle = async (
 		status: articleCollection.status,
 		category: articleCollection.category,
 		headline: articleCollection.headline,
-		body: articleCollection.body,
+		body: JSON.parse(articleCollection.body),
 		prompt: articleCollection.prompt,
 		audioSrc,
 		reactions

@@ -74,7 +74,7 @@ export const actions: Actions = {
 				? await getCompletionFromMock(completionUserPrompt)
 				: await getCompletionFromAI(completionUserPrompt);
 				
-				console.log("COMPLETION /////////////\n", completion)
+				// console.log("COMPLETION /////////////\n", completion)
 			///////////////////////////////
 			///////////////////////////////
 
@@ -103,6 +103,7 @@ export const actions: Actions = {
 				articleCollection.id,
 				{
 					...fieldsFromCompletion,
+					body: JSON.stringify(fieldsFromCompletion?.body),
 					messages: JSON.stringify(initialMessages),
 					user: locals.user.id,
 					status: fieldsFromCompletion ? ArticleStatus.DRAFT : ArticleStatus.FAILED,
@@ -143,9 +144,9 @@ function getFieldsFromCompletion(completion: string | undefined): ArticleComplet
 	const jsonString = completion.slice(startIndex, endIndex);
 	
 	try {
-		console.log("JSONSTRING /////////////\n", completion)
+		// console.log("JSONSTRING /////////////\n", completion)
 		fields = JSON.parse(jsonString);
-		console.log("FIELDS /////////////\n", fields)
+		// console.log("FIELDS /////////////\n", fields)
 	} catch (err) {
 		logEventToSlack('/lib/article.server.ts: getFieldsFromCompletion', err);
 	}
