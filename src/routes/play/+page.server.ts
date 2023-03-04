@@ -143,9 +143,9 @@ function getFieldsFromCompletion(completion: string | undefined): ArticleComplet
 	} catch (err) {
 		logEventToSlack('/lib/article.server.ts: getFieldsFromCompletion', err);
 	}
-	
+
 	if (!fields) return null;
-	
+
 	// Validate the parse fields
 	const { headline, category, body, suggestions } = fields;
 	if (!headline || !isCategoryValid(category) || body.length < 1 || suggestions.length < 1)

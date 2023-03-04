@@ -14,20 +14,20 @@
 <div class="articles">
 	{#each articles as article}
 		<Plate>
-				<a class="article" href="/article/{article.id}">
-					<div class="article__body">
-						<ArticleCategory category={article.category}>
-							{article.category}
-						</ArticleCategory>
+			<a class="article" href="/article/{article.id}">
+				<div class="article__body">
+					<ArticleCategory category={article.category}>
+						{article.category}
+					</ArticleCategory>
 
-						<h1 class="article__headline">
-							{article.headline}
-						</h1>
-						<p class="article__p">{article.body[0]}</p>
-					</div>
-				</a>
-				
-				<ArticleMetadata {article} {isCurrentUserProfile} />
+					<h1 class="article__headline">
+						{article.headline}
+					</h1>
+					<p class="article__p">{article.body[0]}</p>
+				</div>
+			</a>
+
+			<ArticleMetadata {article} {isCurrentUserProfile} />
 		</Plate>
 	{/each}
 </div>
