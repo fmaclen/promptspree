@@ -1,6 +1,7 @@
 import { env } from '$env/dynamic/private';
 import { isTestEnvironment } from '$lib/utils';
 import { error, fail } from '@sveltejs/kit';
+import jsonminify from 'jsonminify';
 import { type BaseAuthStore, ClientResponseError } from 'pocketbase';
 
 export const pocketbaseUrl = isTestEnvironment ? env.TEST_POCKETBASE_URL : env.POCKETBASE_URL;
@@ -32,4 +33,10 @@ export const getAudioSrc = (article: BaseAuthStore['model']): string | undefined
 
 	const pocketbaseCdnUrl = isTestEnvironment ? env.TEST_POCKETBASE_CDN_URL : env.POCKETBASE_CDN_URL;
 	return `${pocketbaseCdnUrl}/${article.collectionId}/${article.id}/${article.audio}`;
+};
+
+// Converts object to string and minifies it
+export const miniStringify = (obj: object): string => {
+	const jsonString = JSON.stringify(obj);
+	return jsonminify(jsonString);
 };

@@ -20,6 +20,7 @@ export interface CompletionUserPrompt {
 export interface CompletionResponse {
 	status: number;
 	message?: string;
+	articleCompletion?: ArticleCompletion | null;
 }
 
 const configuration = new Configuration({ apiKey: env.OPENAI_API_KEY });
