@@ -47,10 +47,10 @@ test.describe('Articles', () => {
 	test('No articles to browse', async ({ page }) => {
 		await page.goto('/');
 		await expectToBeInHomepage(page);
-		await expect(page.getByText('Service is currently unavailable, please try again later')).toBeVisible(); // prettier-ignore
+		await expect(page.getByText('Sorry, we can\'t show you the articles right now. Please try again later')).toBeVisible(); // prettier-ignore
 
 		await page.getByText('Politics').click();
-		await expect(page.getByText('Service is currently unavailable, please try again later')).not.toBeVisible(); // prettier-ignore
+		await expect(page.getByText('Sorry, we can\'t show you the articles right now. Please try again later')).not.toBeVisible(); // prettier-ignore
 		await expect(page.getByText('There are no articles in the Politics category, try creating one')).toBeVisible(); // prettier-ignore
 	});
 

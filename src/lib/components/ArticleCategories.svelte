@@ -69,12 +69,12 @@
 		font-size: 13px;
 		font-weight: 600;
 		box-sizing: border-box;
-		border-radius: 2px;
+		border-radius: var(--border-radius-l);
 		padding: 8px 16px;
 		color: inherit;
 		text-shadow: var(--text-shadow-white-100);
 		background-color: var(--color-white);
-		border: 1px solid var(--color-white);
+		/* border: 1px solid var(--color-white); */
 
 		&--active,
 		&:hover {

@@ -8,7 +8,7 @@
 	export let isCurrentUserProfile: boolean = false;
 
 	// Sort articles by the total number of reactions
-	articles = articles.sort((a, b) => b.reactions.total - a.reactions.total);
+	// articles = articles.sort((a, b) => b.reactions.total - a.reactions.total);
 </script>
 
 <div class="articles">
@@ -45,10 +45,10 @@
 	}
 
 	div.article__body {
-		border-top-left-radius: 2px;
-		border-top-right-radius: 2px;
+		border-top-left-radius: var(--border-radius-l);
+		border-top-right-radius: var(--border-radius-l);
 		background-color: var(--color-white);
-		padding: 20px;
+		padding: 24px;
 		display: flex;
 		flex-direction: column;
 		row-gap: 8px;

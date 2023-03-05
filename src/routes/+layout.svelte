@@ -150,6 +150,10 @@
 		--text-shadow-white-50: 1px 1px 0 rgba(255, 255, 255, 0.5);
 		--text-shadow-white-100: 1px 1px 0 var(--color-white);
 
+		--border-radius-l: 8px;
+		--border-radius-m: 4px;
+		--border-radius-s: 2px;
+
 		height: 100%;
 		margin: 0;
 		font-family: var(--font-sans);
@@ -198,7 +202,7 @@
 		&:last-child {
 			padding-top: 12px;
 			padding-bottom: 12px;
-			box-shadow: 0 1px 0 rgba(255, 255, 255, 0.15), inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+			/* box-shadow: 0 1px 0 rgba(255, 255, 255, 0.15), inset 0 -1px 0 rgba(0, 0, 0, 0.25); */
 		}
 	}
 
@@ -268,7 +272,7 @@
 
 		background-color: var(--color-accent);
 		color: var(--color-white);
-		box-shadow: 0 1px 0 rgba(255, 255, 255, 0.15), inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+		/* box-shadow: 0 1px 0 rgba(255, 255, 255, 0.15), inset 0 -1px 0 rgba(0, 0, 0, 0.25); */
 	}
 
 	hgroup.header__hgroup {
@@ -287,7 +291,7 @@
 		font-family: var(--font-base);
 		font-weight: 400;
 		padding: 8px;
-		border-radius: 2px;
+		border-radius: var(--border-radius-m);
 		cursor: pointer;
 		border: 1px solid rgba(255, 255, 255, 0.15);
 
@@ -300,7 +304,7 @@
 		display: block;
 		width: 20px;
 		height: 1px;
-		border-radius: 2px;
+		border-radius: var(--border-radius-m);
 		background-color: rgba(255, 255, 255, 0.5);
 	}
 
@@ -315,7 +319,7 @@
 		font-size: 14px;
 		font-weight: 600;
 		padding: 8px 12px;
-		border-radius: 2px;
+		border-radius: var(--border-radius-m);
 		margin-left: auto;
 		border: 1px solid rgba(255, 255, 255, 0.15);
 

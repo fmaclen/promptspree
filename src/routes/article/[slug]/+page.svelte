@@ -96,7 +96,8 @@
 		padding: 16px;
 		box-sizing: border-box;
 		border: none;
-		background-color: hsl(0, 0%, 95%);
+		/* background-color: hsl(0, 0%, 95%); */
+		background-color: var(--color-white);
 		cursor: pointer;
 		filter: grayscale(100%);
 
@@ -139,7 +140,7 @@
 		font-size: 13px;
 		font-family: var(--font-mono);
 		overflow-y: scroll;
-		background-color: hsl(0, 0%, 90%);
+		/* background-color: hsl(0, 0%, 90%); */
 		padding: 16px;
 	}
 </style>

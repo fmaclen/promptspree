@@ -35,8 +35,8 @@
 
 <style lang="scss">
 	article.article {
-		border-top-left-radius: 2px;
-		border-top-right-radius: 2px;
+		border-top-left-radius: var(--border-radius-l);
+		border-top-right-radius: var(--border-radius-l);
 		background-color: var(--color-white);
 		display: flex;
 		flex-direction: column;
@@ -66,7 +66,7 @@
 		display: flex;
 		width: 100%;
 		background-color: #f2f3f4;
-		border-radius: 2px;
+		border-radius: var(--border-radius-l);
 		margin-top: 20px;
 		align-items: center;
 	}
@@ -82,7 +82,7 @@
 		color: var(--color-accent);
 		line-height: 1em;
 		padding: 8px;
-		border-radius: 2px;
+		border-radius: var(--border-radius-m);
 		border: 1px solid var(--color-accent);
 		cursor: help;
 		margin-left: 16px;
