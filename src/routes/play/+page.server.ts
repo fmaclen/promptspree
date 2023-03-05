@@ -43,6 +43,14 @@ export const actions: Actions = {
 		//
 		//
 
+		const articleId = formData.get('articleId')?.toString();
+
+		if (articleId) {
+			//
+		} else {
+			//
+		}
+
 		setDefaultValues(formData, locals.user.id, validation.prompt);
 		let articleCollection = await createArticleCollection(locals.pb, formData); // Create draft article
 		if (!articleCollection) return fail(400, { error: 'Prompt could not be saved' });
@@ -53,7 +61,7 @@ export const actions: Actions = {
 		//
 		//
 
-		const messages: ChatCompletionRequestMessage[] = articleCollection.messages;
+		const sessionMessages: ChatCompletionRequestMessage[] = articleCollection.messages;
 
 		//
 		//
@@ -61,14 +69,16 @@ export const actions: Actions = {
 		//
 		//
 
-		const completionResponse = await getCompletion(locals.user.id, messages);
-		if (completionResponse.status !== 200)
+		const completionResponse = await getCompletion(locals.user.id, sessionMessages);
+		if (completionResponse.status !== 200) {
 			return fail(completionResponse.status, { error: completionResponse.message });
+		}
+
 		const { articleCompletion } = completionResponse;
 
 		// Add AI completion to the messages chain (without suggestions) so we can
 		// use it in a future request for context.
-		messages.push({
+		sessionMessages.push({
 			role: 'assistant',
 			content: articleCompletion
 				? miniStringify({
@@ -83,7 +93,7 @@ export const actions: Actions = {
 		articleCollection = await updateArticleCollection(locals.pb, articleCollection.id, {
 			...articleCompletion,
 			body: articleCompletion && miniStringify(articleCompletion.body),
-			messages: miniStringify(messages)
+			messages: miniStringify(sessionMessages)
 		});
 
 		// Generate the article for frontend
@@ -144,58 +154,69 @@ async function getCompletion(
 			: await getCompletionFromAI(completionUserPrompt);
 
 		// Break out of the retry loop if we get a valid completion
-		completionResponse.articleCompletion = getFieldsFromCompletion(completionResponse.message);
+		completionResponse = getFieldsFromCompletion(completionResponse);
 		if (completionResponse.articleCompletion) break;
 
 		// Wait 2 seconds before retrying again
 		// But in the test environment don't wait otherwise the test will timeout
 		if (!isTestEnvironment) await new Promise((resolve) => setTimeout(resolve, 2000));
+
 		retries++;
-
-		// Only retry when completion returns a 200 status but the completion is invalid
-	} while (!completionResponse.articleCompletion && retries < 3);
-
-	// If we still don't have a valid article completion, return an error
-	if (!completionResponse.articleCompletion)
-		return {
-			status: 400,
-			message: "Couldn't generate an article based on your last prompt, try modifiying it"
-		};
+	} while (retries < 3);
 
 	return completionResponse;
 }
 
 // Parses the completion from OpenAI and checks the format of the fields is correct
-function getFieldsFromCompletion(completion: string | undefined): ArticleCompletion | null {
-	if (!completion) return null;
+function getFieldsFromCompletion(completionResponse: CompletionResponse): CompletionResponse {
+	const cantGenerateError = {
+		status: 400,
+		message: "Couldn't generate an article based on your last prompt, try modifiying it",
+		articleCompletion: null
+	};
 
-	let fields: ArticleCompletion | null = null;
+	// If the completion is not 200 or 400, it means that the response has an API error,
+	// we assume we can't parse the `unformattedCompletion` and we return it as-is.
+	if (![200, 400].includes(completionResponse.status)) return completionResponse;
+
+	// If the `unformattedCompletion` is missing we also can't parse it
+	if (!completionResponse.unformattedCompletion) return cantGenerateError;
 
 	// Sometimes AI will return a completion that has extra text so we can't parse
 	// the JSON directly. We need to find the start and end of the JSON object
 	// and then parse it.
-	const startIndex = completion.indexOf('{');
-	const endIndex = completion.lastIndexOf('}') + 1;
-	const jsonString = completion.slice(startIndex, endIndex);
+	const { unformattedCompletion } = completionResponse;
+	const startIndex = unformattedCompletion.indexOf('{');
+	const endIndex = unformattedCompletion.lastIndexOf('}') + 1;
+	const jsonString = unformattedCompletion.slice(startIndex, endIndex);
+
+	let fields: ArticleCompletion | undefined;
 
 	try {
 		fields = JSON.parse(jsonString);
 	} catch (err) {
-		logEventToSlack('/lib/article.server.ts: getFieldsFromCompletion', `${err} // ${completion}`);
+		logEventToSlack(
+			'/lib/article.server.ts: getFieldsFromCompletion',
+			`${err} // ${unformattedCompletion}`
+		);
+
+		return cantGenerateError;
 	}
 
-	if (!fields) return null;
-
-	// Validate the parse fields
-	const { headline, category, body, suggestions } = fields;
-	if (!headline || !isCategoryValid(category) || body.length < 1 || suggestions.length < 1)
-		return null;
+	// Validate the parsed fields
+	if (
+		!fields?.headline ||
+		fields?.body.length < 1 ||
+		fields?.suggestions.length < 1 ||
+		!isCategoryValid(fields?.category)
+	) {
+		return cantGenerateError;
+	}
 
 	return {
-		headline,
-		category,
-		body,
-		suggestions
+		status: 200,
+		message: 'Completion and field validation was succesful',
+		articleCompletion: fields
 	};
 }
 

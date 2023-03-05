@@ -4,7 +4,7 @@
 import type { ChatCompletionRequestMessage } from 'openai';
 
 import { ArticleCategory } from './article.js';
-import type { CompletionUserPrompt } from './openai.server.js';
+import type { CompletionResponse, CompletionUserPrompt } from './openai.server.js';
 
 export enum MockPrompt {
 	GENERATE_ARTICLE = 'GENERATE_ARTICLE',
@@ -108,25 +108,37 @@ export const MOCK_ARTICLES: MockArticle[] = [
 ];
 
 const MOCK_ARTICLE_WRONG_FORMAT = {
-	inevalidHeadline: '',
+	invalidHeadline: '',
 	invalidCategory: '',
 	invalidBody: [],
 	invalidSuggestions: []
 };
 
-export function getCompletionFromMock(completionUserPrompt: CompletionUserPrompt) {
+export function getCompletionFromMock(
+	completionUserPrompt: CompletionUserPrompt
+): CompletionResponse {
 	const prompt = completionUserPrompt.messages[completionUserPrompt.messages.length - 1].content;
 
 	switch (prompt) {
 		case MockPrompt.RETRY_ARTICLE:
-			return { status: 200, message: JSON.stringify(MOCK_ARTICLES[1]) };
+			return {
+				articleCompletion: null,
+				status: 200,
+				message: '',
+				unformattedCompletion: JSON.stringify(MOCK_ARTICLES[1])
+			};
 		case MockPrompt.WRONG_FORMAT:
-			return { status: 200, message: JSON.stringify(MOCK_ARTICLE_WRONG_FORMAT) };
+			return { articleCompletion: null, status: 400, message: '', unformattedCompletion: JSON.stringify(MOCK_ARTICLE_WRONG_FORMAT), }; // prettier-ignore
 		case MockPrompt.THROW_ERROR_429:
-			return { status: 429, message: 'Too many requests' };
+			return { articleCompletion: null, status: 429, message: 'Too many requests' };
 		case MockPrompt.THROW_ERROR_500:
-			return { status: 500, message: 'Internal server error' };
+			return { articleCompletion: null, status: 500, message: 'Internal server error' };
 		default:
-			return { status: 200, message: JSON.stringify(MOCK_ARTICLES[0]) };
+			return {
+				articleCompletion: null,
+				status: 200,
+				message: '',
+				unformattedCompletion: JSON.stringify(MOCK_ARTICLES[0])
+			};
 	}
 }
