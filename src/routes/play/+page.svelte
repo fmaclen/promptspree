@@ -1,6 +1,10 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
-	import type { Article } from '$lib/article';
+	import {
+		type Article,
+		getRandomInitialSuggestions,
+		parseCompletionSuggestions
+	} from '$lib/article';
 	import A from '$lib/components/A.svelte';
 	import ArticleBody from '$lib/components/ArticleBody.svelte';
 	import FormButton from '$lib/components/FormButton.svelte';
@@ -13,30 +17,18 @@
 	import { Sentiment } from '$lib/utils';
 	import type { ActionResult } from '@sveltejs/kit';
 	import { slide } from 'svelte/transition';
-	import type { ChatCompletionRequestMessage } from 'openai';
 
-	let prompt = '';
+	import FormInput from '../../lib/components/FormInput.svelte';
+
 	let article: Article | null = null;
 	let error: string | null = null;
 	let fieldError: string[] | null = null;
 
-	$: suggestions = article ? getSuggestions(article.messages) : [];
+	$: prompt = '';
 	$: isLoading = false;
-
-	function getSuggestions(messages: ChatCompletionRequestMessage[]): string[] {
-		// Grabs the last assistant message and returns the suggestions
-		let assistantSuggestions: string[] = []
-
-		for (let i = messages.length - 1; i >= 0; i--) {
-			if (messages[i].role === 'assistant') {
-				const parsedContent = JSON.parse(messages[i].content);
-				assistantSuggestions = parsedContent.suggestions;
-				break;
-			}
-		}
-
-		return assistantSuggestions;
-	}
+	$: suggestions = article
+		? parseCompletionSuggestions(article.messages)
+		: getRandomInitialSuggestions();
 
 	const submitGenerate = () => {
 		isLoading = true;
@@ -56,6 +48,7 @@
 
 			update();
 			isLoading = false;
+			prompt = '';
 		};
 	};
 
@@ -86,8 +79,10 @@
 <Notice>
 	{#if isLoading}
 		<IconLoading />
+	{:else if article}
+		Type another prompt or use one of the suggestions to edit the article
 	{:else}
-		Enter a prompt below to generate an article
+		Type your own prompt or choose one of the suggestions to generate an article
 	{/if}
 </Notice>
 <HR />
@@ -98,51 +93,66 @@
 			<Notice sentiment={Sentiment.NEGATIVE}>{fieldError[1]}</Notice>
 		{/if}
 
-		<FormTextarea
-			name="prePrompt"
-			placeholder="e.g. write an opinion piece about kids these days in a judgemental tone"
-			disabled={isLoading}
-			bind:value={prompt}
-		/>
-
 		<nav class="play__nav">
 			<form class="play__form" method="POST" action="?/generate" use:enhance={submitGenerate}>
 				<input type="hidden" name="prompt" bind:value={prompt} />
 
 				{#if article}
+					<input type="hidden" name="articleId" value={article.id} />
+				{/if}
 
+				{#if !isLoading}
 					<div class="play__suggestions">
 						{#each suggestions as suggestion}
-							<button on:click={() => (prompt = suggestion)}>
-								{suggestion}
-							</button>
+							<FormButton
+								on:click={() => (prompt = suggestion)}
+								label={suggestion}
+								hierarchy="secondary"
+								type="button"
+								disabled={prompt !== ''}
+							/>
 						{/each}
-
-						<input type="hidden" name="articleId" value={article.id} />
-						<FormButton label="Try another one" type="submit" disabled={!prompt || isLoading} />
 					</div>
-
-				{:else}
-					<FormButton
-						label={isLoading ? 'Generating...' : 'Generate'}
-						type="submit"
-						disabled={!prompt || isLoading}
-					/>
 				{/if}
-			</form>
 
-			{#if article}
-				<form class="play__form" method="POST" action="?/publish" use:enhance={submitPublish}>
-					<input type="hidden" name="articleId" value={article.id} />
-					<FormButton
-						label="Publish"
-						type="submit"
-						sentiment={Sentiment.POSITIVE}
-						disabled={!prompt || isLoading}
+				<div class="play__user-prompt">
+					<FormInput
+						name="prePrompt"
+						placeholder="e.g. an opinion piece about kids these days in a sarcastic tone"
+						bind:value={prompt}
+						disabled={isLoading}
 					/>
-				</form>
-			{/if}
+					<FormButton
+						label={article ? 'Apply change' : isLoading ? 'Generating...' : 'Generate'}
+						type="submit"
+						disabled={isLoading || !prompt}
+					/>
+				</div>
+			</form>
 		</nav>
+
+		{#if article && !isLoading}
+			<HR />
+			<form
+				class="play__form play__form--row"
+				method="POST"
+				action="?/publish"
+				use:enhance={submitPublish}
+			>
+				<input type="hidden" name="articleId" value={article.id} />
+				<FormButton
+					label="Start from scratch"
+					type="button"
+					sentiment={Sentiment.NEGATIVE}
+					hierarchy="secondary"
+					on:click={() => {
+						prompt = '';
+						article = null;
+					}}
+				/>
+				<FormButton label="Publish" type="submit" sentiment={Sentiment.POSITIVE} />
+			</form>
+		{/if}
 	</div>
 
 	<HR />
@@ -190,6 +200,12 @@
 		width: 100%;
 	}
 
+	div.play__user-prompt {
+		display: grid;
+		grid-template-columns: auto max-content;
+		column-gap: 12px;
+	}
+
 	div.play__suggestions {
 		display: grid;
 		column-gap: 8px;
@@ -200,10 +216,10 @@
 		width: 100%;
 		display: flex;
 		flex-direction: column;
-		row-gap: 16px;
+		gap: 16px;
 
-		&:last-child:not(:first-child) {
-			width: max-content;
+		&--row {
+			flex-direction: row;
 		}
 	}
 </style>
