@@ -13,12 +13,29 @@
 	import { Sentiment } from '$lib/utils';
 	import type { ActionResult } from '@sveltejs/kit';
 	import { slide } from 'svelte/transition';
+	import type { ChatCompletionRequestMessage } from 'openai';
 
 	let prompt = '';
 	let article: Article | null = null;
 	let error: string | null = null;
 	let fieldError: string[] | null = null;
+
+	$: suggestions = article ? getSuggestions(article.messages) : [];
 	$: isLoading = false;
+
+	function getSuggestions(messages: ChatCompletionRequestMessage[]): string[] {
+		// Grabs the last assistant message and returns the suggestions
+		let assistantSuggestions: string[] = []
+
+		for (let i = messages.length - 1; i >= 0; i--) {
+			if (messages[i].role === 'assistant') {
+				assistantSuggestions = messages[i].content.suggestions;
+				break;
+			}
+		}
+
+		return assistantSuggestions;
+	}
 
 	const submitGenerate = () => {
 		isLoading = true;
@@ -92,8 +109,18 @@
 				<input type="hidden" name="prompt" bind:value={prompt} />
 
 				{#if article}
-					<input type="hidden" name="articleId" value={article.id} />
-					<FormButton label="Try another one" type="submit" disabled={!prompt || isLoading} />
+
+					<div class="play__suggestions">
+						{#each suggestions as suggestion}
+							<button on:click={() => (prompt = suggestion)}>
+								{suggestion}
+							</button>
+						{/each}
+
+						<input type="hidden" name="articleId" value={article.id} />
+						<FormButton label="Try another one" type="submit" disabled={!prompt || isLoading} />
+					</div>
+
 				{:else}
 					<FormButton
 						label={isLoading ? 'Generating...' : 'Generate'}
@@ -160,6 +187,12 @@
 		display: flex;
 		column-gap: 8px;
 		width: 100%;
+	}
+
+	div.play__suggestions {
+		display: grid;
+		column-gap: 8px;
+		row-gap: 8px;
 	}
 
 	form.play__form {

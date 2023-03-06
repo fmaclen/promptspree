@@ -14,7 +14,7 @@ import {
 } from '$lib/openai.server';
 import { logEventToSlack } from '$lib/slack.server';
 import { getCompletionFromMock } from '$lib/tests';
-import { isTestEnvironment, UNKNOWN_ERROR_MESSAGE } from '$lib/utils';
+import { UNKNOWN_ERROR_MESSAGE, isTestEnvironment } from '$lib/utils';
 import { error, fail, redirect } from '@sveltejs/kit';
 import type { ChatCompletionRequestMessage } from 'openai';
 import type { BaseAuthStore } from 'pocketbase';
@@ -69,28 +69,11 @@ export const actions: Actions = {
 
 		const { articleCompletion } = completionResponse;
 
-		////////////////////////////////////
-		////////////////////////////////////
-		if (articleId) {
-			console.log('\n\n/////////////////////////////////////////////\n\n');
-			console.log('sessionMessages', articleCollection.messages);
-			console.log('articleCompletion', articleCompletion);
-			console.log('\n\n/////////////////////////////////////////////\n\n');
-		}
-		////////////////////////////////////
-		////////////////////////////////////
-
 		// Add AI completion to the messages chain (without suggestions) so we can
 		// use it in a future request for context.
 		articleCollection.messages.push({
 			role: 'assistant',
 			content: articleCompletion
-				? miniStringify({
-						headline: articleCompletion.headline,
-						category: articleCompletion.category,
-						body: articleCompletion.body
-				  })
-				: ''
 		});
 
 		// Update the article with the completion
@@ -150,8 +133,6 @@ async function getCompletion(
 	let completionResponse: CompletionResponse;
 	let retries = 0;
 
-	console.log(completionUserPrompt);
-
 	do {
 		// HACK: If we're in the test environment, mock the completion response.
 		// Couldn't figure out a better way to mock the response from Playwright.
@@ -169,6 +150,18 @@ async function getCompletion(
 
 		retries++;
 	} while (retries < 3);
+
+	//
+	//
+	//
+	//
+	//
+	console.log(completionUserPrompt);
+	//
+	//
+	//
+	//
+	//
 
 	return completionResponse;
 }
