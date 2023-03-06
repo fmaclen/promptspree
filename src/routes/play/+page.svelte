@@ -29,7 +29,8 @@
 
 		for (let i = messages.length - 1; i >= 0; i--) {
 			if (messages[i].role === 'assistant') {
-				assistantSuggestions = messages[i].content.suggestions;
+				const parsedContent = JSON.parse(messages[i].content);
+				assistantSuggestions = parsedContent.suggestions;
 				break;
 			}
 		}

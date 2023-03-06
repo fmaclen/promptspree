@@ -73,14 +73,14 @@ export const actions: Actions = {
 		// use it in a future request for context.
 		articleCollection.messages.push({
 			role: 'assistant',
-			content: articleCompletion
+			content: miniStringify(articleCompletion as object)
 		});
 
 		// Update the article with the completion
 		articleCollection = await updateArticleCollection(locals.pb, articleCollection.id, {
 			...articleCompletion,
 			body: articleCompletion && miniStringify(articleCompletion.body),
-			messages: miniStringify(articleCollection.messages)
+			messages: articleCollection.messages
 		});
 
 		// Generate the article for frontend
