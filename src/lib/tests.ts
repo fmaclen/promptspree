@@ -5,6 +5,7 @@ import type { ChatCompletionRequestMessage } from 'openai';
 
 import { ArticleCategory } from './article.js';
 import type { CompletionResponse, CompletionUserPrompt } from './openai.server.js';
+import { UNKNOWN_ERROR_MESSAGE } from './utils.js';
 
 export enum MockPrompt {
 	GENERATE_ARTICLE = 'GENERATE_ARTICLE',
@@ -132,7 +133,7 @@ export function getCompletionFromMock(
 		case MockPrompt.THROW_ERROR_429:
 			return { articleCompletion: null, status: 429, message: 'Too many requests' };
 		case MockPrompt.THROW_ERROR_500:
-			return { articleCompletion: null, status: 500, message: 'Internal server error' };
+			return { articleCompletion: null, status: 500, message: UNKNOWN_ERROR_MESSAGE };
 		default:
 			return {
 				articleCompletion: null,

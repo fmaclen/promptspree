@@ -4,6 +4,7 @@ import { error } from '@sveltejs/kit';
 import { type ChatCompletionRequestMessage, Configuration, OpenAIApi } from 'openai';
 
 import { ArticleCategory } from './article';
+import { UNKNOWN_ERROR_MESSAGE } from './utils';
 
 export interface ArticleCompletion {
 	headline: string;
@@ -88,6 +89,7 @@ export async function getCompletionFromAI(
 			unformattedCompletion
 		};
 	} catch (err: any) {
+
 		logEventToSlack('openai.server.ts: getCompletionFromAI', err);
 
 		switch (err?.response?.status) {
@@ -104,7 +106,7 @@ export async function getCompletionFromAI(
 					message: 'That model is currently overloaded with other requests'
 				};
 			default:
-				throw error(500);
+				throw error(500, UNKNOWN_ERROR_MESSAGE);
 		}
 	}
 }

@@ -14,9 +14,10 @@ import {
 } from '$lib/openai.server';
 import { logEventToSlack } from '$lib/slack.server';
 import { getCompletionFromMock } from '$lib/tests';
-import { isTestEnvironment } from '$lib/utils';
-import { fail, redirect } from '@sveltejs/kit';
+import { isTestEnvironment, UNKNOWN_ERROR_MESSAGE } from '$lib/utils';
+import { error, fail, redirect } from '@sveltejs/kit';
 import type { ChatCompletionRequestMessage } from 'openai';
+import type { BaseAuthStore } from 'pocketbase';
 
 import type { PageServerLoad } from '../$types';
 import { miniStringify } from '../../lib/pocketbase.server';
@@ -37,31 +38,23 @@ export const actions: Actions = {
 		if (!validation.prompt || validation.error)
 			return fail(400, { fieldError: ['prompt', validation.error] });
 
-		//
-		//
-		// TODO: Here we would branch out to create a new article or update an existing one
-		//
-		//
-
 		const articleId = formData.get('articleId')?.toString();
 
+		let articleCollection: BaseAuthStore['model'];
+
 		if (articleId) {
-			//
+			// Find existing article
+			articleCollection = await locals.pb
+				.collection('articles')
+				.getOne(articleId, { expand: 'user' });
+			articleCollection?.messages.push({ role: 'user', content: validation.prompt });
 		} else {
-			//
+			// Create new article
+			setDefaultValues(formData, locals.user.id, validation.prompt);
+			articleCollection = await createArticleCollection(locals.pb, formData); // Create draft article
+			if (!articleCollection) return fail(400, { error: 'Prompt could not be saved' });
 		}
-
-		setDefaultValues(formData, locals.user.id, validation.prompt);
-		let articleCollection = await createArticleCollection(locals.pb, formData); // Create draft article
-		if (!articleCollection) return fail(400, { error: 'Prompt could not be saved' });
-
-		//
-		//
-		// TODO: at this point we should no longer care if the article is new or existing
-		//
-		//
-
-		const sessionMessages: ChatCompletionRequestMessage[] = articleCollection.messages;
+		if (!articleCollection) throw error(500, UNKNOWN_ERROR_MESSAGE);
 
 		//
 		//
@@ -69,16 +62,27 @@ export const actions: Actions = {
 		//
 		//
 
-		const completionResponse = await getCompletion(locals.user.id, sessionMessages);
+		const completionResponse = await getCompletion(locals.user.id, articleCollection.messages);
 		if (completionResponse.status !== 200) {
 			return fail(completionResponse.status, { error: completionResponse.message });
 		}
 
 		const { articleCompletion } = completionResponse;
 
+		////////////////////////////////////
+		////////////////////////////////////
+		if (articleId) {
+			console.log('\n\n/////////////////////////////////////////////\n\n');
+			console.log('sessionMessages', articleCollection.messages);
+			console.log('articleCompletion', articleCompletion);
+			console.log('\n\n/////////////////////////////////////////////\n\n');
+		}
+		////////////////////////////////////
+		////////////////////////////////////
+
 		// Add AI completion to the messages chain (without suggestions) so we can
 		// use it in a future request for context.
-		sessionMessages.push({
+		articleCollection.messages.push({
 			role: 'assistant',
 			content: articleCompletion
 				? miniStringify({
@@ -89,11 +93,11 @@ export const actions: Actions = {
 				: ''
 		});
 
-		// // Update the article with the completion
+		// Update the article with the completion
 		articleCollection = await updateArticleCollection(locals.pb, articleCollection.id, {
 			...articleCompletion,
 			body: articleCompletion && miniStringify(articleCompletion.body),
-			messages: miniStringify(sessionMessages)
+			messages: miniStringify(articleCollection.messages)
 		});
 
 		// Generate the article for frontend
@@ -145,6 +149,8 @@ async function getCompletion(
 
 	let completionResponse: CompletionResponse;
 	let retries = 0;
+
+	console.log(completionUserPrompt);
 
 	do {
 		// HACK: If we're in the test environment, mock the completion response.

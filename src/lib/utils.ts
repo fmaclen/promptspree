@@ -9,3 +9,5 @@ export enum Sentiment {
 	NEGATIVE = 'negative',
 	WARNING = 'warning'
 }
+
+export const UNKNOWN_ERROR_MESSAGE = "An error occurred on our end, please try again later"
