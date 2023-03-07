@@ -6,6 +6,7 @@
 	export let maxlength: number = 280;
 	export let rows: number = 7;
 	export let autofocus: boolean = false;
+	export let textareaRef: HTMLTextAreaElement;
 </script>
 
 <!-- svelte-ignore a11y-autofocus -->
@@ -18,6 +19,7 @@
 	{rows}
 	class="form-textarea"
 	bind:value
+	bind:this={textareaRef}
 />
 
 <style lang="scss">
@@ -27,8 +29,7 @@
 
 		resize: vertical;
 		line-height: 1.25em;
-		min-height: 84px;
-		max-height: 10vh;
+		height: 64px;
 		box-sizing: border-box;
 
 		&:disabled {

@@ -18,11 +18,10 @@
 	import type { ActionResult } from '@sveltejs/kit';
 	import { slide } from 'svelte/transition';
 
-	import FormInput from '../../lib/components/FormInput.svelte';
-
 	let article: Article | null = null;
 	let error: string | null = null;
 	let fieldError: string[] | null = null;
+  let textareaRef: HTMLTextAreaElement;
 
 	$: prompt = '';
 	$: isLoading = false;
@@ -30,7 +29,12 @@
 		? parseCompletionSuggestions(article.messages)
 		: getRandomInitialSuggestions();
 
-	const submitGenerate = () => {
+	function setSuggestion(suggestion: string) {
+		prompt = suggestion;
+		textareaRef.focus();
+	}
+
+	function submitGenerate() {
 		isLoading = true;
 		article = null;
 		error = null;
@@ -52,7 +56,7 @@
 		};
 	};
 
-	const submitPublish = () => {
+	function submitPublish() {
 		isLoading = true;
 	};
 </script>
@@ -105,7 +109,7 @@
 					<div class="play__suggestions">
 						{#each suggestions as suggestion}
 							<FormButton
-								on:click={() => (prompt = suggestion)}
+								on:click={() => setSuggestion(suggestion)}
 								label={suggestion}
 								hierarchy="secondary"
 								type="button"
@@ -116,9 +120,12 @@
 				{/if}
 
 				<div class="play__user-prompt">
-					<FormInput
-						name="prePrompt"
-						placeholder="e.g. an opinion piece about kids these days in a sarcastic tone"
+					<FormTextarea
+						name="prompt"
+						placeholder={article
+							? 'e.g. "make it a bit longer"'
+							: 'e.g. "an opinion piece about kids these days in a sarcastic tone"'}
+						bind:textareaRef={textareaRef}
 						bind:value={prompt}
 						disabled={isLoading}
 					/>
@@ -130,35 +137,33 @@
 				</div>
 			</form>
 		</nav>
-
-		{#if article && !isLoading}
-			<HR />
-			<form
-				class="play__form play__form--row"
-				method="POST"
-				action="?/publish"
-				use:enhance={submitPublish}
-			>
-				<input type="hidden" name="articleId" value={article.id} />
-				<FormButton
-					label="Start from scratch"
-					type="button"
-					sentiment={Sentiment.NEGATIVE}
-					hierarchy="secondary"
-					on:click={() => {
-						prompt = '';
-						article = null;
-					}}
-				/>
-				<FormButton label="Publish" type="submit" sentiment={Sentiment.POSITIVE} />
-			</form>
-		{/if}
 	</div>
 
 	<HR />
 
 	<div class="play__draft">
 		<Plate>
+			{#if article && !isLoading}
+				<form
+					class="play-article-actions"
+					method="POST"
+					action="?/publish"
+					use:enhance={submitPublish}
+				>
+					<input type="hidden" name="articleId" value={article.id} />
+					<FormButton
+						label="Start from scratch"
+						type="button"
+						sentiment={Sentiment.NEGATIVE}
+						hierarchy="secondary"
+						on:click={() => {
+							prompt = '';
+							article = null;
+						}}
+					/>
+					<FormButton label="Publish" type="submit" sentiment={Sentiment.POSITIVE} />
+				</form>
+			{/if}
 			<ArticleBody {article} {isLoading} />
 		</Plate>
 	</div>
@@ -212,14 +217,18 @@
 		row-gap: 8px;
 	}
 
+	form.play-article-actions,
 	form.play__form {
 		width: 100%;
 		display: flex;
-		flex-direction: column;
 		gap: 16px;
+	}
 
-		&--row {
-			flex-direction: row;
-		}
+	form.play__form {
+		flex-direction: column;
+	}
+
+	form.play-article-actions {
+		margin-bottom: 32px;
 	}
 </style>
