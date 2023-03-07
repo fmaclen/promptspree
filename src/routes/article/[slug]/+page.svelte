@@ -59,7 +59,12 @@
 
 		<div class="article-prompt">
 			<code class="article-prompt__code">
-				{article.messages[1].content}
+				{#each article.messages as message}
+					{#if message.role === 'user'}
+						{message.content}
+						<br>
+					{/if}
+				{/each}
 			</code>
 		</div>
 
@@ -140,7 +145,7 @@
 		font-size: 13px;
 		font-family: var(--font-mono);
 		overflow-y: scroll;
-		/* background-color: hsl(0, 0%, 90%); */
+		background-color: hsl(0, 0%, 90%);
 		padding: 16px;
 	}
 </style>

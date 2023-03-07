@@ -151,18 +151,6 @@ async function getCompletion(
 		retries++;
 	} while (retries < 3);
 
-	//
-	//
-	//
-	//
-	//
-	console.log(completionUserPrompt);
-	//
-	//
-	//
-	//
-	//
-
 	return completionResponse;
 }
 
