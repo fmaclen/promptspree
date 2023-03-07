@@ -1,22 +1,26 @@
 import { ArticleCategory, ArticleStatus } from '$lib/article';
-import { generateArticle, publishArticle } from '$lib/article.server';
+import {
+	createArticleCollection,
+	generateArticle,
+	publishArticle,
+	updateArticleCollection
+} from '$lib/article.server';
 import {
 	type ArticleCompletion,
-	CURRENT_MODEL,
 	type CompletionResponse,
 	type CompletionUserPrompt,
 	getCompletionFromAI,
 	getInitialChatCompletionRequest
 } from '$lib/openai.server';
-import { handlePocketbaseError } from '$lib/pocketbase.server';
 import { logEventToSlack } from '$lib/slack.server';
 import { getCompletionFromMock } from '$lib/tests';
-import { isTestEnvironment } from '$lib/utils';
-import { fail, redirect } from '@sveltejs/kit';
+import { UNKNOWN_ERROR_MESSAGE, isTestEnvironment } from '$lib/utils';
+import { error, fail, redirect } from '@sveltejs/kit';
 import type { ChatCompletionRequestMessage } from 'openai';
 import type { BaseAuthStore } from 'pocketbase';
 
 import type { PageServerLoad } from '../$types';
+import { miniStringify } from '../../lib/pocketbase.server';
 import type { Actions } from './$types';
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -30,86 +34,56 @@ export const actions: Actions = {
 
 		const formData = await request.formData();
 
-		// Check that the prompt exists, is greater than 10 character and less than 280
-		const prompt = formData.get('prompt')?.toString();
-		if (!prompt) return fail(400, { fieldError: ['prompt', 'Prompt was not provided'] });
-		if (prompt.length < 10) return fail(400, { fieldError: ['prompt', 'Prompt is too short'] });
-		if (prompt.length > 290) return fail(400, { fieldError: ['prompt', 'Prompt is greater than 280 characters'] }); // prettier-ignore
+		const validation = await validatePrompt(formData.get('prompt')?.toString());
+		if (!validation.prompt || validation.error)
+			return fail(400, { fieldError: ['prompt', validation.error] });
 
-		const initialMessages: ChatCompletionRequestMessage[] = getInitialChatCompletionRequest(prompt);
+		const articleId = formData.get('articleId')?.toString();
 
-		formData.append('messages', JSON.stringify(initialMessages)); // Set the starting messages
-		formData.append('status', ArticleStatus.DRAFT); // Set the default status
-		formData.append('user', locals.user.id); // Set the author
+		let articleCollection: BaseAuthStore['model'];
 
-		let articleCollection: BaseAuthStore['model'] = null;
+		if (articleId) {
+			// Find existing article
+			articleCollection = await locals.pb
+				.collection('articles')
+				.getOne(articleId, { expand: 'user' });
+			articleCollection?.messages.push({ role: 'user', content: validation.prompt });
+		} else {
+			// Create new article
+			setDefaultValues(formData, locals.user.id, validation.prompt);
+			articleCollection = await createArticleCollection(locals.pb, formData); // Create draft article
+			if (!articleCollection) return fail(400, { error: 'Prompt could not be saved' });
+		}
+		if (!articleCollection) throw error(500, UNKNOWN_ERROR_MESSAGE);
 
-		// Create the draft article
-		try {
-			articleCollection = await locals.pb.collection('articles').create(formData);
-		} catch (err) {
-			logEventToSlack('/play/+page.server.ts (generate)', err);
-			handlePocketbaseError(err);
+		//
+		//
+		// TODO: check if the number of tokens is smaller than 4096
+		//
+		//
+
+		const completionResponse = await getCompletion(locals.user.id, articleCollection.messages);
+		if (completionResponse.status !== 200) {
+			await updateArticleCollection(locals.pb, articleCollection.id, { status: ArticleStatus.FAILED }); // prettier-ignore
+			return fail(completionResponse.status, { error: completionResponse.message });
 		}
 
-		if (!articleCollection) return fail(401, { error: 'Prompt could not be saved' });
+		const { articleCompletion } = completionResponse;
 
-		// Get completion from OpenAI and parse it
-		const completionUserPrompt: CompletionUserPrompt = {
-			userId: locals.user.id,
-			messages: initialMessages
-		};
+		// Add AI completion to the messages chain (without suggestions) so we can
+		// use it in a future request for context.
+		articleCollection.messages.push({
+			role: 'assistant',
+			content: miniStringify(articleCompletion as object)
+		});
 
-		let completion: CompletionResponse;
-		let fieldsFromCompletion: ArticleCompletion | null = null;
-		let retries = 0;
-
-		do {
-			// HACK: If we're in the test environment, mock the completion response.
-			// Couldn't figure out a better way to mock the response from Playwright.
-			completion = isTestEnvironment
-				? getCompletionFromMock(completionUserPrompt)
-				: await getCompletionFromAI(completionUserPrompt);
-
-			// Break out of the retry loop if we get a valid completion
-			fieldsFromCompletion = getFieldsFromCompletion(completion.message);
-			if (fieldsFromCompletion) break;
-
-			// Wait 2 seconds before retrying again
-			// But in the test environment don't wait otherwise the test will timeout
-			if (!isTestEnvironment) await new Promise((resolve) => setTimeout(resolve, 2000));
-			retries++;
-
-			// Only retry when completion returns a 200 status but the completion is invalid
-		} while (completion.status === 200 && retries < 3);
-
-		if (completion.status !== 200) {
-			return fail(completion.status, { error: completion.message });
-		}
-
-		// // Update the article with the completion
-		try {
-			articleCollection = await locals.pb.collection('articles').update(
-				articleCollection.id,
-				{
-					...fieldsFromCompletion,
-					body: JSON.stringify(fieldsFromCompletion?.body),
-					messages: JSON.stringify(initialMessages),
-					user: locals.user.id,
-					status: fieldsFromCompletion ? ArticleStatus.DRAFT : ArticleStatus.FAILED,
-					model: CURRENT_MODEL
-				},
-				{ expand: 'user' }
-			);
-		} catch (err) {
-			logEventToSlack('/play/+page.server.ts (generate)', err);
-			handlePocketbaseError(err);
-		}
-
-		if (!fieldsFromCompletion)
-			return fail(400, {
-				error: "Couldn't generate an article based on your last prompt, try modifiying it"
-			});
+		// Update the article with the completion
+		articleCollection = await updateArticleCollection(locals.pb, articleCollection.id, {
+			...articleCompletion,
+			body: articleCompletion && miniStringify(articleCompletion.body),
+			messages: articleCollection.messages,
+			status: ArticleStatus.DRAFT
+		});
 
 		// Generate the article for frontend
 		const article = await generateArticle(articleCollection, locals);
@@ -125,37 +99,113 @@ export const actions: Actions = {
 	}
 };
 
-// Parses the completion from OpenAI and checks the format of the fields is correct
-function getFieldsFromCompletion(completion: string | undefined): ArticleCompletion | null {
-	if (!completion) return null;
+interface PromptValidation {
+	prompt: string | null;
+	error: string | null;
+}
 
-	let fields: ArticleCompletion | null = null;
+async function validatePrompt(prompt: string | undefined): Promise<PromptValidation> {
+	// Check that the prompt exists, is greater than 10 character and less than 280
+	if (!prompt) return { prompt: null, error: 'Prompt was not provided' };
+	if (prompt.length < 10) return { prompt, error: 'Prompt is too short' };
+	if (prompt.length > 290) return { prompt, error: 'Prompt is greater than 280 characters' };
+
+	// TODO: Check that prompt doesn't violete the moderation rules
+
+	return { prompt, error: null };
+}
+
+function setDefaultValues(formData: FormData, userId: string, prompt: string) {
+	const messages = getInitialChatCompletionRequest(prompt);
+	formData.append('messages', miniStringify(messages)); // Set the starting messages
+	formData.append('status', ArticleStatus.DRAFT); // Set the default status
+	formData.append('user', userId); // Set the author
+}
+
+// Get completion from AI and try to parse it
+async function getCompletion(
+	userId: string,
+	messages: ChatCompletionRequestMessage[]
+): Promise<CompletionResponse> {
+	const completionUserPrompt: CompletionUserPrompt = {
+		userId: userId,
+		messages
+	};
+
+	let completionResponse: CompletionResponse;
+	let retries = 0;
+
+	do {
+		// HACK: If we're in the test environment, mock the completion response.
+		// Couldn't figure out a better way to mock the response from Playwright.
+		completionResponse = isTestEnvironment
+			? getCompletionFromMock(completionUserPrompt)
+			: await getCompletionFromAI(completionUserPrompt);
+
+		// Break out of the retry loop if we get a valid completion
+		completionResponse = getFieldsFromCompletion(completionResponse);
+		if (completionResponse.articleCompletion) break;
+
+		// Wait 2 seconds before retrying again
+		// But in the test environment don't wait otherwise the test will timeout
+		if (!isTestEnvironment) await new Promise((resolve) => setTimeout(resolve, 2000));
+
+		retries++;
+	} while (retries < 3);
+
+	return completionResponse;
+}
+
+// Parses the completion from OpenAI and checks the format of the fields is correct
+function getFieldsFromCompletion(completionResponse: CompletionResponse): CompletionResponse {
+	const cantGenerateError = {
+		status: 400,
+		message: "Couldn't generate an article based on your last prompt, try a different one",
+		articleCompletion: null
+	};
+
+	// If the completion is not 200 or 400, it means that the response has an API error,
+	// we assume we can't parse the `unformattedCompletion` and we return it as-is.
+	if (![200, 400].includes(completionResponse.status)) return completionResponse;
+
+	// If the `unformattedCompletion` is missing we also can't parse it
+	if (!completionResponse.unformattedCompletion) return cantGenerateError;
 
 	// Sometimes AI will return a completion that has extra text so we can't parse
 	// the JSON directly. We need to find the start and end of the JSON object
 	// and then parse it.
-	const startIndex = completion.indexOf('{');
-	const endIndex = completion.lastIndexOf('}') + 1;
-	const jsonString = completion.slice(startIndex, endIndex);
+	const { unformattedCompletion } = completionResponse;
+	const startIndex = unformattedCompletion.indexOf('{');
+	const endIndex = unformattedCompletion.lastIndexOf('}') + 1;
+	const jsonString = unformattedCompletion.slice(startIndex, endIndex);
+
+	let fields: ArticleCompletion | undefined;
 
 	try {
 		fields = JSON.parse(jsonString);
 	} catch (err) {
-		logEventToSlack('/lib/article.server.ts: getFieldsFromCompletion', err);
+		logEventToSlack(
+			'/lib/article.server.ts: getFieldsFromCompletion',
+			`${err} // ${unformattedCompletion}`
+		);
+
+		return cantGenerateError;
 	}
 
-	if (!fields) return null;
-
-	// Validate the parse fields
-	const { headline, category, body, suggestions } = fields;
-	if (!headline || !isCategoryValid(category) || body.length < 1 || suggestions.length < 1)
-		return null;
+	// Validate the parsed fields
+	if (
+		!fields?.headline ||
+		fields?.body.length < 1 ||
+		fields?.suggestions.length < 1 ||
+		!isCategoryValid(fields?.category)
+	) {
+		return cantGenerateError;
+	}
 
 	return {
-		headline,
-		category,
-		body,
-		suggestions
+		status: 200,
+		message: 'Completion and field validation was succesful',
+		articleCompletion: fields
 	};
 }
 

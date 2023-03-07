@@ -9,8 +9,35 @@ import { logEventToSlack } from '$lib/slack.server';
 import { fail } from '@sveltejs/kit';
 import type { BaseAuthStore, Record } from 'pocketbase';
 
-import type { ArticleCompletion } from './openai.server';
+import { CURRENT_MODEL } from './openai.server';
 import { getAudioSrc, handlePocketbaseError } from './pocketbase.server';
+
+export async function createArticleCollection(
+	pb: App.Locals['pb'],
+	formData: FormData
+): Promise<BaseAuthStore['model']> {
+	try {
+		return await pb.collection('articles').create(formData);
+	} catch (err) {
+		logEventToSlack('/lib/+article.server.ts (createArticleCollection)', err);
+		handlePocketbaseError(err);
+	}
+	return null;
+}
+
+export async function updateArticleCollection(
+	pb: App.Locals['pb'],
+	articleId: string,
+	bodyParams: object
+): Promise<BaseAuthStore['model']> {
+	try {
+		return await pb.collection('articles').update(articleId, bodyParams, { expand: 'user' });
+	} catch (err) {
+		logEventToSlack('/lib/+article.server.ts (updateArticleCollection)', err);
+		handlePocketbaseError(err);
+	}
+	return null;
+}
 
 export const generateArticles = async (
 	articlesCollection: BaseAuthStore['model'][],
@@ -44,12 +71,13 @@ export const generateArticle = async (
 	const article: Article = {
 		id: articleCollection.id,
 		updated: articleCollection.updated,
-		author,
 		status: articleCollection.status,
 		category: articleCollection.category,
 		headline: articleCollection.headline,
 		body: JSON.parse(articleCollection.body),
 		messages: articleCollection.messages,
+		model: CURRENT_MODEL,
+		author,
 		audioSrc,
 		reactions
 	};

@@ -6,14 +6,17 @@
 	export let isCompact: boolean = false;
 	export let sentiment: Sentiment = Sentiment.NEUTRAL;
 	export let type: 'button' | 'submit' | 'reset' | null | undefined = 'button';
+	export let hierarchy: 'secondary' | undefined = undefined;
 </script>
 
 <button
 	{type}
 	{disabled}
-	class="form-button {sentiment ? `form-button--${sentiment}` : ''} {isCompact
-		? 'form-button--compact'
-		: ''}"
+	class="form-button
+		{sentiment ? `form-button--${sentiment}` : ''}
+		{isCompact ? 'form-button--compact' : ''}
+		{hierarchy ? `form-button--${hierarchy}` : ''}
+		"
 	on:click
 >
 	{label}
@@ -40,6 +43,11 @@
 			transform: scale(0.98);
 		}
 
+		&--secondary {
+			color: var(--color-accent);
+			background-color: var(--color-accent-secondary);
+		}
+
 		&--positive {
 			background-color: var(--color-positive);
 			border-color: var(--color-positive);
@@ -48,6 +56,11 @@
 		&--negative {
 			background-color: var(--color-negative);
 			border-color: var(--color-negative);
+
+			&.form-button--secondary {
+				background-color: var(--color-negative-secondary);
+				color: var(--color-negative);
+			}
 		}
 
 		&--compact {

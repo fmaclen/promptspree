@@ -4,6 +4,7 @@ import { error } from '@sveltejs/kit';
 import { type ChatCompletionRequestMessage, Configuration, OpenAIApi } from 'openai';
 
 import { ArticleCategory } from './article';
+import { UNKNOWN_ERROR_MESSAGE } from './utils';
 
 export interface ArticleCompletion {
 	headline: string;
@@ -18,8 +19,10 @@ export interface CompletionUserPrompt {
 }
 
 export interface CompletionResponse {
-	status: number;
-	message?: string;
+	status: number; // Status code
+	message: string; // Status message
+	unformattedCompletion?: string;
+	articleCompletion: ArticleCompletion | null;
 }
 
 const configuration = new Configuration({ apiKey: env.OPENAI_API_KEY });
@@ -55,34 +58,55 @@ export function getInitialChatCompletionRequest(
 	];
 }
 
-export async function getCompletionFromAI({
-	userId,
-	messages
-}: CompletionUserPrompt): Promise<CompletionResponse> {
+export async function getCompletionFromAI(
+	completionUserPrompt: CompletionUserPrompt
+): Promise<CompletionResponse> {
+	let unformattedCompletion: string | undefined;
+
 	try {
 		const completion = await openai.createChatCompletion({
 			model: CURRENT_MODEL,
-			user: userId, // e.g. `my6b0jgzuwrtuxg`
 			temperature: 0.75,
 			max_tokens: 2048,
-			messages
+			messages: completionUserPrompt.messages,
+			user: completionUserPrompt.userId // e.g. `my6b0jgzuwrtuxg`
 		});
+
+		unformattedCompletion = completion.data.choices[0].message?.content;
 
 		if (!completion)
 			// If we get here, the AI didn't return a completion for some unknown reason
-			return { status: 500, message: "Couldn't get a response from AI, please try again later" };
+			return {
+				articleCompletion: null,
+				status: 500,
+				message: "Couldn't get a response from AI, please try again later"
+			};
 
-		return { status: 200, message: completion.data.choices[0].message?.content };
+		return {
+			articleCompletion: null,
+			status: 200,
+			message: 'Create chat completion was succesful',
+			unformattedCompletion
+		};
 	} catch (err: any) {
+
 		logEventToSlack('openai.server.ts: getCompletionFromAI', err);
 
 		switch (err?.response?.status) {
 			case 429:
-				return { status: 429, message: 'API rate limit exceeded' };
+				return {
+					articleCompletion: null,
+					status: 429,
+					message: 'API rate limit exceeded'
+				};
 			case 503:
-				return { status: 503, message: 'That model is currently overloaded with other requests' };
+				return {
+					articleCompletion: null,
+					status: 503,
+					message: 'That model is currently overloaded with other requests'
+				};
 			default:
-				throw error(500);
+				throw error(500, UNKNOWN_ERROR_MESSAGE);
 		}
 	}
 }

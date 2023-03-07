@@ -10,7 +10,7 @@
 	import Notice from '$lib/components/Notice.svelte';
 	import Plate from '$lib/components/Plate.svelte';
 	import Section from '$lib/components/Section.svelte';
-	import { Sentiment } from '$lib/utils';
+	import { Sentiment, UNKNOWN_ERROR_MESSAGE } from '$lib/utils';
 
 	let success = false;
 	let email = '';
@@ -22,7 +22,7 @@
 
 		return async ({ result }) => {
 			if (result.type == 'failure') {
-				error = result.data?.error || 'Something went wrong, please try again later';
+				error = result.data?.error || UNKNOWN_ERROR_MESSAGE;
 			} else {
 				success = true;
 			}

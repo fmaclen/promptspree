@@ -1,6 +1,7 @@
 import { env } from '$env/dynamic/private';
-import { isTestEnvironment } from '$lib/utils';
+import { isTestEnvironment, UNKNOWN_ERROR_MESSAGE } from '$lib/utils';
 import { error, fail } from '@sveltejs/kit';
+import jsonminify from 'jsonminify';
 import { type BaseAuthStore, ClientResponseError } from 'pocketbase';
 
 export const pocketbaseUrl = isTestEnvironment ? env.TEST_POCKETBASE_URL : env.POCKETBASE_URL;
@@ -17,12 +18,12 @@ export const handlePocketbaseErrors = (err: unknown) => {
 	// Check if the error is a Pocketbase error
 	if (typeof err === 'object' && err !== null && err instanceof ClientResponseError) {
 		// Check if the Pocketbase server is online
-		if (err.status === 0) throw error(500, 'An error ocurred on our end, please try again later');
+		if (err.status === 0) throw error(500, UNKNOWN_ERROR_MESSAGE);
 
 		// Return the field validation errors
 		return fail(err.data.code, { ...err.data });
 	} else {
-		throw error(500);
+		throw error(500, UNKNOWN_ERROR_MESSAGE);
 	}
 };
 
@@ -32,4 +33,10 @@ export const getAudioSrc = (article: BaseAuthStore['model']): string | undefined
 
 	const pocketbaseCdnUrl = isTestEnvironment ? env.TEST_POCKETBASE_CDN_URL : env.POCKETBASE_CDN_URL;
 	return `${pocketbaseCdnUrl}/${article.collectionId}/${article.id}/${article.audio}`;
+};
+
+// Converts object to string and minifies it
+export const miniStringify = (obj: object): string => {
+	const jsonString = JSON.stringify(obj);
+	return jsonminify(jsonString);
 };
