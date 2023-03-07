@@ -3,7 +3,7 @@
 
 	export let isLoading = false;
 
-	let interval;
+	let interval: NodeJS.Timer;
 	let placeholders: NodeListOf<HTMLElement>;
 
 	const animateLineWidths = () => {
@@ -23,6 +23,8 @@
 		interval = setInterval(() => {
 			animateLineWidths();
 		}, THREE_SECONDS);
+	} else {
+		clearInterval(interval);
 	}
 </script>
 

@@ -160,7 +160,7 @@ async function getCompletion(
 function getFieldsFromCompletion(completionResponse: CompletionResponse): CompletionResponse {
 	const cantGenerateError = {
 		status: 400,
-		message: "Couldn't generate an article based on your last prompt, try modifiying it",
+		message: "Couldn't generate an article based on your last prompt, try a different one",
 		articleCompletion: null
 	};
 

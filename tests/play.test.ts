@@ -118,12 +118,12 @@ test.describe('Play', () => {
 			let prompt = MockPrompt.WRONG_FORMAT;
 			await page.locator('textarea').fill(prompt);
 			await expect(
-				page.getByText("Couldn't generate an article based on your last prompt, try modifiying it")
+				page.getByText("Couldn't generate an article based on your last prompt, try a different one")
 			).not.toBeVisible();
 
 			await generateButton.click();
 			await expect(
-				page.getByText("Couldn't generate an article based on your last prompt, try modifiying it")
+				page.getByText("Couldn't generate an article based on your last prompt, try a different one")
 			).toBeVisible();
 
 			const article = await getLastArticle(`messages ~ "${MockPrompt.WRONG_FORMAT}"`);
