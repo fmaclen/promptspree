@@ -1,4 +1,4 @@
-import type { Article, ArticleStatus } from '$lib/article';
+import type { ArticleStatus } from '$lib/article';
 import type { MockArticle } from '$lib/tests';
 import { type Page, expect } from '@playwright/test';
 import PocketBase, { BaseAuthStore } from 'pocketbase';
@@ -70,7 +70,7 @@ export async function logoutCurrentUser(page: Page) {
 	await page.getByText('Logout').click();
 }
 
-export async function getLastArticle(query: string): Promise<any> {
+export async function getLastArticle(query: string): Promise<BaseAuthStore['model']> {
 	return await pb.collection('articles').getFirstListItem(query, { sort: '-created' });
 }
 

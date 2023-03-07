@@ -64,6 +64,7 @@ export const actions: Actions = {
 
 		const completionResponse = await getCompletion(locals.user.id, articleCollection.messages);
 		if (completionResponse.status !== 200) {
+			await updateArticleCollection(locals.pb, articleCollection.id, { status: ArticleStatus.FAILED }); // prettier-ignore
 			return fail(completionResponse.status, { error: completionResponse.message });
 		}
 
@@ -80,7 +81,8 @@ export const actions: Actions = {
 		articleCollection = await updateArticleCollection(locals.pb, articleCollection.id, {
 			...articleCompletion,
 			body: articleCompletion && miniStringify(articleCompletion.body),
-			messages: articleCollection.messages
+			messages: articleCollection.messages,
+			status: ArticleStatus.DRAFT
 		});
 
 		// Generate the article for frontend
