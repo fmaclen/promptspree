@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-import { type Article, ArticleStatus } from '../src/lib/article.js';
+import { type Article, ArticleStatus, INITIAL_SUGGESTIONS } from '../src/lib/article.js';
 import { MOCK_ARTICLES, MockPrompt } from '../src/lib/tests.js';
 import { UNKNOWN_ERROR_MESSAGE } from '../src/lib/utils.js';
 import { MOCK_USERS } from './lib/fixtures.js';
@@ -153,6 +153,34 @@ test.describe('Play', () => {
 
 			await generateButton.click();
 			await expect(page.getByText(UNKNOWN_ERROR_MESSAGE)).toBeVisible();
+		});
+
+		test('Can write prompt from initial suggestions', async ({ page }) => {
+			const generateButton = page.locator('button[type=submit]', { hasText: 'Generate' });
+			const suggestion = page.locator('div.play__suggestions button');
+
+			const firstSuggestion = suggestion.nth(0);
+			const firstSuggestionText = (await firstSuggestion.textContent()) as string;
+			const secondSuggestion = suggestion.nth(1);
+			const secondSuggestionText = (await secondSuggestion.textContent()) as string;
+			const thirdSuggestion = suggestion.nth(2);
+			const thirdSuggestionText = (await thirdSuggestion.textContent()) as string;
+
+			expect(INITIAL_SUGGESTIONS.includes(firstSuggestionText));
+			expect(INITIAL_SUGGESTIONS.includes(secondSuggestionText));
+			expect(INITIAL_SUGGESTIONS.includes(thirdSuggestionText));
+			await expect(firstSuggestion).not.toBeDisabled();
+			await expect(secondSuggestion).not.toBeDisabled();
+			await expect(thirdSuggestion).not.toBeDisabled();
+			await expect(generateButton).toBeDisabled();
+			await expect(page.locator('input[name=prePrompt]')).toHaveValue('');
+
+			await firstSuggestion.click();
+			await expect(firstSuggestion).toBeDisabled();
+			await expect(secondSuggestion).toBeDisabled();
+			await expect(thirdSuggestion).toBeDisabled();
+			await expect(generateButton).not.toBeDisabled();
+			await expect(page.locator('input[name=prePrompt]')).toHaveValue(firstSuggestionText);
 		});
 	});
 });

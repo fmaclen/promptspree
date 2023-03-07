@@ -58,7 +58,7 @@ export enum ArticleCategory {
 	OPINION = 'Opinion'
 }
 
-const INITIAL_SUGGESTIONS = [
+export const INITIAL_SUGGESTIONS = [
 	'Phonebooks return as nostalgic millennials long for simpler times',
 	'Classical music composer time travels from 1890 and reacts to his pieces remixed as EDM',
 	'Tips for choosing the right radioactive mutant fern for your home',
