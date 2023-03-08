@@ -1,5 +1,5 @@
 import { env } from '$env/dynamic/private';
-import { isTestEnvironment, UNKNOWN_ERROR_MESSAGE } from '$lib/utils';
+import { UNKNOWN_ERROR_MESSAGE, isTestEnvironment } from '$lib/utils';
 import { error, fail } from '@sveltejs/kit';
 import jsonminify from 'jsonminify';
 import { type BaseAuthStore, ClientResponseError } from 'pocketbase';
