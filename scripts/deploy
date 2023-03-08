@@ -10,16 +10,24 @@ git pull
 # Install Node dependencies
 npm ci
 
+# Run SvelteKit build
+npm run build
+
+# Kill SvelteKit server (if running)
+pkill -f "node build/index.js APP_NAME=promptspree-frontend"
+
+# Start SvelteKit server (using .env variables)
+env $(cat .env | xargs) nohup node build/index.js APP_NAME=promptspree-frontend &
+
+# NOTE: the SvelteKit server is ready several seconds earlier than the Pocketbase
+# setup and server start. This causes the frontend to return 500 errors if
+# it receives requests during that period.
+
+# Kill Pocketbase (if running)
+pkill -f "./pocketbase serve APP_NAME=promptspree-backend"
+
 # Install Pocketbase
 npm run setup:pocketbase
 
-# Run npm run build
-npm run build
-
-# Restart backend
-pkill -f "./pocketbase serve APP_NAME=promptspree-backend"
+# Start Pocketbase
 nohup bash -c "cd pocketbase/ && ./pocketbase serve APP_NAME=promptspree-backend" &
-
-# Load environment variables and restart frontend
-pkill -f "node build/index.js APP_NAME=promptspree-frontend"
-env $(cat .env | xargs) nohup node build/index.js APP_NAME=promptspree-frontend &
