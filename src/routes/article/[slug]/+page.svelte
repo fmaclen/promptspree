@@ -22,7 +22,7 @@
 	};
 </script>
 
-<Head title={[article.headline]} />
+<Head title={[article.headline]} description={article.body[0]} />
 
 <Section isVerticallyCentered={true}>
 	<Plate>
