@@ -62,7 +62,7 @@
 				{#each article.messages as message}
 					{#if message.role === 'user'}
 						{message.content}
-						<br>
+						<br />
 					{/if}
 				{/each}
 			</code>
