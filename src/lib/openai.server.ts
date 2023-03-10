@@ -95,7 +95,6 @@ export async function getCompletionFromAI(
 			unformattedCompletion
 		};
 	} catch (err: any) {
-
 		logEventToSlack('openai.server.ts: getCompletionFromAI', err);
 
 		switch (err?.response?.status) {

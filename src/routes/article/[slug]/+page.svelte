@@ -22,7 +22,7 @@
 	};
 </script>
 
-<Head title={[article.headline]} />
+<Head title={[article.headline]} description={article.body[0]} />
 
 <Section isVerticallyCentered={true}>
 	<Plate>
@@ -62,7 +62,7 @@
 				{#each article.messages as message}
 					{#if message.role === 'user'}
 						{message.content}
-						<br>
+						<br />
 					{/if}
 				{/each}
 			</code>

@@ -21,7 +21,7 @@
 	let article: Article | null = null;
 	let error: string | null = null;
 	let fieldError: string[] | null = null;
-  let textareaRef: HTMLTextAreaElement;
+	let textareaRef: HTMLTextAreaElement;
 
 	$: prompt = '';
 	$: isLoading = false;
@@ -54,11 +54,11 @@
 			isLoading = false;
 			prompt = '';
 		};
-	};
+	}
 
 	function submitPublish() {
 		isLoading = true;
-	};
+	}
 </script>
 
 <Head title={['Play']} />
@@ -125,7 +125,7 @@
 						placeholder={article
 							? 'e.g. "make it a bit longer"'
 							: 'e.g. "an opinion piece about kids these days in a sarcastic tone"'}
-						bind:textareaRef={textareaRef}
+						bind:textareaRef
 						bind:value={prompt}
 						disabled={isLoading}
 					/>
