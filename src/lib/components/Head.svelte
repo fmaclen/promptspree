@@ -11,7 +11,7 @@
 
 <svelte:head>
 	<!-- HTML Meta Tags -->
-	<title>{title}</title>
+	<title>{formattedTitle}</title>
 	<meta name="description" content={description} />
 
 	<!-- Facebook Meta Tags -->
