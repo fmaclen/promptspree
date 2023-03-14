@@ -60,10 +60,9 @@
 		<div class="article-prompt">
 			<code class="article-prompt__code">
 				{#each article.messages as message}
-					{#if message.role === 'user'}
-						{message.content}
-						<br />
-					{/if}
+					<p>
+						{typeof message.content == 'string' ? message.content : message.content.notes}
+					</p>
 				{/each}
 			</code>
 		</div>

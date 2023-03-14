@@ -1,9 +1,7 @@
 // These helpers are meant to mock server responses when during Playwright tests.
 //
 // HACK: need to add `.js` extension so it can be imported from tests files.
-import type { ChatCompletionRequestMessage } from 'openai';
-
-import { ArticleCategory } from './article.js';
+import { ArticleCategory, ArticleMessageRole, type ArticleMessage } from './article.js';
 import type { CompletionResponse, CompletionUserPrompt } from './openai.server.js';
 import { UNKNOWN_ERROR_MESSAGE } from './utils.js';
 
@@ -22,7 +20,7 @@ export interface MockArticle {
 	category: ArticleCategory;
 	body: string[];
 	suggestions: string[];
-	messages: ChatCompletionRequestMessage[];
+	messages: ArticleMessage[];
 }
 
 const MOCK_SYSTEM_PROMPT = 'This is a mocked test system prompt, no AI was involved';
@@ -45,8 +43,9 @@ export const MOCK_ARTICLES: MockArticle[] = [
 			'Add a cautionary tale about the dangers of mishandling radioactive plants'
 		],
 		messages: [
-			{ role: 'system', content: MOCK_SYSTEM_PROMPT },
-			{ role: 'user', content: 'tips for buying a radioactive mutant ficus' }
+			{ role: ArticleMessageRole.SYSTEM, content: MOCK_SYSTEM_PROMPT },
+			{ role: ArticleMessageRole.USER, content: 'tips for buying a radioactive mutant ficus' },
+			{ role: ArticleMessageRole.ASSISTANT, content: '{"notes":"Please do not actually purchase a radioactive mutant ficus for your home. This article is meant to be humorous and fictitious"}' }
 		]
 	},
 	{
@@ -64,8 +63,8 @@ export const MOCK_ARTICLES: MockArticle[] = [
 			'Change J.C. Penny to a different store name'
 		],
 		messages: [
-			{ role: 'system', content: MOCK_SYSTEM_PROMPT },
-			{ role: 'user', content: "the great plague and a 50% off sale at J.C. Penney's" }
+			{ role: ArticleMessageRole.SYSTEM, content: MOCK_SYSTEM_PROMPT },
+			{ role: ArticleMessageRole.USER, content: "the great plague and a 50% off sale at J.C. Penney's" }
 		]
 	},
 	{
@@ -83,8 +82,8 @@ export const MOCK_ARTICLES: MockArticle[] = [
 			'Change the headline to be more sensational'
 		],
 		messages: [
-			{ role: 'system', content: MOCK_SYSTEM_PROMPT },
-			{ role: 'user', content: 'phonebooks making a comeback' }
+			{ role: ArticleMessageRole.SYSTEM, content: MOCK_SYSTEM_PROMPT },
+			{ role: ArticleMessageRole.USER, content: 'phonebooks making a comeback' }
 		]
 	},
 	{
@@ -102,8 +101,8 @@ export const MOCK_ARTICLES: MockArticle[] = [
 			'Explain why the discovery of new species is important for the study of marine biology.'
 		],
 		messages: [
-			{ role: 'system', content: MOCK_SYSTEM_PROMPT },
-			{ role: 'user', content: 'new species of deep sea creatures are discovered' }
+			{ role: ArticleMessageRole.SYSTEM, content: MOCK_SYSTEM_PROMPT },
+			{ role: ArticleMessageRole.USER, content: 'new species of deep sea creatures are discovered' }
 		]
 	}
 ];
