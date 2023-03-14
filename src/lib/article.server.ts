@@ -67,6 +67,7 @@ export const generateArticle = async (
 
 	const audioSrc = getAudioSrc(articleCollection);
 	const reactions = await getArticleReactions(articleCollection.id, locals);
+	const messages = await getArticleMessages(articleCollection.id, locals);
 
 	const article: Article = {
 		id: articleCollection.id,
@@ -75,7 +76,7 @@ export const generateArticle = async (
 		category: articleCollection.category,
 		headline: articleCollection.headline,
 		body: JSON.parse(articleCollection.body),
-		messages: articleCollection.messages,
+		messages,
 		model: CURRENT_MODEL,
 		author,
 		audioSrc,
@@ -123,6 +124,27 @@ const getArticleReactions = async (
 
 	return { total, byType, byCurrentUser };
 };
+
+async function getArticleMessages(articleId: string, locals: App.Locals) {
+	let messagesCollection: Record[];
+
+	try {
+		messagesCollection = await locals.pb
+			.collection('messages')
+			.getFullList(200, { filter: `article="${articleId}"` });
+	} catch (err) {
+		logEventToSlack('/article/[slug]/+page.server.ts', err);
+		return handlePocketbaseError(err);
+	}
+
+	const messages:any = []
+
+	messagesCollection.forEach((item) => {
+		messages.push({role: item.role, content: item.content})
+	});
+
+	return messages;
+}
 
 export const deleteArticle = async (request: Request, locals: App.Locals) => {
 	const formData = await request.formData();

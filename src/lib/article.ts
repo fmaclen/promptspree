@@ -1,4 +1,5 @@
 import type { ChatCompletionRequestMessage } from 'openai';
+import type { ArticleCompletion } from './openai.server';
 
 export interface ArticleReactions {
 	total: number;
@@ -17,6 +18,17 @@ export interface ArticleAuthor {
 	nickname: string;
 }
 
+export enum ArticleMessageRole {
+	SYSTEM = 'system',
+	USER = 'user',
+	ASSISTANT = 'assistant'
+}
+
+export interface ArticleMessage {
+	role: ArticleMessageRole;
+	content: string | ArticleCompletion;
+}
+
 export interface Article {
 	id: string;
 	updated: string;
@@ -25,7 +37,7 @@ export interface Article {
 	category: ArticleCategory;
 	headline: string;
 	body: string[];
-	messages: ChatCompletionRequestMessage[];
+	messages: ArticleMessage[];
 	reactions: ArticleReactions;
 	model: string;
 	audioSrc?: string;

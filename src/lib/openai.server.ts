@@ -11,6 +11,7 @@ export interface ArticleCompletion {
 	category: ArticleCategory;
 	body: string[];
 	suggestions: string[];
+	notes?: string;
 }
 
 export interface CompletionUserPrompt {
