@@ -133,7 +133,6 @@
 	}
 
 	:global(body) {
-		--font-serif: 'Playfair Display', serif;
 		--font-sans: 'Inter', sans-serif;
 		--font-mono: 'Overpass Mono', monospace;
 
@@ -153,6 +152,8 @@
 		--border-radius-l: 8px;
 		--border-radius-m: 4px;
 		--border-radius-s: 2px;
+
+		--border-color-default: rgba(0, 0, 0, 0.1);
 
 		height: 100%;
 		margin: 0;

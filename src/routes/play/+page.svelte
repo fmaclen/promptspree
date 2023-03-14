@@ -1,14 +1,9 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
-	import {
-		type Article,
-		getRandomInitialSuggestions,
-		parseCompletionSuggestions
-	} from '$lib/article';
+	import type { Article } from '$lib/article';
 	import A from '$lib/components/A.svelte';
 	import ArticleBody from '$lib/components/ArticleBody.svelte';
 	import FormButton from '$lib/components/FormButton.svelte';
-	import FormTextarea from '$lib/components/FormTextarea.svelte';
 	import HR from '$lib/components/HR.svelte';
 	import Head from '$lib/components/Head.svelte';
 	import IconLoading from '$lib/components/IconLoading.svelte';
@@ -16,6 +11,7 @@
 	import Plate from '$lib/components/Plate.svelte';
 	import { Sentiment } from '$lib/utils';
 	import type { ActionResult } from '@sveltejs/kit';
+	import { afterUpdate } from 'svelte';
 	import { slide } from 'svelte/transition';
 
 	let article: Article | null = null;
@@ -32,6 +28,17 @@
 	function setSuggestion(suggestion: string) {
 		prompt = suggestion;
 		textareaRef.focus();
+	}
+
+	afterUpdate(() => {
+		adjustTextarea();
+	});
+
+	function adjustTextarea() {
+		if (textareaRef) {
+			textareaRef.style.height = 'auto';
+			textareaRef.style.height = `${textareaRef.scrollHeight}px`;
+		}
 	}
 
 	function submitGenerate() {
@@ -80,66 +87,65 @@
 	</div>
 {/if}
 
-<Notice>
-	{#if isLoading}
-		<IconLoading />
-	{:else if article}
-		Type another prompt or use one of the suggestions to edit the article
-	{:else}
-		Type your own prompt or choose one of the suggestions to generate an article
-	{/if}
-</Notice>
-<HR />
-
 <section class="play">
-	<div class="play__prompt">
-		{#if fieldError}
-			<Notice sentiment={Sentiment.NEGATIVE}>{fieldError[1]}</Notice>
-		{/if}
+	{#if fieldError}
+		<Notice sentiment={Sentiment.NEGATIVE}>{fieldError[1]}</Notice>
+	{/if}
 
-		<nav class="play__nav">
-			<form class="play__form" method="POST" action="?/generate" use:enhance={submitGenerate}>
-				<input type="hidden" name="prompt" bind:value={prompt} />
-
+	<nav class="play__session">
+		<div class="chat">
+			<ul class="chat__messages">
 				{#if article}
-					<input type="hidden" name="articleId" value={article.id} />
+					{#each article.messages as message}
+						{#if message.role !== 'system'}
+							<li class="chat__message chat__message--{message.role}">
+								{message.content}
+							</li>
+						{/if}
+					{/each}
 				{/if}
+			</ul>
 
-				{#if !isLoading}
-					<div class="play__suggestions">
-						{#each suggestions as suggestion}
-							<FormButton
-								on:click={() => setSuggestion(suggestion)}
-								label={suggestion}
-								hierarchy="secondary"
-								type="button"
-								disabled={prompt !== ''}
-							/>
-						{/each}
-					</div>
-				{/if}
+			{#if !isLoading}
+				<nav class="chat__suggestions">
+					{#each suggestions as suggestion}
+						<button
+							class="chat__suggestion"
+							on:click={() => setSuggestion(suggestion)}
+							type="button"
+						>
+							{suggestion}
+						</button>
+					{/each}
+				</nav>
+			{/if}
+		</div>
 
-				<div class="play__user-prompt">
-					<FormTextarea
-						name="prompt"
-						placeholder={article
-							? 'e.g. "make it a bit longer"'
-							: 'e.g. "an opinion piece about kids these days in a sarcastic tone"'}
-						bind:textareaRef
-						bind:value={prompt}
-						disabled={isLoading}
-					/>
-					<FormButton
-						label={article ? 'Apply change' : isLoading ? 'Generating...' : 'Generate'}
-						type="submit"
-						disabled={isLoading || !prompt}
-					/>
-				</div>
-			</form>
-		</nav>
-	</div>
-
-	<HR />
+		<form class="play__form" method="POST" action="?/generate" use:enhance={submitGenerate}>
+			{#if article}
+				<input type="hidden" name="articleId" value={article.id} />
+			{/if}
+			<input type="hidden" name="prompt" bind:value={prompt} />
+			<div class="play__prompt">
+				<textarea
+					class="play__prompt-textarea"
+					name="prompt"
+					placeholder={article ? 'Suggest any changes' : 'Write a prompt to generate an article'}
+					rows="1"
+					bind:value={prompt}
+					bind:this={textareaRef}
+					disabled={isLoading}
+				/>
+				<button class="play__submit" type="submit" disabled={isLoading || !prompt}>
+					{#if isLoading}
+						<IconLoading />
+					{:else}
+						Submit
+					{/if}
+				</button>
+			</div>
+		</form>
+	</nav>
 
 	<div class="play__draft">
 		<Plate>
@@ -170,10 +176,85 @@
 </section>
 
 <style lang="scss">
+	ul.chat__messages {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+		margin: 0;
+		padding: 12px;
+		list-style: none;
+	}
+
+	li.chat__message {
+		padding: 8px;
+		font-size: 14px;
+		border-radius: var(--border-radius-m);
+		max-width: 75%;
+
+		&--user {
+			background-color: var(--color-white);
+			margin-right: auto;
+		}
+
+		&--assistant {
+			text-align: right;
+			margin-left: auto;
+			background-color: var(--color-positive-secondary);
+		}
+
+		&--system {
+			padding: 0;
+			margin-inline: auto;
+			color: #999;
+			text-align: center;
+		}
+	}
+
+	nav.chat__suggestions {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+		padding: 12px;
+		max-width: 100vw;
+		box-sizing: border-box;
+		/* border-top: 1px solid var(--border-color-default); */
+		border-bottom: 1px solid var(--border-color-default);
+		background-color: #ddd;
+	}
+
+	button.chat__suggestion {
+		position: relative;
+		font-family: var(--font-sans);
+		padding: 8px;
+		font-size: 14px;
+		text-align: left;
+		border: none;
+		border-radius: var(--border-radius-m);
+		color: var(--color-accent);
+		background-color: var(--color-accent-secondary);
+		padding-top: 8px;
+		padding-bottom: 8px;
+		padding-left: 8px;
+		padding-right: 32px;
+		cursor: pointer;
+
+		&::after {
+			position: absolute;
+			right: 8px;
+			top: 0;
+			bottom: 0;
+			content: '↓';
+			display: flex;
+			align-items: center;
+		}
+	}
+
+	/* ---------------------------------------------------- */
+
 	section.play {
 		display: grid;
-		grid-template-rows: max-content max-content auto;
-		height: 100%;
+		grid-template-rows: repeat(2, 1fr);
+		flex-grow: 1;
 		background-color: hsl(0, 0%, 93%);
 	}
 
@@ -181,22 +262,28 @@
 		display: flex;
 		align-items: center;
 		padding: 24px;
-
 		max-width: 768px;
 		width: 100%;
 		box-sizing: border-box;
 		margin-inline: auto;
+		overflow-y: auto;
 	}
 
 	div.play__prompt {
+		background-color: var(--color-white);
+		padding: 12px;
 		display: flex;
-		flex-direction: column;
-		row-gap: 16px;
-		padding: 24px;
-		max-width: 768px;
-		width: 100%;
-		box-sizing: border-box;
-		margin-inline: auto;
+		gap: 8px;
+	}
+
+	textarea.play__prompt-textarea {
+		flex: 1;
+		font-size: 14px;
+		border: none;
+		resize: vertical;
+		background-color: var(--color-white);
+		border-radius: var(--border-radius-m);
+		font-family: var(--font-sans);
 	}
 
 	nav.play__nav {
@@ -217,18 +304,15 @@
 		row-gap: 8px;
 	}
 
-	form.play-article-actions,
-	form.play__form {
+	form.play-article-actions {
 		width: 100%;
 		display: flex;
 		gap: 16px;
 	}
 
 	form.play__form {
-		flex-direction: column;
 	}
 
 	form.play-article-actions {
-		margin-bottom: 32px;
 	}
 </style>
