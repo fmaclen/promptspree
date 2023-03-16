@@ -20,7 +20,7 @@ import type { ChatCompletionRequestMessage } from 'openai';
 import type { BaseAuthStore } from 'pocketbase';
 
 import type { PageServerLoad } from '../$types';
-import { miniStringify } from '../../lib/pocketbase.server';
+import { miniStringify } from '$lib/utils';
 import type { Actions } from './$types';
 
 export const load: PageServerLoad = async ({ locals }) => {

@@ -1,3 +1,5 @@
+import jsonminify from 'jsonminify';
+
 export const APP_NAME = 'Promptspree';
 export const APP_EMAIL = 'support@promptspree.com';
 
@@ -11,3 +13,9 @@ export enum Sentiment {
 }
 
 export const UNKNOWN_ERROR_MESSAGE = 'An error occurred on our end, please try again later';
+
+// Converts object to string and minifies it
+export const miniStringify = (obj: object): string => {
+	const jsonString = JSON.stringify(obj);
+	return jsonminify(jsonString);
+};
