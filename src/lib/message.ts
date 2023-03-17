@@ -16,23 +16,26 @@ export interface Message {
 	content: ArticleCompletion | string;
 }
 
+// Filters out messages that shouldn't be displayed in the UI, for example: the SYSTEM's prompt
 export function getMessages(messagesCollection?: MessageCollection[]): Message[] {
 	if (!messagesCollection) return [];
 
-	const messages: Message[] = [];
+	const filteredMessages: Message[] = [];
 
-	messagesCollection.forEach((message) => {
-		// Skip messages with the role SYSTEM
-		if (message.role !== MessageRole.SYSTEM) {
-			messages.push({
-				id: message.id,
-				updated: message.updated,
-				created: message.created,
-				role: message.role,
-				content: message.content
-			});
-		}
-	});
+  // Loop through each message in the collection
+  for (const message of messagesCollection) {
+    // Skip messages with the role SYSTEM
+    if (message.role !== MessageRole.SYSTEM) {
+      // Add the message to the filtered messages array
+      filteredMessages.push({
+        id: message.id,
+        updated: message.updated,
+        created: message.created,
+        role: message.role,
+        content: message.content,
+      });
+    }
+  }
 
-	return messages.length ? messages : [];
+	return filteredMessages.length ? filteredMessages : [];
 }

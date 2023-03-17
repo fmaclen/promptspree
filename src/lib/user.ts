@@ -13,6 +13,7 @@ export function getUser(userCollection: UserCollection): User {
 	};
 }
 
+// Calculate the score of a prompt based on the number of reactions
 export const getPromptScore = (articles: Article[]): number => {
 	return articles.reduce((acc, article) => {
 		if (article.status !== ArticleStatus.PUBLISHED) return acc;

@@ -39,6 +39,21 @@ export enum ArticleCategory {
 	OPINION = 'Opinion'
 }
 
+// Grabs the last assistant message and returns the suggestions
+export function parseCompletionSuggestions(messages: ChatCompletionRequestMessage[]): string[] {
+	let assistantSuggestions: string[] = [];
+
+	for (let i = messages.length - 1; i >= 0; i--) {
+		if (messages[i].role === 'assistant') {
+			const parsedContent = JSON.parse(messages[i].content);
+			assistantSuggestions = parsedContent.suggestions;
+			break;
+		}
+	}
+
+	return assistantSuggestions;
+}
+
 export const INITIAL_SUGGESTIONS = [
 	'Phonebooks return as nostalgic millennials long for simpler times',
 	'Classical music composer time travels from 1890 and reacts to his pieces remixed as EDM',
@@ -75,21 +90,8 @@ export const INITIAL_SUGGESTIONS = [
 	'AI language translation causes international incident'
 ];
 
-// Grabs the last assistant message and returns the suggestions
-export function parseCompletionSuggestions(messages: ChatCompletionRequestMessage[]): string[] {
-	let assistantSuggestions: string[] = [];
-
-	for (let i = messages.length - 1; i >= 0; i--) {
-		if (messages[i].role === 'assistant') {
-			const parsedContent = JSON.parse(messages[i].content);
-			assistantSuggestions = parsedContent.suggestions;
-			break;
-		}
-	}
-
-	return assistantSuggestions;
-}
-
+// Gets 3 random suggestions from the INITIAL_SUGGESTIONS array for the user to
+// choose from when they are creating a new article but haven't typed anything yet
 export function getRandomInitialSuggestions(): string[] {
 	const randomSuggestions = [];
 
