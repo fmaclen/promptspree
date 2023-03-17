@@ -19,7 +19,7 @@ export async function getArticle(
 			expand: 'messages(article),reactions(article),user'
 		});
 	} catch (_) {
-		// eslint-disable-next-line no-empty
+		return null
 	}
 
 	if (!collection) return null;
@@ -37,9 +37,8 @@ export async function createArticleCollection(
 		const pb = await pbClient();
 		return await pb.collection('articles').create(formData);
 	} catch (_) {
-		// eslint-disable-next-line no-empty
+		return null;
 	}
-	return null;
 }
 
 export async function updateArticleCollection(
@@ -53,17 +52,16 @@ export async function updateArticleCollection(
 			expand: 'messages(article),reactions(article),user'
 		});
 	} catch (_) {
-		// eslint-disable-next-line no-empty
+		return null;
 	}
-	return null;
 }
 
 export async function deleteArticleCollection(articleId: string) {
 	try {
 		const pb = await pbClient();
-		await pb.collection('articles').delete(articleId);
+		return await pb.collection('articles').delete(articleId);
 	} catch (_) {
-		// eslint-disable-next-line no-empty
+		return null;
 	}
 }
 
