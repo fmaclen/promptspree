@@ -3,7 +3,7 @@ import { getMessages } from '$lib/messages';
 import type { ArticleCollection } from '$lib/pocketbase.schema';
 import { getFileSrc, pbClient } from '$lib/pocketbase.server';
 import { calculateReactionsFromCollection } from '$lib/reactions';
-import { getUser } from '$lib/user';
+import { getUser } from '$lib/users';
 
 export async function getArticle(
 	articleId?: string,
