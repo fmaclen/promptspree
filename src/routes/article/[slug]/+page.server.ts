@@ -14,7 +14,7 @@ import {
 	getReactionCollection,
 	getReactionsCollection,
 	updateReactionCollection
-} from '$lib/reaction.server';
+} from '$lib/reactions.server';
 import { type Actions, error, fail, redirect } from '@sveltejs/kit';
 
 import type { PageServerLoad } from './$types';
