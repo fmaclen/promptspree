@@ -1,6 +1,6 @@
 import type { ChatCompletionRequestMessage } from 'openai';
 import type { User } from '$lib/user';
-import type { Message } from '$lib/message';
+import type { Message } from '$lib/messages';
 import type { Reactions } from '$lib/reaction';
 
 export interface Article {

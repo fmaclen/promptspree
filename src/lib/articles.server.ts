@@ -1,5 +1,5 @@
 import { type Article, ArticleStatus } from '$lib/articles';
-import { getMessages } from '$lib/message';
+import { getMessages } from '$lib/messages';
 import type { ArticleCollection } from '$lib/pocketbase.schema';
 import { getFileSrc, pbClient } from '$lib/pocketbase.server';
 import { calculateReactionsFromCollection } from '$lib/reaction';

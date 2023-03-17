@@ -1,7 +1,7 @@
 import type { ArticleCategory, ArticleStatus } from "$lib/articles";
 import type { ArticleCompletion } from "$lib/openai.server";
 import type { Reaction } from "$lib/reaction";
-import type { MessageRole } from "$lib/message";
+import type { MessageRole } from "$lib/messages";
 
 export interface BaseCollection {
 	id: string;
