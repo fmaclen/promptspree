@@ -6,7 +6,7 @@ import type { ArticleCollection } from './pocketbase.schema';
 
 export const pocketbaseUrl = isTestEnvironment ? env.TEST_POCKETBASE_URL : env.POCKETBASE_URL;
 
-export async function pbClient(): Promise<Pocketbase> {
+export async function pbAdmin(): Promise<Pocketbase> {
 	const pb = new Pocketbase(pocketbaseUrl);
 	await pb.admins.authWithPassword(env.POCKETBASE_ADMIN_EMAIL, env.POCKETBASE_ADMIN_PASSWORD);
 	return pb;

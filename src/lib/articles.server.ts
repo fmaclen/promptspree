@@ -1,7 +1,7 @@
 import { type Article, ArticleStatus } from '$lib/articles';
 import { getMessages } from '$lib/messages';
 import type { ArticleCollection } from '$lib/pocketbase.schema';
-import { getFileSrc, pbClient } from '$lib/pocketbase.server';
+import { getFileSrc, pbAdmin } from '$lib/pocketbase.server';
 import { calculateReactionsFromCollection } from '$lib/reactions';
 import { getUser } from '$lib/users';
 
@@ -14,7 +14,7 @@ export async function getArticle(
 	let collection: ArticleCollection | null = null;
 
 	try {
-		const pb = await pbClient();
+		const pb = await pbAdmin();
 		collection = await pb.collection('articles').getOne(articleId, {
 			expand: 'messages(article),reactions(article),user'
 		});
@@ -34,7 +34,7 @@ export async function createArticleCollection(
 	formData: FormData
 ): Promise<ArticleCollection | null> {
 	try {
-		const pb = await pbClient();
+		const pb = await pbAdmin();
 		return await pb.collection('articles').create(formData);
 	} catch (_) {
 		return null;
@@ -47,7 +47,7 @@ export async function updateArticleCollection(
 ): Promise<ArticleCollection | null> {
 	//validate user
 	try {
-		const pb = await pbClient();
+		const pb = await pbAdmin();
 		return await pb.collection('articles').update(articleId, formData, {
 			expand: 'messages(article),reactions(article),user'
 		});
@@ -58,7 +58,7 @@ export async function updateArticleCollection(
 
 export async function deleteArticleCollection(articleId: string) {
 	try {
-		const pb = await pbClient();
+		const pb = await pbAdmin();
 		return await pb.collection('articles').delete(articleId);
 	} catch (_) {
 		return null;

@@ -1,5 +1,5 @@
 import type { ReactionCollection } from './pocketbase.schema';
-import { pbClient } from './pocketbase.server';
+import { pbAdmin } from './pocketbase.server';
 
 export async function getReactionCollection(
 	articleId: string,
@@ -8,7 +8,7 @@ export async function getReactionCollection(
 	let reactionCollection: ReactionCollection | null = null;
 
 	try {
-		const pb = await pbClient();
+		const pb = await pbAdmin();
 		reactionCollection = await pb
 			.collection('reactions')
 			.getFirstListItem(`article="${articleId}" && user="${currentUserId}"`);
@@ -23,7 +23,7 @@ export async function getReactionsCollection(articleId?: string): Promise<Reacti
 	let collection: ReactionCollection[] = [];
 
 	try {
-		const pb = await pbClient();
+		const pb = await pbAdmin();
 		collection = await pb.collection('reactions').getFullList(undefined, {
 			filter: `article="${articleId}"`
 		});
@@ -38,7 +38,7 @@ export async function createReactionCollection(formData: FormData): Promise<Reac
 	let createdReactionCollection: ReactionCollection | null = null;
 
 	try {
-		const pb = await pbClient();
+		const pb = await pbAdmin();
 		createdReactionCollection = await pb.collection('reactions').create(formData);
 	} catch (_) {
 		return null;
@@ -54,7 +54,7 @@ export async function updateReactionCollection(
 	let updatedReactionCollection: ReactionCollection | null = null;
 
 	try {
-		const pb = await pbClient();
+		const pb = await pbAdmin();
 		updatedReactionCollection = await pb
 			.collection('reactions')
 			.update(reactionCollection.id, formData);
@@ -67,7 +67,7 @@ export async function updateReactionCollection(
 
 export async function deleteReactionCollection(reactionCollection: ReactionCollection) {
 	try {
-		const pb = await pbClient();
+		const pb = await pbAdmin();
 		await pb.collection('reactions').delete(reactionCollection.id);
 	} catch (_) {
 		return null;
