@@ -1,4 +1,4 @@
-import type { ArticleCategory, ArticleStatus } from "$lib/article";
+import type { ArticleCategory, ArticleStatus } from "$lib/articles";
 import type { ArticleCompletion } from "$lib/openai.server";
 import type { Reaction } from "$lib/reaction";
 import type { MessageRole } from "$lib/message";

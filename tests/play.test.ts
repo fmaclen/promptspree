@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-import { type Article, ArticleStatus, INITIAL_SUGGESTIONS } from '../src/lib/article.js';
+import { type Article, ArticleStatus, INITIAL_SUGGESTIONS } from '../src/lib/articles.js';
 import { MOCK_ARTICLES, MockPrompt } from '../src/lib/tests.js';
 import { UNKNOWN_ERROR_MESSAGE } from '../src/lib/utils.js';
 import { MOCK_USERS } from './lib/fixtures.js';

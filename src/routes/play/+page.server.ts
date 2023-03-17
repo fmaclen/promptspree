@@ -1,4 +1,4 @@
-import { ArticleCategory, ArticleStatus } from '$lib/article';
+import { ArticleCategory, ArticleStatus } from '$lib/articles';
 import {
 	createArticleCollection,
 	generateArticle,

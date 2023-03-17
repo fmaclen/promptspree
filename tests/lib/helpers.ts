@@ -1,4 +1,4 @@
-import type { ArticleStatus } from '$lib/article';
+import type { ArticleStatus } from '$lib/articles';
 import type { MockArticle } from '$lib/tests';
 import { type Page, expect } from '@playwright/test';
 import PocketBase, { BaseAuthStore } from 'pocketbase';

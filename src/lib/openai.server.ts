@@ -3,7 +3,7 @@ import { logEventToSlack } from '$lib/slack.server';
 import { error } from '@sveltejs/kit';
 import { type ChatCompletionRequestMessage, Configuration, OpenAIApi } from 'openai';
 
-import { ArticleCategory } from './article';
+import { ArticleCategory } from './articles';
 import { UNKNOWN_ERROR_MESSAGE } from './utils';
 
 // FIME: move to article.ts

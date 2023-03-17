@@ -1,4 +1,4 @@
-import { ArticleStatus } from '$lib/article';
+import { ArticleStatus } from '$lib/articles';
 import {
 	deleteArticleCollection,
 	getArticle,

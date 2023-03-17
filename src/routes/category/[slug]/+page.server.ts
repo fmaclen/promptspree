@@ -1,4 +1,4 @@
-import { ArticleCategory, ArticleStatus } from '$lib/article';
+import { ArticleCategory, ArticleStatus } from '$lib/articles';
 import { generateArticles } from '$lib/article.server';
 import { error } from '@sveltejs/kit';
 import type { BaseAuthStore } from 'pocketbase';

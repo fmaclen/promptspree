@@ -1,4 +1,4 @@
-import { type Article, ArticleStatus } from '$lib/article';
+import { type Article, ArticleStatus } from '$lib/articles';
 import { getMessages } from '$lib/message';
 import type { ArticleCollection } from '$lib/pocketbase.schema';
 import { getFileSrc, pbClient } from '$lib/pocketbase.server';

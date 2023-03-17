@@ -3,7 +3,7 @@
 // HACK: need to add `.js` extension so it can be imported from tests files.
 import type { ChatCompletionRequestMessage } from 'openai';
 
-import { ArticleCategory } from './article.js';
+import { ArticleCategory } from './articles.js';
 import type { CompletionResponse, CompletionUserPrompt } from './openai.server.js';
 import { UNKNOWN_ERROR_MESSAGE } from './utils.js';
 

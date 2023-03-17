@@ -1,4 +1,4 @@
-import { type Article, ArticleStatus } from './article';
+import { type Article, ArticleStatus } from './articles';
 import type { UserCollection } from './pocketbase.schema';
 
 export interface User {

@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-import { ArticleStatus } from '../src/lib/article.js';
+import { ArticleStatus } from '../src/lib/articles.js';
 import { MOCK_ARTICLES } from '../src/lib/tests.js';
 import { MOCK_USERS } from './lib/fixtures.js';
 import {

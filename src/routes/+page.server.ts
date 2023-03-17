@@ -1,4 +1,4 @@
-import { ArticleStatus } from '$lib/article';
+import { ArticleStatus } from '$lib/articles';
 import { generateArticles } from '$lib/article.server';
 import { handlePocketbaseError } from '$lib/pocketbase.server';
 import { logEventToSlack } from '$lib/slack.server';
