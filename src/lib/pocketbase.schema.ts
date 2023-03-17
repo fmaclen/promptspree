@@ -7,6 +7,7 @@ export interface BaseCollection {
 	id: string;
 	created: Date;
 	updated: Date;
+	collectionId: string;
 }
 
 export interface UserCollection extends BaseCollection {

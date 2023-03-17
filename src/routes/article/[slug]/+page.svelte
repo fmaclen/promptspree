@@ -10,10 +10,11 @@
 
 	export let data: PageData;
 	let article = data.article;
+	$: reactions = data.article.reactions;
 
 	const handleReaction: SubmitFunction = () => {
 		return async ({ result, update }) => {
-			article = result.type === 'success' ? result.data?.article : article;
+			reactions = result.type === 'success' ? result.data : data.article.reactions;
 			await update();
 		};
 	};
@@ -26,7 +27,7 @@
 		<ArticleBody {article} />
 
 		<nav class="article-reactions">
-			{#each article.reactions.byType as reaction}
+			{#each reactions.byType as reaction}
 				<form
 					class="article-reactions__form"
 					action="/article/{article.id}?/react"
@@ -34,10 +35,11 @@
 					use:enhance={handleReaction}
 				>
 					<input type="hidden" name="reaction" value={reaction.index} />
+					<input type="hidden" name="article" value={article.id} />
 					<button
 						type="submit"
 						class="article-reactions__button
-							{article?.reactions?.byCurrentUser === reaction.index ? 'article-reactions__button--reacted' : ''}"
+							{reactions.byCurrentUser === reaction.index ? 'article-reactions__button--reacted' : ''}"
 						disabled={!data.user}
 					>
 						<span class="article-reactions__emoji">

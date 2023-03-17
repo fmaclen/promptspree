@@ -1,94 +1,96 @@
-import { getArticle } from '$lib/article.server';
-import { logEventToSlack } from '$lib/slack.server';
-import { error } from '@sveltejs/kit';
+import { ArticleStatus } from '$lib/article';
+import {
+	deleteArticleCollection,
+	getArticle,
+	isUserAuthorized,
+	updateArticleCollection
+} from '$lib/article.server';
+import type { ReactionCollection } from '$lib/pocketbase.schema';
+import type { Reactions } from '$lib/reaction';
+import {
+	calculateReactionsFromCollection,
+	createReactionCollection,
+	deleteReactionCollection,
+	getReactionCollection,
+	getReactionsCollection,
+	updateReactionCollection
+} from '$lib/reaction.server';
+import { type Actions, error, fail, redirect } from '@sveltejs/kit';
 
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals, params }) => {
 	const article = await getArticle(params.slug, locals.user?.id);
-	if (!article) throw error(404, 'Not found');
 
-	return { article };
+	if (article) {
+		return { article };
+	} else {
+		throw error(404, 'Article not found');
+	}
 };
 
-// export const actions: Actions = {
-// 	react: async ({ request, locals, params }) => {
-// 		const formData = await request.formData();
-// 		const articleId = params.slug;
-// 		const reaction = formData.get('reaction')?.toString();
+export const actions: Actions = {
+	react: async ({ request, locals }): Promise<Reactions> => {
+		const currentUserId = locals.user?.id;
 
-// 		if (!locals?.user || !articleId || !reaction) throw error(400, "Can't react to the article");
+		if (!currentUserId) throw error(401, 'You must be logged in to react to an article');
 
-// 		let articleCollection: BaseAuthStore['model'] = null;
-// 		let reactionCollection: BaseAuthStore['model'] = null;
+		const formData = await request.formData();
+		const articleId = formData.get('article')?.toString();
+		const reaction = formData.get('reaction')?.toString();
+		formData.append('user', currentUserId);
 
-// 		// Check if the article exists
-// 		try {
-// 			articleCollection = await locals.pb
-// 				.collection('articles')
-// 				.getOne(articleId, { expand: 'user' });
-// 		} catch (_) {
-// 			// eslint-disable-next-line no-empty
-// 		}
+		if (!articleId || !reaction) throw error(400, "Can't react to the article");
 
-// 		// It should be rare that we hit this case since the UI is the one defining
-// 		// the `articleId`, but it's still possible that the article is deleted
-// 		// during a long user serssion.
-// 		if (!articleCollection) throw error(404, 'Not found');
+		const userReactionCollection: ReactionCollection | null = await getReactionCollection(
+			articleId,
+			currentUserId
+		);
 
-// 		// Append user and article to formData
-// 		formData.append('user', locals.user.id);
-// 		formData.append('article', articleCollection.id || '');
+		// Check if the user has already reacted to the article
+		if (userReactionCollection) {
+			if (userReactionCollection.reaction === reaction) {
+				// If the existing reaction is the same as the new reaction, delete the reaction
+				await deleteReactionCollection(userReactionCollection);
+			} else {
+				// If the existing reaction is different from the new reaction, update the reaction
+				await updateReactionCollection(userReactionCollection, formData);
+			}
+		} else {
+			// If the user hasn't reacted to the article, create a new reaction
+			await createReactionCollection(formData);
+		}
 
-// 		// Check if the user already reacted to article
-// 		try {
-// 			reactionCollection = await locals.pb
-// 				.collection('reactions')
-// 				.getFirstListItem(`user="${locals.user.id}" && article="${articleCollection.id}"`);
-// 		} catch (_) {
-// 			// eslint-disable-next-line no-empty
-// 		}
+		// Get all the reactions again
+		const reactionsCollection: ReactionCollection[] = await getReactionsCollection(articleId);
 
-// 		// Create, update or delete reaction
-// 		try {
-// 			if (reactionCollection) {
-// 				if (reactionCollection?.reaction === reaction) {
-// 					// Delete it
-// 					await locals.pb.collection('reactions').delete(reactionCollection.id);
-// 				} else {
-// 					// Update it
-// 					reactionCollection = await locals.pb
-// 						.collection('reactions')
-// 						.update(reactionCollection.id, formData);
-// 				}
-// 			} else {
-// 				// Create it
-// 				reactionCollection = await locals.pb.collection('reactions').create(formData);
-// 			}
-// 		} catch (err) {
-// 			return handleErrors(err);
-// 		}
+		return calculateReactionsFromCollection(reactionsCollection, currentUserId);
+	},
+	delete: async ({ request, locals }) => {
+		const formData = await request.formData();
+		const articleId = formData.get('articleId')?.toString();
 
-// 		const article = await generateArticle(articleCollection, locals);
-// 		if (!article) throw error(404, 'Not found');
+		// Authorize user
+		const currentUserId = locals.user?.id;
+		const isCurrentUserAuthorized = await isUserAuthorized(articleId, currentUserId);
+		if (!isCurrentUserAuthorized || !articleId)
+			return fail(401, { error: "Can't delete the article" });
 
-// 		return { article };
-// 	},
-// 	delete: async ({ request, locals }) => {
-// 		await deleteArticle(request, locals);
-// 		throw redirect(303, `/profile/${locals?.user?.id}`);
-// 	},
-// 	publish: async ({ request, locals }) => {
-// 		await publishArticle(request, locals);
-// 		throw redirect(303, `/profile/${locals?.user?.id}`);
-// 	}
-// };
+		await deleteArticleCollection(articleId);
+		throw redirect(303, `/profile/${currentUserId}`);
+	},
+	publish: async ({ request, locals }) => {
+		const formData = await request.formData();
+		const articleId = formData.get('articleId')?.toString();
+		formData.append('status', ArticleStatus.PUBLISHED);
 
-// const handleErrors = (err: any) => {
-// 	if (err?.status === 404) {
-// 		throw error(404, 'Article not found');
-// 	} else {
-// 		logEventToSlack('/article/[slug]?/react', err);
-// 		throw error(500);
-// 	}
-// };
+		// Authorize user
+		const currentUserId = locals.user?.id;
+		const isCurrentUserAuthorized = await isUserAuthorized(articleId, currentUserId);
+		if (!isCurrentUserAuthorized || !articleId)
+			return fail(401, { error: "Can't publish the article" });
+
+		await updateArticleCollection(articleId, formData);
+		throw redirect(303, `/profile/${currentUserId}`);
+	}
+};
