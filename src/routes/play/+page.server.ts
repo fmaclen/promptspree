@@ -4,7 +4,7 @@ import {
 	generateArticle,
 	publishArticle,
 	updateArticleCollection
-} from '$lib/article.server';
+} from '$lib/articles.server';
 import {
 	type ArticleCompletion,
 	type CompletionResponse,

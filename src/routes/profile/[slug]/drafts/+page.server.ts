@@ -1,5 +1,5 @@
 import { ArticleStatus } from '$lib/articles';
-import { deleteArticle, generateArticles, publishArticle } from '$lib/article.server';
+import { deleteArticle, generateArticles, publishArticle } from '$lib/articles.server';
 import { getPromptScore } from '$lib/user';
 import { error, redirect } from '@sveltejs/kit';
 import type { BaseAuthStore } from 'pocketbase';

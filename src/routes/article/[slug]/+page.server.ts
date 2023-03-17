@@ -4,7 +4,7 @@ import {
 	getArticle,
 	isUserAuthorized,
 	updateArticleCollection
-} from '$lib/article.server';
+} from '$lib/articles.server';
 import type { ReactionCollection } from '$lib/pocketbase.schema';
 import type { Reactions } from '$lib/reaction';
 import { calculateReactionsFromCollection } from '$lib/reaction';

@@ -1,5 +1,5 @@
 import { ArticleStatus } from '$lib/articles';
-import { generateArticles } from '$lib/article.server';
+import { generateArticles } from '$lib/articles.server';
 import { handlePocketbaseError } from '$lib/pocketbase.server';
 import { logEventToSlack } from '$lib/slack.server';
 import type { BaseAuthStore } from 'pocketbase';
