@@ -6,8 +6,8 @@ import {
 	updateArticleCollection
 } from '$lib/articles.server';
 import type { ReactionCollection } from '$lib/pocketbase.schema';
-import type { Reactions } from '$lib/reaction';
-import { calculateReactionsFromCollection } from '$lib/reaction';
+import type { Reactions } from '$lib/reactions';
+import { calculateReactionsFromCollection } from '$lib/reactions';
 import {
 	createReactionCollection,
 	deleteReactionCollection,
