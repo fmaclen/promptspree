@@ -1,16 +1,53 @@
-import {
-	type Article,
-	type ArticleReactionByType,
-	type ArticleReactions,
-	ArticleStatus,
-	Reaction
-} from '$lib/article';
+import { type Article, ArticleStatus } from '$lib/article';
+import { getMessages } from '$lib/message';
+import { CURRENT_MODEL } from '$lib/openai.server';
+import type { ArticleCollection } from '$lib/pocketbase.schema';
+import { getAudioSrc, handlePocketbaseError, pbClient } from '$lib/pocketbase.server';
+import { getReactions } from '$lib/reaction';
 import { logEventToSlack } from '$lib/slack.server';
+import { getUser } from '$lib/user';
 import { fail } from '@sveltejs/kit';
 import type { BaseAuthStore, Record } from 'pocketbase';
 
-import { CURRENT_MODEL } from './openai.server';
-import { getAudioSrc, handlePocketbaseError } from './pocketbase.server';
+export async function getArticle(
+	articleId?: string,
+	currentUserId?: string
+): Promise<Article | null> {
+	if (!articleId) return null;
+
+	let collection: ArticleCollection | null = null;
+
+	try {
+		const pb = await pbClient();
+		collection = await pb.collection('articles').getOne(articleId, {
+			expand: 'messages(article),reactions(article),user'
+		});
+	} catch (error) {
+		return null;
+	}
+
+	if (!collection) return null;
+
+	const isCreatedByCurrentUser = currentUserId === collection.expand?.['user']?.id;
+	if (collection.status === ArticleStatus.DRAFT && !isCreatedByCurrentUser) return null;
+
+	return {
+		id: collection.id,
+		created: collection.created.toString(),
+		updated: collection.updated.toString(),
+		headline: collection.headline,
+		status: collection.status,
+		body: collection.body,
+		category: collection.category,
+		model: collection.model,
+		audioSrc: collection.audio?.[0],
+		imageSrc: collection.image?.[0],
+		user: getUser(collection.expand['user']),
+		messages: getMessages(collection.expand?.['messages(article)']),
+		reactions: getReactions(collection.expand?.['reactions(article)'], currentUserId),
+		isCreatedByCurrentUser
+	};
+}
 
 export async function createArticleCollection(
 	pb: App.Locals['pb'],

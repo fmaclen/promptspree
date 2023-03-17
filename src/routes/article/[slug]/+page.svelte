@@ -11,9 +11,6 @@
 	export let data: PageData;
 	let article = data.article;
 
-	// Sort the reactions by their index so the UI components always render in the same order
-	article.reactions.byType.sort((a, b) => a.index - b.index);
-
 	const handleReaction: SubmitFunction = () => {
 		return async ({ result, update }) => {
 			article = result.type === 'success' ? result.data?.article : article;
@@ -57,18 +54,17 @@
 			{/each}
 		</nav>
 
-		<div class="article-prompt">
-			<code class="article-prompt__code">
-				{#each article.messages as message}
-					{#if message.role === 'user'}
-						{message.content}
-						<br />
-					{/if}
-				{/each}
-			</code>
-		</div>
+		{#if article.messages}
+			<div class="article-prompt">
+				<code class="article-prompt__code">
+					{#each article.messages as message}
+						<p>{message.content}</p>
+					{/each}
+				</code>
+			</div>
+		{/if}
 
-		<ArticleMetadata {article} isCurrentUserProfile={data.isCurrentUserProfile} />
+		<ArticleMetadata {article} />
 	</Plate>
 </Section>
 

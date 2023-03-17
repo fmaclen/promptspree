@@ -1,9 +1,22 @@
 import { type Article, ArticleStatus } from './article';
+import type { UserCollection } from './pocketbase.schema';
+
+export interface User {
+	id: string;
+	nickname: string;
+}
+
+export function getUser(userCollection: UserCollection): User {
+	return {
+		id: userCollection.id,
+		nickname: userCollection.nickname
+	};
+}
 
 export const getPromptScore = (articles: Article[]): number => {
 	return articles.reduce((acc, article) => {
 		if (article.status !== ArticleStatus.PUBLISHED) return acc;
 
-		return acc + article.reactions.total;
+		return acc + (article.reactions ? article.reactions.total : 0);
 	}, 0);
 };

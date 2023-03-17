@@ -1,42 +1,23 @@
 import type { ChatCompletionRequestMessage } from 'openai';
-
-export interface ArticleReactions {
-	total: number;
-	byType: ArticleReactionByType[];
-	byCurrentUser?: Reaction | number;
-}
-
-export interface ArticleReactionByType {
-	index: number;
-	reaction: Reaction;
-	total: number;
-}
-
-export interface ArticleAuthor {
-	id: string;
-	nickname: string;
-}
+import type { User } from '$lib/user';
+import type { Message } from '$lib/message';
+import type { Reactions } from '$lib/reaction';
 
 export interface Article {
 	id: string;
 	updated: string;
-	author: ArticleAuthor;
+	created: string;
 	status: ArticleStatus;
-	category: ArticleCategory;
 	headline: string;
+	category: ArticleCategory;
 	body: string[];
-	messages: ChatCompletionRequestMessage[];
-	reactions: ArticleReactions;
+	user: User;
+	messages: Message[];
+	reactions: Reactions;
 	model: string;
+	isCreatedByCurrentUser: boolean;
 	audioSrc?: string;
-}
-
-export enum Reaction {
-	MIND_BLOWN = '🤯',
-	ROFL = '🤣',
-	UNSURE = '🤔',
-	MEH = '😒',
-	GRIMACE = '😬'
+	imageSrc?: string;
 }
 
 export enum ArticleStatus {

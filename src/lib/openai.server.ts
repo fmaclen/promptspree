@@ -6,11 +6,13 @@ import { type ChatCompletionRequestMessage, Configuration, OpenAIApi } from 'ope
 import { ArticleCategory } from './article';
 import { UNKNOWN_ERROR_MESSAGE } from './utils';
 
+// FIME: move to article.ts
 export interface ArticleCompletion {
 	headline: string;
 	category: ArticleCategory;
 	body: string[];
 	suggestions: string[];
+	notes?: string;
 }
 
 export interface CompletionUserPrompt {

@@ -1,9 +1,15 @@
 import { env } from '$env/dynamic/private';
 import { UNKNOWN_ERROR_MESSAGE, isTestEnvironment } from '$lib/utils';
 import { error, fail } from '@sveltejs/kit';
-import { type BaseAuthStore, ClientResponseError } from 'pocketbase';
+import Pocketbase, { type BaseAuthStore, ClientResponseError } from 'pocketbase';
 
 export const pocketbaseUrl = isTestEnvironment ? env.TEST_POCKETBASE_URL : env.POCKETBASE_URL;
+
+export async function pbClient(): Promise<Pocketbase> {
+	const pb = new Pocketbase(pocketbaseUrl);
+	await pb.admins.authWithPassword(env.POCKETBASE_ADMIN_EMAIL, env.POCKETBASE_ADMIN_PASSWORD);
+	return pb;
+}
 
 export const handlePocketbaseError = (err: unknown) => {
 	const clientError = err as ClientResponseError;

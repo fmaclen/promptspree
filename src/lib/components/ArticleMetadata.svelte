@@ -7,15 +7,10 @@
 	import FormButton from './FormButton.svelte';
 
 	export let article: Article;
-	export let isCurrentUserProfile: boolean = false;
 
 	const isDraft = article.status === ArticleStatus.DRAFT;
-	const isDeletable = isCurrentUserProfile;
-	const isPublishable = isCurrentUserProfile && article.status === ArticleStatus.DRAFT;
-
-	// Get the most popular reaction by sorting the reactions by their total
-	const mostPopularReaction = article.reactions.byType.sort((a, b) => b.total - a.total)[0]
-		.reaction;
+	const isDeletable = article.isCreatedByCurrentUser;
+	const isPublishable = article.isCreatedByCurrentUser && article.status === ArticleStatus.DRAFT;
 
 	const confirmDeletion = (event: any) => {
 		const confirmDeletion = window.confirm(
@@ -38,8 +33,8 @@
 </script>
 
 <nav class="metadata">
-	<a class="metadata__a" href={`/profile/${article.author.id}`}>
-		<span class="metadata__author">{article.author.nickname}</span>
+	<a class="metadata__a" href={`/profile/${article.user.id}`}>
+		<span class="metadata__author">{article.user.nickname}</span>
 
 		<time class="metadata__time" title={article.updated} datetime={article.updated}>
 			{formatDistance(new Date(article.updated), new Date(), {
@@ -50,11 +45,11 @@
 	<div class="metadata__actions">
 		{#if !isDraft}
 			<a class="article-reactions-summary" href="/article/{article.id}">
-				{#if article.reactions.total > 0}
+				<!-- {#if article.reactions.total > 0}
 					<span class="article-reactions-summary__emoji">
 						{mostPopularReaction}
 					</span>
-				{/if}
+				{/if} -->
 				<span class="article-reactions-summary__total">{article.reactions.total}</span>
 			</a>
 		{/if}
