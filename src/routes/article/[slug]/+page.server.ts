@@ -82,7 +82,6 @@ export const actions: Actions = {
 	publish: async ({ request, locals }) => {
 		const formData = await request.formData();
 		const articleId = formData.get('articleId')?.toString();
-		formData.append('status', ArticleStatus.PUBLISHED);
 
 		// Authorize user
 		const currentUserId = locals.user?.id;
@@ -90,7 +89,7 @@ export const actions: Actions = {
 		if (!isCurrentUserAuthorized || !articleId)
 			return fail(401, { error: "Can't publish the article" });
 
-		await updateArticleCollection(articleId, formData);
+		await updateArticleCollection(articleId, { status: ArticleStatus.PUBLISHED });
 		throw redirect(303, `/profile/${currentUserId}`);
 	}
 };
