@@ -3,18 +3,18 @@ import type { Message } from '$lib/messages';
 import type { Reactions } from '$lib/reactions';
 
 export interface Article {
-	id?: string;
+	id: string;
 	isCreatedByCurrentUser: boolean;
-	updated?: string;
-	created?: string;
-	status?: ArticleStatus;
-	headline?: string;
-	category?: ArticleCategory;
-	body?: string[];
-	user?: User;
+	updated: string;
+	created: string;
+	status: ArticleStatus;
+	headline: string;
+	category: ArticleCategory;
+	body: string[];
+	user: User;
+	model: string;
 	messages?: Message[];
 	reactions?: Reactions;
-	model?: string;
 	audioSrc?: string;
 	imageSrc?: string;
 }
@@ -46,21 +46,6 @@ export interface ArticleCompletion {
 	suggestions: string[];
 	notes?: string;
 }
-
-// Grabs the last assistant message and returns the suggestions
-// export function parseCompletionSuggestions(messages: ChatCompletionRequestMessage[]): string[] {
-// 	let assistantSuggestions: string[] = [];
-
-// 	for (let i = messages.length - 1; i >= 0; i--) {
-// 		if (messages[i].role === 'assistant') {
-// 			const parsedContent = JSON.parse(messages[i].content);
-// 			assistantSuggestions = parsedContent.suggestions;
-// 			break;
-// 		}
-// 	}
-
-// 	return assistantSuggestions;
-// }
 
 export const INITIAL_SUGGESTIONS = [
 	'Phonebooks return as nostalgic millennials long for simpler times',

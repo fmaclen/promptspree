@@ -109,22 +109,36 @@ export function generateArticleFromCollection(
 	collection?: ArticleCollection,
 	currentUserId?: string
 ): Article | null {
-	if (!collection) return null;
+	// `Article` required fields
+	if (
+		!collection?.id ||
+		!collection?.created ||
+		!collection?.updated ||
+		!collection?.created ||
+		!collection?.updated ||
+		!collection?.headline ||
+		!collection?.status ||
+		!collection?.body ||
+		!collection?.category ||
+		!collection?.model ||
+		!collection?.expand?.user
+	)
+		return null;
 
-	const userCollection = collection.expand?.['user'];
+	const userCollection = collection.expand['user'];
 
 	const article: Article = {
 		id: collection.id,
-		created: collection.created?.toString(),
-		updated: collection.updated?.toString(),
+		created: collection.created.toString(),
+		updated: collection.updated.toString(),
 		headline: collection.headline,
 		status: collection.status,
 		body: collection.body,
 		category: collection.category,
 		model: collection.model,
+		user: getUser(userCollection),
 		audioSrc: getFileSrc(collection, 'audio'),
 		imageSrc: getFileSrc(collection, 'image'),
-		user: userCollection && getUser(userCollection),
 		messages: getMessages(collection.expand?.['messages(article)']),
 		reactions: calculateReactionsFromCollection(
 			collection.expand?.['reactions(article)'],
