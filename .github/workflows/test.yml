@@ -42,6 +42,8 @@ jobs:
         env:
           BROWSER: ${{ matrix.browser }}
           NODE_ENV: ci
+          POCKETBASE_ADMIN_EMAIL: playwright@example.com
+          POCKETBASE_ADMIN_PASSWORD: playwright
           TEST_POCKETBASE_URL: http://127.0.0.1:8091
           TEST_POCKETBASE_CDN_URL: http://127.0.0.1:8091/api/files
 
