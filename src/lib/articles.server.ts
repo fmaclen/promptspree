@@ -4,6 +4,9 @@ import type { ArticleCollection } from '$lib/pocketbase.schema';
 import { getFileSrc, pbAdmin } from '$lib/pocketbase.server';
 import { calculateReactionsFromCollection } from '$lib/reactions';
 import { getUser } from '$lib/users';
+import type { BaseModel, ListResult } from 'pocketbase';
+
+const EXPAND_RECORD_RELATIONS = 'messages(article),reactions(article),user';
 
 export async function getArticle(
 	articleId?: string,
@@ -16,18 +19,36 @@ export async function getArticle(
 	try {
 		const pb = await pbAdmin();
 		collection = await pb.collection('articles').getOne(articleId, {
-			expand: 'messages(article),reactions(article),user'
+			expand: EXPAND_RECORD_RELATIONS
 		});
 	} catch (_) {
-		return null
+		return null;
 	}
 
 	if (!collection) return null;
 
 	const article = generateArticleFromCollection(collection, currentUserId);
+
+	// Don't return a DRAFT article if the user is not the author
 	if (collection.status === ArticleStatus.DRAFT && !article?.isCreatedByCurrentUser) return null;
 
 	return article;
+}
+
+export async function getArticles(filter: string, currentUserId?: string): Promise<Article[]> {
+	let collection: ArticleCollection[] = [];
+	try {
+		const pb = await pbAdmin();
+		collection = await pb.collection('articles').getFullList(undefined, {
+			sort: '-updated',
+			filter: filter,
+			expand: EXPAND_RECORD_RELATIONS
+		});
+	} catch (_) {
+		return [];
+	}
+
+	return generateArticlesFromCollection(collection, currentUserId);
 }
 
 export async function createArticleCollection(
@@ -41,6 +62,18 @@ export async function createArticleCollection(
 	}
 }
 
+export async function getArticlesList(filter?: string): Promise<ListResult<BaseModel> | null> {
+	let listResult: ListResult<BaseModel>;
+	try {
+		const pb = await pbAdmin();
+		listResult = await pb.collection('articles').getList(1, 1, { filter });
+	} catch (_) {
+		return null;
+	}
+
+	return listResult;
+}
+
 export async function updateArticleCollection(
 	articleId: string,
 	formData: FormData
@@ -49,7 +82,7 @@ export async function updateArticleCollection(
 	try {
 		const pb = await pbAdmin();
 		return await pb.collection('articles').update(articleId, formData, {
-			expand: 'messages(article),reactions(article),user'
+			expand: EXPAND_RECORD_RELATIONS
 		});
 	} catch (_) {
 		return null;

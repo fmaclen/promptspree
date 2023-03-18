@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { type SubmitFunction, enhance } from '$app/forms';
-	import { type Article, ArticleStatus } from '$lib/article';
+	import { type Article, ArticleStatus } from '$lib/articles';
 	import { Sentiment } from '$lib/utils';
 	import { formatDistance } from 'date-fns';
 

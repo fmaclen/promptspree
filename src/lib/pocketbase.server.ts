@@ -1,7 +1,7 @@
 import { env } from '$env/dynamic/private';
 import { UNKNOWN_ERROR_MESSAGE, isTestEnvironment } from '$lib/utils';
 import { error, fail } from '@sveltejs/kit';
-import Pocketbase, { type BaseAuthStore, ClientResponseError } from 'pocketbase';
+import Pocketbase, { ClientResponseError } from 'pocketbase';
 import type { ArticleCollection } from './pocketbase.schema';
 
 export const pocketbaseUrl = isTestEnvironment ? env.TEST_POCKETBASE_URL : env.POCKETBASE_URL;

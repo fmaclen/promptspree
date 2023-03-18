@@ -4,7 +4,7 @@
 		type Article,
 		getRandomInitialSuggestions,
 		parseCompletionSuggestions
-	} from '$lib/article';
+	} from '$lib/articles';
 	import A from '$lib/components/A.svelte';
 	import ArticleBody from '$lib/components/ArticleBody.svelte';
 	import FormButton from '$lib/components/FormButton.svelte';

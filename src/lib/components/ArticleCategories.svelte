@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ArticleCategory } from '$lib/article';
+	import { ArticleCategory } from '$lib/articles';
 	import HR from '$lib/components/HR.svelte';
 
 	export let currentCategory: ArticleCategory | null = null;

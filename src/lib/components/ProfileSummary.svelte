@@ -7,7 +7,7 @@
 	export let totalPublished: number = 0;
 	export let totalDrafts: number = 0;
 	export let promptScore: number;
-	export let created: string;
+	export let created: Date;
 
 	const isDraftsPage = $page.url.pathname.includes('/drafts');
 </script>

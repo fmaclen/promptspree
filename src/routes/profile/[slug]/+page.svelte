@@ -9,7 +9,6 @@
 	import type { PageData } from './$types';
 
 	export let data: PageData;
-
 	// These need to be reactive otherwise they won't update when navigating from
 	// one profile to the other (e.g. clicking on the user's name in the aside)
 	$: profile = data.profile;
@@ -30,8 +29,8 @@
 	/>
 
 	{#if articles.length > 0}
-		<ArticleSummaries {articles} {isCurrentUserProfile} />
-	{:else if data.isCurrentUserProfile}
+		<ArticleSummaries {articles}  />
+	{:else if isCurrentUserProfile}
 		<Notice>No published articles, <A href="/play" isHighlighted={true}>generate one</A></Notice>
 	{:else}
 		<Notice>{profile.nickname} has not published any articles</Notice>
