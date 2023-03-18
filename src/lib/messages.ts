@@ -1,4 +1,4 @@
-import type { ArticleCompletion } from '$lib/openai.server';
+import type { ArticleCompletion } from '$lib/articles';
 
 import type { MessageCollection } from './pocketbase.schema';
 
