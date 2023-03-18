@@ -32,9 +32,9 @@ export interface ArticleCollection extends BaseCollection {
 }
 
 export interface ReactionCollection extends BaseCollection {
-	user?: string;
-	article?: string;
-	reaction?: Reaction;
+	user: string;
+	article: string;
+	reaction: Reaction;
 }
 
 export interface MessageCollection extends BaseCollection {

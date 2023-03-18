@@ -40,7 +40,6 @@
 		return async ({ result, update }: { result: ActionResult; update: () => void }) => {
 			if (result.type === 'success') {
 				article = result.data?.article || null;
-				console.log(suggestions, result.data?.suggestions)
 				suggestions = result.data?.suggestions || [];
 			}
 			if (result.type === 'failure') {

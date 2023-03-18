@@ -17,7 +17,7 @@ export interface ReactionByType {
 export interface Reactions {
 	total: number;
 	byType: ReactionByType[];
-	byCurrentUser?: Reaction | number;
+	byCurrentUser: Reaction | number | null;
 }
 
 export function calculateReactionsFromCollection(
@@ -33,7 +33,7 @@ export function calculateReactionsFromCollection(
 
 	// Initialize variables to track the total count of reactions and the current user's reaction
 	let total = 0;
-	let byCurrentUser: number | undefined;
+	let byCurrentUser: number | null = null;
 
 	// If the reactions collection is defined, loop through each collection and update the counts
 	if (reactionsCollection) {
@@ -52,5 +52,5 @@ export function calculateReactionsFromCollection(
 	byType.sort((a, b) => b.total - a.total);
 
 	// If the current user hasn't reacted to any collection, set the byCurrentUser variable to 0
-	return { total, byType, byCurrentUser: byCurrentUser ?? 0 };
+	return { total, byType, byCurrentUser: byCurrentUser };
 }

@@ -6,7 +6,7 @@ import {
 	updateArticleCollection
 } from '$lib/articles.server';
 import type { ReactionCollection } from '$lib/pocketbase.schema';
-import type { Reactions } from '$lib/reactions';
+import type { Reaction, Reactions } from '$lib/reactions';
 import { calculateReactionsFromCollection } from '$lib/reactions';
 import {
 	createReactionCollection,
@@ -37,8 +37,7 @@ export const actions: Actions = {
 
 		const formData = await request.formData();
 		const articleId = formData.get('article')?.toString();
-		const reaction = formData.get('reaction')?.toString();
-		formData.append('user', currentUserId);
+		const reaction = formData.get('reaction')?.toString() as Reaction;
 
 		if (!articleId || !reaction) throw error(400, "Can't react to the article");
 
@@ -46,19 +45,21 @@ export const actions: Actions = {
 			articleId,
 			currentUserId
 		);
+		const reactionId = userReactionCollection?.id;
 
+		
 		// Check if the user has already reacted to the article
-		if (userReactionCollection) {
+		if (reactionId) {
 			if (userReactionCollection.reaction === reaction) {
 				// If the existing reaction is the same as the new reaction, delete the reaction
-				await deleteReactionCollection(userReactionCollection);
+				await deleteReactionCollection(reactionId);
 			} else {
 				// If the existing reaction is different from the new reaction, update the reaction
-				await updateReactionCollection(userReactionCollection, formData);
+				await updateReactionCollection(reactionId, reaction);
 			}
 		} else {
 			// If the user hasn't reacted to the article, create a new reaction
-			await createReactionCollection(formData);
+			await createReactionCollection(articleId, currentUserId, reaction);
 		}
 
 		// Get all the reactions again

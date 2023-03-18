@@ -5,12 +5,13 @@
 	import Head from '$lib/components/Head.svelte';
 	import Plate from '$lib/components/Plate.svelte';
 	import Section from '$lib/components/Section.svelte';
+	import { MessageRole } from '../../../lib/messages';
 
 	import type { PageData } from './$types';
 
 	export let data: PageData;
 	let article = data.article;
-	$: reactions = data.article.reactions;
+	let reactions = data.article.reactions;
 
 	const handleReaction: SubmitFunction = () => {
 		return async ({ result, update }) => {
@@ -60,7 +61,7 @@
 			<div class="article-prompt">
 				<code class="article-prompt__code">
 					{#each article.messages as message}
-						<p>{message.content}</p>
+						<p>{message.role === MessageRole.USER ? message.content : message.content?.notes}</p>
 					{/each}
 				</code>
 			</div>
