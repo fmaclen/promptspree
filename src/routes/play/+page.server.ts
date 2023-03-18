@@ -1,20 +1,13 @@
 import {
 	ARTICLE_SYSTEM_PROMPT,
-	type Article,
-	ArticleCategory,
 	type ArticleCompletion,
 	ArticleStatus,
 	isCategoryValid
 } from '$lib/articles';
 import { createArticle, getArticle, updateArticleCollection } from '$lib/articles.server';
 import { type Message, MessageRole, generateCompletionUserPrompt } from '$lib/messages';
-import { createMessageCollection, getMessagesCollection } from '$lib/messages.server';
-import {
-	type CompletionResponse,
-	type CompletionUserPrompt,
-	getCompletionFromAI
-} from '$lib/openai.server';
-import type { ArticleCollection, MessageCollection } from '$lib/pocketbase.schema';
+import { createMessageCollection } from '$lib/messages.server';
+import { type CompletionResponse, getCompletionFromAI } from '$lib/openai.server';
 import { logEventToSlack } from '$lib/slack.server';
 import { getCompletionFromMock } from '$lib/tests';
 import { UNKNOWN_ERROR_MESSAGE, isTestEnvironment } from '$lib/utils';
@@ -45,7 +38,7 @@ export const actions: Actions = {
 			: await createArticle(currentUserId, ArticleStatus.DRAFT);
 		if (!article?.id) throw error(500, UNKNOWN_ERROR_MESSAGE);
 
-    // Get the messages (if any) for the article
+		// Get the messages (if any) for the article
 		const messages: Message[] = article.messages || [];
 
 		// Save user prompt as a message
