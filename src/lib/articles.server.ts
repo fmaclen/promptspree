@@ -148,6 +148,7 @@ export async function isUserAuthorized(
 	articleId?: string,
 	currentUserId?: string
 ): Promise<boolean> {
+	// FIXME: could be optimized by only querying the article, without `EXPAND_RECORD_RELATIONS`
 	const article = await getArticle(articleId, currentUserId);
 	return article?.isCreatedByCurrentUser ?? false;
 }
