@@ -3,17 +3,8 @@ import { logEventToSlack } from '$lib/slack.server';
 import { error } from '@sveltejs/kit';
 import { type ChatCompletionRequestMessage, Configuration, OpenAIApi } from 'openai';
 
-import { ArticleCategory } from './articles';
+import { ArticleCategory, type ArticleCompletion } from './articles';
 import { UNKNOWN_ERROR_MESSAGE } from './utils';
-
-// FIME: move to article.ts
-export interface ArticleCompletion {
-	headline: string;
-	category: ArticleCategory;
-	body: string[];
-	suggestions: string[];
-	notes?: string;
-}
 
 export interface CompletionUserPrompt {
 	userId: string;

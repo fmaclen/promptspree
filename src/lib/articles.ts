@@ -39,6 +39,15 @@ export enum ArticleCategory {
 	OPINION = 'Opinion'
 }
 
+// Shape of the data we expect to get back from the OpenAI API
+export interface ArticleCompletion {
+	headline: string;
+	category: ArticleCategory;
+	body: string[];
+	suggestions: string[];
+	notes?: string;
+}
+
 // Grabs the last assistant message and returns the suggestions
 export function parseCompletionSuggestions(messages: ChatCompletionRequestMessage[]): string[] {
 	let assistantSuggestions: string[] = [];
