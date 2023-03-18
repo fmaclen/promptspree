@@ -1,6 +1,9 @@
 import type { ArticleCompletion } from '$lib/articles';
+import type { ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum } from 'openai';
+import type { CompletionUserPrompt } from '$lib/openai.server';
 
-import type { MessageCollection } from './pocketbase.schema';
+import type { MessageCollection } from '$lib/pocketbase.schema';
+import { miniStringify } from './utils';
 
 export enum MessageRole {
 	SYSTEM = 'SYSTEM',
@@ -9,11 +12,11 @@ export enum MessageRole {
 }
 
 export interface Message {
-	id: string;
-	updated: Date;
-	created: Date;
-	role: MessageRole;
-	content: ArticleCompletion | string;
+	id?: string;
+	updated?: Date;
+	created?: Date;
+	role?: MessageRole;
+	content?: ArticleCompletion | string;
 }
 
 // Filters out messages that shouldn't be displayed in the UI
@@ -35,4 +38,35 @@ export function getMessages(messagesCollection?: MessageCollection[]): Message[]
 	}
 
 	return filteredMessages.length ? filteredMessages : [];
+}
+
+// Generates 
+export function generateCompletionUserPrompt(
+	systemPrompt: string,
+	currentUserId: string,
+	messages: Message[]
+): CompletionUserPrompt {
+	const chatCompletionMessages: ChatCompletionRequestMessage[] = [];
+
+	chatCompletionMessages.push({
+		role: MessageRole.SYSTEM.toLowerCase() as ChatCompletionRequestMessageRoleEnum,
+		content: miniStringify(systemPrompt)
+	})
+
+	for (const message of messages) {
+		if (!message?.role || !message?.content) continue;
+
+		chatCompletionMessages.push({
+			role: message.role.toLowerCase() as ChatCompletionRequestMessageRoleEnum,
+			content: typeof message.content === 'string' ? message.content : JSON.stringify(message.content)
+		})
+	}
+
+	//
+	//
+	// TODO: check if the number of tokens is smaller than 4096
+	//
+	//
+
+	return { userId: currentUserId, messages: chatCompletionMessages };
 }

@@ -3,7 +3,6 @@
 	import {
 		type Article,
 		getRandomInitialSuggestions,
-		parseCompletionSuggestions
 	} from '$lib/articles';
 	import A from '$lib/components/A.svelte';
 	import ArticleBody from '$lib/components/ArticleBody.svelte';
@@ -19,15 +18,13 @@
 	import { slide } from 'svelte/transition';
 
 	let article: Article | null = null;
+	let suggestions: string[] = getRandomInitialSuggestions();
 	let error: string | null = null;
 	let fieldError: string[] | null = null;
 	let textareaRef: HTMLTextAreaElement;
 
 	$: prompt = '';
 	$: isLoading = false;
-	$: suggestions = article
-		? parseCompletionSuggestions(article.messages)
-		: getRandomInitialSuggestions();
 
 	function setSuggestion(suggestion: string) {
 		prompt = suggestion;
@@ -43,6 +40,8 @@
 		return async ({ result, update }: { result: ActionResult; update: () => void }) => {
 			if (result.type === 'success') {
 				article = result.data?.article || null;
+				console.log(suggestions, result.data?.suggestions)
+				suggestions = result.data?.suggestions || [];
 			}
 			if (result.type === 'failure') {
 				error = result.data?.error || null;
@@ -74,7 +73,7 @@
 	<div transition:slide={{ duration: 150 }}>
 		<Notice sentiment={Sentiment.POSITIVE}>
 			Article saved to
-			<A href="/profile/{article.author.id}/drafts" sentiment={Sentiment.POSITIVE}>drafts</A>
+			<A href="/profile/{article.user?.id}/drafts" sentiment={Sentiment.POSITIVE}>drafts</A>
 		</Notice>
 		<HR />
 	</div>

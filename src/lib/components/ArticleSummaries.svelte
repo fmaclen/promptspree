@@ -27,7 +27,7 @@
 				</div>
 			</a>
 
-			<ArticleMetadata {article} {isCurrentUserProfile} />
+			<ArticleMetadata {article} />
 		</Plate>
 	{/each}
 </div>

@@ -15,7 +15,7 @@ export enum Sentiment {
 export const UNKNOWN_ERROR_MESSAGE = 'An error occurred on our end, please try again later';
 
 // Converts object to string and minifies it
-export const miniStringify = (obj: object): string => {
+export const miniStringify = (obj: object | string): string => {
 	const jsonString = JSON.stringify(obj);
 	return jsonminify(jsonString);
 };

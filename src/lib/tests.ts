@@ -3,7 +3,7 @@
 // HACK: need to add `.js` extension so it can be imported from tests files.
 import type { ChatCompletionRequestMessage } from 'openai';
 
-import { ArticleCategory } from './articles.js';
+import { ArticleCategory, type ArticleCompletion } from './articles.js';
 import type { CompletionResponse, CompletionUserPrompt } from './openai.server.js';
 import { UNKNOWN_ERROR_MESSAGE } from './utils.js';
 
@@ -25,12 +25,8 @@ export interface MockArticle {
 	messages: ChatCompletionRequestMessage[];
 }
 
-const MOCK_SYSTEM_PROMPT = 'This is a mocked test system prompt, no AI was involved';
-const MOCK_CURRENT_MODEL = 'mocked-gpt-3.5-turbo';
-
-export const MOCK_ARTICLES: MockArticle[] = [
+export const MOCK_ARTICLE_COMPLETIONS: ArticleCompletion[] = [
 	{
-		model: MOCK_CURRENT_MODEL,
 		headline: 'The Ultimate Guide to Buying a Radioactive Mutant Ficus',
 		category: ArticleCategory.SCIENCE,
 		body: [
@@ -44,13 +40,9 @@ export const MOCK_ARTICLES: MockArticle[] = [
 			'Provide tips on how to care for a radioactive mutant ficus',
 			'Add a cautionary tale about the dangers of mishandling radioactive plants'
 		],
-		messages: [
-			{ role: 'system', content: MOCK_SYSTEM_PROMPT },
-			{ role: 'user', content: 'tips for buying a radioactive mutant ficus' }
-		]
+		notes: 'Some notes about the article.'
 	},
 	{
-		model: MOCK_CURRENT_MODEL,
 		headline: "J.C. Penny's 50% Off Sale: The Cure for the Great Plague?",
 		category: ArticleCategory.OPINION,
 		body: [
@@ -62,14 +54,9 @@ export const MOCK_ARTICLES: MockArticle[] = [
 			'Add a quote from a J.C. Penny spokesperson',
 			'Make it even more sarcastic',
 			'Change J.C. Penny to a different store name'
-		],
-		messages: [
-			{ role: 'system', content: MOCK_SYSTEM_PROMPT },
-			{ role: 'user', content: "the great plague and a 50% off sale at J.C. Penney's" }
 		]
 	},
 	{
-		model: MOCK_CURRENT_MODEL,
 		headline: 'Phonebooks Make a Comeback: The Surprising Resurgence of Printed Directories',
 		category: ArticleCategory.BUSINESS,
 		body: [
@@ -82,13 +69,9 @@ export const MOCK_ARTICLES: MockArticle[] = [
 			'Add a section on the environmental impact of printing phonebooks',
 			'Change the headline to be more sensational'
 		],
-		messages: [
-			{ role: 'system', content: MOCK_SYSTEM_PROMPT },
-			{ role: 'user', content: 'phonebooks making a comeback' }
-		]
+		notes: 'Some notes about the article.'
 	},
 	{
-		model: MOCK_CURRENT_MODEL,
 		headline: 'Scientists discover new species of deep sea creatures',
 		category: ArticleCategory.SCIENCE,
 		body: [
@@ -100,46 +83,47 @@ export const MOCK_ARTICLES: MockArticle[] = [
 			'Add a quote from one of the scientists involved in the discovery.',
 			'Include a description of the physical characteristics of the Abyssal Glow.',
 			'Explain why the discovery of new species is important for the study of marine biology.'
-		],
-		messages: [
-			{ role: 'system', content: MOCK_SYSTEM_PROMPT },
-			{ role: 'user', content: 'new species of deep sea creatures are discovered' }
 		]
 	}
 ];
 
-const MOCK_ARTICLE_WRONG_FORMAT = {
+const MOCK_INVALID_ARTICLE_COMPLETION = {
 	invalidHeadline: '',
 	invalidCategory: '',
 	invalidBody: [],
-	invalidSuggestions: []
+	invalidSuggestions: [],
+	invalidNotes: ''
 };
 
 export function getCompletionFromMock(
 	completionUserPrompt: CompletionUserPrompt
 ): CompletionResponse {
-	const prompt = completionUserPrompt.messages[completionUserPrompt.messages.length - 1].content;
+	// Get the prompt from the last message in the array
+	const mockPrompt =
+		completionUserPrompt.messages[completionUserPrompt.messages.length - 1]?.content;
 
-	switch (prompt) {
+	switch (mockPrompt) {
+		case MockPrompt.THROW_ERROR_429:
+			return { completion: null, status: 429, message: 'Too many requests' };
+		case MockPrompt.THROW_ERROR_500:
+			return { completion: null, status: 500, message: UNKNOWN_ERROR_MESSAGE };
 		case MockPrompt.RETRY_ARTICLE:
 			return {
-				articleCompletion: null,
+				completion: JSON.stringify(MOCK_ARTICLE_COMPLETIONS[1]),
 				status: 200,
-				message: '',
-				unformattedCompletion: JSON.stringify(MOCK_ARTICLES[1])
+				message: ''
 			};
 		case MockPrompt.WRONG_FORMAT:
-			return { articleCompletion: null, status: 400, message: '', unformattedCompletion: JSON.stringify(MOCK_ARTICLE_WRONG_FORMAT), }; // prettier-ignore
-		case MockPrompt.THROW_ERROR_429:
-			return { articleCompletion: null, status: 429, message: 'Too many requests' };
-		case MockPrompt.THROW_ERROR_500:
-			return { articleCompletion: null, status: 500, message: UNKNOWN_ERROR_MESSAGE };
+			return {
+				completion: JSON.stringify(MOCK_INVALID_ARTICLE_COMPLETION),
+				status: 400,
+				message: ''
+			};
 		default:
 			return {
-				articleCompletion: null,
+				completion: JSON.stringify(MOCK_ARTICLE_COMPLETIONS[0]),
 				status: 200,
-				message: '',
-				unformattedCompletion: JSON.stringify(MOCK_ARTICLES[0])
+				message: ''
 			};
 	}
 }

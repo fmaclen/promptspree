@@ -1,21 +1,20 @@
-import type { ChatCompletionRequestMessage } from 'openai';
 import type { User } from '$lib/users';
 import type { Message } from '$lib/messages';
 import type { Reactions } from '$lib/reactions';
 
 export interface Article {
-	id: string;
-	updated: string;
-	created: string;
-	status: ArticleStatus;
-	headline: string;
-	category: ArticleCategory;
-	body: string[];
-	user: User;
-	messages: Message[];
-	reactions: Reactions;
-	model: string;
+	id?: string;
 	isCreatedByCurrentUser: boolean;
+	updated?: string;
+	created?: string;
+	status?: ArticleStatus;
+	headline?: string;
+	category?: ArticleCategory;
+	body?: string[];
+	user?: User;
+	messages?: Message[];
+	reactions?: Reactions;
+	model?: string;
 	audioSrc?: string;
 	imageSrc?: string;
 }
@@ -49,19 +48,19 @@ export interface ArticleCompletion {
 }
 
 // Grabs the last assistant message and returns the suggestions
-export function parseCompletionSuggestions(messages: ChatCompletionRequestMessage[]): string[] {
-	let assistantSuggestions: string[] = [];
+// export function parseCompletionSuggestions(messages: ChatCompletionRequestMessage[]): string[] {
+// 	let assistantSuggestions: string[] = [];
 
-	for (let i = messages.length - 1; i >= 0; i--) {
-		if (messages[i].role === 'assistant') {
-			const parsedContent = JSON.parse(messages[i].content);
-			assistantSuggestions = parsedContent.suggestions;
-			break;
-		}
-	}
+// 	for (let i = messages.length - 1; i >= 0; i--) {
+// 		if (messages[i].role === 'assistant') {
+// 			const parsedContent = JSON.parse(messages[i].content);
+// 			assistantSuggestions = parsedContent.suggestions;
+// 			break;
+// 		}
+// 	}
 
-	return assistantSuggestions;
-}
+// 	return assistantSuggestions;
+// }
 
 export const INITIAL_SUGGESTIONS = [
 	'Phonebooks return as nostalgic millennials long for simpler times',
@@ -112,3 +111,34 @@ export function getRandomInitialSuggestions(): string[] {
 
 	return randomSuggestions;
 }
+
+// Check if the category the AI picked is one of the `ArticleCategory`'s we expect
+export function isCategoryValid(category: string) {
+	return Object.values(ArticleCategory).includes(category as ArticleCategory);
+}
+
+const articleCategories = Object.values(ArticleCategory).join(', ');
+
+export const ARTICLE_SYSTEM_PROMPT = `You are a website that allows users to generate fictitious articles in a news format.
+You will use the user's prompt as inspiration to generate an article.
+
+If the user's prompt is not clear come up with your best guess.
+If the user prompt is of a humorous tone play along with the joke, don't steer the suggestions as if it was a real article.
+You can only write articles in English.
+The article must have a headline, a category, a body and suggestions.
+You will provide suggestions that the user can choose to improve the generated article, for example: "add a quote from an expert, make it more ridiculous, change the names with realistic sounding fictitious ones, revert changes back to an earlier version, etc".
+
+Your responses will be parsed as JSON objects.
+Anything that is not a valid JSON object will be ignoreds so don't include any additional text.
+Write the article in the form of JSON using these keys:
+
+{
+	"headline": "No more than 80 characters long",
+	"category": "One of these: ${articleCategories}",
+
+	// Make sure that arrays don't end with a comma
+	"body": ["an", "array", "of", "3", "to", 6", "paragraphs"],
+	"suggestions": ["an array", "of 3", "very short sentences"],
+
+	"notes": "Optional. Use this key to include remarks about the article generation that need to be relayed to the user"
+}`;

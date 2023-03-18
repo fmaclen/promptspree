@@ -4,10 +4,10 @@ import type { Reaction } from "$lib/reactions";
 import type { MessageRole } from "$lib/messages";
 
 export interface BaseCollection {
-	id: string;
-	created: Date;
-	updated: Date;
-	collectionId: string;
+	id?: string;
+	created?: Date;
+	updated?: Date;
+	collectionId?: string;
 }
 
 export interface UserCollection extends BaseCollection {
@@ -17,14 +17,14 @@ export interface UserCollection extends BaseCollection {
 }
 
 export interface ArticleCollection extends BaseCollection {
-	headline: string;
-	status: ArticleStatus;
-	body: string[];
-	category: ArticleCategory;
-	model: string;
+	headline?: string;
+	status?: ArticleStatus;
+	body?: string[];
+	category?: ArticleCategory;
+	model?: string;
 	audio?: string[];
 	image?: string[];
-	expand: {
+	expand?: {
 		user: UserCollection;
 		['messages(article)']?: MessageCollection[];
 		['reactions(article)']?: ReactionCollection[];
@@ -32,13 +32,13 @@ export interface ArticleCollection extends BaseCollection {
 }
 
 export interface ReactionCollection extends BaseCollection {
-	user: string;
-	article: string;
-	reaction: Reaction;
+	user?: string;
+	article?: string;
+	reaction?: Reaction;
 }
 
 export interface MessageCollection extends BaseCollection {
-	article: string;
-	role: MessageRole;
-	content: ArticleCompletion | string;
+	article?: string;
+	role?: MessageRole;
+	content?: ArticleCompletion | string;
 }
