@@ -85,17 +85,14 @@ test.describe('Profile', () => {
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].notes)).toBeVisible();
 			await expect(publishButton).toBeVisible();
 
-			await page.goBack();
+			await page.goBack(); // Back to draft article list
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].notes)).not.toBeVisible();
 
 			await publishButton.click();
-			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].notes)).toBeVisible();
-			await expect(publishButton).not.toBeVisible();
-
-			await page.locator('span.metadata__author', { hasText: MOCK_USERS.alice.nickname }).click();
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Drafts 0' })).toBeVisible(); // prettier-ignore
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Published 2' })).toBeVisible(); // prettier-ignore
-
+			await expect(publishButton).not.toBeVisible();
+			
 			await page.getByText('Drafts 0').click();
 			await expect(page.getByText('No draft articles, generate one')).toBeVisible();
 		});
