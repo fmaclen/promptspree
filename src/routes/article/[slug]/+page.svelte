@@ -67,7 +67,7 @@
 			</div>
 		{/if}
 
-		<ArticleMetadata {article} />
+		<ArticleMetadata {article} isActionable={true} />
 	</Plate>
 </Section>
 

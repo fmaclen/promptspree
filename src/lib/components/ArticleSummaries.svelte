@@ -5,6 +5,7 @@
 	import Plate from '$lib/components/Plate.svelte';
 
 	export let articles: Article[];
+	export let isActionable: boolean = false;
 
 	// Sort articles by the total number of reactions
 	// articles = articles.sort((a, b) => b.reactions.total - a.reactions.total);
@@ -26,7 +27,7 @@
 				</div>
 			</a>
 
-			<ArticleMetadata {article} />
+			<ArticleMetadata {article} {isActionable} />
 		</Plate>
 	{/each}
 </div>

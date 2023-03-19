@@ -7,10 +7,11 @@
 	import FormButton from './FormButton.svelte';
 
 	export let article: Article;
+	export let isActionable: boolean = false;
 
 	const isDraft = article.status === ArticleStatus.DRAFT;
-	const isDeletable = article.isCreatedByCurrentUser;
-	const isPublishable = article.isCreatedByCurrentUser && article.status === ArticleStatus.DRAFT;
+	const isDeletable = isActionable && article.isCreatedByCurrentUser;
+	const isPublishable = isActionable && article.isCreatedByCurrentUser && article.status === ArticleStatus.DRAFT;
 	
 	// Get the most popular reaction by sorting the reactions by their total
 	const mostPopularReaction = article?.reactions?.byType.sort((a, b) => b.total - a.total)[0]
