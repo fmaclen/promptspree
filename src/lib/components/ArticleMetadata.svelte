@@ -9,13 +9,13 @@
 	export let article: Article;
 	export let isActionable: boolean = false;
 
+	$: reactions = article.reactions;
+	$: mostPopularReaction = reactions.byType.sort((a, b) => b.total - a.total)[0].reaction;
+
 	const isDraft = article.status === ArticleStatus.DRAFT;
 	const isDeletable = isActionable && article.isCreatedByCurrentUser;
-	const isPublishable = isActionable && article.isCreatedByCurrentUser && article.status === ArticleStatus.DRAFT;
-	
-	// Get the most popular reaction by sorting the reactions by their total
-	const mostPopularReaction = article?.reactions?.byType.sort((a, b) => b.total - a.total)[0]
-		.reaction;
+	const isPublishable =
+		isActionable && article.isCreatedByCurrentUser && article.status === ArticleStatus.DRAFT;
 
 	const confirmDeletion = (event: any) => {
 		const confirmDeletion = window.confirm(
@@ -50,12 +50,12 @@
 	<div class="metadata__actions">
 		{#if !isDraft}
 			<a class="article-reactions-summary" href="/article/{article.id}">
-				{#if article?.reactions && article.reactions.total > 0}
+				{#if reactions.total > 0}
 					<span class="article-reactions-summary__emoji">
 						{mostPopularReaction}
 					</span>
 				{/if}
-				<span class="article-reactions-summary__total">{article?.reactions?.total}</span>
+				<span class="article-reactions-summary__total">{reactions.total}</span>
 			</a>
 		{/if}
 

@@ -5,17 +5,18 @@
 	import Head from '$lib/components/Head.svelte';
 	import Plate from '$lib/components/Plate.svelte';
 	import Section from '$lib/components/Section.svelte';
-	import { MessageRole } from '../../../lib/messages';
+	import type { Reactions } from '$lib/reactions';
 
 	import type { PageData } from './$types';
 
 	export let data: PageData;
 	let article = data.article;
-	let reactions = data.article.reactions;
 
 	const handleReaction: SubmitFunction = () => {
 		return async ({ result, update }) => {
-			reactions = result.type === 'success' ? result.data : data.article.reactions;
+			if (result.type === 'success' && result.data) {
+				article = { ...article, reactions: result.data as Reactions }
+			}
 			await update();
 		};
 	};
@@ -28,7 +29,7 @@
 		<ArticleBody {article} />
 
 		<nav class="article-reactions">
-			{#each reactions.byType as reaction}
+			{#each article.reactions.byType as reaction}
 				<form
 					class="article-reactions__form"
 					action="/article/{article.id}?/react"
@@ -40,7 +41,7 @@
 					<button
 						type="submit"
 						class="article-reactions__button
-							{reactions.byCurrentUser === reaction.index ? 'article-reactions__button--reacted' : ''}"
+							{article.reactions?.byCurrentUser === reaction.index ? 'article-reactions__button--reacted' : ''}"
 						disabled={!data.user}
 					>
 						<span class="article-reactions__emoji">
@@ -61,7 +62,7 @@
 			<div class="article-prompt">
 				<code class="article-prompt__code">
 					{#each article.messages as message}
-						<p>{message.role === MessageRole.USER ? message.content : message.content?.notes}</p>
+						<p>{typeof message.content === 'string' ? message.content : message.content?.notes}</p>
 					{/each}
 				</code>
 			</div>

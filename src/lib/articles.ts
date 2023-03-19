@@ -13,8 +13,8 @@ export interface Article {
 	body: string[];
 	user: User;
 	model: string;
-	messages?: Message[];
-	reactions?: Reactions;
+	reactions: Reactions;
+	messages: Message[];
 	audioSrc?: string;
 	imageSrc?: string;
 }
