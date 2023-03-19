@@ -2,7 +2,7 @@ import AdmZip from 'adm-zip';
 import axios from 'axios';
 import { chmodSync } from 'fs';
 
-const POCKETBASE_VERSION = '0.12.3';
+const POCKETBASE_VERSION = '0.13.4';
 const POCKETBASE_BASE_URL = 'https://github.com/pocketbase/pocketbase/releases/download';
 
 const architectures = {
