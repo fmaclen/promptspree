@@ -1,4 +1,4 @@
-import type { ReactionCollection } from "$lib/pocketbase.schema";
+import type { ReactionCollection } from '$lib/pocketbase.schema';
 
 export enum Reaction {
 	MIND_BLOWN = '🤯',

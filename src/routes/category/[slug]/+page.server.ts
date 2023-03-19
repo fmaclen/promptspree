@@ -9,7 +9,9 @@ export const load: PageServerLoad = async ({ params }) => {
 	const category = ArticleCategory[params.slug.toUpperCase() as keyof typeof ArticleCategory];
 	if (!category) throw error(404, 'Not found');
 
-	const articles = await getArticles( `category = "${category}" && status = "${ArticleStatus.PUBLISHED}"`);
+	const articles = await getArticles(
+		`category = "${category}" && status = "${ArticleStatus.PUBLISHED}"`
+	);
 
 	return { articles, category };
 };

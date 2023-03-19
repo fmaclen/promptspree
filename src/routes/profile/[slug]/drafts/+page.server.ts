@@ -3,7 +3,7 @@ import {
 	deleteArticleCollection,
 	getArticles,
 	getArticlesList,
-	isUserAuthorized,
+	isCurrentUserAuthor,
 	updateArticleCollection
 } from '$lib/articles.server';
 import type { UserCollection } from '$lib/pocketbase.schema';
@@ -58,7 +58,7 @@ export const actions: Actions = {
 
 		// Authorize user
 		const currentUserId = locals.user?.id;
-		const isCurrentUserAuthorized = await isUserAuthorized(articleId, currentUserId);
+		const isCurrentUserAuthorized = await isCurrentUserAuthor(articleId, currentUserId);
 		if (!isCurrentUserAuthorized || !articleId)
 			return fail(401, { error: "Can't delete the article" });
 
@@ -71,7 +71,7 @@ export const actions: Actions = {
 
 		// Authorize user
 		const currentUserId = locals.user?.id;
-		const isCurrentUserAuthorized = await isUserAuthorized(articleId, currentUserId);
+		const isCurrentUserAuthorized = await isCurrentUserAuthor(articleId, currentUserId);
 		if (!isCurrentUserAuthorized || !articleId)
 			return fail(401, { error: "Can't publish the article" });
 

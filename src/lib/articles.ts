@@ -1,6 +1,6 @@
-import type { User } from '$lib/users';
 import type { Message } from '$lib/messages';
 import type { Reactions } from '$lib/reactions';
+import type { User } from '$lib/users';
 
 export interface Article {
 	id: string;

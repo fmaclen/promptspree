@@ -92,7 +92,7 @@ test.describe('Profile', () => {
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Drafts 0' })).toBeVisible(); // prettier-ignore
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Published 2' })).toBeVisible(); // prettier-ignore
 			await expect(publishButton).not.toBeVisible();
-			
+
 			await page.getByText('Drafts 0').click();
 			await expect(page.getByText('No draft articles, generate one')).toBeVisible();
 		});

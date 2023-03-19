@@ -2,7 +2,7 @@ import { ArticleStatus } from '$lib/articles';
 import {
 	deleteArticleCollection,
 	getArticle,
-	isUserAuthorized,
+	isCurrentUserAuthor,
 	updateArticleCollection
 } from '$lib/articles.server';
 import type { ReactionCollection } from '$lib/pocketbase.schema';
@@ -47,7 +47,6 @@ export const actions: Actions = {
 		);
 		const reactionId = userReactionCollection?.id;
 
-		
 		// Check if the user has already reacted to the article
 		if (reactionId) {
 			if (userReactionCollection.reaction === reaction) {
@@ -73,7 +72,7 @@ export const actions: Actions = {
 
 		// Authorize user
 		const currentUserId = locals.user?.id;
-		const isCurrentUserAuthorized = await isUserAuthorized(articleId, currentUserId);
+		const isCurrentUserAuthorized = await isCurrentUserAuthor(articleId, currentUserId);
 		if (!isCurrentUserAuthorized || !articleId)
 			return fail(401, { error: "Can't delete the article" });
 
@@ -86,7 +85,7 @@ export const actions: Actions = {
 
 		// Authorize user
 		const currentUserId = locals.user?.id;
-		const isCurrentUserAuthorized = await isUserAuthorized(articleId, currentUserId);
+		const isCurrentUserAuthorized = await isCurrentUserAuthor(articleId, currentUserId);
 		if (!isCurrentUserAuthorized || !articleId)
 			return fail(401, { error: "Can't publish the article" });
 

@@ -1,8 +1,8 @@
 import { env } from '$env/dynamic/private';
+import type { ArticleCollection } from '$lib/pocketbase.schema';
 import { UNKNOWN_ERROR_MESSAGE, isTestEnvironment } from '$lib/utils';
 import { error, fail } from '@sveltejs/kit';
 import Pocketbase, { ClientResponseError } from 'pocketbase';
-import type { ArticleCollection } from '$lib/pocketbase.schema';
 
 export const pocketbaseUrl = isTestEnvironment ? env.TEST_POCKETBASE_URL : env.POCKETBASE_URL;
 
@@ -33,11 +33,13 @@ export const handlePocketbaseErrors = (err: unknown) => {
 	}
 };
 
-export const getFileSrc = (collection: ArticleCollection, fileType: 'audio' | 'image'): string | undefined => {
+export const getFileSrc = (
+	collection: ArticleCollection,
+	fileType: 'audio' | 'image'
+): string | undefined => {
 	if (collection === null) return undefined;
 	if (collection[fileType]?.length === 0) return undefined;
 
 	const pocketbaseCdnUrl = isTestEnvironment ? env.TEST_POCKETBASE_CDN_URL : env.POCKETBASE_CDN_URL;
 	return `${pocketbaseCdnUrl}/${collection.collectionId}/${collection.id}/${collection[fileType]}`;
 };
-

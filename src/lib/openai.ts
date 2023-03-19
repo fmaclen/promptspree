@@ -1,5 +1,5 @@
-import type { ChatCompletionRequestMessage } from 'openai';
 import type { ArticleCompletion } from '$lib/articles';
+import type { ChatCompletionRequestMessage } from 'openai';
 
 export interface CompletionUserPrompt {
 	userId: string;
@@ -14,4 +14,3 @@ export interface CompletionResponse {
 }
 
 export const CURRENT_MODEL = 'gpt-3.5-turbo';
-

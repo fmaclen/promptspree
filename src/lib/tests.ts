@@ -1,6 +1,6 @@
 // These helpers are meant to mock server responses when during Playwright tests.
 // HACK: need to add `.js` extension so it can be imported from tests files.
-import { ArticleCategory } from './articles.js';
+import { ArticleCategory, type ArticleCompletion } from './articles.js';
 import type { CompletionResponse, CompletionUserPrompt } from './openai.js';
 import { UNKNOWN_ERROR_MESSAGE } from './utils.js';
 
@@ -13,16 +13,12 @@ export enum MockPrompt {
 	THROW_ERROR_500 = 'THROW_ERROR_500' // Server error
 }
 
-// FIXME: remove this interface and use ArticleCompletion
-export interface MockArticle {
-	headline: string;
-	category: ArticleCategory;
-	body: string[];
-	suggestions: string[];
-	notes?: string;
+// Extend `ArticleCompletion` to make the `notes` property required for the mock data
+export interface MockArticleCompletion extends ArticleCompletion {
+	notes: string;
 }
 
-export const MOCK_ARTICLE_COMPLETIONS: MockArticle[] = [
+export const MOCK_ARTICLE_COMPLETIONS: MockArticleCompletion[] = [
 	{
 		headline: 'The Ultimate Guide to Buying a Radioactive Mutant Ficus',
 		category: ArticleCategory.SCIENCE,

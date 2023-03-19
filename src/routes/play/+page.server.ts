@@ -5,7 +5,12 @@ import {
 	ArticleStatus,
 	isCategoryValid
 } from '$lib/articles';
-import { createArticleCollection, getArticle, isUserAuthorized, updateArticleCollection } from '$lib/articles.server';
+import {
+	createArticleCollection,
+	getArticle,
+	isCurrentUserAuthor,
+	updateArticleCollection
+} from '$lib/articles.server';
 import { type Message, MessageRole, generateCompletionUserPrompt } from '$lib/messages';
 import { createMessageCollection } from '$lib/messages.server';
 import type { CompletionResponse } from '$lib/openai';
@@ -88,7 +93,7 @@ export const actions: Actions = {
 
 		// Authorize user
 		const currentUserId = locals.user?.id;
-		const isCurrentUserAuthorized = await isUserAuthorized(articleId, currentUserId);
+		const isCurrentUserAuthorized = await isCurrentUserAuthor(articleId, currentUserId);
 		if (!isCurrentUserAuthorized || !articleId)
 			return fail(401, { error: "Can't publish the article" });
 
@@ -112,13 +117,6 @@ async function validatePrompt(prompt: string | undefined): Promise<PromptValidat
 
 	return { prompt, error: null };
 }
-
-// function setDefaultValues(formData: FormData, currentUserId: string, prompt: string) {
-// 	const messages = getInitialChatCompletionRequest(prompt);
-// 	formData.append('messages', miniStringify(messages)); // Set the starting messages
-// 	formData.append('status', ArticleStatus.DRAFT); // Set the default status
-// 	formData.append('user', currentUserId); // Set the author
-// }
 
 // Get completion from AI and try to parse it
 async function getArticleCompletion(

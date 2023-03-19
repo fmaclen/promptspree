@@ -163,7 +163,7 @@ export function generateArticlesFromCollection(
 }
 
 // Check if the user is the creator of the article before allowing them to edit it
-export async function isUserAuthorized( // FIXME: rename to isCurrentUserAuthor
+export async function isCurrentUserAuthor( // FIXME: rename to isCurrentUserAuthor
 	articleId?: string,
 	currentUserId?: string
 ): Promise<boolean> {

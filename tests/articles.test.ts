@@ -1,7 +1,8 @@
 import { expect, test } from '@playwright/test';
 import { readFileSync } from 'fs';
 
-import { type Article, ArticleStatus } from '../src/lib/articles.js';
+import { ArticleStatus } from '../src/lib/articles.js';
+import type { ArticleCollection } from '../src/lib/pocketbase.schema.js';
 import { MOCK_ARTICLE_COMPLETIONS } from '../src/lib/tests.js';
 import { MOCK_USERS } from './lib/fixtures.js';
 import {
@@ -134,7 +135,7 @@ test.describe('Articles', () => {
 
 			// Drafts by Alice
 			let user = await getUser(MOCK_USERS.alice.email);
-			let article: Article = await getLastArticle(
+			let article: ArticleCollection = await getLastArticle(
 				`status = "${ArticleStatus.DRAFT}" && user = "${user?.id}"`
 			);
 			expect(article.headline).toBe(MOCK_ARTICLE_COMPLETIONS[0].headline);
@@ -161,16 +162,14 @@ test.describe('Articles', () => {
 		});
 
 		test('Articles with audio are listenable', async ({ page }) => {
-			// NOTE:
-			// This test only checks that the player is visible when an audio path is present.
-
-			const article: Article = await getLastArticle(`headline = "${MOCK_ARTICLE_COMPLETIONS[1].headline}"`);
+			// NOTE: This test only checks that the player is visible when an audio path is present.
+			const article: ArticleCollection = await getLastArticle(`headline = "${MOCK_ARTICLE_COMPLETIONS[1].headline}"`);
 
 			const audioData = readFileSync('tests/lib/fixtures/the-great-plague.mp3');
 			const audioBlob = new Blob([audioData], { type: 'audio/mp3' });
 			const formData = new FormData();
 			formData.append('audio', audioBlob, 'the-great-plague.mp3');
-			await updateArticle(article.id, formData);
+			article.id && await updateArticle(article.id, formData);
 
 			await page.getByText(MOCK_ARTICLE_COMPLETIONS[3].headline).click();
 			await expect(page.locator('nav.article__audio', { hasText: 'Plus' })).not.toBeVisible();

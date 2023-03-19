@@ -1,7 +1,7 @@
-import type { ArticleCategory, ArticleStatus } from "$lib/articles";
-import type { ArticleCompletion } from "$lib/articles";
-import type { Reaction } from "$lib/reactions";
-import type { MessageRole } from "$lib/messages";
+import type { ArticleCategory, ArticleStatus } from '$lib/articles';
+import type { ArticleCompletion } from '$lib/articles';
+import type { MessageRole } from '$lib/messages';
+import type { Reaction } from '$lib/reactions';
 
 export interface BaseCollection {
 	id?: string;

@@ -1,9 +1,6 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
-	import {
-		type Article,
-		getRandomInitialSuggestions,
-	} from '$lib/articles';
+	import { type Article, getRandomInitialSuggestions } from '$lib/articles';
 	import A from '$lib/components/A.svelte';
 	import ArticleBody from '$lib/components/ArticleBody.svelte';
 	import FormButton from '$lib/components/FormButton.svelte';

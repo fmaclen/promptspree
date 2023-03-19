@@ -1,6 +1,6 @@
 import type { ArticleStatus } from '$lib/articles';
 import type { ArticleCollection } from '$lib/pocketbase.schema.js';
-import type { MockArticle } from '$lib/tests';
+import type { MockArticleCompletion } from '$lib/tests';
 import { type Page, expect } from '@playwright/test';
 import PocketBase, { BaseAuthStore } from 'pocketbase';
 
@@ -78,12 +78,12 @@ export async function getLastArticle(query: string): Promise<ArticleCollection> 
 }
 
 export async function createArticle(
-	mockArticle: MockArticle,
+	mockArticleCompletion: MockArticleCompletion,
 	status: ArticleStatus,
 	user: string
 ): Promise<ArticleCollection> {
 	const article: ArticleCollection = await pb.collection('articles').create({
-		...mockArticle,
+		...mockArticleCompletion,
 		model: CURRENT_MODEL,
 		status,
 		user
@@ -97,11 +97,11 @@ export async function createArticle(
 	});
 
 	// Only create a message if there is a `notes` key
-	if (mockArticle.notes) {
+	if (mockArticleCompletion.notes) {
 		await pb.collection('messages').create({
 			article: article.id,
 			role: MessageRole.ASSISTANT,
-			content: miniStringify(mockArticle)
+			content: miniStringify(mockArticleCompletion)
 		});
 	}
 

@@ -15,7 +15,7 @@
 	const handleReaction: SubmitFunction = () => {
 		return async ({ result, update }) => {
 			if (result.type === 'success' && result.data) {
-				article = { ...article, reactions: result.data as Reactions }
+				article = { ...article, reactions: result.data as Reactions };
 			}
 			await update();
 		};

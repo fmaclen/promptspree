@@ -3,7 +3,8 @@ import type { CompletionUserPrompt } from '$lib/openai';
 import type { MessageCollection } from '$lib/pocketbase.schema';
 import type { ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum } from 'openai';
 
-import { miniStringify } from './utils.js'; // HACK: need to specify the extension so it can be imported in tests
+// HACK: need to specify the extension so it can be imported in tests
+import { miniStringify } from './utils.js';
 
 export enum MessageRole {
 	SYSTEM = 'SYSTEM',
@@ -63,11 +64,7 @@ export function generateCompletionUserPrompt(
 		});
 	}
 
-	//
-	//
 	// TODO: check if the number of tokens is smaller than 4096
-	//
-	//
 
 	return { userId: currentUserId, messages: chatCompletionMessages };
 }
