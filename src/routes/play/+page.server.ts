@@ -8,8 +8,8 @@ import {
 import {
 	createArticleCollection,
 	getArticle,
-	isCurrentUserAuthor,
-	updateArticleCollection
+	updateArticleCollection,
+	publishArticle
 } from '$lib/articles.server';
 import { type Message, MessageRole, generateCompletionUserPrompt } from '$lib/messages';
 import { createMessageCollection } from '$lib/messages.server';
@@ -88,16 +88,9 @@ export const actions: Actions = {
 		return { article, suggestions: parsedCompletion.suggestions };
 	},
 	publish: async ({ request, locals }) => {
-		const formData = await request.formData();
-		const articleId = formData.get('articleId')?.toString();
-
-		// Authorize user
+		const articleId = (await request.formData()).get('articleId')?.toString();
 		const currentUserId = locals.user?.id;
-		const isCurrentUserAuthorized = await isCurrentUserAuthor(articleId, currentUserId);
-		if (!isCurrentUserAuthorized || !articleId)
-			return fail(401, { error: "Can't publish the article" });
-
-		await updateArticleCollection(articleId, { status: ArticleStatus.PUBLISHED });
+		await publishArticle(articleId, currentUserId);
 		throw redirect(303, `/profile/${currentUserId}`);
 	}
 };

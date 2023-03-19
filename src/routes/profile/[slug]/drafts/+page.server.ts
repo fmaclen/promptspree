@@ -3,8 +3,8 @@ import {
 	deleteArticleCollection,
 	getArticles,
 	getArticlesList,
-	isCurrentUserAuthor,
-	updateArticleCollection
+	authorizeCurrentUser,
+	publishArticle
 } from '$lib/articles.server';
 import type { UserCollection } from '$lib/pocketbase.schema';
 import { pbAdmin } from '$lib/pocketbase.server';
@@ -58,24 +58,17 @@ export const actions: Actions = {
 
 		// Authorize user
 		const currentUserId = locals.user?.id;
-		const isCurrentUserAuthorized = await isCurrentUserAuthor(articleId, currentUserId);
-		if (!isCurrentUserAuthorized || !articleId)
+		const authorizeCurrentUserized = await authorizeCurrentUser(articleId, currentUserId);
+		if (!authorizeCurrentUserized || !articleId)
 			return fail(401, { error: "Can't delete the article" });
 
 		await deleteArticleCollection(articleId);
 		throw redirect(303, `/profile/${currentUserId}`);
 	},
 	publish: async ({ request, locals }) => {
-		const formData = await request.formData();
-		const articleId = formData.get('articleId')?.toString();
-
-		// Authorize user
+		const articleId = (await request.formData()).get('articleId')?.toString();
 		const currentUserId = locals.user?.id;
-		const isCurrentUserAuthorized = await isCurrentUserAuthor(articleId, currentUserId);
-		if (!isCurrentUserAuthorized || !articleId)
-			return fail(401, { error: "Can't publish the article" });
-
-		await updateArticleCollection(articleId, { status: ArticleStatus.PUBLISHED });
+		await publishArticle(articleId, currentUserId);
 		throw redirect(303, `/profile/${currentUserId}`);
 	}
 };

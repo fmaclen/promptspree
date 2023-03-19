@@ -5,6 +5,7 @@ import type { ArticleCollection } from '$lib/pocketbase.schema';
 import { getFileSrc, pbAdmin } from '$lib/pocketbase.server';
 import { calculateReactionsFromCollection } from '$lib/reactions';
 import { getUser } from '$lib/users';
+import { error, fail, type HttpError } from '@sveltejs/kit';
 import type { BaseModel, ListResult } from 'pocketbase';
 
 const EXPAND_RECORD_RELATIONS = 'messages(article),reactions(article),user';
@@ -94,6 +95,11 @@ export async function updateArticleCollection(
 	}
 }
 
+export async function publishArticle(articleId?: string, currentUserId?: string): Promise<void | HttpError> {
+	await authorizeCurrentUser(articleId, currentUserId);
+	articleId && await updateArticleCollection(articleId, { status: ArticleStatus.PUBLISHED });
+}
+
 export async function deleteArticleCollection(articleId: string) {
 	try {
 		const pb = await pbAdmin();
@@ -163,11 +169,13 @@ export function generateArticlesFromCollection(
 }
 
 // Check if the user is the creator of the article before allowing them to edit it
-export async function isCurrentUserAuthor( // FIXME: rename to isCurrentUserAuthor
+export async function authorizeCurrentUser( // FIXME: rename to authorizeCurrentUser
 	articleId?: string,
 	currentUserId?: string
-): Promise<boolean> {
+): Promise<boolean | HttpError> {
 	// FIXME: could be optimized by only querying the article, without `EXPAND_RECORD_RELATIONS`
 	const article = await getArticle(articleId, currentUserId);
-	return article?.isCreatedByCurrentUser ?? false;
+
+	if (article?.isCreatedByCurrentUser) return true;
+	throw error(401, 'Unauthorized')
 }
