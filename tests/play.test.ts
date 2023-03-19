@@ -112,7 +112,7 @@ test.describe('Play', () => {
 
 			await publishButton.click();
 			await expect(page.getByText('Delete')).toBeVisible();
-			await expect(page.getByText(prompt)).toBeVisible();
+			await expect(page.locator('h1.section__h1', { hasText: MOCK_USERS.alice.nickname })).toBeVisible(); // prettier-ignore
 			await expect(generateButton).not.toBeVisible();
 			await expect(publishButton).not.toBeVisible();
 			await expect(
@@ -144,8 +144,7 @@ test.describe('Play', () => {
 				)
 			).toBeVisible();
 
-			const article = await getLastArticle(`messages ~ "${MockPrompt.WRONG_FORMAT}"`);
-			// expect(article?.messages[1].content).toBe(MockPrompt.WRONG_FORMAT);
+			const article = await getLastArticle(`body = null`);
 			expect(article?.status).toBe(ArticleStatus.FAILED);
 
 			prompt = MockPrompt.TOO_SHORT;

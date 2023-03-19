@@ -46,13 +46,13 @@ export async function getArticles(filter: string, currentUserId?: string): Promi
 	}
 }
 
-export async function createArticle(
+export async function createArticleCollection(
 	currentUserId: string,
 	status: ArticleStatus
-): Promise<Article | null> {
+): Promise<ArticleCollection | null> {
 	try {
 		const pb = await pbAdmin();
-		const collection: ArticleCollection = await pb.collection('articles').create(
+		return await pb.collection('articles').create(
 			{
 				user: currentUserId,
 				model: CURRENT_MODEL,
@@ -60,7 +60,6 @@ export async function createArticle(
 			},
 			{ expand: 'user' }
 		);
-		return generateArticleFromCollection(collection, currentUserId);
 	} catch (_) {
 		return null;
 	}

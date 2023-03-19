@@ -1,19 +1,22 @@
 import {
 	ARTICLE_SYSTEM_PROMPT,
+	type Article,
 	type ArticleCompletion,
 	ArticleStatus,
 	isCategoryValid
 } from '$lib/articles';
-import { createArticle, getArticle, updateArticleCollection } from '$lib/articles.server';
+import { createArticleCollection, getArticle, isUserAuthorized, updateArticleCollection } from '$lib/articles.server';
 import { type Message, MessageRole, generateCompletionUserPrompt } from '$lib/messages';
 import { createMessageCollection } from '$lib/messages.server';
-import { type CompletionResponse, getCompletionFromAI } from '$lib/openai.server';
+import type { CompletionResponse } from '$lib/openai';
+import { getCompletionFromAI } from '$lib/openai.server';
 import { logEventToSlack } from '$lib/slack.server';
 import { getCompletionFromMock } from '$lib/tests';
 import { UNKNOWN_ERROR_MESSAGE, isTestEnvironment } from '$lib/utils';
 import { error, fail, redirect } from '@sveltejs/kit';
 
 import type { PageServerLoad } from '../$types';
+import type { ArticleCollection } from '../../../../../../../Users/odyssey/projects/promptspree/src/lib/pocketbase.schema';
 import type { Actions } from './$types';
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -33,13 +36,19 @@ export const actions: Actions = {
 		if (!validation.prompt || validation.error)
 			return fail(400, { fieldError: ['prompt', validation.error] });
 
-		let article = articleId
-			? await getArticle(articleId, currentUserId)
-			: await createArticle(currentUserId, ArticleStatus.DRAFT);
-		if (!article?.id) throw error(500, UNKNOWN_ERROR_MESSAGE);
+		let article: ArticleCollection | Article | null = null;
+		let messages: Message[] = [];
 
-		// Get the messages (if any) for the article
-		const messages: Message[] = article.messages || [];
+		if (articleId) {
+			// Get existing article
+			article = await getArticle(articleId, currentUserId);
+			messages = article?.messages || [];
+		} else {
+			// Create a new article
+			article = await createArticleCollection(currentUserId, ArticleStatus.DRAFT);
+		}
+
+		if (!article?.id) throw error(500, UNKNOWN_ERROR_MESSAGE);
 
 		// Save user prompt as a message
 		const userMessage = await createMessageCollection(
@@ -72,13 +81,20 @@ export const actions: Actions = {
 		if (!article?.id) throw error(500, UNKNOWN_ERROR_MESSAGE);
 
 		return { article, suggestions: parsedCompletion.suggestions };
-	}
-	// publish: async ({ request, locals }) => {
-	// 	const article = await publishArticle(request, locals);
-	// 	if (!article) return fail(400, { error: 'Article could not be published' });
+	},
+	publish: async ({ request, locals }) => {
+		const formData = await request.formData();
+		const articleId = formData.get('articleId')?.toString();
 
-	// 	throw redirect(303, `/article/${article.id}`);
-	// }
+		// Authorize user
+		const currentUserId = locals.user?.id;
+		const isCurrentUserAuthorized = await isUserAuthorized(articleId, currentUserId);
+		if (!isCurrentUserAuthorized || !articleId)
+			return fail(401, { error: "Can't publish the article" });
+
+		await updateArticleCollection(articleId, { status: ArticleStatus.PUBLISHED });
+		throw redirect(303, `/profile/${currentUserId}`);
+	}
 };
 
 interface PromptValidation {
