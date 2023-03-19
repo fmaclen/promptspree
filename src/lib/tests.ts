@@ -1,10 +1,7 @@
 // These helpers are meant to mock server responses when during Playwright tests.
-//
 // HACK: need to add `.js` extension so it can be imported from tests files.
-import type { ChatCompletionRequestMessage } from 'openai';
-
-import { ArticleCategory, type ArticleCompletion } from './articles.js';
-import type { CompletionResponse, CompletionUserPrompt } from './openai.server.js';
+import { ArticleCategory } from './articles.js';
+import type { CompletionResponse, CompletionUserPrompt } from './openai.js';
 import { UNKNOWN_ERROR_MESSAGE } from './utils.js';
 
 export enum MockPrompt {
@@ -16,16 +13,16 @@ export enum MockPrompt {
 	THROW_ERROR_500 = 'THROW_ERROR_500' // Server error
 }
 
+// FIXME: remove this interface and use ArticleCompletion
 export interface MockArticle {
-	model: string;
 	headline: string;
 	category: ArticleCategory;
 	body: string[];
 	suggestions: string[];
-	messages: ChatCompletionRequestMessage[];
+	notes?: string;
 }
 
-export const MOCK_ARTICLE_COMPLETIONS: ArticleCompletion[] = [
+export const MOCK_ARTICLE_COMPLETIONS: MockArticle[] = [
 	{
 		headline: 'The Ultimate Guide to Buying a Radioactive Mutant Ficus',
 		category: ArticleCategory.SCIENCE,
@@ -40,7 +37,7 @@ export const MOCK_ARTICLE_COMPLETIONS: ArticleCompletion[] = [
 			'Provide tips on how to care for a radioactive mutant ficus',
 			'Add a cautionary tale about the dangers of mishandling radioactive plants'
 		],
-		notes: 'Some notes about the article.'
+		notes: 'What a good looking article! If I do say so myself.'
 	},
 	{
 		headline: "J.C. Penny's 50% Off Sale: The Cure for the Great Plague?",
@@ -54,7 +51,8 @@ export const MOCK_ARTICLE_COMPLETIONS: ArticleCompletion[] = [
 			'Add a quote from a J.C. Penny spokesperson',
 			'Make it even more sarcastic',
 			'Change J.C. Penny to a different store name'
-		]
+		],
+		notes: 'What a good looking article! If I do say so myself.'
 	},
 	{
 		headline: 'Phonebooks Make a Comeback: The Surprising Resurgence of Printed Directories',
@@ -69,7 +67,7 @@ export const MOCK_ARTICLE_COMPLETIONS: ArticleCompletion[] = [
 			'Add a section on the environmental impact of printing phonebooks',
 			'Change the headline to be more sensational'
 		],
-		notes: 'Some notes about the article.'
+		notes: 'What a good looking article! If I do say so myself.'
 	},
 	{
 		headline: 'Scientists discover new species of deep sea creatures',
@@ -83,7 +81,8 @@ export const MOCK_ARTICLE_COMPLETIONS: ArticleCompletion[] = [
 			'Add a quote from one of the scientists involved in the discovery.',
 			'Include a description of the physical characteristics of the Abyssal Glow.',
 			'Explain why the discovery of new species is important for the study of marine biology.'
-		]
+		],
+		notes: 'What a good looking article! If I do say so myself.'
 	}
 ];
 

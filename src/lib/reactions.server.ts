@@ -1,6 +1,6 @@
-import type { ReactionCollection } from './pocketbase.schema';
-import { pbAdmin } from './pocketbase.server';
-import type { Reaction } from './reactions';
+import type { ReactionCollection } from '$lib/pocketbase.schema';
+import { pbAdmin } from '$lib/pocketbase.server';
+import type { Reaction } from '$lib/reactions';
 
 export async function getReactionCollection(
 	articleId: string,

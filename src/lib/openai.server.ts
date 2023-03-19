@@ -1,37 +1,12 @@
 import { env } from '$env/dynamic/private';
+import { CURRENT_MODEL, type CompletionResponse, type CompletionUserPrompt } from '$lib/openai';
 import { logEventToSlack } from '$lib/slack.server';
+import { UNKNOWN_ERROR_MESSAGE } from '$lib/utils';
 import { error } from '@sveltejs/kit';
-import { type ChatCompletionRequestMessage, Configuration, OpenAIApi } from 'openai';
-
-import type { ArticleCompletion } from './articles';
-import { UNKNOWN_ERROR_MESSAGE } from './utils';
-
-export interface CompletionUserPrompt {
-	userId: string;
-	messages: ChatCompletionRequestMessage[];
-}
-
-export interface CompletionResponse {
-	status: number; // Status code
-	message: string; // Status message
-	completion: string | null;
-	parsedCompletion?: ArticleCompletion;
-}
+import { Configuration, OpenAIApi } from 'openai';
 
 const configuration = new Configuration({ apiKey: env.OPENAI_API_KEY });
 const openai = new OpenAIApi(configuration);
-
-export const CURRENT_MODEL = 'gpt-3.5-turbo';
-
-// Every article starts
-// export function getInitialChatCompletionRequest(
-// 	userPrompt: string
-// ): ChatCompletionRequestMessage[] {
-// 	return [
-// 		{ role: 'system', content: SYSTEM_PROMPT },
-// 		{ role: 'user', content: userPrompt }
-// 	];
-// }
 
 export async function getCompletionFromAI(
 	completionUserPrompt: CompletionUserPrompt

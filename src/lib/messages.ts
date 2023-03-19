@@ -1,9 +1,9 @@
 import type { ArticleCompletion } from '$lib/articles';
-import type { ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum } from 'openai';
-import type { CompletionUserPrompt } from '$lib/openai.server';
-
+import type { CompletionUserPrompt } from '$lib/openai';
 import type { MessageCollection } from '$lib/pocketbase.schema';
-import { miniStringify } from './utils';
+import type { ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum } from 'openai';
+
+import { miniStringify } from './utils.js'; // HACK: need to specify the extension so it can be imported in tests
 
 export enum MessageRole {
 	SYSTEM = 'SYSTEM',
@@ -40,7 +40,7 @@ export function getMessages(messagesCollection?: MessageCollection[]): Message[]
 	return filteredMessages.length ? filteredMessages : [];
 }
 
-// Generates 
+// Generates
 export function generateCompletionUserPrompt(
 	systemPrompt: string,
 	currentUserId: string,
@@ -51,15 +51,16 @@ export function generateCompletionUserPrompt(
 	chatCompletionMessages.push({
 		role: MessageRole.SYSTEM.toLowerCase() as ChatCompletionRequestMessageRoleEnum,
 		content: miniStringify(systemPrompt)
-	})
+	});
 
 	for (const message of messages) {
 		if (!message?.role || !message?.content) continue;
 
 		chatCompletionMessages.push({
 			role: message.role.toLowerCase() as ChatCompletionRequestMessageRoleEnum,
-			content: typeof message.content === 'string' ? message.content : JSON.stringify(message.content)
-		})
+			content:
+				typeof message.content === 'string' ? message.content : JSON.stringify(message.content)
+		});
 	}
 
 	//

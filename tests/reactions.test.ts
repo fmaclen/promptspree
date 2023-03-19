@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 import { ArticleStatus } from '../src/lib/articles.js';
-import { MOCK_ARTICLES } from '../src/lib/tests.js';
+import { MOCK_ARTICLE_COMPLETIONS } from '../src/lib/tests.js';
 import { MOCK_USERS } from './lib/fixtures.js';
 import {
 	createArticle,
@@ -23,10 +23,10 @@ async function seedTest() {
 	}
 
 	let user = await getUser(MOCK_USERS.alice.email);
-	user && (await createArticle(MOCK_ARTICLES[1], ArticleStatus.PUBLISHED, user.id));
+	user && (await createArticle(MOCK_ARTICLE_COMPLETIONS[1], ArticleStatus.PUBLISHED, user.id));
 
 	user = await getUser(MOCK_USERS.bob.email);
-	user && (await createArticle(MOCK_ARTICLES[3], ArticleStatus.PUBLISHED, user.id));
+	user && (await createArticle(MOCK_ARTICLE_COMPLETIONS[3], ArticleStatus.PUBLISHED, user.id));
 }
 
 test.describe('Reactions', () => {
@@ -41,15 +41,15 @@ test.describe('Reactions', () => {
 		const reactionSummary = 'a.article-reactions-summary';
 		expect(await page.locator(reactionSummary, { hasText: '0' }).count()).toBe(2);
 
-		await page.getByText(MOCK_ARTICLES[1].headline).click();
-		await expect(page.getByText(MOCK_ARTICLES[1].body[2])).toBeVisible();
+		await page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline).click();
+		await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[2])).toBeVisible();
 		expect(await page.locator(reactionSummary, { hasText: '0' }).count()).toBe(1);
 
 		await page.getByText('🤯').click();
 		await expect(page.locator(reactionSummary, { hasText: '🤯 1' })).toBeVisible();
 
 		await goToHomepageViaLogo(page);
-		await expect(page.getByText(MOCK_ARTICLES[1].body[2])).not.toBeVisible();
+		await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[2])).not.toBeVisible();
 		await expect(page.locator(reactionSummary, { hasText: '🤯 1' })).toBeVisible();
 
 		// Logout as Alice
@@ -57,15 +57,15 @@ test.describe('Reactions', () => {
 
 		// Login as Bob
 		await loginUser(MOCK_USERS.bob, page);
-		await page.getByText(MOCK_ARTICLES[1].headline).click();
-		await expect(page.getByText(MOCK_ARTICLES[1].body[2])).toBeVisible();
+		await page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline).click();
+		await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[2])).toBeVisible();
 		await expect(page.locator(reactionSummary, { hasText: '🤯 1' })).toBeVisible();
 
 		await page.getByText('🤔').click();
 		await expect(page.locator(reactionSummary, { hasText: '🤯 2' })).toBeVisible();
 
 		await goToHomepageViaLogo(page);
-		await expect(page.getByText(MOCK_ARTICLES[1].body[2])).not.toBeVisible();
+		await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[2])).not.toBeVisible();
 		await expect(page.locator(reactionSummary, { hasText: '🤯 2' })).toBeVisible();
 	});
 

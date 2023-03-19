@@ -1,12 +1,11 @@
 import { type Article, ArticleStatus } from '$lib/articles';
 import { getMessages } from '$lib/messages';
+import { CURRENT_MODEL } from '$lib/openai';
 import type { ArticleCollection } from '$lib/pocketbase.schema';
 import { getFileSrc, pbAdmin } from '$lib/pocketbase.server';
 import { calculateReactionsFromCollection } from '$lib/reactions';
 import { getUser } from '$lib/users';
 import type { BaseModel, ListResult } from 'pocketbase';
-
-import { CURRENT_MODEL } from './openai.server';
 
 const EXPAND_RECORD_RELATIONS = 'messages(article),reactions(article),user';
 
