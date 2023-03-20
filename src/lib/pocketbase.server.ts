@@ -7,8 +7,13 @@ import Pocketbase, { ClientResponseError } from 'pocketbase';
 export const pocketbaseUrl = isTestEnvironment ? env.TEST_POCKETBASE_URL : env.POCKETBASE_URL;
 
 export async function pbAdmin(): Promise<Pocketbase> {
+	const adminEmail = isTestEnvironment ? env.TEST_POCKETBASE_ADMIN_EMAIL : env.POCKETBASE_ADMIN_EMAIL;
+	const adminPassword = isTestEnvironment ? env.TEST_POCKETBASE_ADMIN_PASSWORD : env.POCKETBASE_ADMIN_PASSWORD;
+
+	if (!adminEmail || !adminPassword) throw new Error('Missing Pocketbase admin credentials');
+
 	const pb = new Pocketbase(pocketbaseUrl);
-	await pb.admins.authWithPassword(env.POCKETBASE_ADMIN_EMAIL, env.POCKETBASE_ADMIN_PASSWORD);
+	await pb.admins.authWithPassword(adminEmail, adminPassword);
 	return pb;
 }
 
