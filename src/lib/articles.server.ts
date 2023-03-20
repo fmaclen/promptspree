@@ -5,8 +5,10 @@ import type { ArticleCollection } from '$lib/pocketbase.schema';
 import { getFileSrc, pbAdmin } from '$lib/pocketbase.server';
 import { calculateReactionsFromCollection } from '$lib/reactions';
 import { getUser } from '$lib/users';
-import { error, fail, type HttpError } from '@sveltejs/kit';
+import { type HttpError, error } from '@sveltejs/kit';
 import type { BaseModel, ListResult } from 'pocketbase';
+
+import { UNKNOWN_ERROR_MESSAGE } from './utils';
 
 const EXPAND_RECORD_RELATIONS = 'messages(article),reactions(article),user';
 
@@ -77,9 +79,11 @@ export async function getArticlesList(filter?: string): Promise<ListResult<BaseM
 
 export async function updateArticleCollection(
 	articleId: string,
-	articleCollection: ArticleCollection,
-	currentUserId?: string
+	currentUserId: string,
+	articleCollection: ArticleCollection
 ): Promise<Article | null> {
+	await authorizeCurrentUser(articleId, currentUserId);
+
 	try {
 		const pb = await pbAdmin();
 		const collection: ArticleCollection = await pb.collection('articles').update(
@@ -95,17 +99,23 @@ export async function updateArticleCollection(
 	}
 }
 
-export async function publishArticle(articleId?: string, currentUserId?: string): Promise<void | HttpError> {
-	await authorizeCurrentUser(articleId, currentUserId);
-	articleId && await updateArticleCollection(articleId, { status: ArticleStatus.PUBLISHED });
+export async function publishArticle(
+	articleId: string,
+	currentUserId: string
+): Promise<void | HttpError> {
+	await updateArticleCollection(articleId, currentUserId, { status: ArticleStatus.PUBLISHED });
 }
 
-export async function deleteArticleCollection(articleId: string) {
+export async function deleteArticle(
+	articleId: string,
+	currentUserId: string
+): Promise<void | HttpError> {
+	await authorizeCurrentUser(articleId, currentUserId);
 	try {
 		const pb = await pbAdmin();
-		return await pb.collection('articles').delete(articleId);
+		articleId && (await pb.collection('articles').delete(articleId));
 	} catch (_) {
-		return null;
+		throw error(500, UNKNOWN_ERROR_MESSAGE);
 	}
 }
 
@@ -169,13 +179,17 @@ export function generateArticlesFromCollection(
 }
 
 // Check if the user is the creator of the article before allowing them to edit it
-export async function authorizeCurrentUser( // FIXME: rename to authorizeCurrentUser
+export async function authorizeCurrentUser(
 	articleId?: string,
 	currentUserId?: string
-): Promise<boolean | HttpError> {
-	// FIXME: could be optimized by only querying the article, without `EXPAND_RECORD_RELATIONS`
-	const article = await getArticle(articleId, currentUserId);
+): Promise<void> {
+	let articleCollection: ArticleCollection | null = null;
+	if (articleId) {
+		const pb = await pbAdmin();
+		articleCollection = await pb.collection('articles').getOne(articleId, {
+			expand: 'user'
+		});
+	}
 
-	if (article?.isCreatedByCurrentUser) return true;
-	throw error(401, 'Unauthorized')
+	if (articleCollection?.expand?.user.id !== currentUserId) throw error(401, 'Unauthorized');
 }

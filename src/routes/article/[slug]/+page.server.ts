@@ -1,11 +1,4 @@
-import { ArticleStatus } from '$lib/articles';
-import {
-	deleteArticleCollection,
-	getArticle,
-	authorizeCurrentUser,
-	updateArticleCollection,
-	publishArticle
-} from '$lib/articles.server';
+import { deleteArticle, getArticle, publishArticle } from '$lib/articles.server';
 import type { ReactionCollection } from '$lib/pocketbase.schema';
 import type { Reaction, Reactions } from '$lib/reactions';
 import { calculateReactionsFromCollection } from '$lib/reactions';
@@ -16,8 +9,9 @@ import {
 	getReactionsCollection,
 	updateReactionCollection
 } from '$lib/reactions.server';
-import { type Actions, error, fail, redirect } from '@sveltejs/kit';
+import { type Actions, error, redirect } from '@sveltejs/kit';
 
+import { getArticleAndUserIds } from '$lib/articles';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals, params }) => {
@@ -68,21 +62,12 @@ export const actions: Actions = {
 		return calculateReactionsFromCollection(reactionsCollection, currentUserId);
 	},
 	delete: async ({ request, locals }) => {
-		const formData = await request.formData();
-		const articleId = formData.get('articleId')?.toString();
-
-		// Authorize user
-		const currentUserId = locals.user?.id;
-		const authorizeCurrentUserized = await authorizeCurrentUser(articleId, currentUserId);
-		if (!authorizeCurrentUserized || !articleId)
-			return fail(401, { error: "Can't delete the article" });
-
-		await deleteArticleCollection(articleId);
+		const { articleId, currentUserId } = await getArticleAndUserIds(request, locals);
+		await deleteArticle(articleId, currentUserId);
 		throw redirect(303, `/profile/${currentUserId}`);
 	},
 	publish: async ({ request, locals }) => {
-		const articleId = (await request.formData()).get('articleId')?.toString();
-		const currentUserId = locals.user?.id;
+		const { articleId, currentUserId } = await getArticleAndUserIds(request, locals);
 		await publishArticle(articleId, currentUserId);
 		throw redirect(303, `/profile/${currentUserId}`);
 	}

@@ -3,25 +3,26 @@ import {
 	type Article,
 	type ArticleCompletion,
 	ArticleStatus,
-	isCategoryValid
+	isCategoryValid,
+	getArticleAndUserIds
 } from '$lib/articles';
 import {
 	createArticleCollection,
 	getArticle,
-	updateArticleCollection,
-	publishArticle
+	publishArticle,
+	updateArticleCollection
 } from '$lib/articles.server';
 import { type Message, MessageRole, generateCompletionUserPrompt } from '$lib/messages';
 import { createMessageCollection } from '$lib/messages.server';
 import type { CompletionResponse } from '$lib/openai';
 import { getCompletionFromAI } from '$lib/openai.server';
+import type { ArticleCollection } from '$lib/pocketbase.schema';
 import { logEventToSlack } from '$lib/slack.server';
 import { getCompletionFromMock } from '$lib/tests';
 import { UNKNOWN_ERROR_MESSAGE, isTestEnvironment } from '$lib/utils';
 import { error, fail, redirect } from '@sveltejs/kit';
 
 import type { PageServerLoad } from '../$types';
-import type { ArticleCollection } from '../../../../../../../Users/odyssey/projects/promptspree/src/lib/pocketbase.schema';
 import type { Actions } from './$types';
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -69,7 +70,7 @@ export const actions: Actions = {
 		const { status, message, parsedCompletion } = completionResponse;
 
 		if (status !== 200 || !parsedCompletion) {
-			await updateArticleCollection(article.id, { status: ArticleStatus.FAILED });
+			await updateArticleCollection(article.id, currentUserId, { status: ArticleStatus.FAILED });
 			return fail(status, { error: message });
 		}
 
@@ -82,14 +83,13 @@ export const actions: Actions = {
 		if (!assistantMessage) throw error(500, UNKNOWN_ERROR_MESSAGE);
 
 		// Update the article with the completion
-		article = await updateArticleCollection(article.id, { ...parsedCompletion }, currentUserId);
+		article = await updateArticleCollection(article.id, currentUserId, { ...parsedCompletion });
 		if (!article?.id) throw error(500, UNKNOWN_ERROR_MESSAGE);
 
 		return { article, suggestions: parsedCompletion.suggestions };
 	},
 	publish: async ({ request, locals }) => {
-		const articleId = (await request.formData()).get('articleId')?.toString();
-		const currentUserId = locals.user?.id;
+		const { articleId, currentUserId } = await getArticleAndUserIds(request, locals);
 		await publishArticle(articleId, currentUserId);
 		throw redirect(303, `/profile/${currentUserId}`);
 	}

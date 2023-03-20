@@ -127,3 +127,10 @@ Write the article in the form of JSON using these keys:
 
 	"notes": "Optional. Use this key to include remarks about the article generation that need to be relayed to the user"
 }`;
+
+export async function getArticleAndUserIds(request: Request, locals: App.Locals) {
+	// We force the id's to empty strings if they are not present in the request
+	const articleId = (await request.formData()).get('articleId')?.toString() ?? '';
+	const currentUserId = locals?.user?.id ?? '';
+	return { articleId, currentUserId };
+}

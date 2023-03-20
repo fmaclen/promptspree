@@ -1,16 +1,9 @@
-import { type Article, ArticleStatus } from '$lib/articles';
-import {
-	deleteArticleCollection,
-	getArticles,
-	getArticlesList,
-	authorizeCurrentUser,
-	updateArticleCollection,
-	publishArticle
-} from '$lib/articles.server';
+import { type Article, ArticleStatus, getArticleAndUserIds } from '$lib/articles';
+import { deleteArticle, getArticles, getArticlesList, publishArticle } from '$lib/articles.server';
 import type { UserCollection } from '$lib/pocketbase.schema';
 import { pbAdmin } from '$lib/pocketbase.server';
 import { getPromptScore } from '$lib/users';
-import { error, fail, redirect } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 
 import type { Actions, PageServerLoad } from './$types';
 
@@ -56,21 +49,12 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 
 export const actions: Actions = {
 	delete: async ({ request, locals }) => {
-		const formData = await request.formData();
-		const articleId = formData.get('articleId')?.toString();
-
-		// Authorize user
-		const currentUserId = locals.user?.id;
-		const authorizeCurrentUserized = await authorizeCurrentUser(articleId, currentUserId);
-		if (!authorizeCurrentUserized || !articleId)
-			return fail(401, { error: "Can't delete the article" });
-
-		await deleteArticleCollection(articleId);
+		const { articleId, currentUserId } = await getArticleAndUserIds(request, locals);
+		await deleteArticle(articleId, currentUserId);
 		throw redirect(303, `/profile/${currentUserId}`);
 	},
 	publish: async ({ request, locals }) => {
-		const articleId = (await request.formData()).get('articleId')?.toString();
-		const currentUserId = locals.user?.id;
+		const { articleId, currentUserId } = await getArticleAndUserIds(request, locals);
 		await publishArticle(articleId, currentUserId);
 		throw redirect(303, `/profile/${currentUserId}`);
 	}
