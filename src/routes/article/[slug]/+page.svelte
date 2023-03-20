@@ -62,7 +62,11 @@
 			<div class="article-prompt">
 				<code class="article-prompt__code">
 					{#each article.messages as message}
-						<p>{typeof message.content === 'string' ? message.content : message.content?.notes}</p>
+						{#if typeof message.content === 'string'}
+							<p>{message.content}</p>
+						{:else if message.content?.notes !== undefined}
+							<p>{message.content.notes}</p>
+						{/if}
 					{/each}
 				</code>
 			</div>
