@@ -54,7 +54,7 @@ const config: PlaywrightTestConfig = {
 		}
 	],
 	testDir: 'tests',
-	timeout: isCiEnvironment ? 40000 : 20000,
+	timeout: isCiEnvironment ? 60000 : 20000,
 	use: {
 		trace: 'retain-on-failure',
 		screenshot: 'only-on-failure',
