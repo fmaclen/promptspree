@@ -1,3 +1,4 @@
+import { getArticleAndUserIds } from '$lib/articles';
 import { deleteArticle, getArticle, publishArticle } from '$lib/articles.server';
 import type { ReactionCollection } from '$lib/pocketbase.schema';
 import type { Reaction, Reactions } from '$lib/reactions';
@@ -11,7 +12,6 @@ import {
 } from '$lib/reactions.server';
 import { type Actions, error, redirect } from '@sveltejs/kit';
 
-import { getArticleAndUserIds } from '$lib/articles';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals, params }) => {

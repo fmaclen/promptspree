@@ -3,8 +3,8 @@ import {
 	type Article,
 	type ArticleCompletion,
 	ArticleStatus,
-	isCategoryValid,
-	getArticleAndUserIds
+	getArticleAndUserIds,
+	isCategoryValid
 } from '$lib/articles';
 import {
 	createArticleCollection,

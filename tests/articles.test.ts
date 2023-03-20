@@ -84,7 +84,9 @@ test.describe('Articles', () => {
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].body[1])).not.toBeVisible();
 
 			// Category page
-			await page.locator('a.categories__a', { hasText: MOCK_ARTICLE_COMPLETIONS[1].category }).click();
+			await page
+				.locator('a.categories__a', { hasText: MOCK_ARTICLE_COMPLETIONS[1].category })
+				.click();
 			await expect(page.locator(`a.categories__a--${MOCK_ARTICLE_COMPLETIONS[1].category.toLowerCase()}`)).toHaveClass(/categories__a--active/); // prettier-ignore
 			await expect(page.locator('h3.article__category', { hasText: MOCK_ARTICLE_COMPLETIONS[1].category })).toBeVisible(); // prettier-ignore
 			await expect(page.getByText(MOCK_USERS.alice.nickname)).toBeVisible();
@@ -163,13 +165,15 @@ test.describe('Articles', () => {
 
 		test('Articles with audio are listenable', async ({ page }) => {
 			// NOTE: This test only checks that the player is visible when an audio path is present.
-			const article: ArticleCollection = await getLastArticle(`headline = "${MOCK_ARTICLE_COMPLETIONS[1].headline}"`);
+			const article: ArticleCollection = await getLastArticle(
+				`headline = "${MOCK_ARTICLE_COMPLETIONS[1].headline}"`
+			);
 
 			const audioData = readFileSync('tests/lib/fixtures/the-great-plague.mp3');
 			const audioBlob = new Blob([audioData], { type: 'audio/mp3' });
 			const formData = new FormData();
 			formData.append('audio', audioBlob, 'the-great-plague.mp3');
-			article.id && await updateArticle(article.id, formData);
+			article.id && (await updateArticle(article.id, formData));
 
 			await page.getByText(MOCK_ARTICLE_COMPLETIONS[3].headline).click();
 			await expect(page.locator('nav.article__audio', { hasText: 'Plus' })).not.toBeVisible();
