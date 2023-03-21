@@ -50,6 +50,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"jsonminify": "^0.4.2"
+		"jsonminify": "^0.4.2",
+		"svelte-french-toast": "^1.0.4-beta.0"
 	}
 }

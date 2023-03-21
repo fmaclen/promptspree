@@ -1,18 +1,16 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
 	import { type Article, getRandomInitialSuggestions } from '$lib/articles';
-	import A from '$lib/components/A.svelte';
 	import ArticleBody from '$lib/components/ArticleBody.svelte';
 	import FormButton from '$lib/components/FormButton.svelte';
 	import FormTextarea from '$lib/components/FormTextarea.svelte';
 	import HR from '$lib/components/HR.svelte';
 	import Head from '$lib/components/Head.svelte';
-	import IconLoading from '$lib/components/IconLoading.svelte';
 	import Notice from '$lib/components/Notice.svelte';
 	import Plate from '$lib/components/Plate.svelte';
 	import { Sentiment } from '$lib/utils';
 	import type { ActionResult } from '@sveltejs/kit';
-	import { slide } from 'svelte/transition';
+	import toast from 'svelte-french-toast';
 
 	let article: Article | null = null;
 	let suggestions: string[] = getRandomInitialSuggestions();
@@ -29,6 +27,7 @@
 	}
 
 	function submitGenerate() {
+		toast.dismiss();
 		isLoading = true;
 		article = null;
 		error = null;
@@ -54,31 +53,16 @@
 	function submitPublish() {
 		isLoading = true;
 	}
+
+	$: if (isLoading) toast.loading('Generating article...', { id: 'loading' });
+	$: if (article) toast.success('Article saved to drafts', { id: 'loading' });
+	$: if (error) toast.error(error, { id: 'loading' });
 </script>
 
 <Head title={['Play']} />
 
-{#if error}
-	<div transition:slide={{ duration: 150 }}>
-		<Notice sentiment={Sentiment.NEGATIVE}>{error}</Notice>
-		<HR />
-	</div>
-{/if}
-
-{#if article}
-	<div transition:slide={{ duration: 150 }}>
-		<Notice sentiment={Sentiment.POSITIVE}>
-			Article saved to
-			<A href="/profile/{article.user?.id}/drafts" sentiment={Sentiment.POSITIVE}>drafts</A>
-		</Notice>
-		<HR />
-	</div>
-{/if}
-
 <Notice>
-	{#if isLoading}
-		<IconLoading />
-	{:else if article}
+	{#if article}
 		Type another prompt or use one of the suggestions to edit the article
 	{:else}
 		Type your own prompt or choose one of the suggestions to generate an article

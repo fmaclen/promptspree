@@ -136,7 +136,7 @@ test.describe('Users', () => {
 
 		await page.getByText('Forgot your password?').click();
 		await expect(
-			page.getByText('Email has been sent. Reset the password and login here')
+			page.getByText('Email has been sent. Follow the instructions, then try logging in with the new password')
 		).not.toBeVisible();
 		await expect(loginButton).not.toBeVisible();
 		await expect(passwordResetButton).toBeVisible();
@@ -148,14 +148,14 @@ test.describe('Users', () => {
 
 		await passwordResetButton.click();
 		await expect(
-			page.getByText('Email has been sent. Reset the password and login here')
+			page.getByText('Email has been sent. Follow the instructions, then try logging in with the new password')
 		).toBeVisible();
 		await expect(passwordResetButton).toBeDisabled();
 		await expect(page.getByLabel('E-mail')).toBeDisabled();
 
-		await page.getByText('login here').click();
-		await expect(loginButton).toBeVisible();
-		await expect(passwordResetButton).not.toBeVisible();
+		// await page.getByText('login here').click();
+		// await expect(loginButton).toBeVisible();
+		// await expect(passwordResetButton).not.toBeVisible();
 	});
 
 	test('Redirect away from guest-only paths when user is logged in', async ({ page }) => {

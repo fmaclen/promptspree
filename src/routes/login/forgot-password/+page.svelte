@@ -10,7 +10,8 @@
 	import Notice from '$lib/components/Notice.svelte';
 	import Plate from '$lib/components/Plate.svelte';
 	import Section from '$lib/components/Section.svelte';
-	import { Sentiment, UNKNOWN_ERROR_MESSAGE } from '$lib/utils';
+	import { UNKNOWN_ERROR_MESSAGE } from '$lib/utils';
+	import toast from 'svelte-french-toast';
 
 	let success = false;
 	let email = '';
@@ -28,6 +29,13 @@
 			}
 		};
 	};
+
+	$: if (success)
+		toast.success(
+			'Email has been sent. Follow the instructions, then try logging in with the new password',
+			{ duration: Infinity }
+		);
+	$: if (error) toast.error(error);
 </script>
 
 <Head title={['Forgot your password?']} />
@@ -36,20 +44,9 @@
 <HR />
 
 <Section isVerticallyCentered={true} title="Forgot your password?">
-	{#if success}
-		<Notice sentiment={Sentiment.POSITIVE}>
-			Email has been sent. Reset the password and
-			<A href="/login" isHighlighted={true} sentiment={Sentiment.POSITIVE}>login here</A>
-		</Notice>
-	{:else if error}
-		<Notice sentiment={Sentiment.NEGATIVE}>
-			{error}
-		</Notice>
-	{:else}
-		<Notice>
-			Enter the email address you used to join and we'll send instructions to reset your password
-		</Notice>
-	{/if}
+	<Notice>
+		Enter the email address you used to join and we'll send instructions to reset your password
+	</Notice>
 
 	<Plate>
 		<form class="form" method="POST" use:enhance={handleSubmit}>
