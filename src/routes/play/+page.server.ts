@@ -58,6 +58,7 @@ export const actions: Actions = {
 
 		// Save user prompt as a message
 		const userMessage = await createMessageCollection(
+			locals,
 			article.id,
 			MessageRole.USER,
 			validation.prompt
@@ -76,6 +77,7 @@ export const actions: Actions = {
 
 		// Save AI completion as a message
 		const assistantMessage = await createMessageCollection(
+			locals,
 			article.id,
 			MessageRole.ASSISTANT,
 			parsedCompletion
