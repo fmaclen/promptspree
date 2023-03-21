@@ -1,11 +1,11 @@
 <script lang="ts">
-	import type { Article } from '$lib/article';
+	import type { Article } from '$lib/articles';
 	import ArticleCategory from '$lib/components/ArticleCategory.svelte';
 	import ArticleMetadata from '$lib/components/ArticleMetadata.svelte';
 	import Plate from '$lib/components/Plate.svelte';
 
 	export let articles: Article[];
-	export let isCurrentUserProfile: boolean = false;
+	export let isActionable: boolean = false;
 
 	// Sort articles by the total number of reactions
 	// articles = articles.sort((a, b) => b.reactions.total - a.reactions.total);
@@ -27,7 +27,7 @@
 				</div>
 			</a>
 
-			<ArticleMetadata {article} {isCurrentUserProfile} />
+			<ArticleMetadata {article} {isActionable} />
 		</Plate>
 	{/each}
 </div>

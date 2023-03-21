@@ -11,7 +11,6 @@
 	export let data: PageData;
 	let profile = data.profile;
 	let articles = data.articles;
-	let isCurrentUserProfile = data.isCurrentUserProfile;
 </script>
 
 <Head title={[profile.nickname, 'Drafts', 'Profile']} />
@@ -19,7 +18,7 @@
 <Section title={profile.nickname}>
 	<ProfileSummary
 		id={profile.id}
-		{isCurrentUserProfile}
+		isCurrentUserProfile={data.isCurrentUserProfile}
 		totalPublished={data.totalPublished}
 		totalDrafts={articles.length}
 		promptScore={profile.promptScore}
@@ -27,7 +26,7 @@
 	/>
 
 	{#if articles.length > 0}
-		<ArticleSummaries {articles} {isCurrentUserProfile} />
+		<ArticleSummaries {articles} isActionable={true} />
 	{:else}
 		<Notice>No draft articles, <A href="/play" isHighlighted={true}>generate one</A></Notice>
 	{/if}

@@ -1,108 +1,74 @@
-import { deleteArticle, generateArticle, publishArticle } from '$lib/article.server';
-import { logEventToSlack } from '$lib/slack.server';
+import { getArticleAndUserIds } from '$lib/articles';
+import { deleteArticle, getArticle, publishArticle } from '$lib/articles.server';
+import type { ReactionCollection } from '$lib/pocketbase.schema';
+import type { Reaction, Reactions } from '$lib/reactions';
+import { calculateReactionsFromCollection } from '$lib/reactions';
+import {
+	createReactionCollection,
+	deleteReactionCollection,
+	getReactionCollection,
+	getReactionsCollection,
+	updateReactionCollection
+} from '$lib/reactions.server';
 import { type Actions, error, redirect } from '@sveltejs/kit';
-import type { BaseAuthStore } from 'pocketbase';
 
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals, params }) => {
-	if (!params.slug) throw error(404, 'Not found');
+	const article = await getArticle(params.slug, locals.user?.id);
 
-	let articleCollection: BaseAuthStore['model'] = null;
-	try {
-		articleCollection = await locals.pb
-			.collection('articles')
-			.getOne(params.slug, { expand: 'user' });
-	} catch (_) {
-		// eslint-disable-next-line no-empty
+	if (article) {
+		return { article };
+	} else {
+		throw error(404, 'Article not found');
 	}
-
-	const article = await generateArticle(articleCollection, locals);
-	if (!article) throw error(404, 'Not found');
-
-	const isCurrentUserProfile = locals.user?.id === article.author.id;
-
-	return { article, isCurrentUserProfile };
 };
 
 export const actions: Actions = {
-	react: async ({ request, locals, params }) => {
+	react: async ({ request, locals }): Promise<Reactions> => {
+		const currentUserId = locals.user?.id;
+
+		if (!currentUserId) throw error(401, 'You must be logged in to react to an article');
+
 		const formData = await request.formData();
-		const articleId = params.slug;
-		const reaction = formData.get('reaction')?.toString();
+		const articleId = formData.get('article')?.toString();
+		const reaction = formData.get('reaction')?.toString() as Reaction;
 
-		if (!locals?.user || !articleId || !reaction) throw error(400, "Can't react to the article");
+		if (!articleId || !reaction) throw error(400, "Can't react to the article");
 
-		let articleCollection: BaseAuthStore['model'] = null;
-		let reactionCollection: BaseAuthStore['model'] = null;
+		const userReactionCollection: ReactionCollection | null = await getReactionCollection(
+			articleId,
+			currentUserId
+		);
+		const reactionId = userReactionCollection?.id;
 
-		// Check if the article exists
-		try {
-			articleCollection = await locals.pb
-				.collection('articles')
-				.getOne(articleId, { expand: 'user' });
-		} catch (_) {
-			// eslint-disable-next-line no-empty
-		}
-
-		// It should be rare that we hit this case since the UI is the one defining
-		// the `articleId`, but it's still possible that the article is deleted
-		// during a long user serssion.
-		if (!articleCollection) throw error(404, 'Not found');
-
-		// Append user and article to formData
-		formData.append('user', locals.user.id);
-		formData.append('article', articleCollection.id || '');
-
-		// Check if the user already reacted to article
-		try {
-			reactionCollection = await locals.pb
-				.collection('reactions')
-				.getFirstListItem(`user="${locals.user.id}" && article="${articleCollection.id}"`);
-		} catch (_) {
-			// eslint-disable-next-line no-empty
-		}
-
-		// Create, update or delete reaction
-		try {
-			if (reactionCollection) {
-				if (reactionCollection?.reaction === reaction) {
-					// Delete it
-					await locals.pb.collection('reactions').delete(reactionCollection.id);
-				} else {
-					// Update it
-					reactionCollection = await locals.pb
-						.collection('reactions')
-						.update(reactionCollection.id, formData);
-				}
+		// Check if the user has already reacted to the article
+		if (reactionId) {
+			if (userReactionCollection.reaction === reaction) {
+				// If the existing reaction is the same as the new reaction, delete the reaction
+				await deleteReactionCollection(reactionId);
 			} else {
-				// Create it
-				reactionCollection = await locals.pb.collection('reactions').create(formData);
+				// If the existing reaction is different from the new reaction, update the reaction
+				await updateReactionCollection(reactionId, reaction);
 			}
-		} catch (err) {
-			return handleErrors(err);
+		} else {
+			// If the user hasn't reacted to the article, create a new reaction
+			await createReactionCollection(articleId, currentUserId, reaction);
 		}
 
-		const article = await generateArticle(articleCollection, locals);
-		if (!article) throw error(404, 'Not found');
+		// Get all the reactions again
+		const reactionsCollection: ReactionCollection[] = await getReactionsCollection(articleId);
 
-		return { article };
+		return calculateReactionsFromCollection(reactionsCollection, currentUserId);
 	},
 	delete: async ({ request, locals }) => {
-		await deleteArticle(request, locals);
-		throw redirect(303, `/profile/${locals?.user?.id}`);
+		const { articleId, currentUserId } = await getArticleAndUserIds(request, locals);
+		await deleteArticle(articleId, currentUserId);
+		throw redirect(303, `/profile/${currentUserId}`);
 	},
 	publish: async ({ request, locals }) => {
-		await publishArticle(request, locals);
-		throw redirect(303, `/profile/${locals?.user?.id}`);
-	}
-};
-
-const handleErrors = (err: any) => {
-	if (err?.status === 404) {
-		throw error(404, 'Article not found');
-	} else {
-		logEventToSlack('/article/[slug]?/react', err);
-		throw error(500);
+		const { articleId, currentUserId } = await getArticleAndUserIds(request, locals);
+		await publishArticle(articleId, currentUserId);
+		throw redirect(303, `/profile/${currentUserId}`);
 	}
 };

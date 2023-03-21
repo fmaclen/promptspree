@@ -17,7 +17,7 @@ export const actions: Actions = {
 		const password = formData.get('password')?.toString();
 
 		try {
-			if (!email || !password) throw new Error();
+			if (!email || !password) return fail(400, { message: 'Missing email or password' });
 
 			await locals.pb.collection('users').authWithPassword(email, password);
 

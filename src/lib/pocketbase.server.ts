@@ -1,10 +1,26 @@
 import { env } from '$env/dynamic/private';
+import type { ArticleCollection } from '$lib/pocketbase.schema';
 import { UNKNOWN_ERROR_MESSAGE, isTestEnvironment } from '$lib/utils';
 import { error, fail } from '@sveltejs/kit';
-import jsonminify from 'jsonminify';
-import { type BaseAuthStore, ClientResponseError } from 'pocketbase';
+import Pocketbase, { ClientResponseError } from 'pocketbase';
 
 export const pocketbaseUrl = isTestEnvironment ? env.TEST_POCKETBASE_URL : env.POCKETBASE_URL;
+
+export async function pbAdmin(): Promise<Pocketbase> {
+	const adminEmail = isTestEnvironment
+		? env.TEST_POCKETBASE_ADMIN_EMAIL
+		: env.POCKETBASE_ADMIN_EMAIL;
+
+	const adminPassword = isTestEnvironment
+		? env.TEST_POCKETBASE_ADMIN_PASSWORD
+		: env.POCKETBASE_ADMIN_PASSWORD;
+
+	if (!adminEmail || !adminPassword) throw new Error('Missing Pocketbase admin credentials');
+
+	const pb = new Pocketbase(pocketbaseUrl);
+	await pb.admins.authWithPassword(adminEmail, adminPassword);
+	return pb;
+}
 
 export const handlePocketbaseError = (err: unknown) => {
 	const clientError = err as ClientResponseError;
@@ -27,16 +43,13 @@ export const handlePocketbaseErrors = (err: unknown) => {
 	}
 };
 
-export const getAudioSrc = (article: BaseAuthStore['model']): string | undefined => {
-	if (article === null) return undefined;
-	if (article?.audio.length === 0) return undefined;
+export const getFileSrc = (
+	collection: ArticleCollection,
+	fileType: 'audio' | 'image'
+): string | undefined => {
+	if (collection === null) return undefined;
+	if (collection[fileType]?.length === 0) return undefined;
 
 	const pocketbaseCdnUrl = isTestEnvironment ? env.TEST_POCKETBASE_CDN_URL : env.POCKETBASE_CDN_URL;
-	return `${pocketbaseCdnUrl}/${article.collectionId}/${article.id}/${article.audio}`;
-};
-
-// Converts object to string and minifies it
-export const miniStringify = (obj: object): string => {
-	const jsonString = JSON.stringify(obj);
-	return jsonminify(jsonString);
+	return `${pocketbaseCdnUrl}/${collection.collectionId}/${collection.id}/${collection[fileType]}`;
 };

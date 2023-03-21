@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Article } from '$lib/article';
+	import type { Article } from '$lib/articles';
 	import ArticleCategory from '$lib/components/ArticleCategory.svelte';
 
 	import ArticlePlaceholder from './ArticlePlaceholder.svelte';

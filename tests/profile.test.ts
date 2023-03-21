@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
-import { ArticleStatus } from '../src/lib/article.js';
-import { MOCK_ARTICLES } from '../src/lib/tests.js';
+import { ArticleStatus } from '../src/lib/articles.js';
+import { MOCK_ARTICLE_COMPLETIONS } from '../src/lib/tests.js';
 import { MOCK_USERS } from './lib/fixtures.js';
 import {
 	createArticle,
@@ -24,13 +24,13 @@ async function seedTest() {
 
 	let user = await getUser(MOCK_USERS.alice.email);
 	if (user) {
-		await createArticle(MOCK_ARTICLES[0], ArticleStatus.DRAFT, user.id);
-		await createArticle(MOCK_ARTICLES[1], ArticleStatus.PUBLISHED, user.id);
+		await createArticle(MOCK_ARTICLE_COMPLETIONS[0], ArticleStatus.DRAFT, user.id);
+		await createArticle(MOCK_ARTICLE_COMPLETIONS[1], ArticleStatus.PUBLISHED, user.id);
 	}
 	user = await getUser(MOCK_USERS.bob.email);
 	if (user) {
-		await createArticle(MOCK_ARTICLES[2], ArticleStatus.DRAFT, user.id);
-		await createArticle(MOCK_ARTICLES[3], ArticleStatus.PUBLISHED, user.id);
+		await createArticle(MOCK_ARTICLE_COMPLETIONS[2], ArticleStatus.DRAFT, user.id);
+		await createArticle(MOCK_ARTICLE_COMPLETIONS[3], ArticleStatus.PUBLISHED, user.id);
 	}
 }
 
@@ -56,21 +56,21 @@ test.describe('Profile', () => {
 		});
 
 		test('Can see published and draft articles', async ({ page }) => {
-			await expect(page.getByText(MOCK_ARTICLES[1].headline)).toBeVisible();
-			await expect(page.getByText(MOCK_ARTICLES[1].body[0])).toBeVisible(); // Summary
-			await expect(page.getByText(MOCK_ARTICLES[1].body[1])).not.toBeVisible();
-			await expect(page.getByText(MOCK_ARTICLES[1].messages[1].content)).not.toBeVisible();
-			await expect(page.getByText(MOCK_ARTICLES[0].headline)).not.toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[0])).toBeVisible(); // Summary
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[1])).not.toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].notes)).not.toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline)).not.toBeVisible();
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Drafts 1' })).toBeVisible(); // prettier-ignore
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Published 1' })).toBeVisible(); // prettier-ignore
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Articles 1' })).not.toBeVisible(); // prettier-ignore
 
 			await page.getByText('Drafts 1').click();
-			await expect(page.getByText(MOCK_ARTICLES[0].headline)).toBeVisible();
-			await expect(page.getByText(MOCK_ARTICLES[0].body[0])).toBeVisible(); // Summary
-			await expect(page.getByText(MOCK_ARTICLES[0].body[1])).not.toBeVisible();
-			await expect(page.getByText(MOCK_ARTICLES[0].messages[1].content)).not.toBeVisible();
-			await expect(page.getByText(MOCK_ARTICLES[1].headline)).not.toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline)).toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].body[0])).toBeVisible(); // Summary
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].body[1])).not.toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].notes)).not.toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).not.toBeVisible();
 		});
 
 		test('Can publish draft articles', async ({ page }) => {
@@ -79,22 +79,19 @@ test.describe('Profile', () => {
 
 			await page.getByText('Drafts 1').click();
 			await expect(publishButton).toBeVisible();
-			await expect(page.getByText(MOCK_ARTICLES[0].messages[1].content)).not.toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].notes)).not.toBeVisible();
 
-			await page.getByText(MOCK_ARTICLES[0].headline).click();
-			await expect(page.getByText(MOCK_ARTICLES[0].messages[1].content)).toBeVisible();
+			await page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline).click();
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].notes)).toBeVisible();
 			await expect(publishButton).toBeVisible();
 
-			await page.goBack();
-			await expect(page.getByText(MOCK_ARTICLES[0].messages[1].content)).not.toBeVisible();
+			await page.goBack(); // Back to draft article list
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].notes)).not.toBeVisible();
 
 			await publishButton.click();
-			await expect(page.getByText(MOCK_ARTICLES[0].messages[1].content)).toBeVisible();
-			await expect(publishButton).not.toBeVisible();
-
-			await page.locator('span.metadata__author', { hasText: MOCK_USERS.alice.nickname }).click();
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Drafts 0' })).toBeVisible(); // prettier-ignore
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Published 2' })).toBeVisible(); // prettier-ignore
+			await expect(publishButton).not.toBeVisible();
 
 			await page.getByText('Drafts 0').click();
 			await expect(page.getByText('No draft articles, generate one')).toBeVisible();
@@ -107,20 +104,20 @@ test.describe('Profile', () => {
 
 			await page.getByText('Drafts 1').click();
 			await expect(page.locator('a.profile-summary__a--active', { hasText: 'Drafts 1' })).toBeVisible(); // prettier-ignore
-			await expect(page.getByText(MOCK_ARTICLES[0].headline)).toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline)).toBeVisible();
 
 			await prepareToAcceptDialog(page, /Are you sure you want to delete the article?/);
 			await deleteButton.click();
-			await expect(page.getByText(MOCK_ARTICLES[0].headline)).not.toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline)).not.toBeVisible();
 			await expect(page.locator('a.profile-summary__a--active', { hasText: 'Published 1' })).toBeVisible(); // prettier-ignore
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Drafts 0' })).toBeVisible(); // prettier-ignore
-			await expect(page.getByText(MOCK_ARTICLES[1].headline)).toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).toBeVisible();
 
 			await deleteButton.click();
 			await expect(page.getByText('No published articles, generate one')).toBeVisible();
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Published 0' })).toBeVisible(); // prettier-ignore
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Drafts 0' })).toBeVisible(); // prettier-ignore
-			await expect(page.getByText(MOCK_ARTICLES[1].headline)).not.toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).not.toBeVisible();
 		});
 	});
 
@@ -132,9 +129,9 @@ test.describe('Profile', () => {
 		});
 
 		test('Can only see published articles from other users', async ({ page }) => {
-			await expect(page.getByText(MOCK_ARTICLES[3].headline)).toBeVisible();
-			await expect(page.getByText(MOCK_ARTICLES[3].body[0])).toBeVisible(); // Summary
-			await expect(page.getByText(MOCK_ARTICLES[3].body[1])).not.toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].headline)).toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].body[0])).toBeVisible(); // Summary
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].body[1])).not.toBeVisible();
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Drafts 1' })).not.toBeVisible(); // prettier-ignore
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Published 1' })).not.toBeVisible(); // prettier-ignore
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Articles 1' })).toBeVisible();

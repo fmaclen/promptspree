@@ -5,18 +5,18 @@
 	import Head from '$lib/components/Head.svelte';
 	import Plate from '$lib/components/Plate.svelte';
 	import Section from '$lib/components/Section.svelte';
+	import type { Reactions } from '$lib/reactions';
 
 	import type { PageData } from './$types';
 
 	export let data: PageData;
 	let article = data.article;
 
-	// Sort the reactions by their index so the UI components always render in the same order
-	article.reactions.byType.sort((a, b) => a.index - b.index);
-
 	const handleReaction: SubmitFunction = () => {
 		return async ({ result, update }) => {
-			article = result.type === 'success' ? result.data?.article : article;
+			if (result.type === 'success' && result.data) {
+				article = { ...article, reactions: result.data as Reactions };
+			}
 			await update();
 		};
 	};
@@ -37,10 +37,11 @@
 					use:enhance={handleReaction}
 				>
 					<input type="hidden" name="reaction" value={reaction.index} />
+					<input type="hidden" name="article" value={article.id} />
 					<button
 						type="submit"
 						class="article-reactions__button
-							{article?.reactions?.byCurrentUser === reaction.index ? 'article-reactions__button--reacted' : ''}"
+							{article.reactions?.byCurrentUser === reaction.index ? 'article-reactions__button--reacted' : ''}"
 						disabled={!data.user}
 					>
 						<span class="article-reactions__emoji">
@@ -57,18 +58,21 @@
 			{/each}
 		</nav>
 
-		<div class="article-prompt">
-			<code class="article-prompt__code">
-				{#each article.messages as message}
-					{#if message.role === 'user'}
-						{message.content}
-						<br />
-					{/if}
-				{/each}
-			</code>
-		</div>
+		{#if article.messages}
+			<div class="article-prompt">
+				<code class="article-prompt__code">
+					{#each article.messages as message}
+						{#if typeof message.content === 'string'}
+							<p>{message.content}</p>
+						{:else if message.content?.notes !== undefined}
+							<p>{message.content.notes}</p>
+						{/if}
+					{/each}
+				</code>
+			</div>
+		{/if}
 
-		<ArticleMetadata {article} isCurrentUserProfile={data.isCurrentUserProfile} />
+		<ArticleMetadata {article} isActionable={true} />
 	</Plate>
 </Section>
 

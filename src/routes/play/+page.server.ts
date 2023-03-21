@@ -1,26 +1,28 @@
-import { ArticleCategory, ArticleStatus } from '$lib/article';
+import {
+	ARTICLE_SYSTEM_PROMPT,
+	type Article,
+	type ArticleCompletion,
+	ArticleStatus,
+	getArticleAndUserIds,
+	isCategoryValid
+} from '$lib/articles';
 import {
 	createArticleCollection,
-	generateArticle,
+	getArticle,
 	publishArticle,
 	updateArticleCollection
-} from '$lib/article.server';
-import {
-	type ArticleCompletion,
-	type CompletionResponse,
-	type CompletionUserPrompt,
-	getCompletionFromAI,
-	getInitialChatCompletionRequest
-} from '$lib/openai.server';
+} from '$lib/articles.server';
+import { type Message, MessageRole } from '$lib/messages';
+import { createMessageCollection } from '$lib/messages.server';
+import type { CompletionResponse } from '$lib/openai';
+import { generateCompletionUserPrompt, getCompletionFromAI } from '$lib/openai.server';
+import type { ArticleCollection } from '$lib/pocketbase.schema';
 import { logEventToSlack } from '$lib/slack.server';
 import { getCompletionFromMock } from '$lib/tests';
 import { UNKNOWN_ERROR_MESSAGE, isTestEnvironment } from '$lib/utils';
 import { error, fail, redirect } from '@sveltejs/kit';
-import type { ChatCompletionRequestMessage } from 'openai';
-import type { BaseAuthStore } from 'pocketbase';
 
 import type { PageServerLoad } from '../$types';
-import { miniStringify } from '../../lib/pocketbase.server';
 import type { Actions } from './$types';
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -30,72 +32,66 @@ export const load: PageServerLoad = async ({ locals }) => {
 export const actions: Actions = {
 	generate: async ({ request, locals }) => {
 		// Redirect to login if no user is set in locals
-		if (!locals?.user) throw redirect(303, '/login');
+		const currentUserId = locals?.user?.id;
+		if (!currentUserId) throw redirect(303, '/login');
 
 		const formData = await request.formData();
-
+		const articleId = formData.get('articleId')?.toString();
 		const validation = await validatePrompt(formData.get('prompt')?.toString());
+
 		if (!validation.prompt || validation.error)
 			return fail(400, { fieldError: ['prompt', validation.error] });
 
-		const articleId = formData.get('articleId')?.toString();
-
-		let articleCollection: BaseAuthStore['model'];
+		let article: ArticleCollection | Article | null = null;
+		let messages: Message[] = [];
 
 		if (articleId) {
-			// Find existing article
-			articleCollection = await locals.pb
-				.collection('articles')
-				.getOne(articleId, { expand: 'user' });
-			articleCollection?.messages.push({ role: 'user', content: validation.prompt });
+			// Get existing article and it's messages (if any)
+			article = await getArticle(articleId, currentUserId);
+			messages = article?.messages || [];
 		} else {
-			// Create new article
-			setDefaultValues(formData, locals.user.id, validation.prompt);
-			articleCollection = await createArticleCollection(locals.pb, formData); // Create draft article
-			if (!articleCollection) return fail(400, { error: 'Prompt could not be saved' });
-		}
-		if (!articleCollection) throw error(500, UNKNOWN_ERROR_MESSAGE);
-
-		//
-		//
-		// TODO: check if the number of tokens is smaller than 4096
-		//
-		//
-
-		const completionResponse = await getCompletion(locals.user.id, articleCollection.messages);
-		if (completionResponse.status !== 200) {
-			await updateArticleCollection(locals.pb, articleCollection.id, { status: ArticleStatus.FAILED }); // prettier-ignore
-			return fail(completionResponse.status, { error: completionResponse.message });
+			// Create a new article
+			article = await createArticleCollection(currentUserId, ArticleStatus.DRAFT);
 		}
 
-		const { articleCompletion } = completionResponse;
+		if (!article?.id) throw error(500, UNKNOWN_ERROR_MESSAGE);
 
-		// Add AI completion to the messages chain (without suggestions) so we can
-		// use it in a future request for context.
-		articleCollection.messages.push({
-			role: 'assistant',
-			content: miniStringify(articleCompletion as object)
-		});
+		// Save user prompt as a message
+		const userMessage = await createMessageCollection(
+			article.id,
+			MessageRole.USER,
+			validation.prompt
+		);
+		if (!userMessage) throw error(500, UNKNOWN_ERROR_MESSAGE);
+
+		messages.push(userMessage);
+
+		const completionResponse = await getArticleCompletion(currentUserId, messages);
+		const { status, message, parsedCompletion } = completionResponse;
+
+		if (status !== 200 || !parsedCompletion) {
+			await updateArticleCollection(article.id, currentUserId, { status: ArticleStatus.FAILED });
+			return fail(status, { error: message });
+		}
+
+		// Save AI completion as a message
+		const assistantMessage = await createMessageCollection(
+			article.id,
+			MessageRole.ASSISTANT,
+			parsedCompletion
+		);
+		if (!assistantMessage) throw error(500, UNKNOWN_ERROR_MESSAGE);
 
 		// Update the article with the completion
-		articleCollection = await updateArticleCollection(locals.pb, articleCollection.id, {
-			...articleCompletion,
-			body: articleCompletion && miniStringify(articleCompletion.body),
-			messages: articleCollection.messages,
-			status: ArticleStatus.DRAFT
-		});
+		article = await updateArticleCollection(article.id, currentUserId, { ...parsedCompletion });
+		if (!article?.id) throw error(500, UNKNOWN_ERROR_MESSAGE);
 
-		// Generate the article for frontend
-		const article = await generateArticle(articleCollection, locals);
-		if (!article) return fail(400, { error: 'Article could not be generated' });
-
-		return { article };
+		return { article, suggestions: parsedCompletion.suggestions };
 	},
 	publish: async ({ request, locals }) => {
-		const article = await publishArticle(request, locals);
-		if (!article) return fail(400, { error: 'Article could not be published' });
-
-		throw redirect(303, `/article/${article.id}`);
+		const { articleId, currentUserId } = await getArticleAndUserIds(request, locals);
+		await publishArticle(articleId, currentUserId);
+		throw redirect(303, `/profile/${currentUserId}`);
 	}
 };
 
@@ -115,22 +111,16 @@ async function validatePrompt(prompt: string | undefined): Promise<PromptValidat
 	return { prompt, error: null };
 }
 
-function setDefaultValues(formData: FormData, userId: string, prompt: string) {
-	const messages = getInitialChatCompletionRequest(prompt);
-	formData.append('messages', miniStringify(messages)); // Set the starting messages
-	formData.append('status', ArticleStatus.DRAFT); // Set the default status
-	formData.append('user', userId); // Set the author
-}
-
 // Get completion from AI and try to parse it
-async function getCompletion(
-	userId: string,
-	messages: ChatCompletionRequestMessage[]
+async function getArticleCompletion(
+	currentUserId: string,
+	messages: Message[]
 ): Promise<CompletionResponse> {
-	const completionUserPrompt: CompletionUserPrompt = {
-		userId: userId,
+	const completionUserPrompt = generateCompletionUserPrompt(
+		ARTICLE_SYSTEM_PROMPT,
+		currentUserId,
 		messages
-	};
+	);
 
 	let completionResponse: CompletionResponse;
 	let retries = 0;
@@ -138,13 +128,13 @@ async function getCompletion(
 	do {
 		// HACK: If we're in the test environment, mock the completion response.
 		// Couldn't figure out a better way to mock the response from Playwright.
-		completionResponse = isTestEnvironment
+		const completion = isTestEnvironment
 			? getCompletionFromMock(completionUserPrompt)
 			: await getCompletionFromAI(completionUserPrompt);
 
 		// Break out of the retry loop if we get a valid completion
-		completionResponse = getFieldsFromCompletion(completionResponse);
-		if (completionResponse.articleCompletion) break;
+		completionResponse = parseArticleCompletion(completion);
+		if (completionResponse.parsedCompletion) break;
 
 		// Wait 2 seconds before retrying again
 		// But in the test environment don't wait otherwise the test will timeout
@@ -157,11 +147,11 @@ async function getCompletion(
 }
 
 // Parses the completion from OpenAI and checks the format of the fields is correct
-function getFieldsFromCompletion(completionResponse: CompletionResponse): CompletionResponse {
+function parseArticleCompletion(completionResponse: CompletionResponse): CompletionResponse {
 	const cantGenerateError = {
 		status: 400,
 		message: "Couldn't generate an article based on your last prompt, try a different one",
-		articleCompletion: null
+		completion: null
 	};
 
 	// If the completion is not 200 or 400, it means that the response has an API error,
@@ -169,25 +159,22 @@ function getFieldsFromCompletion(completionResponse: CompletionResponse): Comple
 	if (![200, 400].includes(completionResponse.status)) return completionResponse;
 
 	// If the `unformattedCompletion` is missing we also can't parse it
-	if (!completionResponse.unformattedCompletion) return cantGenerateError;
+	if (!completionResponse.completion) return cantGenerateError;
 
 	// Sometimes AI will return a completion that has extra text so we can't parse
 	// the JSON directly. We need to find the start and end of the JSON object
 	// and then parse it.
-	const { unformattedCompletion } = completionResponse;
-	const startIndex = unformattedCompletion.indexOf('{');
-	const endIndex = unformattedCompletion.lastIndexOf('}') + 1;
-	const jsonString = unformattedCompletion.slice(startIndex, endIndex);
+	const { completion } = completionResponse;
+	const startIndex = completion.indexOf('{');
+	const endIndex = completion.lastIndexOf('}') + 1;
+	const jsonString = completion.slice(startIndex, endIndex);
 
 	let fields: ArticleCompletion | undefined;
 
 	try {
 		fields = JSON.parse(jsonString);
 	} catch (err) {
-		logEventToSlack(
-			'/lib/article.server.ts: getFieldsFromCompletion',
-			`${err} // ${unformattedCompletion}`
-		);
+		logEventToSlack('/lib/article.server.ts: getFieldsFromCompletion', `${err} // ${completion}`);
 
 		return cantGenerateError;
 	}
@@ -205,11 +192,7 @@ function getFieldsFromCompletion(completionResponse: CompletionResponse): Comple
 	return {
 		status: 200,
 		message: 'Completion and field validation was succesful',
-		articleCompletion: fields
+		completion: completionResponse.completion,
+		parsedCompletion: fields
 	};
-}
-
-// Check if the category the AI picked is one of the `ArticleCategory`'s we expect
-function isCategoryValid(category: string) {
-	return Object.values(ArticleCategory).includes(category as ArticleCategory);
 }

@@ -1,8 +1,12 @@
-import type { ArticleStatus } from '$lib/article';
-import type { MockArticle } from '$lib/tests';
+import type { ArticleStatus } from '$lib/articles';
+import type { ArticleCollection } from '$lib/pocketbase.schema.js';
+import type { MockArticleCompletion } from '$lib/tests';
 import { type Page, expect } from '@playwright/test';
 import PocketBase, { BaseAuthStore } from 'pocketbase';
 
+import { MessageRole } from '../../src/lib/messages.js';
+import { CURRENT_MODEL } from '../../src/lib/openai.js';
+import { miniStringify } from '../../src/lib/utils.js';
 import { TEST_ADMIN_PASSWORD, TEST_ADMIN_USER } from './fixtures.js';
 
 interface User {
@@ -14,7 +18,6 @@ interface User {
 }
 
 let pb: PocketBase;
-
 export async function resetDatabase(): Promise<void> {
 	pb = new PocketBase(process.env.TEST_POCKETBASE_URL);
 	await pb.admins.authWithPassword(TEST_ADMIN_USER, TEST_ADMIN_PASSWORD);
@@ -70,22 +73,39 @@ export async function logoutCurrentUser(page: Page) {
 	await page.getByText('Logout').click();
 }
 
-export async function getLastArticle(query: string): Promise<BaseAuthStore['model']> {
+export async function getLastArticle(query: string): Promise<ArticleCollection> {
 	return await pb.collection('articles').getFirstListItem(query, { sort: '-created' });
 }
 
 export async function createArticle(
-	mockArticle: MockArticle,
+	mockArticleCompletion: MockArticleCompletion,
 	status: ArticleStatus,
 	user: string
-): Promise<BaseAuthStore['model']> {
-	return await pb.collection('articles').create({
-		...mockArticle,
-		body: JSON.stringify(mockArticle.body),
-		messages: JSON.stringify(mockArticle.messages),
+): Promise<ArticleCollection> {
+	const article: ArticleCollection = await pb.collection('articles').create({
+		...mockArticleCompletion,
+		model: CURRENT_MODEL,
 		status,
 		user
 	});
+
+	// Create the initial user prompt
+	await pb.collection('messages').create({
+		article: article.id,
+		role: MessageRole.USER,
+		content: "Dear AI, I'd like you to write a good article pretty please with sugar on top"
+	});
+
+	// Only create a message if there is a `notes` key
+	if (mockArticleCompletion.notes) {
+		await pb.collection('messages').create({
+			article: article.id,
+			role: MessageRole.ASSISTANT,
+			content: miniStringify(mockArticleCompletion)
+		});
+	}
+
+	return article;
 }
 
 export async function updateArticle(id: string, formData: FormData) {
