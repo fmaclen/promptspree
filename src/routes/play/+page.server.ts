@@ -46,7 +46,7 @@ export const actions: Actions = {
 		let messages: Message[] = [];
 
 		if (articleId) {
-			// Get existing article
+			// Get existing article and it's messages (if any)
 			article = await getArticle(articleId, currentUserId);
 			messages = article?.messages || [];
 		} else {

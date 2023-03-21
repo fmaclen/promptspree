@@ -1,10 +1,16 @@
 import { env } from '$env/dynamic/private';
 import { CURRENT_MODEL, type CompletionResponse, type CompletionUserPrompt } from '$lib/openai';
 import { logEventToSlack } from '$lib/slack.server';
-import { miniStringify, UNKNOWN_ERROR_MESSAGE } from '$lib/utils';
+import { UNKNOWN_ERROR_MESSAGE, miniStringify } from '$lib/utils';
 import { error } from '@sveltejs/kit';
-import { ChatCompletionRequestMessageRoleEnum, Configuration, OpenAIApi, type ChatCompletionRequestMessage } from 'openai';
-import { MessageRole, type Message } from './messages';
+import {
+	type ChatCompletionRequestMessage,
+	type ChatCompletionRequestMessageRoleEnum,
+	Configuration,
+	OpenAIApi
+} from 'openai';
+
+import { type Message, MessageRole } from './messages';
 
 const configuration = new Configuration({ apiKey: env.OPENAI_API_KEY });
 const openai = new OpenAIApi(configuration);
@@ -58,6 +64,7 @@ export async function getCompletionFromAI(
 	}
 }
 
+// Converts messages to a format that OpenAI can understand to get a completion
 export function generateCompletionUserPrompt(
 	systemPrompt: string,
 	currentUserId: string,
