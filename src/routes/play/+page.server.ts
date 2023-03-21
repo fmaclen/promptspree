@@ -47,17 +47,18 @@ export const actions: Actions = {
 
 		if (articleId) {
 			// Get existing article and it's messages (if any)
-			article = await getArticle(articleId, currentUserId);
+			article = await getArticle(locals, articleId);
 			messages = article?.messages || [];
 		} else {
 			// Create a new article
-			article = await createArticleCollection(currentUserId, ArticleStatus.DRAFT);
+			article = await createArticleCollection(locals, ArticleStatus.DRAFT);
 		}
 
 		if (!article?.id) throw error(500, UNKNOWN_ERROR_MESSAGE);
 
 		// Save user prompt as a message
 		const userMessage = await createMessageCollection(
+			locals,
 			article.id,
 			MessageRole.USER,
 			validation.prompt
@@ -70,12 +71,13 @@ export const actions: Actions = {
 		const { status, message, parsedCompletion } = completionResponse;
 
 		if (status !== 200 || !parsedCompletion) {
-			await updateArticleCollection(article.id, currentUserId, { status: ArticleStatus.FAILED });
+			await updateArticleCollection(locals, article.id, { status: ArticleStatus.FAILED });
 			return fail(status, { error: message });
 		}
 
 		// Save AI completion as a message
 		const assistantMessage = await createMessageCollection(
+			locals,
 			article.id,
 			MessageRole.ASSISTANT,
 			parsedCompletion
@@ -83,14 +85,14 @@ export const actions: Actions = {
 		if (!assistantMessage) throw error(500, UNKNOWN_ERROR_MESSAGE);
 
 		// Update the article with the completion
-		article = await updateArticleCollection(article.id, currentUserId, { ...parsedCompletion });
+		article = await updateArticleCollection(locals, article.id, { ...parsedCompletion });
 		if (!article?.id) throw error(500, UNKNOWN_ERROR_MESSAGE);
 
 		return { article, suggestions: parsedCompletion.suggestions };
 	},
 	publish: async ({ request, locals }) => {
 		const { articleId, currentUserId } = await getArticleAndUserIds(request, locals);
-		await publishArticle(articleId, currentUserId);
+		await publishArticle(locals, articleId);
 		throw redirect(303, `/profile/${currentUserId}`);
 	}
 };

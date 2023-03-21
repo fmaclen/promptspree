@@ -15,7 +15,7 @@ import { type Actions, error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals, params }) => {
-	const article = await getArticle(params.slug, locals.user?.id);
+	const article = await getArticle(locals, params.slug);
 
 	if (article) {
 		return { article };
@@ -37,8 +37,8 @@ export const actions: Actions = {
 		if (!articleId || !reaction) throw error(400, "Can't react to the article");
 
 		const userReactionCollection: ReactionCollection | null = await getReactionCollection(
-			articleId,
-			currentUserId
+			locals,
+			articleId
 		);
 		const reactionId = userReactionCollection?.id;
 
@@ -46,29 +46,32 @@ export const actions: Actions = {
 		if (reactionId) {
 			if (userReactionCollection.reaction === reaction) {
 				// If the existing reaction is the same as the new reaction, delete the reaction
-				await deleteReactionCollection(reactionId);
+				await deleteReactionCollection(locals, reactionId);
 			} else {
 				// If the existing reaction is different from the new reaction, update the reaction
-				await updateReactionCollection(reactionId, reaction);
+				await updateReactionCollection(locals, reactionId, reaction);
 			}
 		} else {
 			// If the user hasn't reacted to the article, create a new reaction
-			await createReactionCollection(articleId, currentUserId, reaction);
+			await createReactionCollection(locals, articleId, reaction);
 		}
 
 		// Get all the reactions again
-		const reactionsCollection: ReactionCollection[] = await getReactionsCollection(articleId);
+		const reactionsCollection: ReactionCollection[] = await getReactionsCollection(
+			locals,
+			articleId
+		);
 
 		return calculateReactionsFromCollection(reactionsCollection, currentUserId);
 	},
 	delete: async ({ request, locals }) => {
 		const { articleId, currentUserId } = await getArticleAndUserIds(request, locals);
-		await deleteArticle(articleId, currentUserId);
+		await deleteArticle(locals, articleId);
 		throw redirect(303, `/profile/${currentUserId}`);
 	},
 	publish: async ({ request, locals }) => {
 		const { articleId, currentUserId } = await getArticleAndUserIds(request, locals);
-		await publishArticle(articleId, currentUserId);
+		await publishArticle(locals, articleId);
 		throw redirect(303, `/profile/${currentUserId}`);
 	}
 };

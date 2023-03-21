@@ -7,6 +7,7 @@ declare global {
 		// interface Error {}
 		interface Locals {
 			pb: PocketBase;
+			pbAdmin: PocketBase;
 			user: BaseAuthStore['model'];
 		} // interface PageData {}
 		// interface Platform {}

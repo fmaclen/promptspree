@@ -5,6 +5,6 @@ import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	return {
-		articles: await getArticles(`status = "${ArticleStatus.PUBLISHED}"`, locals.user?.id)
+		articles: await getArticles(locals, `status = "${ArticleStatus.PUBLISHED}"`)
 	};
 };

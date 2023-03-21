@@ -2,7 +2,7 @@ import { type Article, ArticleStatus } from '$lib/articles';
 import { getMessages } from '$lib/messages';
 import { CURRENT_MODEL } from '$lib/openai';
 import type { ArticleCollection } from '$lib/pocketbase.schema';
-import { getFileSrc, pbAdmin } from '$lib/pocketbase.server';
+import { getFileSrc } from '$lib/pocketbase.server';
 import { calculateReactionsFromCollection } from '$lib/reactions';
 import { getUser } from '$lib/users';
 import { UNKNOWN_ERROR_MESSAGE } from '$lib/utils';
@@ -11,19 +11,17 @@ import type { BaseModel, ListResult } from 'pocketbase';
 
 const EXPAND_RECORD_RELATIONS = 'messages(article),reactions(article),user';
 
-export async function getArticle(
-	articleId?: string,
-	currentUserId?: string
-): Promise<Article | null> {
+export async function getArticle(locals: App.Locals, articleId?: string): Promise<Article | null> {
 	if (!articleId) return null;
 
 	try {
-		const pb = await pbAdmin();
-		const collection: ArticleCollection = await pb.collection('articles').getOne(articleId, {
-			expand: EXPAND_RECORD_RELATIONS
-		});
+		const collection: ArticleCollection = await locals.pbAdmin
+			.collection('articles')
+			.getOne(articleId, {
+				expand: EXPAND_RECORD_RELATIONS
+			});
 
-		const article = generateArticleFromCollection(collection, currentUserId);
+		const article = generateArticleFromCollection(collection, locals.user?.id);
 
 		// Don't return a DRAFT article if the user is not the author
 		if (collection.status === ArticleStatus.DRAFT && !article?.isCreatedByCurrentUser) return null;
@@ -34,29 +32,29 @@ export async function getArticle(
 	}
 }
 
-export async function getArticles(filter: string, currentUserId?: string): Promise<Article[]> {
+export async function getArticles(locals: App.Locals, filter: string): Promise<Article[]> {
 	try {
-		const pb = await pbAdmin();
-		const collection: ArticleCollection[] = await pb.collection('articles').getFullList(undefined, {
-			sort: '-updated',
-			filter: filter,
-			expand: EXPAND_RECORD_RELATIONS
-		});
-		return generateArticlesFromCollection(collection, currentUserId);
+		const collection: ArticleCollection[] = await locals.pbAdmin
+			.collection('articles')
+			.getFullList(undefined, {
+				sort: '-updated',
+				filter: filter,
+				expand: EXPAND_RECORD_RELATIONS
+			});
+		return generateArticlesFromCollection(collection, locals.user?.id);
 	} catch (_) {
 		return [];
 	}
 }
 
 export async function createArticleCollection(
-	currentUserId: string,
+	locals: App.Locals,
 	status: ArticleStatus
 ): Promise<ArticleCollection | null> {
 	try {
-		const pb = await pbAdmin();
-		return await pb.collection('articles').create(
+		return await locals.pbAdmin.collection('articles').create(
 			{
-				user: currentUserId,
+				user: locals.user?.id,
 				model: CURRENT_MODEL,
 				status
 			},
@@ -67,52 +65,53 @@ export async function createArticleCollection(
 	}
 }
 
-export async function getArticlesList(filter?: string): Promise<ListResult<BaseModel> | null> {
+export async function getArticlesList(
+	locals: App.Locals,
+	filter?: string
+): Promise<ListResult<BaseModel> | null> {
 	try {
-		const pb = await pbAdmin();
-		return await pb.collection('articles').getList(1, 1, { filter });
+		return await locals.pbAdmin.collection('articles').getList(1, 1, { filter });
 	} catch (_) {
 		return null;
 	}
 }
 
 export async function updateArticleCollection(
+	locals: App.Locals,
 	articleId: string,
-	currentUserId: string,
 	articleCollection: ArticleCollection
 ): Promise<Article | null> {
-	await authorizeCurrentUser(articleId, currentUserId);
+	await authorizeCurrentUser(locals, articleId);
 
 	try {
-		const pb = await pbAdmin();
-		const collection: ArticleCollection = await pb.collection('articles').update(
+		const collection: ArticleCollection = await locals.pbAdmin.collection('articles').update(
 			articleId,
 			{ ...articleCollection },
 			{
 				expand: EXPAND_RECORD_RELATIONS
 			}
 		);
-		return generateArticleFromCollection(collection, currentUserId);
+		return generateArticleFromCollection(collection, locals.user?.id);
 	} catch (_) {
 		return null;
 	}
 }
 
 export async function publishArticle(
-	articleId: string,
-	currentUserId: string
+	locals: App.Locals,
+	articleId: string
 ): Promise<void | HttpError> {
-	await updateArticleCollection(articleId, currentUserId, { status: ArticleStatus.PUBLISHED });
+	await updateArticleCollection(locals, articleId, { status: ArticleStatus.PUBLISHED });
 }
 
 export async function deleteArticle(
-	articleId: string,
-	currentUserId: string
+	locals: App.Locals,
+	articleId: string
 ): Promise<void | HttpError> {
-	await authorizeCurrentUser(articleId, currentUserId);
+	await authorizeCurrentUser(locals, articleId);
+
 	try {
-		const pb = await pbAdmin();
-		articleId && (await pb.collection('articles').delete(articleId));
+		articleId && (await locals.pbAdmin.collection('articles').delete(articleId));
 	} catch (_) {
 		throw error(500, UNKNOWN_ERROR_MESSAGE);
 	}
@@ -178,17 +177,13 @@ export function generateArticlesFromCollection(
 }
 
 // Check if the user is the creator of the article before allowing them to edit it
-export async function authorizeCurrentUser(
-	articleId?: string,
-	currentUserId?: string
-): Promise<void> {
+export async function authorizeCurrentUser(locals: App.Locals, articleId?: string): Promise<void> {
 	let articleCollection: ArticleCollection | null = null;
 	if (articleId) {
-		const pb = await pbAdmin();
-		articleCollection = await pb.collection('articles').getOne(articleId, {
+		articleCollection = await locals.pbAdmin.collection('articles').getOne(articleId, {
 			expand: 'user'
 		});
 	}
 
-	if (articleCollection?.expand?.user.id !== currentUserId) throw error(401, 'Unauthorized');
+	if (articleCollection?.expand?.user.id !== locals.user?.id) throw error(401, 'Unauthorized');
 }

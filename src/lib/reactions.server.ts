@@ -1,16 +1,14 @@
 import type { ReactionCollection } from '$lib/pocketbase.schema';
-import { pbAdmin } from '$lib/pocketbase.server';
 import type { Reaction } from '$lib/reactions';
 
 export async function getReactionCollection(
+	locals: App.Locals,
 	articleId: string,
-	currentUserId: string
 ): Promise<ReactionCollection | null> {
 	try {
-		const pb = await pbAdmin();
-		const reactionCollection: ReactionCollection | null = await pb
+		const reactionCollection: ReactionCollection | null = await locals.pbAdmin
 			.collection('reactions')
-			.getFirstListItem(`article="${articleId}" && user="${currentUserId}"`);
+			.getFirstListItem(`article="${articleId}" && user="${locals.user?.id}"`);
 
 		return reactionCollection;
 	} catch (_) {
@@ -18,10 +16,12 @@ export async function getReactionCollection(
 	}
 }
 
-export async function getReactionsCollection(articleId?: string): Promise<ReactionCollection[]> {
+export async function getReactionsCollection(
+	locals: App.Locals,
+	articleId?: string
+): Promise<ReactionCollection[]> {
 	try {
-		const pb = await pbAdmin();
-		const collection: ReactionCollection[] = await pb
+		const collection: ReactionCollection[] = await locals.pbAdmin
 			.collection('reactions')
 			.getFullList(undefined, {
 				filter: `article="${articleId}"`
@@ -34,15 +34,14 @@ export async function getReactionsCollection(articleId?: string): Promise<Reacti
 }
 
 export async function createReactionCollection(
+	locals: App.Locals,
 	articleId: string,
-	currentUserId: string,
 	reaction: Reaction
 ): Promise<ReactionCollection | null> {
 	try {
-		const pb = await pbAdmin();
-		const createdReactionCollection: ReactionCollection | null = await pb
+		const createdReactionCollection: ReactionCollection | null = await locals.pbAdmin
 			.collection('reactions')
-			.create({ reaction, article: articleId, user: currentUserId });
+			.create({ reaction, article: articleId, user: locals.user?.id });
 
 		return createdReactionCollection;
 	} catch (_) {
@@ -51,12 +50,12 @@ export async function createReactionCollection(
 }
 
 export async function updateReactionCollection(
+	locals: App.Locals,
 	reactionId: string,
 	reaction: Reaction
 ): Promise<ReactionCollection | null> {
 	try {
-		const pb = await pbAdmin();
-		const updatedReactionCollection: ReactionCollection | null = await pb
+		const updatedReactionCollection: ReactionCollection | null = await locals.pbAdmin
 			.collection('reactions')
 			.update(reactionId, { reaction });
 
@@ -66,10 +65,9 @@ export async function updateReactionCollection(
 	}
 }
 
-export async function deleteReactionCollection(reactionId: string) {
+export async function deleteReactionCollection(locals: App.Locals, reactionId: string) {
 	try {
-		const pb = await pbAdmin();
-		await pb.collection('reactions').delete(reactionId);
+		await locals.pbAdmin.collection('reactions').delete(reactionId);
 	} catch (_) {
 		return null;
 	}

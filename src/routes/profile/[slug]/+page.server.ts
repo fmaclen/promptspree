@@ -1,7 +1,6 @@
 import { type Article, ArticleStatus, getArticleAndUserIds } from '$lib/articles';
 import { deleteArticle, getArticles, getArticlesList, publishArticle } from '$lib/articles.server';
 import type { UserCollection } from '$lib/pocketbase.schema';
-import { pbAdmin } from '$lib/pocketbase.server';
 import { getPromptScore } from '$lib/users';
 import { error, redirect } from '@sveltejs/kit';
 
@@ -15,8 +14,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 	let userCollection: UserCollection | null = null;
 
 	try {
-		const pb = await pbAdmin();
-		userCollection = await pb.collection('users').getOne(params.slug);
+		userCollection = await locals.pbAdmin.collection('users').getOne(params.slug);
 	} catch (_) {
 		// eslint-disable-next-line no-empty
 	}
@@ -24,14 +22,15 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 	if (!userCollection) throw error(404, 'Not found');
 
 	const articles: Article[] = await getArticles(
-		`user = "${params.slug}" && status = "${ArticleStatus.PUBLISHED}"`,
-		locals.user?.id
+		locals,
+		`user = "${params.slug}" && status = "${ArticleStatus.PUBLISHED}"`
 	);
 
 	let totalDrafts = 0;
 
 	if (isCurrentUserProfile) {
 		const articleDrafts = await getArticlesList(
+			locals,
 			`user = "${params.slug}" && status = "${ArticleStatus.DRAFT}"`
 		);
 		totalDrafts = articleDrafts?.totalItems ?? 0;
@@ -50,12 +49,12 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 export const actions: Actions = {
 	delete: async ({ request, locals }) => {
 		const { articleId, currentUserId } = await getArticleAndUserIds(request, locals);
-		await deleteArticle(articleId, currentUserId);
+		await deleteArticle(locals, articleId);
 		throw redirect(303, `/profile/${currentUserId}`);
 	},
 	publish: async ({ request, locals }) => {
 		const { articleId, currentUserId } = await getArticleAndUserIds(request, locals);
-		await publishArticle(articleId, currentUserId);
+		await publishArticle(locals, articleId);
 		throw redirect(303, `/profile/${currentUserId}`);
 	}
 };

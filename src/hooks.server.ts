@@ -1,8 +1,12 @@
-import { pocketbaseUrl } from '$lib/pocketbase.server';
+import { pbAdmin, pocketbaseUrl } from '$lib/pocketbase.server';
 import type { Handle, RequestEvent } from '@sveltejs/kit';
 import Pocketbase from 'pocketbase';
 
 export const handle: Handle = async ({ event, resolve }) => {
+	// Set Admin client
+	event.locals.pbAdmin = await pbAdmin();
+
+	// Authenticate current user
 	await handleUserAuth(event);
 
 	// Set cookies
