@@ -24,14 +24,15 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 	if (!userCollection) throw error(404, 'Not found');
 
 	const articles: Article[] = await getArticles(
-		`user = "${params.slug}" && status = "${ArticleStatus.PUBLISHED}"`,
-		locals.user?.id
+		locals,
+		`user = "${params.slug}" && status = "${ArticleStatus.PUBLISHED}"`
 	);
 
 	let totalDrafts = 0;
 
 	if (isCurrentUserProfile) {
 		const articleDrafts = await getArticlesList(
+			locals,
 			`user = "${params.slug}" && status = "${ArticleStatus.DRAFT}"`
 		);
 		totalDrafts = articleDrafts?.totalItems ?? 0;
@@ -50,12 +51,12 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 export const actions: Actions = {
 	delete: async ({ request, locals }) => {
 		const { articleId, currentUserId } = await getArticleAndUserIds(request, locals);
-		await deleteArticle(articleId, currentUserId);
+		await deleteArticle(locals, articleId);
 		throw redirect(303, `/profile/${currentUserId}`);
 	},
 	publish: async ({ request, locals }) => {
 		const { articleId, currentUserId } = await getArticleAndUserIds(request, locals);
-		await publishArticle(articleId, currentUserId);
+		await publishArticle(locals, articleId);
 		throw redirect(303, `/profile/${currentUserId}`);
 	}
 };

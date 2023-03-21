@@ -15,7 +15,7 @@ import { type Actions, error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals, params }) => {
-	const article = await getArticle(params.slug, locals.user?.id);
+	const article = await getArticle(locals, params.slug);
 
 	if (article) {
 		return { article };
@@ -63,12 +63,12 @@ export const actions: Actions = {
 	},
 	delete: async ({ request, locals }) => {
 		const { articleId, currentUserId } = await getArticleAndUserIds(request, locals);
-		await deleteArticle(articleId, currentUserId);
+		await deleteArticle(locals, articleId);
 		throw redirect(303, `/profile/${currentUserId}`);
 	},
 	publish: async ({ request, locals }) => {
 		const { articleId, currentUserId } = await getArticleAndUserIds(request, locals);
-		await publishArticle(articleId, currentUserId);
+		await publishArticle(locals, articleId);
 		throw redirect(303, `/profile/${currentUserId}`);
 	}
 };
