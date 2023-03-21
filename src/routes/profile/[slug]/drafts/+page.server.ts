@@ -1,7 +1,6 @@
 import { type Article, ArticleStatus, getArticleAndUserIds } from '$lib/articles';
 import { deleteArticle, getArticles, getArticlesList, publishArticle } from '$lib/articles.server';
 import type { UserCollection } from '$lib/pocketbase.schema';
-import { pbAdmin } from '$lib/pocketbase.server';
 import { getPromptScore } from '$lib/users';
 import { error, redirect } from '@sveltejs/kit';
 
@@ -17,8 +16,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 	let userCollection: UserCollection | null = null;
 
 	try {
-		const pb = await pbAdmin();
-		userCollection = await pb.collection('users').getOne(params.slug);
+		userCollection = await locals.pbAdmin.collection('users').getOne(params.slug);
 	} catch (_) {
 		// eslint-disable-next-line no-empty
 	}
