@@ -24,12 +24,12 @@ export interface Message {
 export function getMessages(messagesCollection?: MessageCollection[]): Message[] {
 	if (!messagesCollection) return [];
 
-	const filteredMessages: Message[] = [];
+	const messages: Message[] = [];
 
 	// Loop through each message in the collection
 	for (const message of messagesCollection) {
 		// Add the message to the filtered messages array
-		filteredMessages.push({
+		messages.push({
 			id: message.id,
 			updated: message.updated,
 			created: message.created,
@@ -38,33 +38,5 @@ export function getMessages(messagesCollection?: MessageCollection[]): Message[]
 		});
 	}
 
-	return filteredMessages.length ? filteredMessages : [];
-}
-
-// Generates
-export function generateCompletionUserPrompt(
-	systemPrompt: string,
-	currentUserId: string,
-	messages: Message[]
-): CompletionUserPrompt {
-	const chatCompletionMessages: ChatCompletionRequestMessage[] = [];
-
-	chatCompletionMessages.push({
-		role: MessageRole.SYSTEM.toLowerCase() as ChatCompletionRequestMessageRoleEnum,
-		content: miniStringify(systemPrompt)
-	});
-
-	for (const message of messages) {
-		if (!message?.role || !message?.content) continue;
-
-		chatCompletionMessages.push({
-			role: message.role.toLowerCase() as ChatCompletionRequestMessageRoleEnum,
-			content:
-				typeof message.content === 'string' ? message.content : JSON.stringify(message.content)
-		});
-	}
-
-	// TODO: check if the number of tokens is smaller than 4096
-
-	return { userId: currentUserId, messages: chatCompletionMessages };
+	return messages.length ? messages : [];
 }

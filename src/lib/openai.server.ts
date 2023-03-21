@@ -1,9 +1,10 @@
 import { env } from '$env/dynamic/private';
 import { CURRENT_MODEL, type CompletionResponse, type CompletionUserPrompt } from '$lib/openai';
 import { logEventToSlack } from '$lib/slack.server';
-import { UNKNOWN_ERROR_MESSAGE } from '$lib/utils';
+import { miniStringify, UNKNOWN_ERROR_MESSAGE } from '$lib/utils';
 import { error } from '@sveltejs/kit';
-import { Configuration, OpenAIApi } from 'openai';
+import { ChatCompletionRequestMessageRoleEnum, Configuration, OpenAIApi, type ChatCompletionRequestMessage } from 'openai';
+import { MessageRole, type Message } from './messages';
 
 const configuration = new Configuration({ apiKey: env.OPENAI_API_KEY });
 const openai = new OpenAIApi(configuration);
@@ -55,4 +56,31 @@ export async function getCompletionFromAI(
 				throw error(500, UNKNOWN_ERROR_MESSAGE);
 		}
 	}
+}
+
+export function generateCompletionUserPrompt(
+	systemPrompt: string,
+	currentUserId: string,
+	messages: Message[]
+): CompletionUserPrompt {
+	const chatCompletionMessages: ChatCompletionRequestMessage[] = [];
+
+	chatCompletionMessages.push({
+		role: MessageRole.SYSTEM.toLowerCase() as ChatCompletionRequestMessageRoleEnum,
+		content: miniStringify(systemPrompt)
+	});
+
+	for (const message of messages) {
+		if (!message?.role || !message?.content) continue;
+
+		chatCompletionMessages.push({
+			role: message.role.toLowerCase() as ChatCompletionRequestMessageRoleEnum,
+			content:
+				typeof message.content === 'string' ? message.content : JSON.stringify(message.content)
+		});
+	}
+
+	// TODO: check if the number of tokens is smaller than 4096
+
+	return { userId: currentUserId, messages: chatCompletionMessages };
 }

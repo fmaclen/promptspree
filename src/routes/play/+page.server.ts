@@ -12,10 +12,10 @@ import {
 	publishArticle,
 	updateArticleCollection
 } from '$lib/articles.server';
-import { type Message, MessageRole, generateCompletionUserPrompt } from '$lib/messages';
+import { type Message, MessageRole } from '$lib/messages';
 import { createMessageCollection } from '$lib/messages.server';
 import type { CompletionResponse } from '$lib/openai';
-import { getCompletionFromAI } from '$lib/openai.server';
+import { generateCompletionUserPrompt, getCompletionFromAI } from '$lib/openai.server';
 import type { ArticleCollection } from '$lib/pocketbase.schema';
 import { logEventToSlack } from '$lib/slack.server';
 import { getCompletionFromMock } from '$lib/tests';
