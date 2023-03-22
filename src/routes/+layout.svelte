@@ -4,6 +4,8 @@
 	import HR from '$lib/components/HR.svelte';
 	import Logo from '$lib/components/Logo.svelte';
 	import { APP_NAME } from '$lib/utils';
+	import { onMount } from 'svelte';
+	import toast, { Toaster } from 'svelte-french-toast';
 	import { slide } from 'svelte/transition';
 
 	import type { PageData } from './$types';
@@ -13,6 +15,8 @@
 </script>
 
 <div class="layout {isExpanded ? 'layout--expanded' : ''}">
+	<Toaster />
+
 	<header class="header">
 		<hgroup class="header__hgroup">
 			<button
