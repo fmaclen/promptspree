@@ -85,10 +85,13 @@ test.describe('Play', () => {
 			await expect(page.getByText(articleHeadline)).toBeVisible();
 			await expect(generateButton).not.toBeVisible();
 			expect(await page.locator('p.article__p').count()).toBe(3);
+			
 
 			article = await getLastArticle(`headline = "${articleHeadline}"`);
 			// expect(article?.messages[3].content).toBe(MockPrompt.RETRY_ARTICLE);
 			expect(article?.status).toBe(ArticleStatus.DRAFT);
+
+			// click on "drafts" and check we are in the profile page
 		});
 
 		test('Can publish draft articles', async ({ page }) => {

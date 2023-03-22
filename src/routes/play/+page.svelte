@@ -12,6 +12,8 @@
 	import type { ActionResult } from '@sveltejs/kit';
 	import toast from 'svelte-french-toast';
 
+	import ToastSuccess from './ToastSuccess.svelte';
+
 	let article: Article | null = null;
 	let suggestions: string[] = getRandomInitialSuggestions();
 	let error: string | null = null;
@@ -55,7 +57,7 @@
 	}
 
 	$: if (isLoading) toast.loading('Generating article...', { id: 'loading' });
-	$: if (article) toast.success('Article saved to drafts', { id: 'loading' });
+	$: if (article) toast.success(ToastSuccess, { id: 'loading', userId: article?.user?.id } as any);
 	$: if (error) toast.error(error, { id: 'loading' });
 </script>
 

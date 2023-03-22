@@ -13,6 +13,8 @@
 	import { UNKNOWN_ERROR_MESSAGE } from '$lib/utils';
 	import toast from 'svelte-french-toast';
 
+	import ToastSuccess from './ToastSuccess.svelte';
+
 	let success = false;
 	let email = '';
 	let error = '';
@@ -30,11 +32,7 @@
 		};
 	};
 
-	$: if (success)
-		toast.success(
-			'Email has been sent. Follow the instructions, then try logging in with the new password',
-			{ duration: Infinity }
-		);
+	$: if (success) toast(ToastSuccess, { duration: Infinity });
 	$: if (error) toast.error(error);
 </script>
 
