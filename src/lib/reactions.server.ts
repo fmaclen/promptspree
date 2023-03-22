@@ -3,7 +3,7 @@ import type { Reaction } from '$lib/reactions';
 
 export async function getReactionCollection(
 	locals: App.Locals,
-	articleId: string,
+	articleId: string
 ): Promise<ReactionCollection | null> {
 	try {
 		const reactionCollection: ReactionCollection | null = await locals.pbAdmin

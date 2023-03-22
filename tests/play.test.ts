@@ -85,10 +85,14 @@ test.describe('Play', () => {
 			await expect(page.getByText(articleHeadline)).toBeVisible();
 			await expect(generateButton).not.toBeVisible();
 			expect(await page.locator('p.article__p').count()).toBe(3);
-			await expect(page.locator('a.profile-summary__a--active', { hasText: 'Drafts' })).not.toBeVisible();
+			await expect(
+				page.locator('a.profile-summary__a--active', { hasText: 'Drafts' })
+			).not.toBeVisible();
 
 			await page.getByText('drafts').click();
-			await expect(page.locator('a.profile-summary__a--active', { hasText: 'Drafts' })).toBeVisible();
+			await expect(
+				page.locator('a.profile-summary__a--active', { hasText: 'Drafts' })
+			).toBeVisible();
 			await expect(applyChangesButton).not.toBeVisible();
 
 			article = await getLastArticle(`headline = "${articleHeadline}"`);
