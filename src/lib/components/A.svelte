@@ -21,11 +21,11 @@
 		color: inherit;
 
 		&--highlighted {
-			color: var(--color-accent);
+			color: var(--color-secondary);
 		}
 
 		&:hover {
-			color: var(--color-accent);
+			color: var(--color-secondary);
 		}
 
 		&--positive {
