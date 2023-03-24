@@ -5,7 +5,6 @@
 	import FormField from '$lib/components/FormField.svelte';
 	import FormFieldset from '$lib/components/FormFieldset.svelte';
 	import FormInput from '$lib/components/FormInput.svelte';
-	import HR from '$lib/components/HR.svelte';
 	import Head from '$lib/components/Head.svelte';
 	import Notice from '$lib/components/Notice.svelte';
 	import P from '$lib/components/P.svelte';
@@ -62,7 +61,6 @@
 <Head title={['Join']} />
 
 <Notice>Already have an account? <A href="/login" isHighlighted={true}>Login</A></Notice>
-<HR />
 
 <Section isVerticallyCentered={true} title={success ? 'Almost there...' : 'Join to play'}>
 	<Plate>
@@ -168,16 +166,16 @@
 		column-gap: 12px;
 		font-size: 14px;
 		padding: 12px;
-		border: 1px solid hsl(0, 0%, 85%);
-		/* box-shadow: inset 1px 1px 0 hsl(0, 0%, 97%); */
+		border: 1px solid var(--color-neutral-600);
 		border-radius: var(--border-radius-l);
 	}
 
 	input.form-field-checkbox__input {
 		margin: 0;
+		accent-color: transparent;
 
 		&:checked {
-			accent-color: var(--color-accent);
+			accent-color: var(--color-primary);
 		}
 	}
 </style>

@@ -26,7 +26,7 @@
 
 		&:not(:last-child) {
 			padding-bottom: 24px;
-			border-bottom: 1px solid var(--color-neutral-700);
+			border-bottom: 1px solid var(--color-neutral-600);
 		}
 	}
 </style>

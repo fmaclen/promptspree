@@ -17,15 +17,15 @@
 		display: flex;
 		align-items: center;
 		flex-direction: column;
-		row-gap: 64px;
 		max-width: 1280px;
-		padding: 24px;
+		row-gap: 64px;
+		padding: 64px;
 		margin-inline: auto;
 		box-sizing: border-box;
 
 		&--vertically-centered {
 			width: 33vw;
-			min-width: 384px;
+			min-width: 512px;
 			margin-block: auto;
 		}
 	}

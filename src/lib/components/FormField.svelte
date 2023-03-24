@@ -11,10 +11,10 @@
 	label.form-field {
 		display: flex;
 		flex-direction: column;
-		gap: 6px;
-		font-size: 13px;
+		gap: 8px;
+		font-size: 14px;
 		font-weight: 600;
-		text-shadow: var(--text-shadow-white-100);
+		color: var(--color-neutral-200);
 		width: 100%;
 	}
 </style>

@@ -37,7 +37,6 @@
 <Head title={['Login']} />
 
 <Notice>Don't have an account? <A href="/join" isHighlighted={true}>Join to play</A></Notice>
-<HR />
 
 <Section isVerticallyCentered={true} title="Login">
 	<Plate>
