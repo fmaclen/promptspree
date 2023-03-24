@@ -72,19 +72,17 @@
 		border-radius: var(--border-radius-l);
 		color: var(--color-neutral-100);
 		background-color: var(--color-neutral-800);
-		border: 1px solid var(--color-neutral-500);
 
 		&:hover {
-			border-color: var(--color-neutral-300);
+			background-color: var(--color-neutral-600);
 		}
 
 		&--active {
 			background-color: var(--color-primary-darkest);
 			color: var(--color-primary);
-			border-color: var(--color-primary-dark);
 
 			&:hover {
-				border-color: var(--color-primary);
+				background-color: var(--color-primary-darker);
 			}
 		}
 	}

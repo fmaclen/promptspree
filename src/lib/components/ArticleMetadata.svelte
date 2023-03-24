@@ -201,7 +201,7 @@
 		font-family: var(--font-mono);
 		border-radius: var(--border-radius-l);
 		color: var(--color-neutral-200);
-		border: 1px solid var(--color-neutral-500);
+		background-color: var(--color-neutral-600);
 
 		&:hover {
 			border-color: var(--color-neutral-300);

@@ -43,6 +43,20 @@
 			</header>
 			<p class="article__p">{article.body[0]}</p>
 		{/if}
+
+		{#if size === ArticleSize.SMALL}
+			<header class="article__header">
+				<h2 class="article__h2">
+					{article.category}
+				</h2>
+
+				<a class="article__a" href="/article/{article.id}">
+					<h1 class="article__h1">
+						{article.headline}
+					</h1>
+				</a>
+			</header>
+		{/if}
 	</div>
 </div>
 

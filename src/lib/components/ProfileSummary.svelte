@@ -15,7 +15,7 @@
 <nav class="profile-nav">
 	{#if isCurrentUserProfile}
 		<Plate>
-			<ul class="profile-summary">
+			<ul class="profile-summary profile-summary--with-links">
 				<li class="profile-summary__li profile-summary__li--with-link">
 					<a
 						class="profile-summary__a {!isDraftsPage ? 'profile-summary__a--active' : ''}"
@@ -83,7 +83,11 @@
 		padding: 0;
 		list-style: none;
 		border-radius: var(--border-radius-l);
-		border: 1px solid var(--color-neutral-600);
+		background-color: var(--color-neutral-700);
+		
+		&--with-links {
+			background-color: var(--color-neutral-700);
+		}
 	}
 
 	li.profile-summary__li {
@@ -99,7 +103,7 @@
 		color: var(--color-neutral-200);
 
 		&:not(:first-child) {
-			border-left: 1px solid var(--color-neutral-600);
+			border-left: none;
 		}
 
 		&--with-link {
@@ -127,7 +131,7 @@
 		flex-direction: column;
 		row-gap: 2px;
 		line-height: 1.1em;
-		padding: 12px;
+		padding: 16px;
 		height: 100%;
 		box-sizing: border-box;
 		text-decoration: none;
@@ -135,14 +139,16 @@
 		color: var(--color-neutral-200);
 
 		&:hover {
-			background-color: var(--color-neutral-700);
-			/* background-color: var(--color-primary-darkest); */
+			background-color: var(--color-neutral-600);
 		}
 
 		&--active {
 			color: var(--color-primary);
-			background-color: var(--color-neutral-700);
-			/* background-color: var(--color-primary-darkest); */
+			background-color: var(--color-primary-darkest);
+
+			&:hover {
+				background-color: var(--color-primary-darker);
+			}
 		}
 	}
 
