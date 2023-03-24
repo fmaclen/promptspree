@@ -37,7 +37,7 @@
 	article.article {
 		border-top-left-radius: var(--border-radius-l);
 		border-top-right-radius: var(--border-radius-l);
-		background-color: var(--color-white);
+		background-color: var(--color-neutral-50);
 		display: flex;
 		flex-direction: column;
 		padding: 32px;

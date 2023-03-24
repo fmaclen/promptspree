@@ -48,8 +48,6 @@
 	{/each}
 </nav>
 
-<HR />
-
 <style lang="scss">
 	nav.categories {
 		display: flex;
@@ -69,18 +67,25 @@
 		font-size: 13px;
 		font-weight: 600;
 		box-sizing: border-box;
-		border-radius: var(--border-radius-l);
 		padding: 8px 16px;
 		color: inherit;
-		text-shadow: var(--text-shadow-white-100);
-		background-color: var(--color-white);
-		/* border: 1px solid var(--color-white); */
+		border-radius: var(--border-radius-l);
+		color: var(--color-neutral-100);
+		background-color: var(--color-neutral-800);
+		border: 1px solid var(--color-neutral-500);
 
-		&--active,
 		&:hover {
-			color: var(--color-accent);
-			background-color: var(--color-accent-secondary);
-			border-color: var(--color-accent);
+			border-color: var(--color-neutral-300);
+		}
+
+		&--active {
+			background-color: var(--color-primary-darkest);
+			color: var(--color-primary);
+			border-color: var(--color-primary-dark);
+
+			&:hover {
+				border-color: var(--color-primary);
+			}
 		}
 	}
 </style>

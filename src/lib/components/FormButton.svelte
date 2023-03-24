@@ -35,7 +35,7 @@
 
 		border-radius: var(--border-radius-m);
 		border: 1px solid var(--color-accent);
-		color: var(--color-white);
+		color: var(--color-neutral-50);
 		background-color: var(--color-accent);
 		/* box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.25); */
 

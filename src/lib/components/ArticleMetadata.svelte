@@ -92,55 +92,36 @@
 
 <style lang="scss">
 	nav.metadata {
-		min-height: 48px;
-		padding: 8px 8px 8px 16px;
 		width: 100%;
-		box-sizing: border-box;
 		font-size: 13px;
-		display: grid;
-		grid-template-columns: auto max-content;
-		row-gap: 32px;
-		align-items: center;
-		border-top: 1px solid hsl(0deg, 0%, 90%);
-		/* border-top: 1px solid hsl(0, 0%, 85%); */
-		/* box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.5); */
-		border-bottom-left-radius: var(--border-radius-l);
-		border-bottom-right-radius: var(--border-radius-l);
-		background-color: var(--color-white);
+		box-sizing: border-box;
+		display: flex;
+		gap: 16px;
+		flex-direction: column;
+		height: max-content;
+		color: var(--color-neutral-200);
 	}
 
 	span.metadata__author {
 		font-weight: 600;
 		color: inherit;
-		text-shadow: var(--text-shadow-white-50);
 	}
 
 	time.metadata__time {
-		margin-left: 4px;
-		color: hsl(0, 0%, 50%);
-		text-shadow: var(--text-shadow-white-50);
+		color: var(--color-neutral-300);
 	}
 
 	a.metadata__a {
-		display: grid;
-		grid-template-columns: max-content auto;
-		align-items: center;
-		column-gap: 4px;
+		display: flex;
+		flex-direction: column;
 		color: inherit;
 		text-decoration: none;
 		width: 100%;
 		height: 100%;
 
 		&:hover {
-			color: var(--color-accent);
+			color: var(--color-primary);
 		}
-	}
-
-	div.metadata__actions {
-		display: flex;
-		align-items: center;
-		justify-content: flex-end;
-		column-gap: 8px;
 	}
 
 	nav.metadata__author-actions {
@@ -153,18 +134,18 @@
 		align-items: center;
 		column-gap: 8px;
 		text-decoration: none;
-
-		font-family: var(--font-mono);
 		font-size: 12px;
 		line-height: 1em;
-		text-align: center;
 		font-weight: 400;
-		color: hsl(0, 0%, 50%);
 		padding: 10px;
-		/* border: 1px solid hsl(0, 0%, 85%); */
+		width: max-content;
+		font-family: var(--font-mono);
+		border-radius: var(--border-radius-l);
+		color: var(--color-neutral-200);
+		border: 1px solid var(--color-neutral-500);
 
 		&:hover {
-			/* border: 1px solid hsl(0, 0%, 70%); */
+			border-color: var(--color-neutral-300);
 		}
 	}
 

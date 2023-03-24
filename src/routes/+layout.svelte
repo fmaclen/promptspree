@@ -20,7 +20,7 @@
 			<button
 				type="button"
 				id="hamburger"
-				class="header__hamburger {isExpanded ? 'header__hamburger--expanded' : ''}"
+				class="header__hamburger {isExpanded ? 'header__hamburger--active' : ''}"
 				on:click={() => (isExpanded = !isExpanded)}
 				aria-expanded={isExpanded}
 				aria-controls=""
@@ -43,8 +43,8 @@
 					: ''}"
 				href={$page.url.pathname.includes('/play') ? '/' : '/play'}
 			>
-				Play
 				<span class="primary-action__icon">✨</span>
+				Play
 			</a>
 		</hgroup>
 	</header>
@@ -183,7 +183,6 @@
 		height: 100%;
 		margin: 0;
 		font-family: var(--font-sans);
-		color: hsl(0, 0%, 30%);
 		background-color: var(--color-neutral-800);
 	}
 
@@ -200,7 +199,8 @@
 		flex-direction: column;
 		justify-content: space-between;
 		min-width: 256px;
-		background-color: var(--color-neutral-950);
+		background-color: var(--color-neutral-950); 
+		border-bottom: 1px solid var(--color-neutral-700);
 
 		border-right: none;
 		position: sticky;
@@ -290,7 +290,8 @@
 		position: sticky;
 		top: 0;
 		z-index: 3;
-		background-color: var(--color-neutral-700);
+		background-color: var(--color-neutral-900);
+		border-bottom: 1px solid var(--color-neutral-700);
 	}
 
 	hgroup.header__hgroup {
@@ -309,12 +310,27 @@
 		font-family: var(--font-base);
 		font-weight: 400;
 		padding: 8px;
-		border-radius: var(--border-radius-m);
-		cursor: pointer;
+		border-radius: var(--border-radius-l);
+		color: var(--color-neutral-100);
+		background-color: var(--color-neutral-800);
 		border: 1px solid var(--color-neutral-500);
 
 		&:hover {
 			border-color: var(--color-neutral-300);
+		}
+
+		&--active {
+			background-color: var(--color-primary-darkest);
+			color: var(--color-primary);
+			border-color: var(--color-primary-dark);
+
+			&:hover {
+				border-color: var(--color-primary);
+			}
+
+			span.header__hamburger-line {
+				background-color: var(--color-primary);
+			}
 		}
 	}
 
@@ -323,7 +339,7 @@
 		width: 20px;
 		height: 1px;
 		border-radius: var(--border-radius-m);
-		background-color: rgba(255, 255, 255, 0.5);
+		background-color: var(--color-neutral-300);
 	}
 
 	/* ------------------------------------------------------------------------ */
@@ -337,7 +353,7 @@
 		font-weight: 600;
 		padding: 8px 12px;
 		margin-left: auto;
-		border-radius: var(--border-radius-m);
+		border-radius: var(--border-radius-l);
 		color: var(--color-neutral-50);
 		border: 1px solid var(--color-neutral-500);
 
@@ -372,6 +388,7 @@
 		text-align: center;
 		padding: 24px;
 		margin-inline: auto;
+		color: var(--color-neutral-300);
 		background-color: var(--color-neutral-1000);
 
 		@media (max-width: 768px) {

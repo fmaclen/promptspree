@@ -18,7 +18,7 @@
 		align-items: center;
 		flex-direction: column;
 		row-gap: 64px;
-		max-width: 768px;
+		max-width: 1440px;
 		padding: 24px;
 		width: 100%;
 		margin-inline: auto;

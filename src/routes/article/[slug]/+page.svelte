@@ -105,8 +105,8 @@
 		padding: 16px;
 		box-sizing: border-box;
 		border: none;
-		/* background-color: hsl(0, 0%, 95%); */
-		background-color: var(--color-white);
+		/* background-color: var(--color-neutral-800) */
+		background-color: var(--color-neutral-50);
 		cursor: pointer;
 		filter: grayscale(100%);
 
@@ -125,7 +125,7 @@
 		&--reacted,
 		&:hover:not(:disabled) {
 			filter: inherit;
-			background-color: var(--color-white);
+			background-color: var(--color-neutral-50);
 			border-bottom-color: transparent;
 			color: var(--color-accent);
 		}

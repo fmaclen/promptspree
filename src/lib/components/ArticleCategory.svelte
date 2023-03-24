@@ -19,7 +19,7 @@
 		font-size: 13px;
 		line-height: 1em;
 		font-weight: 600;
-		color: var(--color-negative);
+		color: var(--color-primary);
 	}
 
 	a.article__category-a {

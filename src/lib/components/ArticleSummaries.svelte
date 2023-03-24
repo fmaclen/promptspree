@@ -13,8 +13,9 @@
 
 <div class="articles">
 	{#each articles as article}
-		<Plate>
-			<a class="article" href="/article/{article.id}">
+		<div class="article article--medium">
+			<ArticleMetadata {article} {isActionable} />
+			<a class="article__a" href="/article/{article.id}">
 				<div class="article__body">
 					<ArticleCategory category={article.category}>
 						{article.category}
@@ -26,9 +27,7 @@
 					<p class="article__p">{article.body[0]}</p>
 				</div>
 			</a>
-
-			<ArticleMetadata {article} {isActionable} />
-		</Plate>
+		</div>
 	{/each}
 </div>
 
@@ -40,15 +39,33 @@
 		row-gap: 16px;
 	}
 
-	a.article {
+	div.article {
+		display: grid;
+		grid-template-columns: 1fr 2fr 1fr;
+		gap: 16px;
+		padding: 24px 0;
+
+		&:not(:last-child) {
+			border-bottom: 1px solid var(--color-neutral-500);
+		}
+
+		@media (max-width: 1024px) {
+			grid-template-columns: 1fr 2fr;
+		}
+
+		@media (max-width: 768px) {
+			display: flex;
+			flex-direction: column-reverse;
+		}
+	}
+
+	a.article__a {
 		text-decoration: none;
 	}
 
 	div.article__body {
 		border-top-left-radius: var(--border-radius-l);
 		border-top-right-radius: var(--border-radius-l);
-		background-color: var(--color-white);
-		padding: 24px;
 		display: flex;
 		flex-direction: column;
 		row-gap: 8px;
@@ -60,13 +77,13 @@
 		margin: 0;
 		font-size: 24px;
 		line-height: 1.1em;
-		color: hsl(0, 0%, 10%);
+		color: var(--color-neutral-100);
 	}
 
 	p.article__p {
-		font-size: 14px;
 		margin: 0;
-		color: hsl(0, 0%, 40%);
+		font-size: 14px;
 		line-height: 1.4em;
+		color: var(--color-neutral-200);
 	}
 </style>

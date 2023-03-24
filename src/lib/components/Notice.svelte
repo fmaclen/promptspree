@@ -15,10 +15,8 @@
 		font-size: 14px;
 		padding: 16px 8px;
 		box-sizing: border-box;
-
-		color: hsl(0, 0%, 40%);
-		background-color: hsl(0, 0%, 93%);
-		text-shadow: var(--text-shadow-white-50);
+		background-color: var(--color-neutral-900);
+		color: var(--color-neutral-200);
 
 		&--positive {
 			background-color: var(--color-positive-secondary);
