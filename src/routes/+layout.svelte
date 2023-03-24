@@ -387,6 +387,7 @@
 		font-size: 13px;
 		text-align: center;
 		padding: 24px;
+		box-sizing: border-box;
 		margin-inline: auto;
 		color: var(--color-neutral-300);
 		background-color: var(--color-neutral-1000);

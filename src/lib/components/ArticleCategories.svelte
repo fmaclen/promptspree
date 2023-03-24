@@ -51,12 +51,12 @@
 <style lang="scss">
 	nav.categories {
 		display: flex;
-		max-width: 100%;
+		justify-content: center;
+		gap: 8px;
 		overflow-x: auto;
 		padding: 16px 24px;
 		box-sizing: border-box;
-		gap: 8px;
-		margin-inline: auto;
+		background-color: var(--color-neutral-900);
 	}
 
 	a.categories__a {
