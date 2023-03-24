@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Article from '$lib/components/Article.svelte';
+	import { ArticleSize } from '../articles';
 	export let articles: Article[];
 	export let isActionable: boolean = false;
 </script>
@@ -7,7 +8,7 @@
 <ul class="articles">
 	{#each articles as article}
 		<li class="articles__li">
-			<Article {article} {isActionable} size="medium" />
+			<Article {article} {isActionable} size={ArticleSize.MEDIUM} />
 		</li>
 	{/each}
 </ul>

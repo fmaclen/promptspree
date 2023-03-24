@@ -70,7 +70,8 @@
 	nav.profile-nav {
 		width: 100%;
 		display: flex;
-		column-gap: 8px;
+		column-gap: 24px;
+		margin-bottom: 64px;
 	}
 
 	ul.profile-summary {
@@ -81,27 +82,24 @@
 		margin: 0;
 		padding: 0;
 		list-style: none;
-		border: 1px solid hsl(0, 0%, 85%);
 		border-radius: var(--border-radius-l);
+		border: 1px solid var(--color-neutral-600);
 	}
 
 	li.profile-summary__li {
 		flex: 1;
-		padding: 12px;
+		padding: 16px;
 		font-size: 13px;
-		color: hsl(0, 0%, 50%);
-		/* box-shadow: inset 1px 1px 0 var(--color-neutral-50); */
-		text-shadow: var(--text-shadow-white-100);
-
 		display: flex;
 		flex-direction: column;
 		row-gap: 2px;
 		line-height: 1.1em;
 		height: 100%;
 		box-sizing: border-box;
+		color: var(--color-neutral-200);
 
 		&:not(:first-child) {
-			border-left: 1px solid hsl(0, 0%, 85%);
+			border-left: 1px solid var(--color-neutral-600);
 		}
 
 		&--with-link {
@@ -132,17 +130,19 @@
 		padding: 12px;
 		height: 100%;
 		box-sizing: border-box;
-
 		text-decoration: none;
 		color: inherit;
+		color: var(--color-neutral-200);
 
 		&:hover {
-			background-color: hsl(0, 0%, 97%);
+			background-color: var(--color-neutral-700);
+			/* background-color: var(--color-primary-darkest); */
 		}
 
 		&--active {
-			color: var(--color-accent);
-			background-color: var(--color-neutral-50);
+			color: var(--color-primary);
+			background-color: var(--color-neutral-700);
+			/* background-color: var(--color-primary-darkest); */
 		}
 	}
 

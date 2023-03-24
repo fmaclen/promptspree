@@ -144,9 +144,6 @@
 		--color-negative: hsl(342, 83%, 48%);
 		--color-negative-secondary: hsl(342, 83%, 95%);
 
-		--text-shadow-white-50: 1px 1px 0 rgba(255, 255, 255, 0.5);
-		--text-shadow-white-100: 1px 1px 0 var(--color-neutral-50);
-
 		--border-radius-l: 8px;
 		--border-radius-m: 4px;
 		--border-radius-s: 2px;
