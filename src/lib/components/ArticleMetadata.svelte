@@ -58,7 +58,7 @@
 		</time>
 	</a>
 
-	{#if !ArticleStatus.DRAFT}
+	{#if article.status !== ArticleStatus.DRAFT}
 		<div class="metadata__actions">
 			<a class="article-reactions-summary" href="/article/{article.id}">
 				{#if reactions.total > 0}
