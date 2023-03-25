@@ -1,13 +1,12 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
-	import { type Article, getRandomInitialSuggestions } from '$lib/articles';
-	import ArticleBody from '$lib/components/ArticleBody.svelte';
+	import { type Article, ArticleSize, getRandomInitialSuggestions } from '$lib/articles';
+	import ArticleContent from '$lib/components/ArticleContent.svelte';
+	import ArticlePlaceholder from '$lib/components/ArticlePlaceholder.svelte';
 	import FormButton from '$lib/components/FormButton.svelte';
 	import FormTextarea from '$lib/components/FormTextarea.svelte';
-	import HR from '$lib/components/HR.svelte';
 	import Head from '$lib/components/Head.svelte';
 	import Notice from '$lib/components/Notice.svelte';
-	import Plate from '$lib/components/Plate.svelte';
 	import { Sentiment } from '$lib/utils';
 	import type { ActionResult } from '@sveltejs/kit';
 	import toast from 'svelte-french-toast';
@@ -70,7 +69,6 @@
 		Type your own prompt or choose one of the suggestions to generate an article
 	{/if}
 </Notice>
-<HR />
 
 <section class="play">
 	<div class="play__prompt">
@@ -120,11 +118,9 @@
 		</nav>
 	</div>
 
-	<HR />
-
-	<div class="play__draft">
-		<Plate>
-			{#if article && !isLoading}
+	<div class="play__preview">
+		{#if article && !isLoading}
+			<div class="play__article">
 				<form
 					class="play-article-actions"
 					method="POST"
@@ -144,25 +140,26 @@
 					/>
 					<FormButton label="Publish" type="submit" sentiment={Sentiment.POSITIVE} />
 				</form>
-			{/if}
-			<ArticleBody {article} {isLoading} />
-		</Plate>
+
+				<ArticleContent {article} size={ArticleSize.FULL} />
+			</div>
+		{:else}
+			<ArticlePlaceholder />
+		{/if}
 	</div>
 </section>
 
 <style lang="scss">
 	section.play {
 		display: grid;
-		grid-template-rows: max-content max-content auto;
+		grid-template-rows: max-content auto;
 		height: 100%;
-		background-color: hsl(0, 0%, 93%);
 	}
 
-	div.play__draft {
+	div.play__preview {
 		display: flex;
 		align-items: center;
 		padding: 24px;
-
 		max-width: 768px;
 		width: 100%;
 		box-sizing: border-box;
@@ -178,6 +175,12 @@
 		width: 100%;
 		box-sizing: border-box;
 		margin-inline: auto;
+	}
+
+	div.play__article {
+		display: flex;
+		flex-direction: column;
+		row-gap: 16px;
 	}
 
 	nav.play__nav {

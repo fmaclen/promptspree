@@ -1,25 +1,30 @@
 <script lang="ts">
-	import Article from '$lib/components/Article.svelte';
-	import { ArticleSize } from '$lib/articles';
+	import { type Article, ArticleSize } from '$lib/articles';
+	import ArticleLayout from '$lib/components/ArticleLayout.svelte';
+
 	export let articles: Article[];
 	export let isActionable: boolean = false;
 
-	// Set article summary size
-  $: articles.forEach((article, index) => {
-    if (index <= 7) {
+	interface SizedArticle extends Article {
+		size: ArticleSize;
+	}
+	let sizedArticles: SizedArticle[];
+
+	$: sizedArticles = articles.map((article, index) => {
+		if (index <= 7) {
 			// The first 7 are medium size
-      article.size = ArticleSize.MEDIUM;
-    } else {
+			return { ...article, size: ArticleSize.MEDIUM };
+		} else {
 			// The rest are small size
-      article.size = ArticleSize.SMALL;
-    }
-  });
+			return { ...article, size: ArticleSize.SMALL };
+		}
+	});
 </script>
 
 <ul class="articles">
-	{#each articles as article}
+	{#each sizedArticles as article}
 		<li class="articles__li">
-			<Article {article} {isActionable} size={article.size} />
+			<ArticleLayout {article} {isActionable} size={article.size} />
 		</li>
 	{/each}
 </ul>

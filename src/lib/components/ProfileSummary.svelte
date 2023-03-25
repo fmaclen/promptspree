@@ -82,11 +82,10 @@
 		margin: 0;
 		padding: 0;
 		list-style: none;
-		border-radius: var(--border-radius-l);
-		background-color: var(--color-neutral-700);
-		
+		gap: 8px;
+
 		&--with-links {
-			background-color: var(--color-neutral-700);
+			gap: inherit;
 		}
 	}
 
@@ -101,6 +100,8 @@
 		height: 100%;
 		box-sizing: border-box;
 		color: var(--color-neutral-200);
+		background-color: var(--color-neutral-700);
+		border-radius: var(--border-radius-l);
 
 		&:not(:first-child) {
 			border-left: none;
@@ -109,6 +110,7 @@
 		&--with-link {
 			padding: 0;
 			color: inherit;
+			background-color: var(--color-neutral-700);
 		}
 
 		&:first-child {

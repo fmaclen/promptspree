@@ -25,26 +25,30 @@
 <style lang="scss">
 	button.form-button {
 		padding: 16px 24px;
-		font-family: var(--font-sans);
 		font-size: 14px;
 		font-weight: 600;
 		box-sizing: border-box;
 		text-align: center;
 		width: 100%;
 		cursor: pointer;
-
+		font-family: var(--font-sans);
 		border-radius: var(--border-radius-l);
 		border: 1px solid var(--color-primary);
-		color: var(--color-neutral-950);
 		background-color: var(--color-primary);
+		color: var(--color-neutral-950);
 
 		&:active {
 			transform: scale(0.98);
 		}
 
 		&--secondary {
-			color: var(--color-primary);
-			background-color: var(--color-primary-darker);
+			color: var(--color-secondary);
+			background-color: var(--color-secondary-darkest);
+			border-color: var(--color-secondary-darker);
+
+			&:hover {
+				border-color: var(--color-secondary);
+			}
 		}
 
 		&--positive {

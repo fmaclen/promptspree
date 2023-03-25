@@ -139,7 +139,7 @@
 					{#if typeof message.content === 'string'}
 						<p>{message.content}</p>
 					{:else if message.content?.notes !== undefined}
-						<p>{message.content.notes}</p>
+						<p class="article-prompt__assistant">{message.content.notes}</p>
 					{/if}
 				{/each}
 			</code>
@@ -277,5 +277,9 @@
 		background-color: var(--color-neutral-700);
 		border-radius: var(--border-radius-l);
 		padding: 0 16px;
+	}
+
+	p.article-prompt__assistant {
+		color: var(--color-primary-dark);
 	}
 </style>

@@ -196,7 +196,7 @@
 		flex-direction: column;
 		justify-content: space-between;
 		min-width: 256px;
-		background-color: var(--color-neutral-950); 
+		background-color: var(--color-neutral-950);
 		border-bottom: 1px solid var(--color-neutral-700);
 
 		border-right: none;
