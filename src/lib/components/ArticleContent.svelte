@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Article, ArticleSize } from '$lib/articles';
+	import { type Article, ArticleSize } from '$lib/articles';
 	import ArticleBody from '$lib/components/ArticleBody.svelte';
 	import ArticleHeader from '$lib/components/ArticleHeader.svelte';
 
@@ -11,7 +11,7 @@
 	<ArticleHeader {article} {size} />
 	<ArticleBody {article} {size} />
 
-	{#if article.audioSrc}
+	{#if article.audioSrc && size === ArticleSize.FULL}
 		<nav class="article__audio">
 			<p class="article__beta" title="Coming soon, hopefully!">Plus</p>
 			<audio controls src={article.audioSrc} preload="none" class="article__player" />
