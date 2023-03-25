@@ -38,6 +38,12 @@ export enum ArticleCategory {
 	OPINION = 'Opinion'
 }
 
+export enum ArticleSize {
+	SMALL = 'small',
+	MEDIUM = 'medium',
+	FULL = 'full'
+}
+
 // Shape of the data we expect to get back from the OpenAI API
 export interface ArticleCompletion {
 	headline: string;

@@ -1,38 +1,35 @@
 @mixin baseForm {
 	width: 100%;
-	padding: 32px 0;
 	box-sizing: border-box;
 }
 
 @mixin baseInput {
 	display: block;
 	width: 100%;
-
 	font-size: 14px;
-	font-family: var(--font-mono);
-	color: var(--color-accent);
-
-	background-color: var(--color-white);
-	border: 1px solid hsl(0, 0%, 85%);
 	padding: 16px;
 	box-sizing: border-box;
-	border-radius: var(--border-radius-m);
+	border: 1px solid var(--color-neutral-500);
+	font-family: var(--font-mono);
+	color: var(--color-neutral-100);
+	border-radius: var(--border-radius-l);
+	background-color: var(--color-neutral-700);
 
 	&:active,
 	&:focus {
-		outline: 1px solid var(--color-accent);
+		outline: 1px solid var(--color-primary);
 		-webkit-tap-highlight-color: rgba(0, 0, 0, 0); // Removes outline on iOS
 	}
 
 	&::placeholder {
-		color: hsl(0, 0%, 70%);
+		color: var(--color-neutral-400);
 	}
 }
 
 @mixin disabledInput {
 	pointer-events: none;
-	color: hsl(0, 0%, 75%);
-	border-color: hsl(0, 0%, 85%);
-	background-color: hsl(0deg, 0%, 93%);
+	color: var(--color-neutral-500);
+	border-color: var(--color-neutral-700);
+	background-color: var(--color-neutral-700);
 	cursor: default;
 }

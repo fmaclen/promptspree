@@ -1,18 +1,19 @@
 <script lang="ts">
 	import { type SubmitFunction, enhance } from '$app/forms';
-	import { type Article, ArticleStatus } from '$lib/articles';
+	import { type Article, ArticleSize, ArticleStatus } from '$lib/articles';
+	import type { Reactions } from '$lib/reactions';
 	import { Sentiment } from '$lib/utils';
 	import { formatDistance } from 'date-fns';
 
 	import FormButton from './FormButton.svelte';
 
 	export let article: Article;
+	export let size: ArticleSize;
 	export let isActionable: boolean = false;
 
 	$: reactions = article.reactions;
 	$: mostPopularReaction = reactions.byType.sort((a, b) => b.total - a.total)[0].reaction;
 
-	const isDraft = article.status === ArticleStatus.DRAFT;
 	const isDeletable = isActionable && article.isCreatedByCurrentUser;
 	const isPublishable =
 		isActionable && article.isCreatedByCurrentUser && article.status === ArticleStatus.DRAFT;
@@ -35,6 +36,15 @@
 			await update();
 		};
 	};
+
+	const handleReaction: SubmitFunction = () => {
+		return async ({ result, update }) => {
+			if (result.type === 'success' && result.data) {
+				article = { ...article, reactions: result.data as Reactions };
+			}
+			await update();
+		};
+	};
 </script>
 
 <nav class="metadata">
@@ -47,8 +57,9 @@
 			})}
 		</time>
 	</a>
-	<div class="metadata__actions">
-		{#if !isDraft}
+
+	{#if article.status !== ArticleStatus.DRAFT}
+		<div class="metadata__actions">
 			<a class="article-reactions-summary" href="/article/{article.id}">
 				{#if reactions.total > 0}
 					<span class="article-reactions-summary__emoji">
@@ -57,90 +68,117 @@
 				{/if}
 				<span class="article-reactions-summary__total">{reactions.total}</span>
 			</a>
-		{/if}
+		</div>
+	{/if}
 
-		{#if isDeletable || isPublishable}
-			<nav class="metadata__author-actions">
-				{#if isDeletable}
-					<form class="form" method="POST" action="?/delete" use:enhance={handleDelete}>
-						<input type="hidden" name="articleId" value={article.id} />
-						<FormButton
-							label="Delete"
-							type="submit"
-							isCompact={true}
-							sentiment={Sentiment.NEGATIVE}
-							on:click={confirmDeletion}
-						/>
-					</form>
-				{/if}
+	{#if size === ArticleSize.FULL}
+		<nav class="article-reactions">
+			{#each article.reactions.byType as reaction}
+				<form
+					class="article-reactions__form"
+					action="/article/{article.id}?/react"
+					method="POST"
+					use:enhance={handleReaction}
+				>
+					<input type="hidden" name="reaction" value={reaction.index} />
+					<input type="hidden" name="article" value={article.id} />
+					<button
+						type="submit"
+						class="article-reactions__button
+							{article.reactions?.byCurrentUser === reaction.index ? 'article-reactions__button--reacted' : ''}"
+						disabled={!article.user}
+					>
+						<span class="article-reactions-summary__emoji">
+							{reaction.reaction}
+						</span>
+						{#if reaction.total}
+							<span class="article-reactions-summary__total">
+								{reaction.total}
+							</span>
+						{/if}
+					</button>
+				</form>
+			{/each}
+		</nav>
 
-				{#if isPublishable}
-					<form class="play__form" method="POST" action="?/publish" use:enhance={handlePublish}>
-						<input type="hidden" name="articleId" value={article.id} />
-						<FormButton
-							label="Publish"
-							type="submit"
-							isCompact={true}
-							sentiment={Sentiment.POSITIVE}
-						/>
-					</form>
-				{/if}
-			</nav>
+		{#if article.messages}
+			<div class="article-prompt">
+				<code class="article-prompt__code">
+					{#each article.messages as message}
+						{#if typeof message.content === 'string'}
+							<p>{message.content}</p>
+						{:else if message.content?.notes !== undefined}
+							<p class="article-prompt__assistant">{message.content.notes}</p>
+						{/if}
+					{/each}
+				</code>
+			</div>
 		{/if}
-	</div>
+	{/if}
+
+
+	{#if isDeletable || isPublishable}
+		<nav class="metadata__author-actions">
+			{#if isDeletable}
+				<form class="form" method="POST" action="?/delete" use:enhance={handleDelete}>
+					<input type="hidden" name="articleId" value={article.id} />
+					<FormButton
+						label="Delete"
+						type="submit"
+						isCompact={true}
+						sentiment={Sentiment.NEGATIVE}
+						on:click={confirmDeletion}
+					/>
+				</form>
+			{/if}
+
+			{#if isPublishable}
+				<form class="play__form" method="POST" action="?/publish" use:enhance={handlePublish}>
+					<input type="hidden" name="articleId" value={article.id} />
+					<FormButton
+						label="Publish"
+						type="submit"
+						isCompact={true}
+						sentiment={Sentiment.POSITIVE}
+					/>
+				</form>
+			{/if}
+		</nav>
+	{/if}
 </nav>
 
 <style lang="scss">
 	nav.metadata {
-		min-height: 48px;
-		padding: 8px 8px 8px 16px;
 		width: 100%;
-		box-sizing: border-box;
 		font-size: 13px;
-		display: grid;
-		grid-template-columns: auto max-content;
-		row-gap: 32px;
-		align-items: center;
-		border-top: 1px solid hsl(0deg, 0%, 90%);
-		/* border-top: 1px solid hsl(0, 0%, 85%); */
-		/* box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.5); */
-		border-bottom-left-radius: var(--border-radius-l);
-		border-bottom-right-radius: var(--border-radius-l);
-		background-color: var(--color-white);
+		box-sizing: border-box;
+		display: flex;
+		gap: 16px;
+		flex-direction: column;
+		height: max-content;
+		color: var(--color-neutral-200);
 	}
 
 	span.metadata__author {
 		font-weight: 600;
 		color: inherit;
-		text-shadow: var(--text-shadow-white-50);
 	}
 
 	time.metadata__time {
-		margin-left: 4px;
-		color: hsl(0, 0%, 50%);
-		text-shadow: var(--text-shadow-white-50);
+		color: var(--color-neutral-300);
 	}
 
 	a.metadata__a {
-		display: grid;
-		grid-template-columns: max-content auto;
-		align-items: center;
-		column-gap: 4px;
+		display: flex;
+		gap: 2px;
+		flex-direction: column;
 		color: inherit;
 		text-decoration: none;
-		width: 100%;
-		height: 100%;
+		width: max-content;
 
 		&:hover {
-			color: var(--color-accent);
+			color: var(--color-primary);
 		}
-	}
-
-	div.metadata__actions {
-		display: flex;
-		align-items: center;
-		justify-content: flex-end;
-		column-gap: 8px;
 	}
 
 	nav.metadata__author-actions {
@@ -148,23 +186,25 @@
 		column-gap: 8px;
 	}
 
+	/* ------------------------------------------------------------------------ */
+
 	a.article-reactions-summary {
 		display: flex;
 		align-items: center;
 		column-gap: 8px;
 		text-decoration: none;
-
-		font-family: var(--font-mono);
 		font-size: 12px;
 		line-height: 1em;
-		text-align: center;
 		font-weight: 400;
-		color: hsl(0, 0%, 50%);
 		padding: 10px;
-		/* border: 1px solid hsl(0, 0%, 85%); */
+		width: max-content;
+		font-family: var(--font-mono);
+		border-radius: var(--border-radius-l);
+		color: var(--color-neutral-200);
+		background-color: var(--color-neutral-600);
 
 		&:hover {
-			/* border: 1px solid hsl(0, 0%, 70%); */
+			border-color: var(--color-neutral-300);
 		}
 	}
 
@@ -175,5 +215,71 @@
 
 	span.article-reactions-summary__total {
 		transform: translateY(1px); // Optically align with text `a.article-reactions-summary`
+	}
+
+	/* ------------------------------------------------------------------------ */
+
+	nav.article-reactions {
+		display: flex;
+		flex-direction: column;
+		width: max-content;
+		background-color: var(--color-neutral-700);
+		border-radius: var(--border-radius-l);
+		overflow: hidden; // Hide rounded corners
+	}
+
+	button.article-reactions__button {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		column-gap: 8px;
+		width: 100%;
+		padding: 8px;
+		box-sizing: border-box;
+		border: none;
+		background-color: transparent;
+		cursor: pointer;
+
+		// Styles shared with `a.article-reactions-summary`
+		text-align: center;
+		font-weight: 400;
+		line-height: 24px;
+		font-size: 12px;
+		font-family: var(--font-mono);
+		color: var(--color-neutral-200);
+
+		&--reacted {
+			font-weight: 600;
+		}
+
+		&--reacted,
+		&:hover:not(:disabled) {
+			background-color: var(--color-neutral-600);
+		}
+
+		&:disabled {
+			cursor: not-allowed;
+		}
+	}
+
+	/* ------------------------------------------------------------------------ */
+
+	div.article-prompt {
+		display: flex;
+		flex-direction: column;
+	}
+
+	code.article-prompt__code {
+		font-size: 13px;
+		font-family: var(--font-mono);
+		overflow-y: scroll;
+		color: var(--color-neutral-300);
+		background-color: var(--color-neutral-700);
+		border-radius: var(--border-radius-l);
+		padding: 0 16px;
+	}
+
+	p.article-prompt__assistant {
+		color: var(--color-primary-dark);
 	}
 </style>

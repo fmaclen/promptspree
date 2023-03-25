@@ -25,27 +25,30 @@
 <style lang="scss">
 	button.form-button {
 		padding: 16px 24px;
-		font-family: var(--font-sans);
-		font-size: 13px;
+		font-size: 14px;
 		font-weight: 600;
 		box-sizing: border-box;
 		text-align: center;
 		width: 100%;
 		cursor: pointer;
-
-		border-radius: var(--border-radius-m);
-		border: 1px solid var(--color-accent);
-		color: var(--color-white);
-		background-color: var(--color-accent);
-		/* box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.25); */
+		font-family: var(--font-sans);
+		border-radius: var(--border-radius-l);
+		border: 1px solid var(--color-primary);
+		background-color: var(--color-primary);
+		color: var(--color-neutral-950);
 
 		&:active {
 			transform: scale(0.98);
 		}
 
 		&--secondary {
-			color: var(--color-accent);
-			background-color: var(--color-accent-secondary);
+			color: var(--color-secondary);
+			background-color: var(--color-secondary-darkest);
+			border-color: var(--color-secondary-darker);
+
+			&:hover {
+				border-color: var(--color-secondary);
+			}
 		}
 
 		&--positive {
@@ -54,6 +57,7 @@
 		}
 
 		&--negative {
+			color: var(--color-neutral-50);
 			background-color: var(--color-negative);
 			border-color: var(--color-negative);
 
@@ -72,9 +76,9 @@
 			pointer-events: none;
 
 			box-shadow: none;
-			color: hsl(0, 0%, 75%);
-			border-color: hsl(0, 0%, 85%);
-			background-color: hsl(0, 0%, 85%);
+			color: var(--color-neutral-500);
+			border-color: var(--color-neutral-900);
+			background-color: var(--color-neutral-900);
 		}
 	}
 </style>

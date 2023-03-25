@@ -28,39 +28,48 @@
 	}
 </script>
 
-<div class="article__category-placeholder" />
+<div class="placeholder">
+	<div class="article__category-placeholder" />
 
-<ul class="article__list-placeholder">
-	<li class="article__headline-placeholder" />
-	<li class="article__headline-placeholder" />
-	<li class="article__headline-placeholder" />
-</ul>
+	<ul class="article__list-placeholder">
+		<li class="article__headline-placeholder" />
+		<li class="article__headline-placeholder" />
+		<li class="article__headline-placeholder" />
+	</ul>
 
-<ul class="article__list-placeholder">
-	<li class="article__paragraph-placeholder" />
-	<li class="article__paragraph-placeholder" />
-	<li class="article__paragraph-placeholder" />
-</ul>
+	<ul class="article__list-placeholder">
+		<li class="article__paragraph-placeholder" />
+		<li class="article__paragraph-placeholder" />
+		<li class="article__paragraph-placeholder" />
+	</ul>
 
-<ul class="article__list-placeholder">
-	<li class="article__paragraph-placeholder" />
-	<li class="article__paragraph-placeholder" />
-	<li class="article__paragraph-placeholder" />
-	<li class="article__paragraph-placeholder" />
-</ul>
+	<ul class="article__list-placeholder">
+		<li class="article__paragraph-placeholder" />
+		<li class="article__paragraph-placeholder" />
+		<li class="article__paragraph-placeholder" />
+		<li class="article__paragraph-placeholder" />
+	</ul>
 
-<ul class="article__list-placeholder">
-	<li class="article__paragraph-placeholder" />
-	<li class="article__paragraph-placeholder" />
-</ul>
+	<ul class="article__list-placeholder">
+		<li class="article__paragraph-placeholder" />
+		<li class="article__paragraph-placeholder" />
+	</ul>
+</div>
 
 <style lang="scss">
+	div.placeholder {
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		gap: 16px;
+	}
+
 	ul.article__list-placeholder {
 		margin: 0;
 		padding: 0;
 		display: flex;
 		flex-direction: column;
-		row-gap: 2px;
+		row-gap: 4px;
 		list-style: none;
 	}
 
@@ -68,8 +77,6 @@
 	li.article__headline-placeholder,
 	li.article__paragraph-placeholder {
 		width: 100%;
-		color: hsl(0, 0%, 90%);
-		background-color: hsl(0, 0%, 90%);
 		padding: 0;
 		transition: 500ms width;
 		border-radius: var(--border-radius-l);
@@ -78,13 +85,16 @@
 	div.article__category-placeholder {
 		height: 14px;
 		width: 25%;
+		background-color: var(--color-primary-darker);
 	}
 
 	li.article__headline-placeholder {
 		height: 32px;
+		background-color: var(--color-neutral-600);
 	}
 
 	li.article__paragraph-placeholder {
 		height: 16px;
+		background-color: var(--color-neutral-600);
 	}
 </style>

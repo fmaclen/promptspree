@@ -20,12 +20,9 @@
 		text-decoration: none;
 		color: inherit;
 
+		&:hover,
 		&--highlighted {
-			color: var(--color-accent);
-		}
-
-		&:hover {
-			color: var(--color-accent);
+			color: var(--color-secondary);
 		}
 
 		&--positive {

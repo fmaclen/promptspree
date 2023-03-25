@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { ArticleCategory } from '$lib/articles';
-	import HR from '$lib/components/HR.svelte';
 
 	export let currentCategory: ArticleCategory | null = null;
 
@@ -48,17 +47,20 @@
 	{/each}
 </nav>
 
-<HR />
-
 <style lang="scss">
 	nav.categories {
 		display: flex;
-		max-width: 100%;
+		justify-content: center;
+		gap: 8px;
 		overflow-x: auto;
 		padding: 16px 24px;
 		box-sizing: border-box;
-		gap: 8px;
-		margin-inline: auto;
+		background-color: var(--color-neutral-900);
+
+		@media (max-width: 768px) {
+			position: relative;
+			justify-content: flex-start;
+		}
 	}
 
 	a.categories__a {
@@ -69,18 +71,23 @@
 		font-size: 13px;
 		font-weight: 600;
 		box-sizing: border-box;
-		border-radius: var(--border-radius-l);
 		padding: 8px 16px;
 		color: inherit;
-		text-shadow: var(--text-shadow-white-100);
-		background-color: var(--color-white);
-		/* border: 1px solid var(--color-white); */
+		border-radius: var(--border-radius-l);
+		color: var(--color-neutral-100);
+		background-color: var(--color-neutral-800);
 
-		&--active,
 		&:hover {
-			color: var(--color-accent);
-			background-color: var(--color-accent-secondary);
-			border-color: var(--color-accent);
+			background-color: var(--color-neutral-600);
+		}
+
+		&--active {
+			background-color: var(--color-primary-darkest);
+			color: var(--color-primary);
+
+			&:hover {
+				background-color: var(--color-primary-darker);
+			}
 		}
 	}
 </style>

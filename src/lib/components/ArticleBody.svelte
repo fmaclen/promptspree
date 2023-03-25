@@ -1,90 +1,37 @@
 <script lang="ts">
-	import type { Article } from '$lib/articles';
-	import ArticleCategory from '$lib/components/ArticleCategory.svelte';
+	import { type Article, ArticleSize } from '$lib/articles';
 
-	import ArticlePlaceholder from './ArticlePlaceholder.svelte';
-
-	export let article: Article | null;
-	export let isLoading: boolean = false;
+	export let article: Article;
+	export let size: ArticleSize;
 </script>
 
-<article class="article">
-	{#if article}
-		<ArticleCategory href="/category/{article.category.toLowerCase()}" category={article.category}>
-			{article.category}
-		</ArticleCategory>
-
-		<h1 class="article__headline">
-			{article.headline}
-		</h1>
-
+<div class="article__body">
+	{#if size === ArticleSize.FULL}
 		{#each article.body as paragraph}
-			<p class="article__p">{paragraph}</p>
+			<p class="article__p article__p--full">{paragraph}</p>
 		{/each}
-
-		{#if article.audioSrc}
-			<nav class="article__audio">
-				<p class="article__beta" title="Coming soon">Plus</p>
-				<audio controls src={article.audioSrc} preload="none" class="article__player" />
-			</nav>
-		{/if}
-	{:else}
-		<ArticlePlaceholder {isLoading} />
 	{/if}
-</article>
+
+	{#if size === ArticleSize.MEDIUM}
+		<p class="article__p">{article.body[0]}</p>
+	{/if}
+</div>
 
 <style lang="scss">
-	article.article {
-		border-top-left-radius: var(--border-radius-l);
-		border-top-right-radius: var(--border-radius-l);
-		background-color: var(--color-white);
+	div.article__body {
 		display: flex;
 		flex-direction: column;
-		padding: 32px;
-		row-gap: 12px;
-	}
-
-	h1.article__headline {
-		font-weight: 600;
-		letter-spacing: -0.025em;
-		margin: 0;
-		line-height: 1em;
-		color: hsl(0, 0%, 10%);
-
-		font-size: 32px;
-		margin-bottom: 16px;
+		row-gap: 16px;
 	}
 
 	p.article__p {
-		font-size: 15px;
 		margin: 0;
-		color: hsl(0, 0%, 40%);
+		font-size: 14px;
 		line-height: 1.5em;
-	}
+		color: var(--color-neutral-200);
 
-	nav.article__audio {
-		display: flex;
-		width: 100%;
-		background-color: #f2f3f4;
-		border-radius: var(--border-radius-l);
-		margin-top: 20px;
-		align-items: center;
-	}
-
-	audio.article__player {
-		width: 100%;
-	}
-
-	p.article__beta {
-		font-size: 12px;
-		font-weight: 600;
-		margin: 0;
-		color: var(--color-accent);
-		line-height: 1em;
-		padding: 8px;
-		border-radius: var(--border-radius-m);
-		border: 1px solid var(--color-accent);
-		cursor: help;
-		margin-left: 16px;
+		&--full {
+			font-size: 18px;
+		}
 	}
 </style>

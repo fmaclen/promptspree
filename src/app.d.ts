@@ -1,4 +1,5 @@
-import PocketBase, { BaseAuthStore } from 'pocketbase';
+import type { UserCollection } from '$/lib/pocketbase.schema';
+import PocketBase from 'pocketbase';
 
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
@@ -8,7 +9,7 @@ declare global {
 		interface Locals {
 			pb: PocketBase;
 			pbAdmin: PocketBase;
-			user: BaseAuthStore['model'];
+			user: UserCollection;
 		} // interface PageData {}
 		// interface Platform {}
 	}
