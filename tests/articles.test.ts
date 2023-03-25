@@ -72,14 +72,14 @@ test.describe('Articles', () => {
 			// Article by Alice
 			await expect(page.getByText(MOCK_USERS.alice.nickname)).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).toBeVisible();
-			await expect(page.locator('h3.article__category', { hasText: MOCK_ARTICLE_COMPLETIONS[1].category })).toBeVisible(); // prettier-ignore
+			await expect(page.locator('h2.article__h2', { hasText: MOCK_ARTICLE_COMPLETIONS[1].category })).toBeVisible(); // prettier-ignore
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[0])).toBeVisible(); // Summary
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[1])).not.toBeVisible();
 
 			// Article by Bob
 			await expect(page.getByText(MOCK_USERS.bob.nickname)).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].headline)).toBeVisible();
-			await expect(page.locator('h3.article__category', { hasText: MOCK_ARTICLE_COMPLETIONS[3].category })).toBeVisible(); // prettier-ignore
+			await expect(page.locator('h2.article__h2', { hasText: MOCK_ARTICLE_COMPLETIONS[3].category })).toBeVisible(); // prettier-ignore
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].body[0])).toBeVisible(); // Summary
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].body[1])).not.toBeVisible();
 
@@ -88,7 +88,7 @@ test.describe('Articles', () => {
 				.locator('a.categories__a', { hasText: MOCK_ARTICLE_COMPLETIONS[1].category })
 				.click();
 			await expect(page.locator(`a.categories__a--${MOCK_ARTICLE_COMPLETIONS[1].category.toLowerCase()}`)).toHaveClass(/categories__a--active/); // prettier-ignore
-			await expect(page.locator('h3.article__category', { hasText: MOCK_ARTICLE_COMPLETIONS[1].category })).toBeVisible(); // prettier-ignore
+			await expect(page.locator('h2.article__h2', { hasText: MOCK_ARTICLE_COMPLETIONS[1].category })).toBeVisible(); // prettier-ignore
 			await expect(page.getByText(MOCK_USERS.alice.nickname)).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[0])).toBeVisible(); // Summary
@@ -104,7 +104,7 @@ test.describe('Articles', () => {
 
 			// Published article by Alice
 			await page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline).click();
-			await expect(page.locator('h1.article__headline', { hasText: MOCK_ARTICLE_COMPLETIONS[1].headline })).toBeVisible(); // prettier-ignore
+			await expect(page.locator('h1.article__h1', { hasText: MOCK_ARTICLE_COMPLETIONS[1].headline })).toBeVisible(); // prettier-ignore
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[0])).toBeVisible(); // Summary
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[1])).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[2])).toBeVisible();
@@ -116,7 +116,7 @@ test.describe('Articles', () => {
 			// Published article by Bob
 			await goToHomepageViaLogo(page);
 			await page.getByText(MOCK_ARTICLE_COMPLETIONS[3].headline).click();
-			await expect(page.locator('h1.article__headline', { hasText: MOCK_ARTICLE_COMPLETIONS[3].headline })).toBeVisible(); // prettier-ignore
+			await expect(page.locator('h1.article__h1', { hasText: MOCK_ARTICLE_COMPLETIONS[3].headline })).toBeVisible(); // prettier-ignore
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].body[0])).toBeVisible(); // Summary
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].body[1])).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].body[2])).toBeVisible();
@@ -146,7 +146,7 @@ test.describe('Articles', () => {
 
 			await page.goto(`/article/${article.id}`);
 			await expect(
-				page.locator('h1.article__headline', { hasText: MOCK_ARTICLE_COMPLETIONS[0].headline })
+				page.locator('h1.article__h1', { hasText: MOCK_ARTICLE_COMPLETIONS[0].headline })
 			).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline)).toBeVisible(); // Summary
 			await expect(page.getByText('Delete')).toBeVisible();

@@ -10,6 +10,13 @@
 <article class={`article-content article-content--${size}`}>
 	<ArticleHeader {article} {size} />
 	<ArticleBody {article} {size} />
+
+	{#if article.audioSrc}
+		<nav class="article__audio">
+			<p class="article__beta" title="Coming soon, hopefully!">Plus</p>
+			<audio controls src={article.audioSrc} preload="none" class="article__player" />
+		</nav>
+	{/if}
 </article>
 
 <style lang="scss">
@@ -21,5 +28,32 @@
 		&--full {
 			row-gap: 32px;
 		}
+	}
+
+	nav.article__audio {
+		display: flex;
+		width: 100%;
+		background-color: #f2f3f4;
+		border-radius: var(--border-radius-l);
+		align-items: center;
+		filter: invert(1);
+	}
+
+	audio.article__player {
+		width: 100%;
+	}
+
+	p.article__beta {
+		font-size: 12px;
+		font-weight: 600;
+		margin: 0;
+		line-height: 1em;
+		padding: 8px;
+		cursor: help;
+		margin-left: 16px;
+		border-radius: var(--border-radius-l);
+		color: var(--color-secondary);
+		border: 1px solid var(--color-secondary);
+		filter: invert(1);
 	}
 </style>

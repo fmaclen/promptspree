@@ -8,8 +8,8 @@
 	import FormButton from './FormButton.svelte';
 
 	export let article: Article;
-	export let isActionable: boolean = false;
 	export let size: ArticleSize;
+	export let isActionable: boolean = false;
 
 	$: reactions = article.reactions;
 	$: mostPopularReaction = reactions.byType.sort((a, b) => b.total - a.total)[0].reaction;
@@ -72,35 +72,6 @@
 		</div>
 	{/if}
 
-	{#if isDeletable || isPublishable}
-		<nav class="metadata__author-actions">
-			{#if isDeletable}
-				<form class="form" method="POST" action="?/delete" use:enhance={handleDelete}>
-					<input type="hidden" name="articleId" value={article.id} />
-					<FormButton
-						label="Delete"
-						type="submit"
-						isCompact={true}
-						sentiment={Sentiment.NEGATIVE}
-						on:click={confirmDeletion}
-					/>
-				</form>
-			{/if}
-
-			{#if isPublishable}
-				<form class="play__form" method="POST" action="?/publish" use:enhance={handlePublish}>
-					<input type="hidden" name="articleId" value={article.id} />
-					<FormButton
-						label="Publish"
-						type="submit"
-						isCompact={true}
-						sentiment={Sentiment.POSITIVE}
-					/>
-				</form>
-			{/if}
-		</nav>
-	{/if}
-
 	{#if size === ArticleSize.FULL}
 		<nav class="article-reactions">
 			{#each article.reactions.byType as reaction}
@@ -144,6 +115,35 @@
 				{/each}
 			</code>
 		</div>
+	{/if}
+
+	{#if isDeletable || isPublishable}
+		<nav class="metadata__author-actions">
+			{#if isDeletable}
+				<form class="form" method="POST" action="?/delete" use:enhance={handleDelete}>
+					<input type="hidden" name="articleId" value={article.id} />
+					<FormButton
+						label="Delete"
+						type="submit"
+						isCompact={true}
+						sentiment={Sentiment.NEGATIVE}
+						on:click={confirmDeletion}
+					/>
+				</form>
+			{/if}
+
+			{#if isPublishable}
+				<form class="play__form" method="POST" action="?/publish" use:enhance={handlePublish}>
+					<input type="hidden" name="articleId" value={article.id} />
+					<FormButton
+						label="Publish"
+						type="submit"
+						isCompact={true}
+						sentiment={Sentiment.POSITIVE}
+					/>
+				</form>
+			{/if}
+		</nav>
 	{/if}
 </nav>
 

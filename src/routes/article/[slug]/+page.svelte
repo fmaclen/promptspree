@@ -13,5 +13,5 @@
 <Head title={[article.headline]} description={article.body[0]} />
 
 <Section>
-	<ArticleLayout {article} size={ArticleSize.FULL} />
+	<ArticleLayout {article} size={ArticleSize.FULL} isActionable={true} />
 </Section>
