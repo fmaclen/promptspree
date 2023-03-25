@@ -7,7 +7,6 @@
 	import FormInput from '$lib/components/FormInput.svelte';
 	import Head from '$lib/components/Head.svelte';
 	import Notice from '$lib/components/Notice.svelte';
-	import Plate from '$lib/components/Plate.svelte';
 	import Section from '$lib/components/Section.svelte';
 	import { UNKNOWN_ERROR_MESSAGE } from '$lib/utils';
 	import toast from 'svelte-french-toast';
