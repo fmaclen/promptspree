@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import Plate from '$lib/components/Plate.svelte';
 
 	export let id: string;
 	export let isCurrentUserProfile: boolean = false;
@@ -14,56 +13,52 @@
 
 <nav class="profile-nav">
 	{#if isCurrentUserProfile}
-		<Plate>
-			<ul class="profile-summary profile-summary--with-links">
-				<li class="profile-summary__li profile-summary__li--with-link">
-					<a
-						class="profile-summary__a {!isDraftsPage ? 'profile-summary__a--active' : ''}"
-						href="/profile/{id}"
-					>
-						<strong class="profile-summary__key">Published</strong>
-						<span class="profile-summary__value">{totalPublished}</span>
-					</a>
-				</li>
-
-				<li class="profile-summary__li profile-summary__li--with-link">
-					<a
-						class="profile-summary__a {isDraftsPage ? 'profile-summary__a--active' : ''}"
-						href="/profile/{id}/drafts"
-					>
-						<strong class="profile-summary__key">Drafts</strong>
-						<span class="profile-summary__value">{totalDrafts}</span>
-					</a>
-				</li>
-			</ul>
-		</Plate>
-	{/if}
-
-	<Plate>
-		<ul class="profile-summary">
-			{#if !isCurrentUserProfile}
-				<li class="profile-summary__li">
-					<strong class="profile-summary__key">Articles</strong>
+		<ul class="profile-summary profile-summary--with-links">
+			<li class="profile-summary__li profile-summary__li--with-link">
+				<a
+					class="profile-summary__a {!isDraftsPage ? 'profile-summary__a--active' : ''}"
+					href="/profile/{id}"
+				>
+					<strong class="profile-summary__key">Published</strong>
 					<span class="profile-summary__value">{totalPublished}</span>
-				</li>
-			{/if}
-
-			<li class="profile-summary__li">
-				<strong class="profile-summary__key">Prompt score</strong>
-				<span class="profile-summary__value">{promptScore}</span>
+				</a>
 			</li>
 
-			<li class="profile-summary__li">
-				<strong class="profile-summary__key">Joined</strong>
-				<span class="profile-summary__value">
-					{new Date(created).toLocaleDateString('en-US', {
-						month: 'long',
-						year: 'numeric'
-					})}
-				</span>
+			<li class="profile-summary__li profile-summary__li--with-link">
+				<a
+					class="profile-summary__a {isDraftsPage ? 'profile-summary__a--active' : ''}"
+					href="/profile/{id}/drafts"
+				>
+					<strong class="profile-summary__key">Drafts</strong>
+					<span class="profile-summary__value">{totalDrafts}</span>
+				</a>
 			</li>
 		</ul>
-	</Plate>
+	{/if}
+
+	<ul class="profile-summary">
+		{#if !isCurrentUserProfile}
+			<li class="profile-summary__li">
+				<strong class="profile-summary__key">Articles</strong>
+				<span class="profile-summary__value">{totalPublished}</span>
+			</li>
+		{/if}
+
+		<li class="profile-summary__li">
+			<strong class="profile-summary__key">Prompt score</strong>
+			<span class="profile-summary__value">{promptScore}</span>
+		</li>
+
+		<li class="profile-summary__li">
+			<strong class="profile-summary__key">Joined</strong>
+			<span class="profile-summary__value">
+				{new Date(created).toLocaleDateString('en-US', {
+					month: 'long',
+					year: 'numeric'
+				})}
+			</span>
+		</li>
+	</ul>
 </nav>
 
 <style lang="scss">

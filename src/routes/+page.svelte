@@ -1,7 +1,6 @@
 <script lang="ts">
 	import ArticleCategories from '$lib/components/ArticleCategories.svelte';
 	import ArticleSummaries from '$lib/components/ArticleSummaries.svelte';
-	import HR from '$lib/components/HR.svelte';
 	import Head from '$lib/components/Head.svelte';
 	import Notice from '$lib/components/Notice.svelte';
 	import Section from '$lib/components/Section.svelte';

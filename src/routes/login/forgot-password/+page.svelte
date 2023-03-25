@@ -5,7 +5,6 @@
 	import FormField from '$lib/components/FormField.svelte';
 	import FormFieldset from '$lib/components/FormFieldset.svelte';
 	import FormInput from '$lib/components/FormInput.svelte';
-	import HR from '$lib/components/HR.svelte';
 	import Head from '$lib/components/Head.svelte';
 	import Notice from '$lib/components/Notice.svelte';
 	import Plate from '$lib/components/Plate.svelte';
@@ -38,32 +37,27 @@
 
 <Head title={['Forgot your password?']} />
 
-<Notice>Don't have an account? <A href="/join" isHighlighted={true}>Join to play</A></Notice>
-<HR />
+<Notice>
+	Enter the email address you used to join and we'll send instructions to reset your password
+</Notice>
 
 <Section isVerticallyCentered={true} title="Forgot your password?">
-	<Notice>
-		Enter the email address you used to join and we'll send instructions to reset your password
-	</Notice>
+	<form class="form" method="POST" use:enhance={handleSubmit}>
+		<FormFieldset>
+			<FormField label="E-mail">
+				<FormInput
+					type="email"
+					name="email"
+					placeholder="cosmic.damascus@example.com"
+					required={true}
+					disabled={success}
+					bind:value={email}
+				/>
+			</FormField>
 
-	<Plate>
-		<form class="form" method="POST" use:enhance={handleSubmit}>
-			<FormFieldset>
-				<FormField label="E-mail">
-					<FormInput
-						type="email"
-						name="email"
-						placeholder="cosmic.damascus@example.com"
-						required={true}
-						disabled={success}
-						bind:value={email}
-					/>
-				</FormField>
-
-				<FormButton type="submit" label="Send password reset email" disabled={isSubmitDisabled} />
-			</FormFieldset>
-		</form>
-	</Plate>
+			<FormButton type="submit" label="Send password reset email" disabled={isSubmitDisabled} />
+		</FormFieldset>
+	</form>
 </Section>
 
 <style lang="scss">

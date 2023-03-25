@@ -76,8 +76,8 @@
 
 			box-shadow: none;
 			color: var(--color-neutral-500);
-			border-color: var(--color-neutral-700);
-			background-color: var(--color-neutral-700);
+			border-color: var(--color-neutral-900);
+			background-color: var(--color-neutral-900);
 		}
 	}
 </style>
