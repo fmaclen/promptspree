@@ -1,5 +1,5 @@
-import PocketBase from 'pocketbase';
 import type { UserCollection } from '$/lib/pocketbase.schema';
+import PocketBase from 'pocketbase';
 
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces

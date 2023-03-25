@@ -139,7 +139,12 @@
 							article = null;
 						}}
 					/>
-					<FormButton label="Publish" type="submit" sentiment={Sentiment.POSITIVE} isCompact={true} />
+					<FormButton
+						label="Publish"
+						type="submit"
+						sentiment={Sentiment.POSITIVE}
+						isCompact={true}
+					/>
 				</form>
 
 				<ArticleContent {article} size={ArticleSize.FULL} />

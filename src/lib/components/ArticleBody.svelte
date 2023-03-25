@@ -5,19 +5,17 @@
 	export let size: ArticleSize;
 </script>
 
-{#if size === ArticleSize.FULL}
-	<div class="article__body">
+<div class="article__body">
+	{#if size === ArticleSize.FULL}
 		{#each article.body as paragraph}
 			<p class="article__p article__p--full">{paragraph}</p>
 		{/each}
-	</div>
-{/if}
+	{/if}
 
-{#if size === ArticleSize.MEDIUM}
-	<div class="article__body">
+	{#if size === ArticleSize.MEDIUM}
 		<p class="article__p">{article.body[0]}</p>
-	</div>
-{/if}
+	{/if}
+</div>
 
 <style lang="scss">
 	div.article__body {

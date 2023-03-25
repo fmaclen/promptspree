@@ -14,7 +14,6 @@
 	$: reactions = article.reactions;
 	$: mostPopularReaction = reactions.byType.sort((a, b) => b.total - a.total)[0].reaction;
 
-	const isDraft = article.status === ArticleStatus.DRAFT;
 	const isDeletable = isActionable && article.isCreatedByCurrentUser;
 	const isPublishable =
 		isActionable && article.isCreatedByCurrentUser && article.status === ArticleStatus.DRAFT;
@@ -59,7 +58,7 @@
 		</time>
 	</a>
 
-	{#if !isDraft}
+	{#if !ArticleStatus.DRAFT}
 		<div class="metadata__actions">
 			<a class="article-reactions-summary" href="/article/{article.id}">
 				{#if reactions.total > 0}
@@ -101,21 +100,22 @@
 				</form>
 			{/each}
 		</nav>
+
+		{#if article.messages}
+			<div class="article-prompt">
+				<code class="article-prompt__code">
+					{#each article.messages as message}
+						{#if typeof message.content === 'string'}
+							<p>{message.content}</p>
+						{:else if message.content?.notes !== undefined}
+							<p class="article-prompt__assistant">{message.content.notes}</p>
+						{/if}
+					{/each}
+				</code>
+			</div>
+		{/if}
 	{/if}
 
-	{#if size === ArticleSize.FULL && article.messages}
-		<div class="article-prompt">
-			<code class="article-prompt__code">
-				{#each article.messages as message}
-					{#if typeof message.content === 'string'}
-						<p>{message.content}</p>
-					{:else if message.content?.notes !== undefined}
-						<p class="article-prompt__assistant">{message.content.notes}</p>
-					{/if}
-				{/each}
-			</code>
-		</div>
-	{/if}
 
 	{#if isDeletable || isPublishable}
 		<nav class="metadata__author-actions">

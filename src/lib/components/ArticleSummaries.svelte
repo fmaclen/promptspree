@@ -8,8 +8,8 @@
 	interface SizedArticle extends Article {
 		size: ArticleSize;
 	}
-	let sizedArticles: SizedArticle[];
 
+	let sizedArticles: SizedArticle[];
 	$: sizedArticles = articles.map((article, index) => {
 		if (index <= 7) {
 			// The first 7 are medium size

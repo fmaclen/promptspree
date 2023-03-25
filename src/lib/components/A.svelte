@@ -20,11 +20,8 @@
 		text-decoration: none;
 		color: inherit;
 
+		&:hover,
 		&--highlighted {
-			color: var(--color-secondary);
-		}
-
-		&:hover {
 			color: var(--color-secondary);
 		}
 

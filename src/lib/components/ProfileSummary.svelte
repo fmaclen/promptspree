@@ -110,13 +110,13 @@
 			&:first-child {
 				border-top-left-radius: var(--border-radius-l);
 				border-bottom-left-radius: var(--border-radius-l);
-	
+
 				a.profile-summary__a {
 					border-top-left-radius: var(--border-radius-l);
 					border-bottom-left-radius: var(--border-radius-l);
 				}
 			}
-	
+
 			&:last-child {
 				border-top-right-radius: var(--border-radius-l);
 				border-bottom-right-radius: var(--border-radius-l);
