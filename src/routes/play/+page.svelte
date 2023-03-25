@@ -92,6 +92,7 @@
 								label={suggestion}
 								hierarchy="secondary"
 								type="button"
+								isCompact={true}
 								disabled={prompt !== ''}
 							/>
 						{/each}
@@ -132,13 +133,13 @@
 						label="Start from scratch"
 						type="button"
 						sentiment={Sentiment.NEGATIVE}
-						hierarchy="secondary"
+						isCompact={true}
 						on:click={() => {
 							prompt = '';
 							article = null;
 						}}
 					/>
-					<FormButton label="Publish" type="submit" sentiment={Sentiment.POSITIVE} />
+					<FormButton label="Publish" type="submit" sentiment={Sentiment.POSITIVE} isCompact={true} />
 				</form>
 
 				<ArticleContent {article} size={ArticleSize.FULL} />
@@ -181,6 +182,9 @@
 		display: flex;
 		flex-direction: column;
 		row-gap: 16px;
+		padding: 32px;
+		background-color: var(--color-neutral-900);
+		border-radius: var(--border-radius-l);
 	}
 
 	nav.play__nav {
@@ -203,9 +207,9 @@
 
 	form.play-article-actions,
 	form.play__form {
-		width: 100%;
 		display: flex;
 		gap: 16px;
+		width: 100%;
 	}
 
 	form.play__form {

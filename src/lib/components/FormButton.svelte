@@ -57,6 +57,7 @@
 		}
 
 		&--negative {
+			color: var(--color-neutral-50);
 			background-color: var(--color-negative);
 			border-color: var(--color-negative);
 
