@@ -17,6 +17,7 @@
 		display: flex;
 		align-items: center;
 		flex-direction: column;
+		width: 100%;
 		max-width: 1280px;
 		row-gap: 64px;
 		padding: 64px;
