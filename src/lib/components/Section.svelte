@@ -24,6 +24,15 @@
 		margin-inline: auto;
 		box-sizing: border-box;
 
+		@media (max-width: 768px) {
+			padding: 32px;
+			row-gap: 32px;
+		}
+
+		&:not(:first-of-type) {
+			padding-top: 0;
+		}
+
 		&--vertically-centered {
 			width: 33vw;
 			min-width: 512px;

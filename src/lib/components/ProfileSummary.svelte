@@ -92,7 +92,6 @@
 		flex-direction: column;
 		row-gap: 2px;
 		line-height: 1.1em;
-		height: 100%;
 		box-sizing: border-box;
 		color: var(--color-neutral-200);
 		background-color: var(--color-neutral-700);
@@ -136,7 +135,6 @@
 		row-gap: 2px;
 		line-height: 1.1em;
 		padding: 16px;
-		height: 100%;
 		box-sizing: border-box;
 		text-decoration: none;
 		color: inherit;

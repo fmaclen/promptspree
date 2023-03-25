@@ -21,11 +21,13 @@
 
 		@media (max-width: 1024px) {
 			grid-template-columns: 1fr 2fr;
+			gap: 48px;
 		}
 
 		@media (max-width: 768px) {
 			display: flex;
 			flex-direction: column-reverse;
+			gap: 32px;
 		}
 	}
 

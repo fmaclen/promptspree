@@ -56,6 +56,11 @@
 		padding: 16px 24px;
 		box-sizing: border-box;
 		background-color: var(--color-neutral-900);
+
+		@media (max-width: 768px) {
+			position: relative;
+			justify-content: flex-start;
+		}
 	}
 
 	a.categories__a {

@@ -13,7 +13,7 @@
 		text-align: center;
 		width: 100%;
 		font-size: 14px;
-		padding: 16px 8px;
+		padding: 16px;
 		box-sizing: border-box;
 		background-color: var(--color-neutral-900);
 		color: var(--color-neutral-200);
