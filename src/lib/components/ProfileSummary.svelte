@@ -80,7 +80,7 @@
 		gap: 8px;
 
 		&--with-links {
-			gap: inherit;
+			gap: 0px;
 		}
 	}
 
@@ -106,19 +106,26 @@
 			padding: 0;
 			color: inherit;
 			background-color: var(--color-neutral-700);
-		}
+			border-radius: 0px;
 
-		&:first-child {
-			a.profile-summary__a {
+			&:first-child {
 				border-top-left-radius: var(--border-radius-l);
 				border-bottom-left-radius: var(--border-radius-l);
+	
+				a.profile-summary__a {
+					border-top-left-radius: var(--border-radius-l);
+					border-bottom-left-radius: var(--border-radius-l);
+				}
 			}
-		}
-
-		&:last-child {
-			a.profile-summary__a {
+	
+			&:last-child {
 				border-top-right-radius: var(--border-radius-l);
 				border-bottom-right-radius: var(--border-radius-l);
+
+				a.profile-summary__a {
+					border-top-right-radius: var(--border-radius-l);
+					border-bottom-right-radius: var(--border-radius-l);
+				}
 			}
 		}
 	}
