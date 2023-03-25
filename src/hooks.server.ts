@@ -23,7 +23,7 @@ const handleUserAuth = async (event: RequestEvent) => {
 	try {
 		if (event.locals.pb.authStore.isValid) {
 			await event.locals.pb.collection('users').authRefresh();
-			event.locals.user = structuredClone(event.locals.pb.authStore.model); // Serialize non POJOs
+			event.locals.user = { ...event.locals.pb.authStore.model }; // Serialize non POJOs
 		}
 	} catch (_) {
 		event.locals.pb.authStore.clear();
