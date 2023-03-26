@@ -34,8 +34,7 @@
 		}
 
 		&--vertically-centered {
-			width: 33vw;
-			min-width: 512px;
+			max-width: 512px;
 			margin-block: auto;
 		}
 	}
@@ -55,5 +54,9 @@
 		line-height: 1.2em;
 		color: var(--color-neutral-100);
 		border-bottom: 1px solid var(--color-neutral-500);
+
+		@media (max-width: 768px) {
+			font-size: 32px;
+		}
 	}
 </style>

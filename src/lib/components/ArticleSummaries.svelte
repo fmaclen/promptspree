@@ -3,7 +3,6 @@
 	import ArticleLayout from '$lib/components/ArticleLayout.svelte';
 
 	export let articles: Article[];
-	export let isActionable: boolean = false;
 
 	interface SizedArticle extends Article {
 		size: ArticleSize;
@@ -24,7 +23,7 @@
 <ul class="articles">
 	{#each sizedArticles as article}
 		<li class="articles__li">
-			<ArticleLayout {article} {isActionable} size={article.size} />
+			<ArticleLayout {article} size={article.size} />
 		</li>
 	{/each}
 </ul>

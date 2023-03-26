@@ -29,7 +29,7 @@
 	/>
 
 	{#if articles.length > 0}
-		<ArticleSummaries {articles} isActionable={true} />
+		<ArticleSummaries {articles} />
 	{:else if isCurrentUserProfile}
 		<Notice>No published articles, <A href="/play" isHighlighted={true}>generate one</A></Notice>
 	{:else}

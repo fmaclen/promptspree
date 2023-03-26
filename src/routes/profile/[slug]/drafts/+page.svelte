@@ -26,7 +26,7 @@
 	/>
 
 	{#if articles.length > 0}
-		<ArticleSummaries {articles} isActionable={true} />
+		<ArticleSummaries {articles} />
 	{:else}
 		<Notice>No draft articles, <A href="/play" isHighlighted={true}>generate one</A></Notice>
 	{/if}

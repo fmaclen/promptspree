@@ -37,6 +37,14 @@
 		&--full {
 			font-size: 40px;
 		}
+
+		@media (max-width: 768px) {
+			font-size: 20px;
+
+			&--full {
+				font-size: 32px;
+			}
+		}
 	}
 
 	h2.article__h2 {

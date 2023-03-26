@@ -120,8 +120,8 @@ test.describe('Play', () => {
 			await expect(page.getByText(articleHeadline)).toBeVisible();
 
 			await publishButton.click();
-			await expect(page.getByText('Delete')).toBeVisible();
 			await expect(page.locator('h1.section__h1', { hasText: MOCK_USERS.alice.nickname })).toBeVisible(); // prettier-ignore
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline)).toBeVisible();
 			await expect(generateButton).not.toBeVisible();
 			await expect(publishButton).not.toBeVisible();
 			await expect(

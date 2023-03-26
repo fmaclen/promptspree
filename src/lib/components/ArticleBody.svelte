@@ -33,5 +33,13 @@
 		&--full {
 			font-size: 18px;
 		}
+
+		@media (max-width: 768px) {
+			font-size: 13px;
+
+			&--full {
+				font-size: 16px;
+			}
+		}
 	}
 </style>
