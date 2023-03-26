@@ -4,6 +4,7 @@
 	import AddReaction from '$lib/components/icons/AddReaction.svelte';
 	import Loading from '$lib/components/icons/Loading.svelte';
 	import type { Reactions } from '$lib/reactions';
+	import { slide } from 'svelte/transition';
 
 	export let article: Article;
 	export let currentUserCanReact: boolean = false;
@@ -127,6 +128,7 @@
 		cursor: pointer;
 		padding-left: 12px;
 		padding-right: 12px;
+		width: 56px;
 	}
 
 	button.reactions__context-menu-reaction {
@@ -134,6 +136,7 @@
 		width: 100%;
 		border-radius: var(--border-radius-m);
 		font-size: 16px;
+		cursor: pointer;
 
 		&:hover {
 			background-color: var(--color-neutral-500);
@@ -146,9 +149,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		height: 100%;
-		padding-top: 6px;
-		padding-bottom: 6px;
+		height: 40px;
 		gap: 6px;
 		box-sizing: border-box;
 		background-color: transparent;
@@ -168,6 +169,7 @@
 	button.reactions__context-menu-reaction {
 		&--reacted,
 		&--reacted:hover {
+			color: var(--color-primary);
 			border-color: var(--color-primary-dark);
 			background-color: var(--color-primary-darker);
 		}

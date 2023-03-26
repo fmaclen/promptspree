@@ -20,7 +20,7 @@
 <style lang="scss">
 	svg.loading-icon {
 		circle {
-			fill: var(--color-positive);
+			fill: var(--color-neutral-300);
 		}
 	}
 
