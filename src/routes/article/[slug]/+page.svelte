@@ -10,7 +10,7 @@
 	export let data: PageData;
 
 	let article = data.article;
-	let currentUser = (data.user as User | undefined);
+	let currentUser = data.user as User | undefined;
 </script>
 
 <Head title={[article.headline]} description={article.body[0]} />

@@ -40,7 +40,9 @@ test.describe('Reactions', () => {
 
 		const reactionSummaryClass = 'a.reactions__summary';
 		const reactionsContextMenuReaction = page.locator('button.reactions__context-menu-reaction');
-		const reactionsContextMenuReactionReacted = page.locator('button.reactions__context-menu-reaction--reacted');
+		const reactionsContextMenuReactionReacted = page.locator(
+			'button.reactions__context-menu-reaction--reacted'
+		);
 		const reactionsContextMenuToggle = page.locator('button.reactions__context-menu-toggle');
 		const reactionsContextMenu = page.locator('div.reactions__context-menu');
 
@@ -51,7 +53,7 @@ test.describe('Reactions', () => {
 		await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[2])).toBeVisible();
 		await expect(reactionsContextMenuToggle).toBeVisible();
 		await expect(reactionsContextMenu).not.toBeVisible();
-		
+
 		await reactionsContextMenuToggle.click();
 		await expect(reactionsContextMenu).toBeVisible();
 		expect(await reactionsContextMenuReaction.count()).toBe(5);

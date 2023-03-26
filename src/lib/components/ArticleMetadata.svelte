@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { type SubmitFunction, enhance } from '$app/forms';
 	import { type Article, ArticleSize, ArticleStatus } from '$lib/articles';
+	import type { User } from '$lib/users';
 	import { Sentiment } from '$lib/utils';
 	import { formatDistance } from 'date-fns';
-	import type { User } from '$lib/users';
 
 	import ArticleReactions from './ArticleReactions.svelte';
 	import FormButton from './FormButton.svelte';
@@ -41,7 +41,7 @@
 	<nav class="metadata__nav">
 		<a class="metadata__a" href={`/profile/${article.user.id}`}>
 			<span class="metadata__author">{article.user.nickname}</span>
-	
+
 			<time class="metadata__time" title={article.updated} datetime={article.updated}>
 				{formatDistance(new Date(article.updated), new Date(), {
 					addSuffix: true
@@ -49,7 +49,7 @@
 			</time>
 		</a>
 
-		<ArticleReactions {article} {size} {currentUser} />
+		<ArticleReactions {article} currentUserCanReact={currentUser !== null && isActionable} />
 	</nav>
 
 	{#if size === ArticleSize.FULL}

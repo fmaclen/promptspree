@@ -1,15 +1,12 @@
 <script lang="ts">
 	import { type SubmitFunction, enhance } from '$app/forms';
-	import { type Article, ArticleSize, ArticleStatus } from '$lib/articles';
+	import { type Article, ArticleStatus } from '$lib/articles';
 	import AddReaction from '$lib/components/icons/AddReaction.svelte';
 	import Loading from '$lib/components/icons/Loading.svelte';
 	import type { Reactions } from '$lib/reactions';
-	import type { User } from '$lib/users';
 
-	// FIXME: reactions shouldn't know about Articles
 	export let article: Article;
-	export let size: ArticleSize;
-	export let currentUser: User | null = null;
+	export let currentUserCanReact: boolean = false;
 
 	$: reactions = article.reactions;
 
@@ -56,7 +53,7 @@
 		</a>
 	{/if}
 
-	{#if currentUser && size === ArticleSize.FULL}
+	{#if currentUserCanReact}
 		<div class="reactions__context-menu-container">
 			<button class="reactions__context-menu-toggle" on:click={toggleContextMenuVisibility}>
 				{#if isLoading}
