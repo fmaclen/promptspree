@@ -19,8 +19,6 @@
 
 <style lang="scss">
 	svg.loading-icon {
-		padding: 0 16px;
-
 		circle {
 			fill: var(--color-positive);
 		}

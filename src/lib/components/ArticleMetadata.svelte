@@ -37,18 +37,20 @@
 	};
 </script>
 
-<nav class="metadata">
-	<a class="metadata__a" href={`/profile/${article.user.id}`}>
-		<span class="metadata__author">{article.user.nickname}</span>
+<aside class="metadata">
+	<nav class="metadata__nav">
+		<a class="metadata__a" href={`/profile/${article.user.id}`}>
+			<span class="metadata__author">{article.user.nickname}</span>
+	
+			<time class="metadata__time" title={article.updated} datetime={article.updated}>
+				{formatDistance(new Date(article.updated), new Date(), {
+					addSuffix: true
+				})}
+			</time>
+		</a>
 
-		<time class="metadata__time" title={article.updated} datetime={article.updated}>
-			{formatDistance(new Date(article.updated), new Date(), {
-				addSuffix: true
-			})}
-		</time>
-	</a>
-
-	<ArticleReactions {article} {size} {currentUser} />
+		<ArticleReactions {article} {size} {currentUser} />
+	</nav>
 
 	{#if size === ArticleSize.FULL}
 		{#if article.messages}
@@ -94,10 +96,10 @@
 			{/if}
 		</nav>
 	{/if}
-</nav>
+</aside>
 
 <style lang="scss">
-	nav.metadata {
+	aside.metadata {
 		width: 100%;
 		font-size: 13px;
 		box-sizing: border-box;
@@ -124,15 +126,17 @@
 		color: inherit;
 		text-decoration: none;
 		width: max-content;
+		align-self: center;
 
 		&:hover {
 			color: var(--color-primary);
 		}
 	}
 
-	nav.metadata__author-actions {
+	nav.metadata__nav {
 		display: flex;
 		column-gap: 8px;
+		justify-content: space-between;
 	}
 
 	/* ------------------------------------------------------------------------ */

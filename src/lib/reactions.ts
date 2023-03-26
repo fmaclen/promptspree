@@ -48,9 +48,6 @@ export function calculateReactionsFromCollection(
 		});
 	}
 
-	// Sort reactions by most reacted type
-	byType.sort((a, b) => b.total - a.total);
-
 	// If the current user hasn't reacted to any collection, set the byCurrentUser variable to 0
 	return { total, byType, byCurrentUser: byCurrentUser };
 }

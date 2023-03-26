@@ -1,152 +1,191 @@
 <script lang="ts">
 	import { type SubmitFunction, enhance } from '$app/forms';
 	import { type Article, ArticleSize, ArticleStatus } from '$lib/articles';
+	import AddReaction from '$lib/components/icons/AddReaction.svelte';
+	import Loading from '$lib/components/icons/Loading.svelte';
 	import type { Reactions } from '$lib/reactions';
 	import type { User } from '$lib/users';
 
+	// FIXME: reactions shouldn't know about Articles
 	export let article: Article;
 	export let size: ArticleSize;
 	export let currentUser: User | null = null;
 
 	$: reactions = article.reactions;
-	$: mostPopularReaction = reactions.byType.sort((a, b) => b.total - a.total)[0].reaction;
+
+	// Filter out reactions with no total, then sort by total
+	$: reactionsByTotal = reactions.byType
+		.filter((reaction) => reaction.total > 0)
+		.sort((a, b) => b.total - a.total);
 
 	const handleReaction: SubmitFunction = () => {
-		toggleVisibility();
+		isLoading = true;
+		toggleContextMenuVisibility();
 
 		return async ({ result, update }) => {
 			if (result.type === 'success' && result.data) {
+				isLoading = false;
 				article = { ...article, reactions: result.data as Reactions };
 			}
 			await update();
 		};
 	};
 
-	let isVisible = false;
-	function toggleVisibility() {
-		isVisible = !isVisible;
+	let isLoading = false;
+	let isContextMenuVisible = false;
+
+	function toggleContextMenuVisibility() {
+		isContextMenuVisible = !isContextMenuVisible;
 	}
 </script>
 
-{#if article.status !== ArticleStatus.DRAFT}
-	<div class="metadata__actions">
-		<a class="article-reactions-summary" href="/article/{article.id}">
-			{#if reactions.total > 0}
-				<span class="article-reactions-summary__emoji">
-					{mostPopularReaction}
+<nav class="reactions">
+	{#if reactions.total > 0 && article.status !== ArticleStatus.DRAFT}
+		<a
+			href="/article/{article.id}"
+			class={`reactions__summary ${
+				reactions.byCurrentUser !== null ? 'reactions__summary--reacted' : ''
+			}`}
+		>
+			{#each reactionsByTotal as reaction}
+				<span class="reactions__summary-emoji">
+					{reaction.reaction}
 				</span>
-			{/if}
-			<span class="article-reactions-summary__total">{reactions.total}</span>
-		</a>
-	</div>
-{/if}
-
-{#if currentUser && size === ArticleSize.FULL}
-	<nav class="article-reactions">
-		<button on:click={toggleVisibility}>React!</button>
-
-		{#if isVisible}
-			{#each article.reactions.byType as reaction}
-				<form
-					class="article-reactions__form"
-					action="/article/{article.id}?/react"
-					method="POST"
-					use:enhance={handleReaction}
-				>
-					<input type="hidden" name="reaction" value={reaction.index} />
-					<input type="hidden" name="article" value={article.id} />
-					<button
-						type="submit"
-						class="article-reactions__button
-							{article.reactions?.byCurrentUser === reaction.index ? 'article-reactions__button--reacted' : ''}"
-					>
-						<span class="article-reactions-summary__emoji">
-							{reaction.reaction}
-						</span>
-						{#if reaction.total}
-							<span class="article-reactions-summary__total">
-								{reaction.total}
-							</span>
-						{/if}
-					</button>
-				</form>
 			{/each}
-		{/if}
-	</nav>
-{/if}
+			<span class="reactions__summary-total">{reactions.total}</span>
+		</a>
+	{/if}
+
+	{#if currentUser && size === ArticleSize.FULL}
+		<div class="reactions__context-menu-container">
+			<button class="reactions__context-menu-toggle" on:click={toggleContextMenuVisibility}>
+				{#if isLoading}
+					<Loading />
+				{:else}
+					<AddReaction />
+				{/if}
+			</button>
+
+			{#if isContextMenuVisible}
+				<div class="reactions__context-menu">
+					{#each article.reactions.byType as reaction}
+						<form
+							class="reactions__context-menu"
+							action="/article/{article.id}?/react"
+							method="POST"
+							use:enhance={handleReaction}
+						>
+							<input type="hidden" name="reaction" value={reaction.index} />
+							<input type="hidden" name="article" value={article.id} />
+							<button
+								type="submit"
+								class="reactions__context-menu-reaction
+								{article.reactions.byCurrentUser === reaction.index
+									? 'reactions__context-menu-reaction--reacted'
+									: ''}"
+							>
+								{reaction.reaction}
+							</button>
+						</form>
+					{/each}
+				</div>
+			{/if}
+		</div>
+	{/if}
+</nav>
 
 <style lang="scss">
-	a.article-reactions-summary {
+	nav.reactions {
 		display: flex;
-		align-items: center;
-		column-gap: 8px;
-		text-decoration: none;
-		font-size: 12px;
-		line-height: 1em;
-		font-weight: 400;
-		padding: 10px;
-		width: max-content;
-		font-family: var(--font-mono);
+		column-gap: 4px;
+	}
+
+	div.reactions__context-menu-container {
+		position: relative;
+	}
+
+	div.reactions__context-menu {
+		position: absolute;
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+		text-align: center;
+		width: 100%;
+		box-sizing: border-box;
+		padding: 6px;
+		margin-top: 6px;
+		background-color: var(--color-neutral-600);
 		border-radius: var(--border-radius-l);
+	}
+
+	a.reactions__summary {
+		text-decoration: none;
+		padding-left: 12px;
+		padding-right: 12px;
 		color: var(--color-neutral-200);
 		background-color: var(--color-neutral-600);
+	}
+
+	button.reactions__context-menu-toggle {
+		cursor: pointer;
+		padding-left: 12px;
+		padding-right: 12px;
+	}
+
+	button.reactions__context-menu-reaction {
+		display: block;
+		width: 100%;
+		border-radius: var(--border-radius-m);
+		font-size: 16px;
 
 		&:hover {
-			border-color: var(--color-neutral-300);
+			background-color: var(--color-neutral-500);
 		}
 	}
 
-	span.article-reactions-summary__emoji {
-		font-size: 16px;
-		transform: translateY(2px); // Optically align with text `span.article-reactions-summary__total`
-	}
-
-	span.article-reactions-summary__total {
-		transform: translateY(1px); // Optically align with text `a.article-reactions-summary`
-	}
-
-	/* ------------------------------------------------------------------------ */
-
-	nav.article-reactions {
-		display: flex;
-		flex-direction: column;
-		width: max-content;
-		background-color: var(--color-neutral-700);
-		border-radius: var(--border-radius-l);
-		overflow: hidden; // Hide rounded corners
-	}
-
-	button.article-reactions__button {
+	a.reactions__summary,
+	button.reactions__context-menu-toggle,
+	button.reactions__context-menu-reaction {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		column-gap: 8px;
-		width: 100%;
-		padding: 8px;
+		height: 100%;
+		padding-top: 6px;
+		padding-bottom: 6px;
+		gap: 6px;
 		box-sizing: border-box;
-		border: none;
 		background-color: transparent;
-		cursor: pointer;
+		border-radius: var(--border-radius-l);
+		border: 1px solid var(--color-neutral-600);
+	}
 
-		// Styles shared with `a.article-reactions-summary`
-		text-align: center;
-		font-weight: 400;
-		line-height: 24px;
-		font-size: 12px;
-		font-family: var(--font-mono);
-		color: var(--color-neutral-200);
-
-		&--reacted {
-			font-weight: 600;
+	a.reactions__summary,
+	button.reactions__context-menu-toggle {
+		&:focus,
+		&:hover {
+			border-color: var(--color-neutral-400);
 		}
+	}
 
+	a.reactions__summary,
+	button.reactions__context-menu-reaction {
 		&--reacted,
-		&:hover:not(:disabled) {
-			background-color: var(--color-neutral-600);
+		&--reacted:hover {
+			border-color: var(--color-primary-dark);
+			background-color: var(--color-primary-darker);
 		}
+	}
 
-		&:disabled {
-			cursor: not-allowed;
+	span.reactions__summary-emoji {
+		font-size: 16px;
+		text-shadow: 0 0 8px var(--color-neutral-800);
+
+		&:not(:first-child) {
+			margin-left: -0.65em;
 		}
+	}
+
+	span.reactions__summary-total {
+		font-size: 14px;
 	}
 </style>

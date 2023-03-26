@@ -28,7 +28,7 @@
 		@media (max-width: 768px) {
 			display: flex;
 			flex-direction: column-reverse;
-			gap: 32px;
+			gap: 16px;
 		}
 	}
 
