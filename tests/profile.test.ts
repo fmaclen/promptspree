@@ -78,15 +78,12 @@ test.describe('Profile', () => {
 			await expect(publishButton).not.toBeVisible();
 
 			await page.getByText('Drafts 1').click();
-			await expect(publishButton).toBeVisible();
+			await expect(publishButton).not.toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].notes)).not.toBeVisible();
 
 			await page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline).click();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].notes)).toBeVisible();
 			await expect(publishButton).toBeVisible();
-
-			await page.goBack(); // Back to draft article list
-			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].notes)).not.toBeVisible();
 
 			await publishButton.click();
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Drafts 0' })).toBeVisible(); // prettier-ignore
@@ -101,17 +98,26 @@ test.describe('Profile', () => {
 			const deleteButton = page.locator('button[type=submit]', { hasText: 'Delete' });
 			await expect(page.locator('a.profile-summary__a--active', { hasText: 'Published 1' })).toBeVisible(); // prettier-ignore
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Drafts 1' })).toBeVisible(); // prettier-ignore
+			await expect(deleteButton).not.toBeVisible();
 
 			await page.getByText('Drafts 1').click();
 			await expect(page.locator('a.profile-summary__a--active', { hasText: 'Drafts 1' })).toBeVisible(); // prettier-ignore
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline)).toBeVisible();
+			await expect(deleteButton).not.toBeVisible();
+			
+			await page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline).click();
+			await expect(deleteButton).toBeVisible();
 
 			await prepareToAcceptDialog(page, /Are you sure you want to delete the article?/);
 			await deleteButton.click();
-			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline)).not.toBeVisible();
 			await expect(page.locator('a.profile-summary__a--active', { hasText: 'Published 1' })).toBeVisible(); // prettier-ignore
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Drafts 0' })).toBeVisible(); // prettier-ignore
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline)).not.toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).toBeVisible();
+			await expect(deleteButton).not.toBeVisible();
+
+			await page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline).click();
+			await expect(deleteButton).toBeVisible();
 
 			await deleteButton.click();
 			await expect(page.getByText('No published articles, generate one')).toBeVisible();
