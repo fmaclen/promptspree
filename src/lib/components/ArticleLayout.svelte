@@ -2,14 +2,15 @@
 	import type { Article, ArticleSize } from '$lib/articles';
 	import ArticleContent from '$lib/components/ArticleContent.svelte';
 	import ArticleMetadata from '$lib/components/ArticleMetadata.svelte';
+	import type { User } from '$lib/users';
 
 	export let article: Article;
 	export let size: ArticleSize;
-	export let isActionable: boolean = false;
+	export let currentUser: User | null = null;
 </script>
 
 <div class={`article-layout article-layout--${size}`}>
-	<ArticleMetadata {article} {size} {isActionable} />
+	<ArticleMetadata {article} {size} {currentUser} />
 	<ArticleContent {article} {size} />
 </div>
 
