@@ -129,7 +129,6 @@
 	@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;400;600;800&family=Overpass+Mono:wght@300&family=Playfair+Display:wght@400;800&display=swap');
 
 	:global(html) {
-		scroll-behavior: smooth;
 		height: 100%;
 	}
 
