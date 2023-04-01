@@ -10,11 +10,13 @@
 
 	export let data: PageData;
 	let isExpanded = false;
+	$: isEditor = $page.url.pathname.includes('/editor');
 </script>
 
-<div class="layout {isExpanded ? 'layout--expanded' : ''}">
+<div class="layout {isExpanded ? 'layout--expanded' : ''} {isEditor ? 'layout--editor' : ''}">
 	<Toaster />
 
+	<!-- {#if !isEditor} -->
 	<header class="header">
 		<hgroup class="header__hgroup">
 			<button
@@ -48,6 +50,7 @@
 			</a>
 		</hgroup>
 	</header>
+	<!-- {/if} -->
 
 	{#if isExpanded}
 		<aside
@@ -187,6 +190,16 @@
 		flex-direction: column;
 		position: relative;
 		height: 100%;
+
+		&--editor {
+			header.header {
+				display: none;
+			}
+
+			footer.layout__footer {
+				display: none;
+			}
+		}
 	}
 
 	aside.layout__aside {
