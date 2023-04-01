@@ -89,15 +89,14 @@ export const actions: Actions = {
 		article = await updateArticleCollection(locals, article.id, { ...parsedCompletion });
 		if (!article?.id) throw error(500, UNKNOWN_ERROR_MESSAGE);
 
-		console.log(messages)
-
 		// wait 2 seconds before returning
 		await new Promise((resolve) => setTimeout(resolve, 3000));
 
-		return { article, messages: structuredClone(messages) };
+		return { article, messages: structuredClone(messages), suggestions: parsedCompletion.suggestions };
 	},
 	publish: async ({ request, locals }) => {
 		const { articleId, currentUserId } = await getArticleAndUserIds(request, locals);
+		// TODO: get the message the user chose to publish and use that as the category, headline and body
 		await publishArticle(locals, articleId);
 		throw redirect(303, `/profile/${currentUserId}`);
 	}

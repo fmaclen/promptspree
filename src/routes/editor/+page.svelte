@@ -33,35 +33,42 @@
 	function setSuggestion(suggestion: string) {
 		prompt = suggestion;
 		textareaRef.focus();
+		setTimeout(() => {
+			textareaRef.scrollIntoView({ behavior: 'smooth' });
+		}, 1000);
 	}
 
-	function scrollToBottom() {
+	function scrollToLastMessage() {
 		setTimeout(() => {
 			scrollToLi.scrollIntoView({ behavior: 'smooth' });
 		}, 100);
 	}
 
 	function submitGenerate() {
+		console.log("HERE")
+		//
+		//
+		//
+		messages = [...messages, { role: MessageRole.USER, content: prompt }];
+		scrollToLastMessage();
+		//
+		//
+		//
+
 		toast.dismiss();
 		isLoading = true;
 		article = null;
 		error = null;
 		fieldError = null;
-
-		//
-		//
-		//
-		messages = [...messages, { role: MessageRole.USER, content: prompt }];
-		scrollToBottom();
-		//
-		//
-		//
+		prompt = "";
+		console.log("THERE")
 
 		return async ({ result, update }: { result: ActionResult; update: () => void }) => {
 			if (result.type === 'success') {
 				article = result.data?.article || null;
 				messages = result.data?.messages || null;
 				suggestions = result.data?.suggestions || [];
+				console.log(result.data)
 			}
 			if (result.type === 'failure') {
 				error = result.data?.error || null;
@@ -70,7 +77,7 @@
 			}
 
 			update();
-			scrollToBottom();
+			scrollToLastMessage();
 			isLoading = false;
 			prompt = '';
 		};
@@ -81,8 +88,8 @@
 	}
 
 	// $: if (isLoading) toast.loading('Generating article...', { id: 'loading' });
-	// $: if (article) toast.success(ToastSuccess, { id: 'loading', userId: article?.user?.id } as any);
-	// $: if (error) toast.error(error, { id: 'loading' });
+	$: if (article) toast.success(ToastSuccess, { id: 'loading', userId: article?.user?.id } as any);
+	$: if (error) toast.error(error, { id: 'loading' });
 </script>
 
 <div class="chat">
@@ -119,14 +126,21 @@
 										<p class="chat__article-p">{paragraph}</p>
 									{/each}
 
-									<nav class="chat__publish">
+									<form
+										class="chat__publish"
+										method="POST"
+										action="?/publish"
+										use:enhance={submitPublish}
+									>
+										<input type="hidden" name="articleId" value={article?.id} />
+										<input type="hidden" name="messageId" value={message.id} />
 										<FormButton
 											label="Publish"
 											type="submit"
 											sentiment={Sentiment.POSITIVE}
 											isCompact={true}
 										/>
-									</nav>
+									</form>
 								</article>
 							</div>
 						{/if}
@@ -139,8 +153,8 @@
 
 	<footer class="chat__footer">
 		<div class="chat__container chat__container--footer">
-			{#if suggestions && prompt === ''}
-				<nav class="chat__suggestions" transition:slide={{ duration: 150 }}>
+			{#if suggestions && prompt === '' && !isLoading}
+				<nav class="chat__suggestions">
 					{#each suggestions as suggestion}
 						<button
 							on:click={() => setSuggestion(suggestion)}
@@ -169,9 +183,7 @@
 					<textarea
 						class="chat__textarea"
 						name="prompt"
-						placeholder={article
-							? 'e.g. "make it a bit longer"'
-							: 'e.g. "write an opinion piece about kids these days in a sarcastic tone"'}
+						placeholder={'Type your prompt here...'}
 						bind:this={textareaRef}
 						bind:value={prompt}
 						disabled={isLoading}
@@ -204,22 +216,31 @@
 	}
 
 	ul.chat__messages {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
 		list-style: none;
 		margin-block: 0;
 		padding-inline: 0;
 		max-height: 100%;
+		padding: 16px;
 	}
 
 	div.chat__message {
 		display: grid;
 		grid-template-columns: max-content auto;
-		gap: 16px;
+		gap: 12px;
 		font-size: 16px;
-		padding: 24px;
+		padding: 16px;
+		border-radius: var(--border-radius-l);
+
+		&--user {
+			background-color: var(--color-primary-darkest);
+		}
 
 		&--assistant {
-			/* background-color: var(--color-primary-darkest); */
-			background-color: var(--color-secondary-darkest);
+			/* background-color: var(--color-secondary-darkest); */
+			background-color: var(--color-neutral-700);
 		}
 	}
 
@@ -241,7 +262,7 @@
 		gap: 24px;
 	}
 
-	nav.chat__publish {
+	form.chat__publish {
 		width: max-content;
 		margin-top: 12px;
 	}
@@ -288,8 +309,13 @@
 	footer.chat__footer {
 		position: sticky;
 		bottom: 0;
-		background: transparent;
-		background-image: linear-gradient(0deg, var(--color-neutral-800) 0%, transparent 100%);
+		/* background: transparent; */
+		backdrop-filter: blur(4px);
+		-webkit-backdrop-filter: blur(4px);
+		background-color: rgba(30,30,30,.9);
+		border-top: 1px solid var(--color-neutral-600);
+		/* background-color: var(--color-neutral-800); */
+		/* background-image: linear-gradient(0deg, var(--color-neutral-800) 0%, transparent 100%); */
 		padding: 16px;
 	}
 

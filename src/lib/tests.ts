@@ -31,7 +31,7 @@ export const MOCK_ARTICLE_COMPLETIONS: MockArticleCompletion[] = [
 		suggestions: [
 			'Include a fun fact about the history of radioactive plants',
 			'Provide tips on how to care for a radioactive mutant ficus',
-			'Add a cautionary tale about the dangers of mishandling radioactive plants'
+			'RETRY_ARTICLE'
 		],
 		notes: 'What a good looking article! If I do say so myself.'
 	},
@@ -46,7 +46,7 @@ export const MOCK_ARTICLE_COMPLETIONS: MockArticleCompletion[] = [
 		suggestions: [
 			'Add a quote from a J.C. Penny spokesperson',
 			'Make it even more sarcastic',
-			'Change J.C. Penny to a different store name'
+			'RETRY_ARTICLE'
 		],
 		notes: 'What a good looking article! If I do say so myself.'
 	},
@@ -61,7 +61,7 @@ export const MOCK_ARTICLE_COMPLETIONS: MockArticleCompletion[] = [
 		suggestions: [
 			'Include a quote from a phonebook manufacturer',
 			'Add a section on the environmental impact of printing phonebooks',
-			'Change the headline to be more sensational'
+			'RETRY_ARTICLE'
 		],
 		notes: 'What a good looking article! If I do say so myself.'
 	},
@@ -76,7 +76,7 @@ export const MOCK_ARTICLE_COMPLETIONS: MockArticleCompletion[] = [
 		suggestions: [
 			'Add a quote from one of the scientists involved in the discovery.',
 			'Include a description of the physical characteristics of the Abyssal Glow.',
-			'Explain why the discovery of new species is important for the study of marine biology.'
+			'RETRY_ARTICLE'
 		],
 		notes: 'What a good looking article! If I do say so myself.'
 	}
