@@ -17,10 +17,13 @@
 	import toast from 'svelte-french-toast';
 	import { slide } from 'svelte/transition';
 
+	import type { PageData } from './$types';
 	import ToastSuccess from './ToastSuccess.svelte';
 
-	let messages: Message[] = [];
-	let article: Article | null = null;
+	export let data: PageData;
+
+	let article: Article | null = data.article ?? null;
+	let messages: Message[] = data.messages ?? [];
 	let suggestions: string[] = getRandomInitialSuggestions();
 	let error: string | null = null;
 	let fieldError: string[] | null = null;
@@ -45,30 +48,21 @@
 	}
 
 	function submitGenerate() {
-		console.log("HERE")
-		//
-		//
-		//
 		messages = [...messages, { role: MessageRole.USER, content: prompt }];
 		scrollToLastMessage();
-		//
-		//
-		//
-
 		toast.dismiss();
 		isLoading = true;
 		article = null;
 		error = null;
 		fieldError = null;
-		prompt = "";
-		console.log("THERE")
+		prompt = '';
 
 		return async ({ result, update }: { result: ActionResult; update: () => void }) => {
 			if (result.type === 'success') {
 				article = result.data?.article || null;
 				messages = result.data?.messages || null;
 				suggestions = result.data?.suggestions || [];
-				console.log(result.data)
+				toast.success(ToastSuccess, { id: 'loading', userId: article?.user?.id } as any)
 			}
 			if (result.type === 'failure') {
 				error = result.data?.error || null;
@@ -87,8 +81,6 @@
 		isLoading = true;
 	}
 
-	// $: if (isLoading) toast.loading('Generating article...', { id: 'loading' });
-	$: if (article) toast.success(ToastSuccess, { id: 'loading', userId: article?.user?.id } as any);
 	$: if (error) toast.error(error, { id: 'loading' });
 </script>
 
@@ -104,7 +96,7 @@
 					<li bind:this={scrollToLi} />
 				{/if}
 
-				<li class="chat__container"  transition:slide={{ duration: 150 }}>
+				<li class="chat__container" transition:slide={{ duration: 150 }}>
 					<div class={`chat__message chat__message--${roleClass}`}>
 						{#if role === MessageRole.USER}
 							<Human />
@@ -140,6 +132,9 @@
 											sentiment={Sentiment.POSITIVE}
 											isCompact={true}
 										/>
+										{#if isLastMessage}
+											<span class="chat__current-draft">Current draft</span>
+										{/if}
 									</form>
 								</article>
 							</div>
@@ -147,7 +142,6 @@
 					</div>
 				</li>
 			{/each}
-
 		{/if}
 	</ul>
 
@@ -159,8 +153,8 @@
 						<button
 							on:click={() => setSuggestion(suggestion)}
 							type="button"
+							class="chat__suggestion"
 							disabled={prompt !== ''}
-							class="chat_suggestion"
 						>
 							{suggestion}
 						</button>
@@ -263,8 +257,21 @@
 	}
 
 	form.chat__publish {
-		width: max-content;
+		display: grid;
+		grid-template-columns: max-content auto;
+		gap: 8px;
 		margin-top: 12px;
+	}
+
+	span.chat__current-draft {
+		display: flex;
+		font-size: 14px;
+		align-items: center;
+		padding-inline: 12px;
+		/* color: var(--color-primary); */
+		color: var(--color-neutral-300);
+		background-color: var(--color-neutral-600);
+		border-radius: var(--border-radius-l);
 	}
 
 	article.chat__article {
@@ -312,7 +319,7 @@
 		/* background: transparent; */
 		backdrop-filter: blur(4px);
 		-webkit-backdrop-filter: blur(4px);
-		background-color: rgba(30,30,30,.9);
+		background-color: rgba(30, 30, 30, 0.9);
 		border-top: 1px solid var(--color-neutral-600);
 		/* background-color: var(--color-neutral-800); */
 		/* background-image: linear-gradient(0deg, var(--color-neutral-800) 0%, transparent 100%); */
@@ -333,7 +340,7 @@
 		gap: 8px;
 	}
 
-	button.chat_suggestion {
+	button.chat__suggestion {
 		padding: 8px;
 		background-color: transparent;
 		border-radius: 4px;

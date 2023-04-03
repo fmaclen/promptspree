@@ -13,7 +13,7 @@ import {
 	updateArticleCollection
 } from '$lib/articles.server';
 import { type Message, MessageRole } from '$lib/messages';
-import { createMessageCollection } from '$lib/messages.server';
+import { createMessageCollection, getMessage } from '$lib/messages.server';
 import type { CompletionResponse } from '$lib/openai';
 import { generateCompletionUserPrompt, getCompletionFromAI } from '$lib/openai.server';
 import type { ArticleCollection } from '$lib/pocketbase.schema';
@@ -25,8 +25,18 @@ import { error, fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from '../$types';
 import type { Actions } from './$types';
 
-export const load: PageServerLoad = async ({ locals }) => {
-	// if (!locals.pb.authStore.isValid) throw redirect(303, '/join');
+export const load: PageServerLoad = async ({ url, locals }) => {
+	if (!locals.pb.authStore.isValid) throw redirect(303, '/join');
+
+	const articleParams = new URLSearchParams(url.search);
+	const articleId = articleParams.get('id')
+
+	if (articleId) {
+		const article = await getArticle(locals, articleId);
+		const messages = article?.messages || [];
+
+		return { article, messages };
+	}
 };
 
 export const actions: Actions = {
@@ -90,15 +100,28 @@ export const actions: Actions = {
 		if (!article?.id) throw error(500, UNKNOWN_ERROR_MESSAGE);
 
 		// wait 2 seconds before returning
-		await new Promise((resolve) => setTimeout(resolve, 3000));
+		await new Promise((resolve) => setTimeout(resolve, 1500));
 
 		return { article, messages: structuredClone(messages), suggestions: parsedCompletion.suggestions };
 	},
 	publish: async ({ request, locals }) => {
-		const { articleId, currentUserId } = await getArticleAndUserIds(request, locals);
-		// TODO: get the message the user chose to publish and use that as the category, headline and body
-		await publishArticle(locals, articleId);
-		throw redirect(303, `/profile/${currentUserId}`);
+		const formData = await request.formData();
+		const articleId = formData.get('articleId')?.toString() ?? '';
+		const messageId = formData.get('messageId')?.toString() ?? '';
+
+		const message = await getMessage(locals, messageId);
+		if (!message || !message.content || typeof message.content === 'string') throw error(500, UNKNOWN_ERROR_MESSAGE);
+
+		const { category, headline, body } = message.content;
+
+		await updateArticleCollection(locals, articleId, {
+			category: category,
+			headline: headline,
+			body: body,
+			status: ArticleStatus.PUBLISHED
+		});
+
+		throw redirect(303, `/profile/${locals?.user?.id}`);
 	}
 };
 
