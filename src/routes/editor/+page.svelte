@@ -96,7 +96,7 @@
 					<li bind:this={scrollToLi} />
 				{/if}
 
-				<li class="chat__container" transition:slide={{ duration: 150 }}>
+				<li class="chat__message-container" transition:slide={{ duration: 150 }}>
 					<div class={`chat__message chat__message--${roleClass}`}>
 						{#if role === MessageRole.USER}
 							<Human />
@@ -133,7 +133,7 @@
 											isCompact={true}
 										/>
 										{#if isLastMessage}
-											<span class="chat__current-draft">Current draft</span>
+										<span class="chat__latest-version">Latest version</span>
 										{/if}
 									</form>
 								</article>
@@ -180,6 +180,7 @@
 						placeholder={'Type your prompt here...'}
 						bind:this={textareaRef}
 						bind:value={prompt}
+						on:click={showSuggestions}
 						disabled={isLoading}
 					/>
 					<button class="chat__button-generate" type="submit" disabled={!prompt}>
@@ -220,12 +221,21 @@
 		padding: 16px;
 	}
 
+	li.chat__message-container {
+		&:last-child {
+			margin-top: -4px;
+		}
+	}
+
 	div.chat__message {
 		display: grid;
 		grid-template-columns: max-content auto;
 		gap: 12px;
 		font-size: 16px;
 		padding: 16px;
+		max-width: 1280px;
+		box-sizing: border-box;
+		margin-inline: auto;
 		border-radius: var(--border-radius-l);
 
 		&--user {
@@ -235,6 +245,10 @@
 		&--assistant {
 			/* background-color: var(--color-secondary-darkest); */
 			background-color: var(--color-neutral-700);
+		}
+
+		@media (min-width: 768px) {
+			padding: 32px;
 		}
 	}
 
@@ -263,7 +277,7 @@
 		margin-top: 12px;
 	}
 
-	span.chat__current-draft {
+	span.chat__latest-version {
 		display: flex;
 		font-size: 14px;
 		align-items: center;
@@ -286,6 +300,16 @@
 		/* background-color: var(--color-neutral-1000);
 		border-radius: var(--border-radius-l); */
 		padding-left: 24px;
+		box-sizing: border-box;
+		width: 100%;
+		
+		@media (min-width: 768px) {
+			width: 75%;
+		}
+
+		@media (min-width: 1024px) {
+			width: 50%;
+		}
 	}
 
 	h1.chat__article-h1 {
