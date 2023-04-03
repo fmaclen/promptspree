@@ -62,11 +62,13 @@
 				article = result.data?.article || null;
 				messages = result.data?.messages || null;
 				suggestions = result.data?.suggestions || [];
-				toast.success(ToastSuccess, { id: 'loading', userId: article?.user?.id } as any)
+				toast.success(ToastSuccess, { userId: article?.user?.id } as any)
 			}
+
 			if (result.type === 'failure') {
 				error = result.data?.error || null;
 				fieldError = result.data?.fieldError || null;
+				toast.error(error);
 				await applyAction(result);
 			}
 
@@ -80,8 +82,6 @@
 	function submitPublish() {
 		isLoading = true;
 	}
-
-	$: if (error) toast.error(error, { id: 'loading' });
 </script>
 
 <div class="chat">
@@ -180,7 +180,6 @@
 						placeholder={'Type your prompt here...'}
 						bind:this={textareaRef}
 						bind:value={prompt}
-						on:click={showSuggestions}
 						disabled={isLoading}
 					/>
 					<button class="chat__button-generate" type="submit" disabled={!prompt}>
@@ -213,7 +212,7 @@
 	ul.chat__messages {
 		display: flex;
 		flex-direction: column;
-		gap: 4px;
+		gap: 8px;
 		list-style: none;
 		margin-block: 0;
 		padding-inline: 0;
@@ -223,7 +222,7 @@
 
 	li.chat__message-container {
 		&:last-child {
-			margin-top: -4px;
+			margin-top: -8px;
 		}
 	}
 
@@ -343,8 +342,8 @@
 		/* background: transparent; */
 		backdrop-filter: blur(4px);
 		-webkit-backdrop-filter: blur(4px);
-		background-color: rgba(30, 30, 30, 0.9);
-		border-top: 1px solid var(--color-neutral-600);
+		background-color: rgba(25, 25, 25, 0.9);
+		border-top: 1px solid var(--color-neutral-700);
 		/* background-color: var(--color-neutral-800); */
 		/* background-image: linear-gradient(0deg, var(--color-neutral-800) 0%, transparent 100%); */
 		padding: 16px;

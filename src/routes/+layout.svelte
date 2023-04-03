@@ -192,9 +192,9 @@
 		height: 100%;
 
 		&--editor {
-			header.header {
+			/* header.header {
 				display: none;
-			}
+			} */
 
 			footer.layout__footer {
 				display: none;
