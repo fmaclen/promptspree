@@ -9,17 +9,17 @@
 	import { type Message, MessageRole } from '$lib/messages';
 	import { Sentiment } from '$lib/utils';
 	import type { ActionResult } from '@sveltejs/kit';
+	import { onMount } from 'svelte';
 	import toast from 'svelte-french-toast';
 	import { slide } from 'svelte/transition';
 
 	import type { PageData } from './$types';
 	import ToastSuccess from './ToastSuccess.svelte';
-	import { onMount } from 'svelte';
 
 	export let data: PageData;
 
-	let article: Article | null = data.article ?? null;
-	let messages: Message[] = data.messages ?? [];
+	let article: Article | null = data.article || null;
+	let messages: Message[] = data.messages || [];
 	let suggestions: string[] = getRandomInitialSuggestions();
 	let error: string | null = null;
 	let fieldError: string[] | null = null;
@@ -62,7 +62,12 @@
 	}
 
 	onMount(() => {
-		if (article) scrollToMessage();
+		if (article) {
+			scrollToMessage();
+			const { content } = messages[messages.length - 1]; // Gets `content` from Last message
+			suggestions = (typeof content !== 'string' && content?.suggestions) || [];
+		}
+
 		textareaRef.focus();
 	});
 
@@ -77,11 +82,11 @@
 		// keyboard is shown so we wait a bit before scrolling to the textarea.
 		setTimeout(() => {
 			textareaRef.scrollIntoView({ behavior: 'smooth', block: 'center' });
-		}, 250); 
+		}, 250);
 	}
 
 	function scrollToMessage() {
-		 // HACK: Wait for the old message ref to be removed and the new one to be rendered.
+		// HACK: Wait for the old message ref to be removed and the new one to be rendered.
 		setTimeout(() => {
 			scrollToMessageRef.scrollIntoView({ behavior: 'smooth', block: 'center' });
 		}, 250);
@@ -95,6 +100,7 @@
 				{@const { role, content } = message}
 				{@const roleClass = role?.toLowerCase()}
 				{@const isLastMessage = messages.indexOf(message) === messages.length - 1}
+				{@const isContentArticleCompletion = content && typeof content !== 'string'}
 
 				<li class="chat__message-container" transition:slide={{ duration: 150 }}>
 					{#if isLastMessage}
@@ -107,7 +113,7 @@
 							<p class={`chat__content chat__content--${roleClass}`}>
 								{content}
 							</p>
-						{:else if role === MessageRole.ASSISTANT}
+						{:else if role === MessageRole.ASSISTANT && isContentArticleCompletion}
 							<Robot />
 							<div class="chat__assistant-response">
 								<p class={`chat__content chat__content--${roleClass}`}>
