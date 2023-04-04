@@ -126,8 +126,8 @@ export const actions: Actions = {
 	},
 	publish: async ({ request, locals }) => {
 		const formData = await request.formData();
-		const articleId = formData.get('articleId')?.toString() ?? '';
-		const messageId = formData.get('messageId')?.toString() ?? '';
+		const articleId = formData.get('articleId')?.toString() || '';
+		const messageId = formData.get('messageId')?.toString() || '';
 
 		const message = await getMessage(locals, messageId);
 		if (!message || !message.content || typeof message.content === 'string')

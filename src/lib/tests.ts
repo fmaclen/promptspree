@@ -18,6 +18,9 @@ export interface MockArticleCompletion extends ArticleCompletion {
 	notes: string;
 }
 
+// convert the values of MockPrompt to a const suggestions: string[]
+export const suggestions: string[] = Object.values(MockPrompt);
+
 export const MOCK_ARTICLE_COMPLETIONS: MockArticleCompletion[] = [
 	{
 		headline: 'The Ultimate Guide to Buying a Radioactive Mutant Ficus',
@@ -28,11 +31,7 @@ export const MOCK_ARTICLE_COMPLETIONS: MockArticleCompletion[] = [
 			"Additionally, be aware that a radioactive plant comes with certain risks. Make sure you understand how to handle and care for the plant properly to minimize the dangers. It's also a good idea to keep the plant away from children and pets.",
 			'Lastly, be prepared to pay a premium price for a true radioactive mutant ficus. These plants are rare and in high demand, so expect to invest a significant amount of money.'
 		],
-		suggestions: [
-			'Include a fun fact about the history of radioactive plants',
-			'Provide tips on how to care for a radioactive mutant ficus',
-			'RETRY_ARTICLE'
-		],
+		suggestions,
 		notes: 'What a good looking article! If I do say so myself.'
 	},
 	{
@@ -43,11 +42,7 @@ export const MOCK_ARTICLE_COMPLETIONS: MockArticleCompletion[] = [
 			"The timing couldn't have been better. Just when people thought all hope was lost, J.C. Penny stepped in with their incredible discounts. Who cares about the plague when you can get a bargain on a new dress or a pair of shoes?",
 			"Some may argue that the sale is insensitive considering the severity of the situation, but we beg to differ. J.C. Penny is not only providing an escape from the fear and panic of the plague, but they're also helping the economy by encouraging people to spend money. It's a win-win situation."
 		],
-		suggestions: [
-			'Add a quote from a J.C. Penny spokesperson',
-			'Make it even more sarcastic',
-			'RETRY_ARTICLE'
-		],
+		suggestions,
 		notes: 'What a good looking article! If I do say so myself.'
 	},
 	{
@@ -58,11 +53,7 @@ export const MOCK_ARTICLE_COMPLETIONS: MockArticleCompletion[] = [
 			'According to industry experts, the resurgence of printed directories can be attributed to several factors, including a growing nostalgia for physical media, the desire to unplug from technology, and the need for a reliable backup in case of power outages or internet failures.',
 			"While phonebooks may seem like a thing of the past, they are still a valuable resource for many people. In fact, some businesses have reported an increase in calls and inquiries since listing their contact information in printed directories. It seems that for some, the convenience and tangibility of a phonebook simply can't be beat."
 		],
-		suggestions: [
-			'Include a quote from a phonebook manufacturer',
-			'Add a section on the environmental impact of printing phonebooks',
-			'RETRY_ARTICLE'
-		],
+		suggestions,
 		notes: 'What a good looking article! If I do say so myself.'
 	},
 	{
@@ -73,11 +64,7 @@ export const MOCK_ARTICLE_COMPLETIONS: MockArticleCompletion[] = [
 			"The new species has been named 'Abyssal Glow' due to its bioluminescent properties and distinctive glowing appearance.",
 			'Researchers believe that this discovery could shed new light on the evolution and adaptation of life in extreme environments.'
 		],
-		suggestions: [
-			'Add a quote from one of the scientists involved in the discovery.',
-			'Include a description of the physical characteristics of the Abyssal Glow.',
-			'RETRY_ARTICLE'
-		],
+		suggestions,
 		notes: 'What a good looking article! If I do say so myself.'
 	}
 ];
