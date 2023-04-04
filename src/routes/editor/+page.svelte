@@ -73,12 +73,15 @@
 	function setSuggestion(suggestion: string) {
 		prompt = suggestion;
 		textareaRef.focus();
+		// HACK: Mostly needed for mobile, the viewport changes dramatically when the
+		// keyboard is shown so we wait a bit before scrolling to the textarea.
 		setTimeout(() => {
 			textareaRef.scrollIntoView({ behavior: 'smooth', block: 'center' });
-		}, 250);
+		}, 250); 
 	}
 
 	function scrollToMessage() {
+		 // HACK: Wait for the old message ref to be removed and the new one to be rendered.
 		setTimeout(() => {
 			scrollToMessageRef.scrollIntoView({ behavior: 'smooth', block: 'center' });
 		}, 250);
