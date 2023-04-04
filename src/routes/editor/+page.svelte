@@ -1,12 +1,7 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
-	import { type Article, ArticleSize, getRandomInitialSuggestions } from '$lib/articles';
-	import ArticleContent from '$lib/components/ArticleContent.svelte';
-	import ArticlePlaceholder from '$lib/components/ArticlePlaceholder.svelte';
+	import { type Article, getRandomInitialSuggestions } from '$lib/articles';
 	import FormButton from '$lib/components/FormButton.svelte';
-	import FormTextarea from '$lib/components/FormTextarea.svelte';
-	import Head from '$lib/components/Head.svelte';
-	import Notice from '$lib/components/Notice.svelte';
 	import Human from '$lib/components/icons/Human.svelte';
 	import Loading from '$lib/components/icons/Loading.svelte';
 	import Robot from '$lib/components/icons/Robot.svelte';
@@ -19,6 +14,7 @@
 
 	import type { PageData } from './$types';
 	import ToastSuccess from './ToastSuccess.svelte';
+	import { onMount } from 'svelte';
 
 	export let data: PageData;
 
@@ -28,29 +24,15 @@
 	let error: string | null = null;
 	let fieldError: string[] | null = null;
 	let textareaRef: HTMLTextAreaElement;
-	let scrollToLi: HTMLLIElement;
+	let scrollToMessageRef: HTMLDivElement;
 
 	$: prompt = '';
 	$: isLoading = false;
 	$: shouldDisplaySuggestions = !article && suggestions && prompt === '' && !isLoading;
 
-	function setSuggestion(suggestion: string) {
-		prompt = suggestion;
-		textareaRef.focus();
-		setTimeout(() => {
-			textareaRef.scrollIntoView({ behavior: 'smooth' });
-		}, 250);
-	}
-
-	function scrollToLastMessage() {
-		setTimeout(() => {
-			scrollToLi.scrollIntoView({ behavior: 'smooth' });
-		}, 100);
-	}
-
 	function submitGenerate() {
 		messages = [...messages, { role: MessageRole.USER, content: prompt }];
-		scrollToLastMessage();
+		scrollToMessage();
 		toast.dismiss();
 		isLoading = true;
 		error = null;
@@ -73,18 +55,33 @@
 			}
 
 			update();
-			scrollToLastMessage();
+			scrollToMessage();
 			isLoading = false;
 			prompt = '';
 		};
 	}
 
-	function submitPublish() {
-		isLoading = true;
-	}
+	onMount(() => {
+		if (article) scrollToMessage();
+		textareaRef.focus();
+	});
 
 	function toggleSuggestions() {
 		shouldDisplaySuggestions = true;
+	}
+
+	function setSuggestion(suggestion: string) {
+		prompt = suggestion;
+		textareaRef.focus();
+		setTimeout(() => {
+			textareaRef.scrollIntoView({ behavior: 'smooth', block: 'center' });
+		}, 250);
+	}
+
+	function scrollToMessage() {
+		setTimeout(() => {
+			scrollToMessageRef.scrollIntoView({ behavior: 'smooth', block: 'center' });
+		}, 250);
 	}
 </script>
 
@@ -96,11 +93,11 @@
 				{@const roleClass = role?.toLowerCase()}
 				{@const isLastMessage = messages.indexOf(message) === messages.length - 1}
 
-				{#if isLastMessage}
-					<li bind:this={scrollToLi} />
-				{/if}
-
 				<li class="chat__message-container" transition:slide={{ duration: 150 }}>
+					{#if isLastMessage}
+						<div bind:this={scrollToMessageRef} />
+					{/if}
+
 					<div class={`chat__message chat__message--${roleClass}`}>
 						{#if role === MessageRole.USER}
 							<Human />
@@ -122,12 +119,7 @@
 										<p class="chat__article-p">{paragraph}</p>
 									{/each}
 
-									<form
-										class="chat__publish"
-										method="POST"
-										action="?/publish"
-										use:enhance={submitPublish}
-									>
+									<form class="chat__publish" method="POST" action="?/publish">
 										<input type="hidden" name="articleId" value={article?.id} />
 										<input type="hidden" name="messageId" value={message.id} />
 										<FormButton
@@ -167,7 +159,6 @@
 			{/if}
 
 			<nav class="chat__prompt">
-				<!-- <button>New article</button> -->
 				<form
 					class={`chat__form chat__form--${isLoading ? 'loading' : ''}`}
 					method="POST"
@@ -206,7 +197,6 @@
 		grid-template-rows: auto max-content;
 		color: var(--color-neutral-100);
 		flex-grow: 1;
-		/* height: 100dvh; */
 	}
 
 	div.chat__container {
@@ -227,12 +217,6 @@
 		gap: var(--gap);
 	}
 
-	li.chat__message-container {
-		&:last-child {
-			margin-top: calc(var(--gap) * -1); // Offset the gap from `ul.chat__messages`
-		}
-	}
-
 	div.chat__message {
 		display: grid;
 		grid-template-columns: max-content auto;
@@ -249,7 +233,6 @@
 		}
 
 		&--assistant {
-			/* background-color: var(--color-secondary-darkest); */
 			background-color: var(--color-neutral-700);
 		}
 
@@ -288,7 +271,6 @@
 		font-size: 14px;
 		align-items: center;
 		padding-inline: 12px;
-		/* color: var(--color-primary); */
 		color: var(--color-neutral-300);
 		background-color: var(--color-neutral-600);
 		border-radius: var(--border-radius-l);
@@ -298,12 +280,6 @@
 		display: flex;
 		flex-direction: column;
 		gap: 12px;
-		/* border: 1px solid var(--color-neutral-500);
-		background-color: var(--color-neutral-1000);
-		border-radius: var(--border-radius-l);
-		padding: 24px; */
-		/* background-color: var(--color-neutral-1000);
-		border-radius: var(--border-radius-l); */
 		border-left: 2px solid var(--color-secondary);
 		padding-left: 20px;
 		box-sizing: border-box;
@@ -331,7 +307,6 @@
 		font-size: 14px;
 		font-weight: 600;
 		margin-block: 0;
-		/* color: var(--color-primary); */
 	}
 
 	p.chat__article-p {
@@ -346,14 +321,11 @@
 	footer.chat__footer {
 		position: sticky;
 		bottom: 0;
-		/* background: transparent; */
 		padding: 24px;
 		backdrop-filter: blur(1px);
 		-webkit-backdrop-filter: blur(1px);
 		background-color: rgba(25, 25, 25, 0.9);
 		border-top: 1px solid var(--color-neutral-700);
-		/* background-color: var(--color-neutral-800); */
-		/* background-image: linear-gradient(0deg, var(--color-neutral-800) 0%, transparent 100%); */
 	}
 
 	div.chat__container--footer {
