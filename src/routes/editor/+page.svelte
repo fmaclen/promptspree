@@ -32,13 +32,14 @@
 
 	$: prompt = '';
 	$: isLoading = false;
+	$: shouldDisplaySuggestions = !article && suggestions && prompt === '' && !isLoading;
 
 	function setSuggestion(suggestion: string) {
 		prompt = suggestion;
 		textareaRef.focus();
 		setTimeout(() => {
 			textareaRef.scrollIntoView({ behavior: 'smooth' });
-		}, 1000);
+		}, 250);
 	}
 
 	function scrollToLastMessage() {
@@ -52,7 +53,6 @@
 		scrollToLastMessage();
 		toast.dismiss();
 		isLoading = true;
-		article = null;
 		error = null;
 		fieldError = null;
 		prompt = '';
@@ -62,7 +62,7 @@
 				article = result.data?.article || null;
 				messages = result.data?.messages || null;
 				suggestions = result.data?.suggestions || [];
-				toast.success(ToastSuccess, { userId: article?.user?.id } as any)
+				toast.success(ToastSuccess, { userId: article?.user?.id } as any);
 			}
 
 			if (result.type === 'failure') {
@@ -81,6 +81,10 @@
 
 	function submitPublish() {
 		isLoading = true;
+	}
+
+	function toggleSuggestions() {
+		shouldDisplaySuggestions = true;
 	}
 </script>
 
@@ -133,7 +137,7 @@
 											isCompact={true}
 										/>
 										{#if isLastMessage}
-										<span class="chat__latest-version">Latest version</span>
+											<span class="chat__latest-version">Latest version</span>
 										{/if}
 									</form>
 								</article>
@@ -147,8 +151,8 @@
 
 	<footer class="chat__footer">
 		<div class="chat__container chat__container--footer">
-			{#if suggestions && prompt === '' && !isLoading}
-				<nav class="chat__suggestions">
+			{#if shouldDisplaySuggestions}
+				<nav class="chat__suggestions" transition:slide={{ duration: 150 }}>
 					{#each suggestions as suggestion}
 						<button
 							on:click={() => setSuggestion(suggestion)}
@@ -180,6 +184,7 @@
 						placeholder={'Type your prompt here...'}
 						bind:this={textareaRef}
 						bind:value={prompt}
+						on:click={toggleSuggestions}
 						disabled={isLoading}
 					/>
 					<button class="chat__button-generate" type="submit" disabled={!prompt}>
@@ -212,17 +217,19 @@
 	ul.chat__messages {
 		display: flex;
 		flex-direction: column;
-		gap: 8px;
 		list-style: none;
 		margin-block: 0;
 		padding-inline: 0;
 		max-height: 100%;
-		padding: 16px;
+		padding: 24px;
+
+		--gap: 12px;
+		gap: var(--gap);
 	}
 
 	li.chat__message-container {
 		&:last-child {
-			margin-top: -8px;
+			margin-top: calc(var(--gap) * -1); // Offset the gap from `ul.chat__messages`
 		}
 	}
 
@@ -266,7 +273,7 @@
 	div.chat__assistant-response {
 		display: flex;
 		flex-direction: column;
-		gap: 24px;
+		gap: 20px;
 	}
 
 	form.chat__publish {
@@ -295,13 +302,13 @@
 		background-color: var(--color-neutral-1000);
 		border-radius: var(--border-radius-l);
 		padding: 24px; */
-		border-left: 2px solid var(--color-secondary);
 		/* background-color: var(--color-neutral-1000);
 		border-radius: var(--border-radius-l); */
-		padding-left: 24px;
+		border-left: 2px solid var(--color-secondary);
+		padding-left: 20px;
 		box-sizing: border-box;
 		width: 100%;
-		
+
 		@media (min-width: 768px) {
 			width: 75%;
 		}
@@ -340,13 +347,13 @@
 		position: sticky;
 		bottom: 0;
 		/* background: transparent; */
-		backdrop-filter: blur(4px);
-		-webkit-backdrop-filter: blur(4px);
+		padding: 24px;
+		backdrop-filter: blur(1px);
+		-webkit-backdrop-filter: blur(1px);
 		background-color: rgba(25, 25, 25, 0.9);
 		border-top: 1px solid var(--color-neutral-700);
 		/* background-color: var(--color-neutral-800); */
 		/* background-image: linear-gradient(0deg, var(--color-neutral-800) 0%, transparent 100%); */
-		padding: 16px;
 	}
 
 	div.chat__container--footer {

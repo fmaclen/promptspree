@@ -29,11 +29,14 @@ export const load: PageServerLoad = async ({ url, locals }) => {
 	if (!locals.pb.authStore.isValid) throw redirect(303, '/join');
 
 	const articleParams = new URLSearchParams(url.search);
-	const articleId = articleParams.get('id')
+	const articleId = articleParams.get('articleId');
 
 	if (articleId) {
 		const article = await getArticle(locals, articleId);
 		const messages = article?.messages || [];
+
+		if (!article) throw error(404, 'Article not found');
+		if (article.status === ArticleStatus.PUBLISHED) throw redirect(303, `/article/${article.id}`);
 
 		return { article, messages };
 	}
@@ -96,13 +99,30 @@ export const actions: Actions = {
 		messages.push(assistantMessage);
 
 		// Update the article with the completion
-		article = await updateArticleCollection(locals, article.id, { ...parsedCompletion });
+		article = await updateArticleCollection(locals, article.id, {
+			...parsedCompletion,
+			status: ArticleStatus.DRAFT
+		});
 		if (!article?.id) throw error(500, UNKNOWN_ERROR_MESSAGE);
 
+		//
+		//
+		//
+		//
+		//
 		// wait 2 seconds before returning
 		await new Promise((resolve) => setTimeout(resolve, 1500));
+		//
+		//
+		//
+		//
+		//
 
-		return { article, messages: structuredClone(messages), suggestions: parsedCompletion.suggestions };
+		return {
+			article,
+			messages: structuredClone(messages),
+			suggestions: parsedCompletion.suggestions
+		};
 	},
 	publish: async ({ request, locals }) => {
 		const formData = await request.formData();
@@ -110,7 +130,8 @@ export const actions: Actions = {
 		const messageId = formData.get('messageId')?.toString() ?? '';
 
 		const message = await getMessage(locals, messageId);
-		if (!message || !message.content || typeof message.content === 'string') throw error(500, UNKNOWN_ERROR_MESSAGE);
+		if (!message || !message.content || typeof message.content === 'string')
+			throw error(500, UNKNOWN_ERROR_MESSAGE);
 
 		const { category, headline, body } = message.content;
 

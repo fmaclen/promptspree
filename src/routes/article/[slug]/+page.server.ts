@@ -18,7 +18,7 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 	const article = await getArticle(locals, params.slug);
 
 	if (article) {
-		if (article.status === ArticleStatus.DRAFT) throw redirect(303, `/editor?id=${article.id}`);
+		if (article.status === ArticleStatus.DRAFT) throw redirect(303, `/editor?articleId=${article.id}`);
 
 		return { article };
 	} else {
