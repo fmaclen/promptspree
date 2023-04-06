@@ -73,8 +73,12 @@ export async function logoutCurrentUser(page: Page) {
 	await page.getByText('Logout').click();
 }
 
-export async function getLastArticle(query: string): Promise<ArticleCollection> {
-	return await pb.collection('articles').getFirstListItem(query, { sort: '-created', expand: EXPAND_RECORD_RELATIONS });
+export async function getLastArticle(query: string): Promise<ArticleCollection | null> {
+	try {
+		return await pb.collection('articles').getFirstListItem(query, { sort: '-created', expand: EXPAND_RECORD_RELATIONS });
+	} catch {
+		return null;
+	}
 }
 
 export async function createArticle(

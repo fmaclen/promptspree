@@ -2,8 +2,7 @@ import { expect, test } from '@playwright/test';
 import { readFileSync } from 'fs';
 
 import { ArticleStatus } from '../src/lib/articles.js';
-import type { ArticleCollection } from '../src/lib/pocketbase.schema.js';
-import { MOCK_ARTICLE_COMPLETIONS } from '../src/lib/tests.js';
+import { MockPrompt, MOCK_ARTICLE_COMPLETIONS } from '../src/lib/tests.js';
 import { MOCK_USERS } from './lib/fixtures.js';
 import {
 	createArticle,
@@ -126,7 +125,7 @@ test.describe('Articles', () => {
 			await expect(page.getByText('Publish')).not.toBeVisible();
 		});
 
-		test("Can only see user's authored draft articles", async ({ page }) => {
+		test("Can edit own draft articles", async ({ page }) => {
 			// Published articles
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].headline)).toBeVisible();
@@ -137,27 +136,33 @@ test.describe('Articles', () => {
 
 			// Drafts by Alice
 			let user = await getUser(MOCK_USERS.alice.email);
-			let article: ArticleCollection = await getLastArticle(
+			let article = await getLastArticle(
 				`status = "${ArticleStatus.DRAFT}" && user = "${user?.id}"`
 			);
-			expect(article.headline).toBe(MOCK_ARTICLE_COMPLETIONS[0].headline);
-			await expect(page.getByText('Delete')).not.toBeVisible();
+			expect(article?.headline).toBe(MOCK_ARTICLE_COMPLETIONS[0].headline);
 			await expect(page.getByText('Publish')).not.toBeVisible();
 
-			await page.goto(`/article/${article.id}`);
-			await expect(
-				page.locator('h1.article__h1', { hasText: MOCK_ARTICLE_COMPLETIONS[0].headline })
-			).toBeVisible();
-			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline)).toBeVisible(); // Summary
-			await expect(page.getByText('Delete')).toBeVisible();
+			// 
+			await page.goto(`/article/${article?.id}`);
+			await expect(page.locator('h1.chat__article-h1', { hasText: MOCK_ARTICLE_COMPLETIONS[0].headline })).toBeVisible(); // prettier-ignore
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline)).toBeVisible();
 			await expect(page.getByText('Publish')).toBeVisible();
+
+			await page.locator('textarea').fill(MockPrompt.RETRY_ARTICLE);
+			await page.locator('button.chat__button-generate').click();
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline)).toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).toBeVisible();
+
+			await page.goto(`/profile/${user?.id}/drafts`);
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline)).not.toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).toBeVisible();
 
 			// A draft by Bob can't be viewed by Alice
 			user = await getUser(MOCK_USERS.bob.email);
 			article = await getLastArticle(`status = "${ArticleStatus.DRAFT}" && user = "${user?.id}"`);
-			expect(article.headline).toBe(MOCK_ARTICLE_COMPLETIONS[2].headline);
+			expect(article?.headline).toBe(MOCK_ARTICLE_COMPLETIONS[2].headline);
 
-			await page.goto(`/article/${article.id}`);
+			await page.goto(`/article/${article?.id}`);
 			await expect(page.getByText('Error 404')).toBeVisible();
 			await expect(page.getByText('Not found')).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[2].headline)).not.toBeVisible();
@@ -165,7 +170,7 @@ test.describe('Articles', () => {
 
 		test('Articles with audio are listenable', async ({ page }) => {
 			// NOTE: This test only checks that the player is visible when an audio path is present.
-			const article: ArticleCollection = await getLastArticle(
+			const article = await getLastArticle(
 				`headline = "${MOCK_ARTICLE_COMPLETIONS[1].headline}"`
 			);
 
@@ -173,7 +178,7 @@ test.describe('Articles', () => {
 			const audioBlob = new Blob([audioData], { type: 'audio/mp3' });
 			const formData = new FormData();
 			formData.append('audio', audioBlob, 'the-great-plague.mp3');
-			article.id && (await updateArticle(article.id, formData));
+			article?.id && (await updateArticle(article?.id, formData));
 
 			await page.getByText(MOCK_ARTICLE_COMPLETIONS[3].headline).click();
 			await expect(page.locator('nav.article__audio', { hasText: 'Plus' })).not.toBeVisible();
