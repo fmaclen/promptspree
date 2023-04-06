@@ -22,7 +22,6 @@
 	let messages: Message[] = data.messages || [];
 	let suggestions: string[] = getRandomInitialSuggestions();
 	let error: string | null = null;
-	let fieldError: string[] | null = null;
 	let textareaRef: HTMLTextAreaElement;
 	let scrollToMessageRef: HTMLDivElement;
 
@@ -36,7 +35,6 @@
 		toast.dismiss();
 		isLoading = true;
 		error = null;
-		fieldError = null;
 		prompt = '';
 
 		return async ({ result, update }: { result: ActionResult; update: () => void }) => {
@@ -49,7 +47,6 @@
 
 			if (result.type === 'failure') {
 				error = result.data?.error || null;
-				fieldError = result.data?.fieldError || null;
 				toast.error(error);
 				await applyAction(result);
 			}

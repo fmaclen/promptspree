@@ -50,10 +50,9 @@ export const actions: Actions = {
 
 		const formData = await request.formData();
 		const articleId = formData.get('articleId')?.toString();
-		const validation = await validatePrompt(formData.get('prompt')?.toString());
-
-		if (!validation.prompt || validation.error)
-			return fail(400, { fieldError: ['prompt', validation.error] });
+		const prompt = formData.get('prompt')?.toString();
+		const promptError = validatePrompt(prompt);
+		if (promptError) return fail(400, { error: promptError });
 
 		let article: ArticleCollection | Article | null = null;
 		let messages: Message[] = [];
@@ -74,7 +73,7 @@ export const actions: Actions = {
 			locals,
 			article.id,
 			MessageRole.USER,
-			validation.prompt
+			prompt as string // NOTE: validatePrompt() ensures that prompt is a string
 		);
 		if (!userMessage) throw error(500, UNKNOWN_ERROR_MESSAGE);
 
@@ -105,19 +104,6 @@ export const actions: Actions = {
 		});
 		if (!article?.id) throw error(500, UNKNOWN_ERROR_MESSAGE);
 
-		//
-		//
-		//
-		//
-		//
-		// wait 2 seconds before returning
-		await new Promise((resolve) => setTimeout(resolve, 1500));
-		//
-		//
-		//
-		//
-		//
-
 		return {
 			article,
 			messages: structuredClone(messages),
@@ -146,20 +132,15 @@ export const actions: Actions = {
 	}
 };
 
-interface PromptValidation {
-	prompt: string | null;
-	error: string | null;
-}
-
-async function validatePrompt(prompt: string | undefined): Promise<PromptValidation> {
+function validatePrompt(prompt: string | undefined): string | null {
 	// Check that the prompt exists, is greater than 10 character and less than 280
-	if (!prompt) return { prompt: null, error: 'Prompt was not provided' };
-	if (prompt.length < 10) return { prompt, error: 'Prompt is too short' };
-	if (prompt.length > 290) return { prompt, error: 'Prompt is greater than 280 characters' };
+	if (!prompt) return 'Prompt was not provided';
+	if (prompt.length < 10) 'Prompt is too short';
+	if (prompt.length > 290) 'Prompt is greater than 280 characters';
 
 	// TODO: Check that prompt doesn't violete the moderation rules
 
-	return { prompt, error: null };
+	return null;
 }
 
 // Get completion from AI and try to parse it
