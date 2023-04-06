@@ -2,6 +2,7 @@
 	import { applyAction, enhance } from '$app/forms';
 	import { type Article, getRandomInitialSuggestions } from '$lib/articles';
 	import FormButton from '$lib/components/FormButton.svelte';
+	import Broom from '$lib/components/icons/Broom.svelte';
 	import Human from '$lib/components/icons/Human.svelte';
 	import Loading from '$lib/components/icons/Loading.svelte';
 	import Robot from '$lib/components/icons/Robot.svelte';
@@ -88,6 +89,15 @@
 			scrollToMessageRef.scrollIntoView({ behavior: 'smooth', block: 'center' });
 		}, 250);
 	}
+
+	function resetArticle() {
+		prompt = '';
+		article = null;
+		error = null;
+		messages = [];
+		suggestions = getRandomInitialSuggestions();
+		textareaRef.focus();
+	}
 </script>
 
 <div class="chat">
@@ -165,6 +175,18 @@
 			{/if}
 
 			<nav class="chat__prompt">
+				{#if article}
+					<button
+						class="chat__button-reset"
+						type="button"
+						on:click={resetArticle}
+						transition:slide={{ duration: 150, axis: 'x' }}
+						title="Start from scratch"
+						aria-label="Start from scratch"
+					>
+						<Broom />
+					</button>
+				{/if}
 				<form
 					class={`chat__form chat__form--${isLoading ? 'loading' : ''}`}
 					method="POST"
@@ -217,10 +239,12 @@
 		margin-block: 0;
 		padding-inline: 0;
 		max-height: 100%;
+		gap: 12px;
 		padding: 24px;
 
-		--gap: 12px;
-		gap: var(--gap);
+		@media (max-width: 767px) {
+			padding: 12px;
+		}
 	}
 
 	div.chat__message {
@@ -228,7 +252,7 @@
 		grid-template-columns: max-content auto;
 		gap: 12px;
 		font-size: 16px;
-		padding: 16px;
+		padding: 24px;
 		max-width: 1280px;
 		box-sizing: border-box;
 		margin-inline: auto;
@@ -242,8 +266,8 @@
 			background-color: var(--color-neutral-700);
 		}
 
-		@media (min-width: 768px) {
-			padding: 32px;
+		@media (max-width: 768px) {
+			padding: 16px;
 		}
 	}
 
@@ -289,14 +313,14 @@
 		border-left: 2px solid var(--color-secondary);
 		padding-left: 20px;
 		box-sizing: border-box;
-		width: 100%;
+		width: 50%;
 
-		@media (min-width: 768px) {
+		@media (max-width: 1024px) {
 			width: 75%;
 		}
 
-		@media (min-width: 1024px) {
-			width: 50%;
+		@media (max-width: 768px) {
+			width: 100%;
 		}
 	}
 
@@ -332,6 +356,10 @@
 		-webkit-backdrop-filter: blur(1px);
 		background-color: rgba(25, 25, 25, 0.9);
 		border-top: 1px solid var(--color-neutral-700);
+
+		@media (max-width: 768px) {
+			padding: 16px;
+		}
 	}
 
 	div.chat__container--footer {
@@ -368,7 +396,11 @@
 	nav.chat__prompt {
 		display: flex;
 		flex-grow: 1;
-		gap: 32px;
+		gap: 16px;
+
+		@media (max-width: 768px) {
+			gap: 8px;
+		}
 	}
 
 	form.chat__form {
@@ -379,6 +411,7 @@
 		border-radius: var(--border-radius-l);
 		border: 1px solid var(--color-neutral-500);
 		background-color: var(--color-neutral-700);
+		transition: border-color 0.2s ease-in-out;
 
 		&:not(.chat__form--loading) {
 			&:focus-within {
@@ -409,10 +442,9 @@
 		}
 	}
 
+	button.chat__button-reset,
 	button.chat__button-generate {
 		cursor: pointer;
-		border: 0;
-		background: transparent;
 
 		&:active {
 			transform: scale(0.95);
@@ -420,6 +452,27 @@
 
 		&:disabled {
 			cursor: not-allowed;
+		}
+	}
+
+	button.chat__button-generate {
+		border: 0;
+		background: transparent;
+	}
+
+	button.chat__button-reset {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		border: 1px solid var(--color-primary-darkest);
+		background-color: var(--color-primary-darkest);
+		border-radius: var(--border-radius-l);
+		transition: padding 200ms;
+		padding: 12px;
+
+		&:hover {
+			padding-left: 24px;
+			padding-right: 24px;
 		}
 	}
 </style>

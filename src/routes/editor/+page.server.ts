@@ -135,8 +135,8 @@ export const actions: Actions = {
 function validatePrompt(prompt: string | undefined): string | null {
 	// Check that the prompt exists, is greater than 10 character and less than 280
 	if (!prompt) return 'Prompt was not provided';
-	if (prompt.length < 10) 'Prompt is too short';
-	if (prompt.length > 290) 'Prompt is greater than 280 characters';
+	if (prompt.length < 10) return 'Prompt is too short';
+	if (prompt.length > 290) return 'Prompt is greater than 280 characters';
 
 	// TODO: Check that prompt doesn't violete the moderation rules
 

@@ -131,7 +131,7 @@ Write the article in the form of JSON using these keys:
 	"body": ["an", "array", "of", "3", "to", 6", "paragraphs"],
 	"suggestions": ["an array", "of 3", "very short sentences"],
 
-	"notes": "Optional. Use this key to include remarks about the article generation that need to be relayed to the user"
+	"notes": "Use this key to include a quirky light-hearted opinion about the article so far, avoid repeating your earlier notes"
 }`;
 
 // FIXME: this helper function is probably overkill at this point
@@ -141,3 +141,5 @@ export async function getArticleAndUserIds(request: Request, locals: App.Locals)
 	const currentUserId = locals?.user?.id || '';
 	return { articleId, currentUserId };
 }
+
+export const EXPAND_RECORD_RELATIONS = 'messages(article),reactions(article),user';

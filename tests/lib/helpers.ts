@@ -1,9 +1,9 @@
-import type { ArticleStatus } from '$lib/articles';
 import type { ArticleCollection } from '$lib/pocketbase.schema.js';
 import type { MockArticleCompletion } from '$lib/tests';
 import { type Page, expect } from '@playwright/test';
 import PocketBase, { BaseAuthStore } from 'pocketbase';
 
+import { EXPAND_RECORD_RELATIONS, type ArticleStatus } from '../../src/lib/articles.js';
 import { MessageRole } from '../../src/lib/messages.js';
 import { CURRENT_MODEL } from '../../src/lib/openai.js';
 import { miniStringify } from '../../src/lib/utils.js';
@@ -74,7 +74,7 @@ export async function logoutCurrentUser(page: Page) {
 }
 
 export async function getLastArticle(query: string): Promise<ArticleCollection> {
-	return await pb.collection('articles').getFirstListItem(query, { sort: '-created' });
+	return await pb.collection('articles').getFirstListItem(query, { sort: '-created', expand: EXPAND_RECORD_RELATIONS });
 }
 
 export async function createArticle(

@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-import { type Article, ArticleStatus, INITIAL_SUGGESTIONS } from '../src/lib/articles.js';
+import { ArticleStatus, INITIAL_SUGGESTIONS } from '../src/lib/articles.js';
 import { MOCK_ARTICLE_COMPLETIONS, MockPrompt } from '../src/lib/tests.js';
 import { UNKNOWN_ERROR_MESSAGE } from '../src/lib/utils.js';
 import { MOCK_USERS } from './lib/fixtures.js';
@@ -41,102 +41,128 @@ test.describe('Play', () => {
 
 		test('Can generate draft articles', async ({ page }) => {
 			await expect(page.getByText('Already have an account? Login')).not.toBeVisible();
-			await expect(
-				page.getByText(
-					'Type your own prompt or choose one of the suggestions to generate an article'
-				)
-			).toBeVisible();
 
-			const generateButton = page.locator('button[type=submit]', { hasText: 'Generate' });
-			const applyChangesButton = page.locator('button[type=submit]', { hasText: 'Apply change' });
-
-			await expect(applyChangesButton).not.toBeVisible();
+			const generateButton = page.locator('button.chat__button-generate');
 			await expect(generateButton).toBeDisabled();
 
 			let prompt = MockPrompt.GENERATE_ARTICLE;
-			let articleHeadline = MOCK_ARTICLE_COMPLETIONS[0].headline;
 			await page.locator('textarea').fill(prompt);
 			await expect(generateButton).not.toBeDisabled();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].category)).not.toBeVisible();
-			await expect(page.getByText(articleHeadline)).not.toBeVisible();
-			expect(await page.locator('p.article__p').count()).toBe(0);
-			expect(await page.locator('ul.article__list-placeholder').count()).toBe(4);
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline)).not.toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].body[0])).not.toBeVisible();
+			expect(await page.locator('p.chat__article-p').count()).toBe(0);
+			expect(await page.locator('li.chat__message-container').count()).toBe(0);
 
 			await generateButton.click();
+			await expect(page.locator('div.chat__message--user')).toBeVisible();
+			await expect(page.locator('div.chat__message--assistant')).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].category)).toBeVisible();
-			await expect(page.getByText(articleHeadline)).toBeVisible();
-			await expect(applyChangesButton).toBeVisible();
-			await expect(generateButton).not.toBeVisible();
-			expect(await page.locator('p.article__p').count()).toBe(4);
-			expect(await page.locator('ul.article__list-placeholder').count()).toBe(0);
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline)).toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].body[0])).toBeVisible();
+			expect(await page.locator('p.chat__article-p').count()).toBe(4);
+			expect(await page.locator('li.chat__message-container').count()).toBe(2);
 
-			let article = await getLastArticle(`headline = "${articleHeadline}"`);
-			// expect(article?.messages[1].content).toBe(MockPrompt.GENERATE_ARTICLE);
+			let article = await getLastArticle(`headline = "${MOCK_ARTICLE_COMPLETIONS[0].headline}"`);
+			let articleMessages = article.expand?.['messages(article)'];
+			expect(articleMessages?.[0].content).toBe(MockPrompt.GENERATE_ARTICLE);
+			expect(articleMessages?.[1].content?.notes).toBe(MOCK_ARTICLE_COMPLETIONS[0].notes);
 			expect(article?.status).toBe(ArticleStatus.DRAFT);
 
 			prompt = MockPrompt.RETRY_ARTICLE;
-			articleHeadline = MOCK_ARTICLE_COMPLETIONS[1].headline;
 			await page.locator('textarea').fill(prompt);
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].category)).not.toBeVisible();
-			await expect(page.getByText(articleHeadline)).not.toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).not.toBeVisible();
 
-			await applyChangesButton.click();
+			await generateButton.click();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].category)).toBeVisible();
-			await expect(page.getByText(articleHeadline)).toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).toBeVisible();
+			await expect(page.locator('a.profile-summary__a--active', { hasText: 'Drafts' })).not.toBeVisible(); // prettier-ignore
+			expect(await page.locator('div.chat__message').count()).toBe(4);
+			expect(await page.locator('div.chat__message--user').count()).toBe(2);
+			expect(await page.locator('div.chat__message--assistant').count()).toBe(2);
+
+			await page.locator('div.toaster a', { hasText: 'drafts' }).first().click();
+			await expect(page.locator('a.profile-summary__a--active', { hasText: 'Drafts' })).toBeVisible(); // prettier-ignore
 			await expect(generateButton).not.toBeVisible();
-			expect(await page.locator('p.article__p').count()).toBe(3);
-			await expect(
-				page.locator('a.profile-summary__a--active', { hasText: 'Drafts' })
-			).not.toBeVisible();
 
-			await page.getByText('drafts').click();
-			await expect(
-				page.locator('a.profile-summary__a--active', { hasText: 'Drafts' })
-			).toBeVisible();
-			await expect(applyChangesButton).not.toBeVisible();
-
-			article = await getLastArticle(`headline = "${articleHeadline}"`);
-			// expect(article?.messages[3].content).toBe(MockPrompt.RETRY_ARTICLE);
+			article = await getLastArticle(`headline = "${MOCK_ARTICLE_COMPLETIONS[1].headline}"`);
+			articleMessages = article.expand?.['messages(article)'];
+			expect(articleMessages?.[2].content).toBe(MockPrompt.RETRY_ARTICLE);
+			expect(articleMessages?.[3].content?.notes).toBe(MOCK_ARTICLE_COMPLETIONS[1].notes);
 			expect(article?.status).toBe(ArticleStatus.DRAFT);
 		});
 
-		test('Can publish draft articles', async ({ page }) => {
-			await expect(
-				page.getByText(
-					'Type your own prompt or choose one of the suggestions to generate an article'
-				)
-			).toBeVisible();
-
-			const generateButton = page.locator('button[type=submit]', { hasText: 'Generate' });
-			const publishButton = page.locator('button[type=submit]', { hasText: 'Publish' });
-			const prompt = MockPrompt.GENERATE_ARTICLE;
-			const articleHeadline = MOCK_ARTICLE_COMPLETIONS[0].headline;
-			await page.locator('textarea').fill(prompt);
+		test('Can publish lastest version of a draft article', async ({ page }) => {
+			// First prompt
+			const generateButton = page.locator('button.chat__button-generate');
+			const publishButton = page.locator('button.form-button', { hasText: 'Publish' });
+			await page.locator('textarea').fill(MockPrompt.GENERATE_ARTICLE);
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline)).not.toBeVisible();
 			await expect(publishButton).not.toBeVisible();
-			await expect(page.getByText(articleHeadline)).not.toBeVisible();
 
 			await generateButton.click();
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline)).toBeVisible();
 			await expect(publishButton).toBeVisible();
-			await expect(page.getByText(articleHeadline)).toBeVisible();
 
-			await publishButton.click();
+			// Second prompt
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).not.toBeVisible();
+			await page.locator('textarea').fill(MockPrompt.RETRY_ARTICLE);
+
+			await generateButton.click();
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).toBeVisible();
+
+			// Publish article generated by second prompt
+			await publishButton.filter({ hasText: 'Latest version' }).click();
+			await expect(page.locator('h1.section__h1', { hasText: MOCK_USERS.alice.nickname })).toBeVisible(); // prettier-ignore
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).toBeVisible();
+			await expect(generateButton).not.toBeVisible();
+			await expect(publishButton).not.toBeVisible();
+
+			let article = await getLastArticle(`headline = "${MOCK_ARTICLE_COMPLETIONS[1].headline}"`);
+			expect(article.expand?.['messages(article)']?.[2].content).toBe(MockPrompt.RETRY_ARTICLE);
+			expect(article?.status).toBe(ArticleStatus.PUBLISHED);
+
+			article = await getLastArticle(`headline = "${MOCK_ARTICLE_COMPLETIONS[0].headline}"`);
+			expect(article).toBe(null);
+		});
+
+		test('Can publish an earlier version of a draft article', async ({ page }) => {
+			// First prompt
+			const generateButton = page.locator('button.chat__button-generate');
+			const publishButton = page.locator('button.form-button', { hasText: 'Publish' });
+			await page.locator('textarea').fill(MockPrompt.GENERATE_ARTICLE);
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline)).not.toBeVisible();
+			await expect(publishButton).not.toBeVisible();
+
+			await generateButton.click();
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline)).toBeVisible();
+			await expect(publishButton).toBeVisible();
+
+			// Second prompt
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).not.toBeVisible();
+			await page.locator('textarea').fill(MockPrompt.RETRY_ARTICLE);
+
+			await generateButton.click();
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).toBeVisible();
+
+			// Publish article generated by second prompt
+			await publishButton.filter({ hasText: MOCK_ARTICLE_COMPLETIONS[0].headline }).click();
 			await expect(page.locator('h1.section__h1', { hasText: MOCK_USERS.alice.nickname })).toBeVisible(); // prettier-ignore
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline)).toBeVisible();
 			await expect(generateButton).not.toBeVisible();
 			await expect(publishButton).not.toBeVisible();
-			await expect(
-				page.getByText(
-					'Type your own prompt or choose one of the suggestions to generate an article'
-				)
-			).not.toBeVisible();
 
-			const article = await getLastArticle(`headline = "${articleHeadline}"`);
-			// expect(article?.messages[1].content).toBe(MockPrompt.GENERATE_ARTICLE);
+			let article = await getLastArticle(`headline = "${MOCK_ARTICLE_COMPLETIONS[0].headline}"`);
+			expect(article.expand?.['messages(article)']?.[2].content).toBe(MockPrompt.RETRY_ARTICLE);
 			expect(article?.status).toBe(ArticleStatus.PUBLISHED);
+
+			article = await getLastArticle(`headline = "${MOCK_ARTICLE_COMPLETIONS[1].headline}"`);
+			expect(article).toBe(null);
 		});
 
 		test('Errors trying to create articles', async ({ page }) => {
-			const generateButton = page.locator('button[type=submit]', { hasText: 'Generate' });
+			const generateButton = page.locator('button.chat__button-generate');
 
 			let prompt = MockPrompt.WRONG_FORMAT;
 			await page.locator('textarea').fill(prompt);
@@ -180,8 +206,8 @@ test.describe('Play', () => {
 
 		test('Can write prompt from initial suggestions', async ({ page }) => {
 			const promptTextarea = page.locator('textarea');
-			const generateButton = page.locator('button[type=submit]', { hasText: 'Generate' });
-			const suggestion = page.locator('div.play__suggestions button');
+			const generateButton = page.locator('button.chat__button-generate');
+			const suggestion = page.locator('button.chat__suggestion');
 
 			const firstSuggestion = suggestion.nth(0);
 			const firstSuggestionText = (await firstSuggestion.textContent()) as string;
@@ -198,41 +224,43 @@ test.describe('Play', () => {
 			await expect(thirdSuggestion).not.toBeDisabled();
 			await expect(generateButton).toBeDisabled();
 			await expect(promptTextarea).toHaveValue('');
-			await expect(promptTextarea).not.toBeFocused();
+			await expect(promptTextarea).toBeFocused();
 
 			await firstSuggestion.click();
-			await expect(firstSuggestion).toBeDisabled();
-			await expect(secondSuggestion).toBeDisabled();
-			await expect(thirdSuggestion).toBeDisabled();
+			await expect(firstSuggestion).not.toBeVisible();
+			await expect(secondSuggestion).not.toBeVisible();
+			await expect(thirdSuggestion).not.toBeVisible();
 			await expect(generateButton).not.toBeDisabled();
-			await expect(promptTextarea).toHaveValue(firstSuggestionText);
+			await expect(promptTextarea).toHaveValue(firstSuggestionText.trim());
 			await expect(promptTextarea).toBeFocused();
 		});
 
 		test('Can discard current article and start over', async ({ page }) => {
-			const startFromScratchButton = page.locator('button[type=button]', {
-				hasText: 'Start from scratch'
-			});
-			const applyChangesButton = page.locator('button[type=submit]', { hasText: 'Apply change' });
-			const generateButton = page.locator('button[type=submit]', { hasText: 'Generate' });
-			const publishButton = page.locator('button[type=submit]', { hasText: 'Publish' });
+			const startFromScratchButton = page.getByLabel('Start from scratch');
+			const generateButton = page.locator('button.chat__button-generate');
+			const publishButton = page.locator('button.form-button', { hasText: 'Publish' });
 			await expect(startFromScratchButton).not.toBeVisible();
-			await expect(applyChangesButton).not.toBeVisible();
 			await expect(publishButton).not.toBeVisible();
-			await expect(generateButton).toBeVisible();
 
-			const prompt = MockPrompt.GENERATE_ARTICLE;
+			let prompt = MockPrompt.GENERATE_ARTICLE;
 			await page.locator('textarea').fill(prompt);
 			await generateButton.click();
-			await expect(applyChangesButton).toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline)).toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).not.toBeVisible();
 			await expect(startFromScratchButton).toBeVisible();
 			await expect(publishButton).toBeVisible();
 
+			prompt = MockPrompt.RETRY_ARTICLE;
+			await page.locator('textarea').fill(prompt);
+			await generateButton.click();
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline)).toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).toBeVisible();
+
 			await startFromScratchButton.click();
 			await expect(startFromScratchButton).not.toBeVisible();
-			await expect(applyChangesButton).not.toBeVisible();
 			await expect(publishButton).not.toBeVisible();
-			await expect(generateButton).toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline)).not.toBeVisible();
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).not.toBeVisible();
 		});
 	});
 });
