@@ -4,8 +4,8 @@
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	x="0px"
 	y="0px"
-	width="14px"
-	height="14px"
+	width="16px"
+	height="16px"
 	viewBox="0 0 16 16"
 >
 	<g transform="translate(0, 0)">

@@ -1,9 +1,9 @@
-import type { ArticleStatus } from '$lib/articles';
 import type { ArticleCollection } from '$lib/pocketbase.schema.js';
 import type { MockArticleCompletion } from '$lib/tests';
 import { type Page, expect } from '@playwright/test';
 import PocketBase, { BaseAuthStore } from 'pocketbase';
 
+import { type ArticleStatus, EXPAND_RECORD_RELATIONS } from '../../src/lib/articles.js';
 import { MessageRole } from '../../src/lib/messages.js';
 import { CURRENT_MODEL } from '../../src/lib/openai.js';
 import { miniStringify } from '../../src/lib/utils.js';
@@ -58,7 +58,10 @@ export async function loginUser(user: User, page: Page): Promise<void> {
 	await page.goto('/login');
 	await page.getByLabel('E-mail').fill(user.email);
 	await page.getByLabel('Password', { exact: true }).fill(user.password);
-	await page.locator('button[type=submit]', { hasText: 'Login' }).click();
+
+	const loginButton = page.locator('button[type=submit]', { hasText: 'Login' });
+	await expect(loginButton).not.toBeDisabled();
+	await loginButton.click();
 	await expectToBeInHomepage(page);
 }
 
@@ -73,8 +76,14 @@ export async function logoutCurrentUser(page: Page) {
 	await page.getByText('Logout').click();
 }
 
-export async function getLastArticle(query: string): Promise<ArticleCollection> {
-	return await pb.collection('articles').getFirstListItem(query, { sort: '-created' });
+export async function getLastArticle(query: string): Promise<ArticleCollection | null> {
+	try {
+		return await pb
+			.collection('articles')
+			.getFirstListItem(query, { sort: '-created', expand: EXPAND_RECORD_RELATIONS });
+	} catch {
+		return null;
+	}
 }
 
 export async function createArticle(

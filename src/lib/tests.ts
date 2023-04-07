@@ -5,8 +5,10 @@ import type { CompletionResponse, CompletionUserPrompt } from './openai.js';
 import { UNKNOWN_ERROR_MESSAGE } from './utils.js';
 
 export enum MockPrompt {
-	GENERATE_ARTICLE = 'GENERATE_ARTICLE',
-	RETRY_ARTICLE = 'RETRY_ARTICLE',
+	GENERATE_ARTICLE_0 = 'GENERATE_ARTICLE_0',
+	GENERATE_ARTICLE_1 = 'GENERATE_ARTICLE_1',
+	GENERATE_ARTICLE_2 = 'GENERATE_ARTICLE_2',
+	GENERATE_ARTICLE_3 = 'GENERATE_ARTICLE_3',
 	WRONG_FORMAT = 'WRONG_FORMAT',
 	TOO_SHORT = 'TOO_SHORT', // Prompt too short
 	THROW_ERROR_429 = 'THROW_ERROR_429', // Rate limit
@@ -18,6 +20,9 @@ export interface MockArticleCompletion extends ArticleCompletion {
 	notes: string;
 }
 
+// convert the values of MockPrompt to a const suggestions: string[]
+export const suggestions: string[] = Object.values(MockPrompt);
+
 export const MOCK_ARTICLE_COMPLETIONS: MockArticleCompletion[] = [
 	{
 		headline: 'The Ultimate Guide to Buying a Radioactive Mutant Ficus',
@@ -28,11 +33,7 @@ export const MOCK_ARTICLE_COMPLETIONS: MockArticleCompletion[] = [
 			"Additionally, be aware that a radioactive plant comes with certain risks. Make sure you understand how to handle and care for the plant properly to minimize the dangers. It's also a good idea to keep the plant away from children and pets.",
 			'Lastly, be prepared to pay a premium price for a true radioactive mutant ficus. These plants are rare and in high demand, so expect to invest a significant amount of money.'
 		],
-		suggestions: [
-			'Include a fun fact about the history of radioactive plants',
-			'Provide tips on how to care for a radioactive mutant ficus',
-			'Add a cautionary tale about the dangers of mishandling radioactive plants'
-		],
+		suggestions,
 		notes: 'What a good looking article! If I do say so myself.'
 	},
 	{
@@ -43,12 +44,8 @@ export const MOCK_ARTICLE_COMPLETIONS: MockArticleCompletion[] = [
 			"The timing couldn't have been better. Just when people thought all hope was lost, J.C. Penny stepped in with their incredible discounts. Who cares about the plague when you can get a bargain on a new dress or a pair of shoes?",
 			"Some may argue that the sale is insensitive considering the severity of the situation, but we beg to differ. J.C. Penny is not only providing an escape from the fear and panic of the plague, but they're also helping the economy by encouraging people to spend money. It's a win-win situation."
 		],
-		suggestions: [
-			'Add a quote from a J.C. Penny spokesperson',
-			'Make it even more sarcastic',
-			'Change J.C. Penny to a different store name'
-		],
-		notes: 'What a good looking article! If I do say so myself.'
+		suggestions,
+		notes: 'This article was so much fun to write.'
 	},
 	{
 		headline: 'Phonebooks Make a Comeback: The Surprising Resurgence of Printed Directories',
@@ -58,12 +55,8 @@ export const MOCK_ARTICLE_COMPLETIONS: MockArticleCompletion[] = [
 			'According to industry experts, the resurgence of printed directories can be attributed to several factors, including a growing nostalgia for physical media, the desire to unplug from technology, and the need for a reliable backup in case of power outages or internet failures.',
 			"While phonebooks may seem like a thing of the past, they are still a valuable resource for many people. In fact, some businesses have reported an increase in calls and inquiries since listing their contact information in printed directories. It seems that for some, the convenience and tangibility of a phonebook simply can't be beat."
 		],
-		suggestions: [
-			'Include a quote from a phonebook manufacturer',
-			'Add a section on the environmental impact of printing phonebooks',
-			'Change the headline to be more sensational'
-		],
-		notes: 'What a good looking article! If I do say so myself.'
+		suggestions,
+		notes: "It's funny because it's true."
 	},
 	{
 		headline: 'Scientists discover new species of deep sea creatures',
@@ -73,12 +66,8 @@ export const MOCK_ARTICLE_COMPLETIONS: MockArticleCompletion[] = [
 			"The new species has been named 'Abyssal Glow' due to its bioluminescent properties and distinctive glowing appearance.",
 			'Researchers believe that this discovery could shed new light on the evolution and adaptation of life in extreme environments.'
 		],
-		suggestions: [
-			'Add a quote from one of the scientists involved in the discovery.',
-			'Include a description of the physical characteristics of the Abyssal Glow.',
-			'Explain why the discovery of new species is important for the study of marine biology.'
-		],
-		notes: 'What a good looking article! If I do say so myself.'
+		suggestions,
+		notes: "Not enough RGB on it's bioluminecense."
 	}
 ];
 
@@ -102,16 +91,28 @@ export function getCompletionFromMock(
 			return { completion: null, status: 429, message: 'Too many requests' };
 		case MockPrompt.THROW_ERROR_500:
 			return { completion: null, status: 500, message: UNKNOWN_ERROR_MESSAGE };
-		case MockPrompt.RETRY_ARTICLE:
+		case MockPrompt.WRONG_FORMAT:
+			return {
+				completion: JSON.stringify(MOCK_INVALID_ARTICLE_COMPLETION),
+				status: 400,
+				message: ''
+			};
+		case MockPrompt.GENERATE_ARTICLE_1:
 			return {
 				completion: JSON.stringify(MOCK_ARTICLE_COMPLETIONS[1]),
 				status: 200,
 				message: ''
 			};
-		case MockPrompt.WRONG_FORMAT:
+		case MockPrompt.GENERATE_ARTICLE_2:
 			return {
-				completion: JSON.stringify(MOCK_INVALID_ARTICLE_COMPLETION),
-				status: 400,
+				completion: JSON.stringify(MOCK_ARTICLE_COMPLETIONS[2]),
+				status: 200,
+				message: ''
+			};
+		case MockPrompt.GENERATE_ARTICLE_3:
+			return {
+				completion: JSON.stringify(MOCK_ARTICLE_COMPLETIONS[3]),
+				status: 200,
 				message: ''
 			};
 		default:

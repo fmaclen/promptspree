@@ -33,7 +33,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 			locals,
 			`user = "${params.slug}" && status = "${ArticleStatus.DRAFT}"`
 		);
-		totalDrafts = articleDrafts?.totalItems ?? 0;
+		totalDrafts = articleDrafts?.totalItems || 0;
 	}
 
 	const profile = {

@@ -10,9 +10,12 @@
 
 	export let data: PageData;
 	let isExpanded = false;
+	$: isPlaySection = $page.url.pathname.includes('/play');
 </script>
 
-<div class="layout {isExpanded ? 'layout--expanded' : ''}">
+<div
+	class="layout {isExpanded ? 'layout--expanded' : ''} {isPlaySection ? 'layout--playSection' : ''}"
+>
 	<Toaster />
 
 	<header class="header">
@@ -187,6 +190,12 @@
 		flex-direction: column;
 		position: relative;
 		height: 100%;
+
+		&--playSection {
+			footer.layout__footer {
+				display: none;
+			}
+		}
 	}
 
 	aside.layout__aside {

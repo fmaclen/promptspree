@@ -1,4 +1,4 @@
-import { type Article, ArticleStatus } from '$lib/articles';
+import { type Article, ArticleStatus, EXPAND_RECORD_RELATIONS } from '$lib/articles';
 import { getMessages } from '$lib/messages';
 import { CURRENT_MODEL } from '$lib/openai';
 import type { ArticleCollection } from '$lib/pocketbase.schema';
@@ -8,8 +8,6 @@ import { getUser } from '$lib/users';
 import { UNKNOWN_ERROR_MESSAGE } from '$lib/utils';
 import { type HttpError, error } from '@sveltejs/kit';
 import type { BaseModel, ListResult } from 'pocketbase';
-
-const EXPAND_RECORD_RELATIONS = 'messages(article),reactions(article),user';
 
 export async function getArticle(locals: App.Locals, articleId?: string): Promise<Article | null> {
 	if (!articleId) return null;

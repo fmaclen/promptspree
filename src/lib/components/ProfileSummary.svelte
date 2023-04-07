@@ -12,30 +12,6 @@
 </script>
 
 <nav class="profile-nav">
-	{#if isCurrentUserProfile}
-		<ul class="profile-summary profile-summary--with-links">
-			<li class="profile-summary__li profile-summary__li--with-link">
-				<a
-					class="profile-summary__a {!isDraftsPage ? 'profile-summary__a--active' : ''}"
-					href="/profile/{id}"
-				>
-					<strong class="profile-summary__key">Published</strong>
-					<span class="profile-summary__value">{totalPublished}</span>
-				</a>
-			</li>
-
-			<li class="profile-summary__li profile-summary__li--with-link">
-				<a
-					class="profile-summary__a {isDraftsPage ? 'profile-summary__a--active' : ''}"
-					href="/profile/{id}/drafts"
-				>
-					<strong class="profile-summary__key">Drafts</strong>
-					<span class="profile-summary__value">{totalDrafts}</span>
-				</a>
-			</li>
-		</ul>
-	{/if}
-
 	<ul class="profile-summary">
 		{#if !isCurrentUserProfile}
 			<li class="profile-summary__li">
@@ -59,6 +35,30 @@
 			</span>
 		</li>
 	</ul>
+
+	{#if isCurrentUserProfile}
+		<ul class="profile-summary profile-summary--with-links">
+			<li class="profile-summary__li profile-summary__li--with-link">
+				<a
+					class="profile-summary__a {!isDraftsPage ? 'profile-summary__a--active' : ''}"
+					href="/profile/{id}"
+				>
+					<strong class="profile-summary__key">Published</strong>
+					<span class="profile-summary__value">{totalPublished}</span>
+				</a>
+			</li>
+
+			<li class="profile-summary__li profile-summary__li--with-link">
+				<a
+					class="profile-summary__a {isDraftsPage ? 'profile-summary__a--active' : ''}"
+					href="/profile/{id}/drafts"
+				>
+					<strong class="profile-summary__key">Drafts</strong>
+					<span class="profile-summary__value">{totalDrafts}</span>
+				</a>
+			</li>
+		</ul>
+	{/if}
 </nav>
 
 <style lang="scss">
@@ -67,6 +67,11 @@
 		display: flex;
 		column-gap: 24px;
 		margin-bottom: 64px;
+
+		@media (max-width: 512px) {
+			flex-direction: column;
+			row-gap: 12px;
+		}
 	}
 
 	ul.profile-summary {
@@ -139,17 +144,16 @@
 		text-decoration: none;
 		color: inherit;
 		color: var(--color-neutral-200);
+		background-color: var(--color-neutral-900);
 
-		&:hover {
-			background-color: var(--color-neutral-600);
-		}
-
+		&:hover,
+		&:focus,
 		&--active {
-			color: var(--color-primary);
-			background-color: var(--color-primary-darkest);
+			color: var(--color-secondary);
+			background-color: var(--color-secondary-darkest);
 
 			&:hover {
-				background-color: var(--color-primary-darker);
+				background-color: var(--color-secondary-darker);
 			}
 		}
 	}
