@@ -1,5 +1,5 @@
 <script lang="ts">
-  export let isDisabled: boolean = false;
+	export let isDisabled: boolean = false;
 </script>
 
 <svg
@@ -24,16 +24,15 @@
 </svg>
 
 <style lang="scss">
-  svg.submit-prompt-icon {
-    path {
-      fill: var(--color-primary);
-      /* fill: var(--color-secondary); */
-    }
+	svg.submit-prompt-icon {
+		path {
+			fill: var(--color-primary);
+		}
 
-    &--disabled {
-      path {
-        fill: var(--color-neutral-500);
-      }
-    }
-  }
+		&--disabled {
+			path {
+				fill: var(--color-neutral-500);
+			}
+		}
+	}
 </style>

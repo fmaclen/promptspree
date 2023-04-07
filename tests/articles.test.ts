@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { readFileSync } from 'fs';
 
 import { ArticleStatus } from '../src/lib/articles.js';
-import { MockPrompt, MOCK_ARTICLE_COMPLETIONS } from '../src/lib/tests.js';
+import { MOCK_ARTICLE_COMPLETIONS, MockPrompt } from '../src/lib/tests.js';
 import { MOCK_USERS } from './lib/fixtures.js';
 import {
 	createArticle,
@@ -125,7 +125,7 @@ test.describe('Articles', () => {
 			await expect(page.getByText('Publish')).not.toBeVisible();
 		});
 
-		test("Can edit own draft articles", async ({ page }) => {
+		test('Can edit own draft articles', async ({ page }) => {
 			// Published articles
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].headline)).toBeVisible();
@@ -142,26 +142,34 @@ test.describe('Articles', () => {
 			expect(article?.headline).toBe(MOCK_ARTICLE_COMPLETIONS[0].headline);
 			await expect(page.getByText('Publish')).not.toBeVisible();
 			await expect(page.getByText('Edit')).not.toBeVisible();
-			
+
 			const generateButton = page.locator('button.chat__button-generate');
-			
+
 			await page.goto(`/profile/${user?.id}/drafts`);
+			await expect(
+				page.locator('a.profile-summary__a--active', { hasText: 'Drafts 1' })
+			).toBeVisible();
+
 			await page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline).click();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].body[3])).toBeVisible();
 			await expect(page.getByText('Publish')).toBeVisible();
 			await expect(page.getByText('Edit')).toBeVisible();
 			await expect(generateButton).not.toBeVisible();
-			
+
 			await page.getByText('Edit').click();
 			await expect(generateButton).toBeVisible();
 			await expect(page.locator('h1.chat__article-h1', { hasText: MOCK_ARTICLE_COMPLETIONS[0].headline })).toBeVisible(); // prettier-ignore
-			
+
 			await page.locator('textarea').fill(MockPrompt.GENERATE_ARTICLE_1);
 			await generateButton.click();
 			await expect(page.locator('h1.chat__article-h1', { hasText:MOCK_ARTICLE_COMPLETIONS[0].headline })).toBeVisible(); // prettier-ignore
 			await expect(page.locator('h1.chat__article-h1', { hasText:MOCK_ARTICLE_COMPLETIONS[1].headline })).toBeVisible(); // prettier-ignore
 
 			await page.goto(`/profile/${user?.id}/drafts`);
+			await expect(
+				page.locator('a.profile-summary__a--active', { hasText: 'Drafts 1' })
+			).toBeVisible();
+
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline)).not.toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).toBeVisible();
 
@@ -178,9 +186,7 @@ test.describe('Articles', () => {
 
 		test('Articles with audio are listenable', async ({ page }) => {
 			// NOTE: This test only checks that the player is visible when an audio path is present.
-			const article = await getLastArticle(
-				`headline = "${MOCK_ARTICLE_COMPLETIONS[1].headline}"`
-			);
+			const article = await getLastArticle(`headline = "${MOCK_ARTICLE_COMPLETIONS[1].headline}"`);
 
 			const audioData = readFileSync('tests/lib/fixtures/the-great-plague.mp3');
 			const audioBlob = new Blob([audioData], { type: 'audio/mp3' });
@@ -221,9 +227,7 @@ test.describe('Articles', () => {
 
 		await prepareToAcceptDialog(page, /Are you sure you want to delete the article?/);
 		await page.getByText('Delete').click();
-		await expect(
-			page.locator('h1.section__h1', { hasText: MOCK_USERS.alice.nickname })
-		).toBeVisible();
+		await expect(page.locator('h1.section__h1', { hasText: MOCK_USERS.alice.nickname })).toBeVisible(); // prettier-ignore
 		await expect(page.getByText('No published articles, generate one')).toBeVisible();
 		await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[2])).not.toBeVisible();
 	});

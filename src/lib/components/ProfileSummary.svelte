@@ -37,28 +37,28 @@
 	</ul>
 
 	{#if isCurrentUserProfile}
-	<ul class="profile-summary profile-summary--with-links">
-		<li class="profile-summary__li profile-summary__li--with-link">
-			<a
-				class="profile-summary__a {!isDraftsPage ? 'profile-summary__a--active' : ''}"
-				href="/profile/{id}"
-			>
-				<strong class="profile-summary__key">Published</strong>
-				<span class="profile-summary__value">{totalPublished}</span>
-			</a>
-		</li>
+		<ul class="profile-summary profile-summary--with-links">
+			<li class="profile-summary__li profile-summary__li--with-link">
+				<a
+					class="profile-summary__a {!isDraftsPage ? 'profile-summary__a--active' : ''}"
+					href="/profile/{id}"
+				>
+					<strong class="profile-summary__key">Published</strong>
+					<span class="profile-summary__value">{totalPublished}</span>
+				</a>
+			</li>
 
-		<li class="profile-summary__li profile-summary__li--with-link">
-			<a
-				class="profile-summary__a {isDraftsPage ? 'profile-summary__a--active' : ''}"
-				href="/profile/{id}/drafts"
-			>
-				<strong class="profile-summary__key">Drafts</strong>
-				<span class="profile-summary__value">{totalDrafts}</span>
-			</a>
-		</li>
-	</ul>
-{/if}
+			<li class="profile-summary__li profile-summary__li--with-link">
+				<a
+					class="profile-summary__a {isDraftsPage ? 'profile-summary__a--active' : ''}"
+					href="/profile/{id}/drafts"
+				>
+					<strong class="profile-summary__key">Drafts</strong>
+					<span class="profile-summary__value">{totalDrafts}</span>
+				</a>
+			</li>
+		</ul>
+	{/if}
 </nav>
 
 <style lang="scss">

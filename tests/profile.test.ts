@@ -104,7 +104,7 @@ test.describe('Profile', () => {
 			await expect(page.locator('a.profile-summary__a--active', { hasText: 'Drafts 1' })).toBeVisible(); // prettier-ignore
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline)).toBeVisible();
 			await expect(deleteButton).not.toBeVisible();
-			
+
 			await page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline).click();
 			await expect(deleteButton).toBeVisible();
 

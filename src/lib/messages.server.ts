@@ -2,7 +2,10 @@ import type { ArticleCompletion } from '$lib/articles';
 import type { MessageRole } from '$lib/messages';
 import type { MessageCollection } from '$lib/pocketbase.schema';
 
-export async function getMessage(locals: App.Locals, messageId?: string): Promise<MessageCollection | null> {
+export async function getMessage(
+	locals: App.Locals,
+	messageId?: string
+): Promise<MessageCollection | null> {
 	if (!messageId) return null;
 
 	try {
@@ -15,7 +18,6 @@ export async function getMessage(locals: App.Locals, messageId?: string): Promis
 		return null;
 	}
 }
-
 
 export async function createMessageCollection(
 	locals: App.Locals,
@@ -31,4 +33,3 @@ export async function createMessageCollection(
 		return null;
 	}
 }
-

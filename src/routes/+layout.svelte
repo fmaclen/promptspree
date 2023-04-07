@@ -13,7 +13,9 @@
 	$: isPlaySection = $page.url.pathname.includes('/play');
 </script>
 
-<div class="layout {isExpanded ? 'layout--expanded' : ''} {isPlaySection ? 'layout--playSection' : ''}">
+<div
+	class="layout {isExpanded ? 'layout--expanded' : ''} {isPlaySection ? 'layout--playSection' : ''}"
+>
 	<Toaster />
 
 	<header class="header">

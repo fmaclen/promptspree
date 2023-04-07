@@ -156,7 +156,7 @@ test.describe('Play', () => {
 			let article = await getLastArticle(`headline = "${MOCK_ARTICLE_COMPLETIONS[2].headline}"`);
 			expect(article?.expand?.user.email).toBe(MOCK_USERS.alice.email);
 			expect(article?.status).toBe(ArticleStatus.PUBLISHED);
-			
+
 			article = await getLastArticle(`headline = "${MOCK_ARTICLE_COMPLETIONS[3].headline}"`);
 			expect(article).toBe(null);
 		});
