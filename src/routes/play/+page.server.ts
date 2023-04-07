@@ -3,13 +3,11 @@ import {
 	type Article,
 	type ArticleCompletion,
 	ArticleStatus,
-	getArticleAndUserIds,
 	isCategoryValid
 } from '$lib/articles';
 import {
 	createArticleCollection,
 	getArticle,
-	publishArticle,
 	updateArticleCollection
 } from '$lib/articles.server';
 import { type Message, MessageRole } from '$lib/messages';
