@@ -76,7 +76,7 @@
 			{#if isPublishable}
 				<a class="metadata__edit" href={`/play?articleId=${article.id}`}>Edit</a>
 
-				<form class="play__form" method="POST" action="?/publish" use:enhance={handlePublish}>
+				<form method="POST" action="?/publish" use:enhance={handlePublish}>
 					<input type="hidden" name="articleId" value={article.id} />
 					<FormButton
 						label="Publish"
@@ -88,7 +88,7 @@
 			{/if}
 
 			{#if isDeletable}
-				<form class="form" method="POST" action="?/delete" use:enhance={handleDelete}>
+				<form method="POST" action="?/delete" use:enhance={handleDelete}>
 					<input type="hidden" name="articleId" value={article.id} />
 					<FormButton
 						label="Delete"
