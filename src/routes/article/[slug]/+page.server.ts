@@ -1,4 +1,4 @@
-import { ArticleStatus, getArticleAndUserIds } from '$lib/articles';
+import { getArticleAndUserIds } from '$lib/articles';
 import { deleteArticle, getArticle, publishArticle } from '$lib/articles.server';
 import type { ReactionCollection } from '$lib/pocketbase.schema';
 import type { Reaction, Reactions } from '$lib/reactions';
@@ -18,8 +18,6 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 	const article = await getArticle(locals, params.slug);
 
 	if (article) {
-		if (article.status === ArticleStatus.DRAFT) throw redirect(303, `/editor?articleId=${article.id}`);
-
 		return { article };
 	} else {
 		throw error(404, 'Article not found');

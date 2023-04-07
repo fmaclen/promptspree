@@ -10,13 +10,12 @@
 
 	export let data: PageData;
 	let isExpanded = false;
-	$: isEditor = $page.url.pathname.includes('/editor');
+	$: isPlaySection = $page.url.pathname.includes('/play');
 </script>
 
-<div class="layout {isExpanded ? 'layout--expanded' : ''} {isEditor ? 'layout--editor' : ''}">
+<div class="layout {isExpanded ? 'layout--expanded' : ''} {isPlaySection ? 'layout--playSection' : ''}">
 	<Toaster />
 
-	<!-- {#if !isEditor} -->
 	<header class="header">
 		<hgroup class="header__hgroup">
 			<button
@@ -50,7 +49,6 @@
 			</a>
 		</hgroup>
 	</header>
-	<!-- {/if} -->
 
 	{#if isExpanded}
 		<aside
@@ -191,11 +189,7 @@
 		position: relative;
 		height: 100%;
 
-		&--editor {
-			/* header.header {
-				display: none;
-			} */
-
+		&--playSection {
 			footer.layout__footer {
 				display: none;
 			}

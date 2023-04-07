@@ -5,8 +5,10 @@ import type { CompletionResponse, CompletionUserPrompt } from './openai.js';
 import { UNKNOWN_ERROR_MESSAGE } from './utils.js';
 
 export enum MockPrompt {
-	GENERATE_ARTICLE = 'GENERATE_ARTICLE',
-	RETRY_ARTICLE = 'RETRY_ARTICLE',
+	GENERATE_ARTICLE_0 = 'GENERATE_ARTICLE_0',
+	GENERATE_ARTICLE_1 = 'GENERATE_ARTICLE_1',
+	GENERATE_ARTICLE_2 = 'GENERATE_ARTICLE_2',
+	GENERATE_ARTICLE_3 = 'GENERATE_ARTICLE_3',
 	WRONG_FORMAT = 'WRONG_FORMAT',
 	TOO_SHORT = 'TOO_SHORT', // Prompt too short
 	THROW_ERROR_429 = 'THROW_ERROR_429', // Rate limit
@@ -43,7 +45,7 @@ export const MOCK_ARTICLE_COMPLETIONS: MockArticleCompletion[] = [
 			"Some may argue that the sale is insensitive considering the severity of the situation, but we beg to differ. J.C. Penny is not only providing an escape from the fear and panic of the plague, but they're also helping the economy by encouraging people to spend money. It's a win-win situation."
 		],
 		suggestions,
-		notes: 'What a good looking article! If I do say so myself.'
+		notes: 'This article was so much fun to write.'
 	},
 	{
 		headline: 'Phonebooks Make a Comeback: The Surprising Resurgence of Printed Directories',
@@ -54,7 +56,7 @@ export const MOCK_ARTICLE_COMPLETIONS: MockArticleCompletion[] = [
 			"While phonebooks may seem like a thing of the past, they are still a valuable resource for many people. In fact, some businesses have reported an increase in calls and inquiries since listing their contact information in printed directories. It seems that for some, the convenience and tangibility of a phonebook simply can't be beat."
 		],
 		suggestions,
-		notes: 'What a good looking article! If I do say so myself.'
+		notes: "It's funny because it's true."
 	},
 	{
 		headline: 'Scientists discover new species of deep sea creatures',
@@ -65,7 +67,7 @@ export const MOCK_ARTICLE_COMPLETIONS: MockArticleCompletion[] = [
 			'Researchers believe that this discovery could shed new light on the evolution and adaptation of life in extreme environments.'
 		],
 		suggestions,
-		notes: 'What a good looking article! If I do say so myself.'
+		notes: "Not enough RGB on it's bioluminecense."
 	}
 ];
 
@@ -89,16 +91,28 @@ export function getCompletionFromMock(
 			return { completion: null, status: 429, message: 'Too many requests' };
 		case MockPrompt.THROW_ERROR_500:
 			return { completion: null, status: 500, message: UNKNOWN_ERROR_MESSAGE };
-		case MockPrompt.RETRY_ARTICLE:
+		case MockPrompt.WRONG_FORMAT:
+			return {
+				completion: JSON.stringify(MOCK_INVALID_ARTICLE_COMPLETION),
+				status: 400,
+				message: ''
+			};
+		case MockPrompt.GENERATE_ARTICLE_1:
 			return {
 				completion: JSON.stringify(MOCK_ARTICLE_COMPLETIONS[1]),
 				status: 200,
 				message: ''
 			};
-		case MockPrompt.WRONG_FORMAT:
+		case MockPrompt.GENERATE_ARTICLE_2:
 			return {
-				completion: JSON.stringify(MOCK_INVALID_ARTICLE_COMPLETION),
-				status: 400,
+				completion: JSON.stringify(MOCK_ARTICLE_COMPLETIONS[2]),
+				status: 200,
+				message: ''
+			};
+		case MockPrompt.GENERATE_ARTICLE_3:
+			return {
+				completion: JSON.stringify(MOCK_ARTICLE_COMPLETIONS[3]),
+				status: 200,
 				message: ''
 			};
 		default:

@@ -49,7 +49,10 @@
 			</time>
 		</a>
 
-		<ArticleReactions {article} currentUserCanReact={currentUser !== null && isActionable} />
+		<ArticleReactions
+			{article}
+			currentUserCanReact={currentUser !== null && isActionable && !isPublishable}
+		/>
 	</nav>
 
 	{#if size === ArticleSize.FULL}
@@ -70,6 +73,20 @@
 
 	{#if isDeletable || isPublishable}
 		<nav class="metadata__author-actions">
+			{#if isPublishable}
+				<a class="metadata__edit" href={`/play?articleId=${article.id}`}>Edit</a>
+
+				<form class="play__form" method="POST" action="?/publish" use:enhance={handlePublish}>
+					<input type="hidden" name="articleId" value={article.id} />
+					<FormButton
+						label="Publish"
+						type="submit"
+						isCompact={true}
+						sentiment={Sentiment.POSITIVE}
+					/>
+				</form>
+			{/if}
+
 			{#if isDeletable}
 				<form class="form" method="POST" action="?/delete" use:enhance={handleDelete}>
 					<input type="hidden" name="articleId" value={article.id} />
@@ -79,18 +96,6 @@
 						isCompact={true}
 						sentiment={Sentiment.NEGATIVE}
 						on:click={confirmDeletion}
-					/>
-				</form>
-			{/if}
-
-			{#if isPublishable}
-				<form class="play__form" method="POST" action="?/publish" use:enhance={handlePublish}>
-					<input type="hidden" name="articleId" value={article.id} />
-					<FormButton
-						label="Publish"
-						type="submit"
-						isCompact={true}
-						sentiment={Sentiment.POSITIVE}
 					/>
 				</form>
 			{/if}
@@ -137,6 +142,25 @@
 		display: flex;
 		column-gap: 8px;
 		justify-content: space-between;
+	}
+
+	nav.metadata__author-actions {
+		display: flex;
+		gap: 8px;
+		flex-direction: column;
+	}
+
+	a.metadata__edit {
+		padding: 8px 16px;
+		font-size: 14px;
+		font-weight: 600;
+		box-sizing: border-box;
+		text-align: center;
+		width: 100%;
+		text-decoration: none;
+		border-radius: var(--border-radius-l);
+		color: var(--color-neutral-100);
+		background-color: var(--color-neutral-600);
 	}
 
 	/* ------------------------------------------------------------------------ */

@@ -13,7 +13,7 @@ import {
 	updateArticleCollection
 } from '$lib/articles.server';
 import { type Message, MessageRole } from '$lib/messages';
-import { createMessageCollection } from '$lib/messages.server';
+import { createMessageCollection, getMessage } from '$lib/messages.server';
 import type { CompletionResponse } from '$lib/openai';
 import { generateCompletionUserPrompt, getCompletionFromAI } from '$lib/openai.server';
 import type { ArticleCollection } from '$lib/pocketbase.schema';
@@ -25,8 +25,21 @@ import { error, fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from '../$types';
 import type { Actions } from './$types';
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async ({ url, locals }) => {
 	if (!locals.pb.authStore.isValid) throw redirect(303, '/join');
+
+	const articleParams = new URLSearchParams(url.search);
+	const articleId = articleParams.get('articleId');
+
+	if (articleId) {
+		const article = await getArticle(locals, articleId);
+		const messages = article?.messages || [];
+
+		if (!article) throw error(404, 'Article not found');
+		if (article.status === ArticleStatus.PUBLISHED) throw redirect(303, `/article/${article.id}`);
+
+		return { article, messages };
+	}
 };
 
 export const actions: Actions = {
@@ -37,10 +50,9 @@ export const actions: Actions = {
 
 		const formData = await request.formData();
 		const articleId = formData.get('articleId')?.toString();
-		const validation = await validatePrompt(formData.get('prompt')?.toString());
-
-		if (!validation.prompt || validation.error)
-			return fail(400, { fieldError: ['prompt', validation.error] });
+		const prompt = formData.get('prompt')?.toString();
+		const promptError = validatePrompt(prompt);
+		if (promptError) return fail(400, { error: promptError });
 
 		let article: ArticleCollection | Article | null = null;
 		let messages: Message[] = [];
@@ -61,7 +73,7 @@ export const actions: Actions = {
 			locals,
 			article.id,
 			MessageRole.USER,
-			validation.prompt
+			prompt as string // NOTE: validatePrompt() ensures that prompt is a string
 		);
 		if (!userMessage) throw error(500, UNKNOWN_ERROR_MESSAGE);
 
@@ -83,34 +95,52 @@ export const actions: Actions = {
 			parsedCompletion
 		);
 		if (!assistantMessage) throw error(500, UNKNOWN_ERROR_MESSAGE);
+		messages.push(assistantMessage);
 
 		// Update the article with the completion
-		article = await updateArticleCollection(locals, article.id, { ...parsedCompletion });
+		article = await updateArticleCollection(locals, article.id, {
+			...parsedCompletion,
+			status: ArticleStatus.DRAFT
+		});
 		if (!article?.id) throw error(500, UNKNOWN_ERROR_MESSAGE);
 
-		return { article, suggestions: parsedCompletion.suggestions };
+		return {
+			article,
+			messages: structuredClone(messages),
+			suggestions: parsedCompletion.suggestions
+		};
 	},
 	publish: async ({ request, locals }) => {
-		const { articleId, currentUserId } = await getArticleAndUserIds(request, locals);
-		await publishArticle(locals, articleId);
-		throw redirect(303, `/profile/${currentUserId}`);
+		const formData = await request.formData();
+		const articleId = formData.get('articleId')?.toString() || '';
+		const messageId = formData.get('messageId')?.toString() || '';
+
+		const message = await getMessage(locals, messageId);
+		if (!message || !message.content || typeof message.content === 'string')
+			throw error(500, UNKNOWN_ERROR_MESSAGE);
+
+		const { category, headline, body } = message.content;
+
+		await updateArticleCollection(locals, articleId, {
+			category: category,
+			headline: headline,
+			body: body,
+			status: ArticleStatus.PUBLISHED
+		});
+
+		throw redirect(303, `/profile/${locals?.user?.id}`);
 	}
 };
 
-interface PromptValidation {
-	prompt: string | null;
-	error: string | null;
-}
-
-async function validatePrompt(prompt: string | undefined): Promise<PromptValidation> {
+function validatePrompt(prompt: string | undefined): string | null {
 	// Check that the prompt exists, is greater than 10 character and less than 280
-	if (!prompt) return { prompt: null, error: 'Prompt was not provided' };
-	if (prompt.length < 10) return { prompt, error: 'Prompt is too short' };
-	if (prompt.length > 290) return { prompt, error: 'Prompt is greater than 280 characters' };
+	if (!prompt) return 'Prompt was not provided';
+	if (prompt.length < 10) return 'Prompt is too short';
+	if (prompt.length > 290) return 'Prompt is greater than 280 characters';
 
 	// TODO: Check that prompt doesn't violete the moderation rules
 
-	return { prompt, error: null };
+	return null;
 }
 
 // Get completion from AI and try to parse it

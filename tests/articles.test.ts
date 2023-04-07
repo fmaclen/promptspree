@@ -141,17 +141,25 @@ test.describe('Articles', () => {
 			);
 			expect(article?.headline).toBe(MOCK_ARTICLE_COMPLETIONS[0].headline);
 			await expect(page.getByText('Publish')).not.toBeVisible();
-
-			// 
-			await page.goto(`/article/${article?.id}`);
-			await expect(page.locator('h1.chat__article-h1', { hasText: MOCK_ARTICLE_COMPLETIONS[0].headline })).toBeVisible(); // prettier-ignore
-			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline)).toBeVisible();
+			await expect(page.getByText('Edit')).not.toBeVisible();
+			
+			const generateButton = page.locator('button.chat__button-generate');
+			
+			await page.goto(`/profile/${user?.id}/drafts`);
+			await page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline).click();
+			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].body[3])).toBeVisible();
 			await expect(page.getByText('Publish')).toBeVisible();
-
-			await page.locator('textarea').fill(MockPrompt.RETRY_ARTICLE);
-			await page.locator('button.chat__button-generate').click();
-			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline)).toBeVisible();
-			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).toBeVisible();
+			await expect(page.getByText('Edit')).toBeVisible();
+			await expect(generateButton).not.toBeVisible();
+			
+			await page.getByText('Edit').click();
+			await expect(generateButton).toBeVisible();
+			await expect(page.locator('h1.chat__article-h1', { hasText: MOCK_ARTICLE_COMPLETIONS[0].headline })).toBeVisible(); // prettier-ignore
+			
+			await page.locator('textarea').fill(MockPrompt.GENERATE_ARTICLE_1);
+			await generateButton.click();
+			await expect(page.locator('h1.chat__article-h1', { hasText:MOCK_ARTICLE_COMPLETIONS[0].headline })).toBeVisible(); // prettier-ignore
+			await expect(page.locator('h1.chat__article-h1', { hasText:MOCK_ARTICLE_COMPLETIONS[1].headline })).toBeVisible(); // prettier-ignore
 
 			await page.goto(`/profile/${user?.id}/drafts`);
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline)).not.toBeVisible();
