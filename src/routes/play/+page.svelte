@@ -2,6 +2,7 @@
 	import { applyAction, enhance } from '$app/forms';
 	import { type Article, getRandomInitialSuggestions } from '$lib/articles';
 	import FormButton from '$lib/components/FormButton.svelte';
+	import Head from '$lib/components/Head.svelte';
 	import Broom from '$lib/components/icons/Broom.svelte';
 	import Human from '$lib/components/icons/Human.svelte';
 	import Loading from '$lib/components/icons/Loading.svelte';
@@ -100,6 +101,8 @@
 	}
 </script>
 
+<Head title={['Play']} />
+
 <div class="chat">
 	<ul class="chat__messages">
 		{#if messages}
@@ -123,9 +126,11 @@
 						{:else if role === MessageRole.ASSISTANT && isContentArticleCompletion}
 							<Robot />
 							<div class="chat__assistant-response">
-								<p class={`chat__content chat__content--${roleClass}`}>
-									{content.notes}
-								</p>
+								{#if content.notes}
+									<p class={`chat__content chat__content--${roleClass}`}>
+										{content.notes}
+									</p>
+								{/if}
 
 								<article class="chat__article">
 									<h2 class="chat__article-h2">{content.category}</h2>

@@ -116,8 +116,8 @@ You will use the user's prompt as inspiration to generate an article.
 If the user's prompt is not clear come up with your best guess.
 If the user prompt is of a humorous tone play along with the joke, don't steer the suggestions as if it was a real article.
 You can only write articles in English.
-The article must have a headline, a category, a body and suggestions.
-You will provide suggestions that the user can choose to improve the generated article, for example: "add a quote from an expert, make it more ridiculous, change the names with realistic sounding fictitious ones, revert changes back to an earlier version, etc".
+The article must have a headline, a category, a body and 3 suggestions.
+You will provide suggestions that the user can choose to improve the generated article, for example: "change the title, add a quote from an expert, make it more ridiculous, change the names with realistic sounding fictitious ones, revert changes back to an earlier version, etc".
 
 Your responses will be parsed as JSON objects.
 Anything that is not a valid JSON object will be ignoreds so don't include any additional text.
@@ -131,7 +131,7 @@ Write the article in the form of JSON using these keys:
 	"body": ["an", "array", "of", "3", "to", 6", "paragraphs"],
 	"suggestions": ["an array", "of 3", "very short sentences"],
 
-	"notes": "Use this key to include a quirky light-hearted opinion about the article so far, avoid repeating your earlier notes"
+	"notes": "Optional. Use this key to include remarks about the article generation that need to be relayed to the user in quirky light-hearted humorous tone. Avoid repeating earlier notes."
 }`;
 
 // FIXME: this helper function is probably overkill at this point

@@ -21,7 +21,7 @@ export async function getCompletionFromAI(
 	try {
 		const completion = await openai.createChatCompletion({
 			model: CURRENT_MODEL,
-			temperature: 0.75,
+			temperature: 0.9,
 			max_tokens: 2048,
 			messages: completionUserPrompt.messages,
 			user: completionUserPrompt.userId // e.g. `my6b0jgzuwrtuxg`
