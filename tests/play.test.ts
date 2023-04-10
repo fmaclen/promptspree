@@ -74,7 +74,9 @@ test.describe('Play', () => {
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].category)).not.toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).not.toBeVisible();
 
-			await generateButton.click();
+			// Pressing "Enter" also submits prompt
+			await expect(page.locator('textarea')).toBeFocused();
+			await page.keyboard.press('Enter');
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].category)).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).toBeVisible();
 			await expect(page.locator('a.profile-summary__a--active', { hasText: 'Drafts' })).not.toBeVisible(); // prettier-ignore
