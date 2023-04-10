@@ -26,6 +26,7 @@
 	let error: string | null = null;
 	let textareaRef: HTMLTextAreaElement;
 	let scrollToMessageRef: HTMLDivElement;
+	let buttonRef: HTMLButtonElement;
 
 	$: prompt = '';
 	$: isLoading = false;
@@ -209,9 +210,10 @@
 						bind:this={textareaRef}
 						bind:value={prompt}
 						on:click={toggleSuggestions}
+						on:keydown="{(event) => event.key === 'Enter' && buttonRef.click()}"
 						disabled={isLoading}
 					/>
-					<button class="chat__button-generate" type="submit" disabled={!prompt}>
+					<button class="chat__button-generate" type="submit" disabled={!prompt} bind:this={buttonRef}>
 						{#if isLoading}
 							<Loading />
 						{:else}
