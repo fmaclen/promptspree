@@ -29,16 +29,16 @@
 	let buttonRef: HTMLButtonElement;
 
 	$: prompt = '';
-	$: isLoading = false;
 	$: shouldDisplaySuggestions = !article && suggestions && prompt === '' && !isLoading;
+	$: isLoading = false;
 
 	function submitGenerate() {
 		messages = [...messages, { role: MessageRole.USER, content: prompt }];
-		scrollToMessage();
-		toast.dismiss();
-		isLoading = true;
 		error = null;
 		prompt = '';
+		isLoading = true;
+		scrollToMessage();
+		toast.dismiss();
 
 		return async ({ result, update }: { result: ActionResult; update: () => void }) => {
 			if (result.type === 'success') {
@@ -161,6 +161,17 @@
 				</li>
 			{/each}
 		{/if}
+
+		{#if isLoading}
+			<li class="chat__message-container" transition:slide={{ duration: 150 }}>
+				<div class="chat__message chat__message--assistant chat__message--loading">
+					<Robot />
+					<div class="chat__assistant-response">
+						<Loading theme="secondary" />
+					</div>
+				</div>
+			</li>
+		{/if}
 	</ul>
 
 	<footer class="chat__footer">
@@ -210,10 +221,15 @@
 						bind:this={textareaRef}
 						bind:value={prompt}
 						on:click={toggleSuggestions}
-						on:keydown="{(event) => event.key === 'Enter' && buttonRef.click()}"
+						on:keydown={(event) => event.key === 'Enter' && buttonRef.click()}
 						disabled={isLoading}
 					/>
-					<button class="chat__button-generate" type="submit" disabled={!prompt} bind:this={buttonRef}>
+					<button
+						class="chat__button-generate"
+						type="submit"
+						disabled={!prompt}
+						bind:this={buttonRef}
+					>
 						{#if isLoading}
 							<Loading />
 						{:else}
@@ -230,8 +246,8 @@
 	div.chat {
 		display: grid;
 		grid-template-rows: auto max-content;
-		color: var(--color-neutral-100);
 		flex-grow: 1;
+		color: var(--color-neutral-100);
 	}
 
 	div.chat__container {
@@ -271,6 +287,31 @@
 
 		&--assistant {
 			background-color: var(--color-neutral-700);
+		}
+
+		&--loading {
+			position: relative;
+			overflow: hidden;
+
+			&::before {
+				position: absolute;
+				content: '';
+				background-color: rgba(255, 255, 255, 0.05);
+				height: 100%;
+				width: 90%;
+				animation-name: progress-animation;
+				animation-duration: 15s;
+				animation-timing-function: ease-out;
+			}
+
+			@keyframes progress-animation {
+				0% {
+					width: 0%;
+				}
+				100% {
+					width: 90%;
+				}
+			}
 		}
 
 		@media (max-width: 768px) {

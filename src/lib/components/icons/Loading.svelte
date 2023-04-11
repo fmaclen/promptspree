@@ -1,5 +1,9 @@
+<script lang="ts">
+	export let theme: 'primary' | 'secondary' | undefined = undefined;
+</script>
+
 <svg
-	class="loading-icon"
+	class={`loading-icon ${theme ? `loading-icon--${theme}` : ''}`}
 	xmlns="http://www.w3.org/2000/svg"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	x="0px"
@@ -21,6 +25,18 @@
 	svg.loading-icon {
 		circle {
 			fill: var(--color-neutral-300);
+		}
+
+		&--primary {
+			circle {
+				fill: var(--color-primary);
+			}
+		}
+
+		&--secondary {
+			circle {
+				fill: var(--color-secondary);
+			}
 		}
 	}
 
