@@ -300,7 +300,7 @@
 				height: 100%;
 				width: 90%;
 				animation-name: progress-animation;
-				animation-duration: 15s;
+				animation-duration: 20s;
 				animation-timing-function: ease-out;
 			}
 
@@ -309,7 +309,7 @@
 					width: 0%;
 				}
 				100% {
-					width: 90%;
+					width: 95%;
 				}
 			}
 		}
