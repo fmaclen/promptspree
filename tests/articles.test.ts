@@ -165,7 +165,7 @@ test.describe('Articles', () => {
 			await expect(page.locator('h1.chat__article-h1', { hasText:MOCK_ARTICLE_COMPLETIONS[0].headline })).toBeVisible(); // prettier-ignore
 			await expect(page.locator('h1.chat__article-h1', { hasText:MOCK_ARTICLE_COMPLETIONS[1].headline })).toBeVisible(); // prettier-ignore
 
-			await page.goto(`/profile/${user?.id}/drafts`);
+			await page.getByText('Drafts').click();
 			await expect(
 				page.locator('a.profile-summary__a--active', { hasText: 'Drafts 1' })
 			).toBeVisible();
