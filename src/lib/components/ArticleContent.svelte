@@ -9,6 +9,11 @@
 
 <article class={`article-content article-content--${size}`}>
 	<ArticleHeader {article} {size} />
+
+	{#if article.imageSrc && size === ArticleSize.FULL}
+		<img src="{article.imageSrc}" class="article__img" alt="AI-generated illustration of the article" />
+	{/if}
+
 	<ArticleBody {article} {size} />
 
 	{#if article.audioSrc && size === ArticleSize.FULL}
@@ -55,5 +60,9 @@
 		color: var(--color-secondary);
 		border: 1px solid var(--color-secondary);
 		filter: invert(1);
+	}
+
+	img.article__img {
+		border-radius: var(--border-radius-l);
 	}
 </style>
