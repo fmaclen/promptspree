@@ -1,6 +1,6 @@
 import type { ArticleCollection } from '$lib/pocketbase.schema.js';
 import type { MockArticleCompletion } from '$lib/tests';
-import { type Page, expect, type TestInfo } from '@playwright/test';
+import { type Page, type TestInfo, expect } from '@playwright/test';
 import PocketBase, { BaseAuthStore } from 'pocketbase';
 
 import { type ArticleStatus, EXPAND_RECORD_RELATIONS } from '../../src/lib/articles.js';
@@ -145,11 +145,19 @@ export const setSnapshotPath = (testInfo: TestInfo) => {
 	testInfo.snapshotPath = (name: string) => `${testInfo.file}-snapshots/${name}`;
 };
 
-
 export async function matchSnapshot(page: Page, name: string) {
 	// NOTE: We are currently only running snapshots locally on macOS.
 	// To add run visual regression tests on CI we need to account for all the different
 	// variations of browser and viewport resolutions (i.e. desktop/mobile).
-	const isMacOs = process.platform === 'darwin';
-	if (isMacOs) expect(await page.screenshot({ fullPage: true })).toMatchSnapshot({ name , maxDiffPixelRatio: MAX_DIFF_PIXEL_RATIO }); //prettier-ignore
+	if (process.platform !== 'darwin') return;
+	
+	// Desktop
+	expect(await page.screenshot({ fullPage: true })).toMatchSnapshot({ name: `${name}-desktop.png` , maxDiffPixelRatio: MAX_DIFF_PIXEL_RATIO });
+
+	// Mobile
+	await page.setViewportSize({ width: 375, height: 667 });
+	expect(await page.screenshot({ fullPage: true })).toMatchSnapshot({ name: `${name}-mobile.png` , maxDiffPixelRatio: MAX_DIFF_PIXEL_RATIO });
+
+	// Reset viewport size
+	await page.setViewportSize({ width: 1280, height: 720 });
 }

@@ -66,7 +66,7 @@ test.describe('Profile', () => {
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Articles 1' })).not.toBeVisible(); // prettier-ignore
 
 			await page.getByText('Drafts 1').click();
-			await matchSnapshot(page, 'profile-with-drafts.png')
+			await matchSnapshot(page, 'profile-with-drafts')
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline)).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].body[0])).toBeVisible(); // Summary
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].body[1])).not.toBeVisible();
@@ -93,7 +93,7 @@ test.describe('Profile', () => {
 
 			await page.getByText('Drafts 0').click();
 			await expect(page.getByText('No draft articles, generate one')).toBeVisible();
-			await matchSnapshot(page, 'profile-without-drafts.png')
+			await matchSnapshot(page, 'profile-without-drafts')
 		});
 
 		test('Can delete published or draft articles', async ({ page }) => {
@@ -143,7 +143,7 @@ test.describe('Profile', () => {
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Drafts 1' })).not.toBeVisible(); // prettier-ignore
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Published 1' })).not.toBeVisible(); // prettier-ignore
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Articles 1' })).toBeVisible();
-			await matchSnapshot(page, 'profile-other-user.png')
+			await matchSnapshot(page, 'profile-other-user')
 		});
 
 		test('Date joined is displayed correctly', async ({ page }) => {
