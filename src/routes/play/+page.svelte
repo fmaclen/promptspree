@@ -8,6 +8,7 @@
 	import Loading from '$lib/components/icons/Loading.svelte';
 	import Robot from '$lib/components/icons/Robot.svelte';
 	import SubmitPrompt from '$lib/components/icons/SubmitPrompt.svelte';
+	import Category from '$lib/components/Category.svelte';
 	import { type Message, MessageRole } from '$lib/messages';
 	import { Sentiment } from '$lib/utils';
 	import type { ActionResult } from '@sveltejs/kit';
@@ -134,7 +135,8 @@
 								{/if}
 
 								<article class="chat__article">
-									<h2 class="chat__article-h2">{content.category}</h2>
+									<Category label={article.category} />
+
 									<h1 class="chat__article-h1">{content.headline}</h1>
 
 									{#each content.body as paragraph}
@@ -379,12 +381,6 @@
 		font-size: 24px;
 		line-height: 1.2em;
 		color: var(--color-neutral-100);
-	}
-
-	h2.chat__article-h2 {
-		font-size: 14px;
-		font-weight: 600;
-		margin-block: 0;
 	}
 
 	p.chat__article-p {
