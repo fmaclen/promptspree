@@ -9,7 +9,7 @@
 
 <a
 	href="/category/{id}"
-	class="category__a category__a--{id} {isActive ? 'category__a--active' : ''}"
+	class="category category--{id} {isActive ? 'category--active' : ''}"
 >
 	<span class="category__halftone">
 		<Halftone />
@@ -19,7 +19,7 @@
 </a>
 
 <style lang="scss">
-	a.category__a {
+	a.category {
 		@include subtitle-m;
 		position: relative;
 		font-weight: bold;

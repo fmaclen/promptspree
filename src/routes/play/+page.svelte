@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
 	import { type Article, getRandomInitialSuggestions } from '$lib/articles';
+	import Category from '$lib/components/Category.svelte';
 	import FormButton from '$lib/components/FormButton.svelte';
 	import Head from '$lib/components/Head.svelte';
 	import Broom from '$lib/components/icons/Broom.svelte';
@@ -8,7 +9,6 @@
 	import Loading from '$lib/components/icons/Loading.svelte';
 	import Robot from '$lib/components/icons/Robot.svelte';
 	import SubmitPrompt from '$lib/components/icons/SubmitPrompt.svelte';
-	import Category from '$lib/components/Category.svelte';
 	import { type Message, MessageRole } from '$lib/messages';
 	import { Sentiment } from '$lib/utils';
 	import type { ActionResult } from '@sveltejs/kit';
@@ -135,7 +135,7 @@
 								{/if}
 
 								<article class="chat__article">
-									<Category label={article.category} />
+									<Category label={content.category} />
 
 									<h1 class="chat__article-h1">{content.headline}</h1>
 
