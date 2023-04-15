@@ -142,7 +142,6 @@ export const prepareToAcceptDialog = async (page: Page, message: RegExp) => {
 // update the test configuration so it always matches the macOS + Chromium snapshot.
 // REF: https://github.com/microsoft/playwright/issues/7575#issuecomment-1240566545
 export const setSnapshotPath = (testInfo: TestInfo) => {
-	console.warn("testInfo //////////////////",testInfo);
 	testInfo.snapshotPath = (name: string) => `${testInfo.file}-snapshots/${name}`;
 };
 
