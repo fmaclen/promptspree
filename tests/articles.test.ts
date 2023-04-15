@@ -71,23 +71,23 @@ test.describe('Articles', () => {
 			// Article by Alice
 			await expect(page.getByText(MOCK_USERS.alice.nickname)).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).toBeVisible();
-			await expect(page.locator('h2.article__h2', { hasText: MOCK_ARTICLE_COMPLETIONS[1].category })).toBeVisible(); // prettier-ignore
+			await expect(page.locator('li.articles__li a.category', { hasText: MOCK_ARTICLE_COMPLETIONS[1].category })).toBeVisible(); // prettier-ignore
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[0])).toBeVisible(); // Summary
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[1])).not.toBeVisible();
 
 			// Article by Bob
 			await expect(page.getByText(MOCK_USERS.bob.nickname)).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].headline)).toBeVisible();
-			await expect(page.locator('h2.article__h2', { hasText: MOCK_ARTICLE_COMPLETIONS[3].category })).toBeVisible(); // prettier-ignore
+			await expect(page.locator('li.articles__li a.category', { hasText: MOCK_ARTICLE_COMPLETIONS[3].category })).toBeVisible(); // prettier-ignore
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].body[0])).toBeVisible(); // Summary
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].body[1])).not.toBeVisible();
 
 			// Category page
 			await page
-				.locator('a.categories__a', { hasText: MOCK_ARTICLE_COMPLETIONS[1].category })
+				.locator('li.articles__li a.category', { hasText: MOCK_ARTICLE_COMPLETIONS[1].category })
 				.click();
-			await expect(page.locator(`a.categories__a--${MOCK_ARTICLE_COMPLETIONS[1].category.toLowerCase()}`)).toHaveClass(/categories__a--active/); // prettier-ignore
-			await expect(page.locator('h2.article__h2', { hasText: MOCK_ARTICLE_COMPLETIONS[1].category })).toBeVisible(); // prettier-ignore
+			await expect(page.locator(`nav.categories a.category--${MOCK_ARTICLE_COMPLETIONS[1].category.toLowerCase()}`)).toHaveClass(/category--active/); // prettier-ignore
+			await expect(page.locator('li.articles__li a.category', { hasText: MOCK_ARTICLE_COMPLETIONS[1].category })).toBeVisible(); // prettier-ignore
 			await expect(page.getByText(MOCK_USERS.alice.nickname)).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[0])).toBeVisible(); // Summary

@@ -48,9 +48,11 @@
 		justify-content: center;
 
 		&:hover {
-			> svg {
-				> path {
-					fill: var(--color-green);
+			@media (min-width: 768px) {
+				> svg {
+					> path {
+						fill: var(--color-green);
+					}
 				}
 			}
 		}

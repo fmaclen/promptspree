@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
 	import { type Article, getRandomInitialSuggestions } from '$lib/articles';
+	import Category from '$lib/components/Category.svelte';
 	import FormButton from '$lib/components/FormButton.svelte';
 	import Head from '$lib/components/Head.svelte';
 	import Broom from '$lib/components/icons/Broom.svelte';
@@ -134,7 +135,8 @@
 								{/if}
 
 								<article class="chat__article">
-									<h2 class="chat__article-h2">{content.category}</h2>
+									<Category label={content.category} />
+
 									<h1 class="chat__article-h1">{content.headline}</h1>
 
 									{#each content.body as paragraph}
@@ -379,12 +381,6 @@
 		font-size: 24px;
 		line-height: 1.2em;
 		color: var(--color-neutral-100);
-	}
-
-	h2.chat__article-h2 {
-		font-size: 14px;
-		font-weight: 600;
-		margin-block: 0;
 	}
 
 	p.chat__article-p {

@@ -104,7 +104,7 @@ test.describe('Users', () => {
 		await submitButton.click();
 		await expect(page.getByText("Can't login, check your credentials")).not.toBeVisible();
 
-		await expect(page.locator('a.categories__a', { hasText: 'Politics' })).toBeVisible();
+		await expect(page.locator('a.category', { hasText: 'Politics' })).toBeVisible();
 		await expectToBeInHomepage(page);
 
 		// Check logged in navigation

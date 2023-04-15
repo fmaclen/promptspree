@@ -45,13 +45,9 @@
 	}
 
 	h1.section__h1 {
-		font-weight: 600;
-		letter-spacing: -0.025em;
-		margin: 0;
+		@include headline-xl;
 		margin-bottom: 32px;
 		padding-bottom: 24px;
-		font-size: 40px;
-		line-height: 1.2em;
 		color: var(--color-neutral-100);
 		border-bottom: 1px solid var(--color-neutral-500);
 
