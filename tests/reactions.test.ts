@@ -92,11 +92,11 @@ test.describe('Reactions', () => {
 
 	test("Prompt score is displayed in user's profile", async ({ page }) => {
 		await page.goto('/');
-		await page.locator('span.metadata__author', { hasText: MOCK_USERS.alice.nickname }).click();
+		await page.locator('a.metadata_a', { hasText: MOCK_USERS.alice.nickname }).click();
 		await expect(page.locator('li.profile-summary__li', { hasText: 'Prompt score 2' })).toBeVisible(); // prettier-ignore
 
 		await goToHomepageViaLogo(page);
-		await page.locator('span.metadata__author', { hasText: MOCK_USERS.bob.nickname }).click();
+		await page.locator('a.metadata_a', { hasText: MOCK_USERS.bob.nickname }).click();
 		await expect(page.locator('li.profile-summary__li', { hasText: 'Prompt score 0' })).toBeVisible(); // prettier-ignore
 	});
 });
