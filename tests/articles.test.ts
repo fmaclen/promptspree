@@ -3,7 +3,7 @@ import { readFileSync } from 'fs';
 
 import { ArticleStatus } from '../src/lib/articles.js';
 import { MOCK_ARTICLE_COMPLETIONS, MockPrompt } from '../src/lib/tests.js';
-import { MAX_DIFF_PIXEL_RATIO, MOCK_USERS } from './lib/fixtures.js';
+import { MOCK_USERS } from './lib/fixtures.js';
 import {
 	createArticle,
 	createUser,
@@ -13,6 +13,7 @@ import {
 	goToHomepageViaLogo,
 	loginUser,
 	logoutCurrentUser,
+	matchSnapshot,
 	prepareToAcceptDialog,
 	resetDatabase,
 	setSnapshotPath,
@@ -57,7 +58,7 @@ test.describe('Articles', () => {
 		await page.getByText('Politics').click();
 		await expect(page.getByText('Sorry, we can\'t show you the articles right now. Please try again later')).not.toBeVisible(); // prettier-ignore
 		await expect(page.getByText('There are no articles in the Politics category, try creating one')).toBeVisible(); // prettier-ignore
-		expect(await page.screenshot({ fullPage: true})).toMatchSnapshot({ name: 'homepage-with-no-articles.png' , maxDiffPixelRatio: MAX_DIFF_PIXEL_RATIO }); //prettier-ignore
+		await matchSnapshot(page, 'homepage-with-no-articles.png')
 	});
 
 	test.describe('With articles', () => {
@@ -87,7 +88,7 @@ test.describe('Articles', () => {
 			await expect(page.locator('li.articles__li a.category', { hasText: MOCK_ARTICLE_COMPLETIONS[3].category })).toBeVisible(); // prettier-ignore
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].body[0])).toBeVisible(); // Summary
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].body[1])).not.toBeVisible();
-			expect(await page.screenshot({ fullPage: true })).toMatchSnapshot({ name: 'homepage-with-articles.png' , maxDiffPixelRatio: MAX_DIFF_PIXEL_RATIO }); //prettier-ignore
+			await matchSnapshot(page, 'homepage-with-articles.png')
 
 			// Category page
 			await page
@@ -100,7 +101,7 @@ test.describe('Articles', () => {
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[0])).toBeVisible(); // Summary
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[1])).not.toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].headline)).not.toBeVisible();
-			expect(await page.screenshot({ fullPage: true })).toMatchSnapshot({ name: 'category-page.png' , maxDiffPixelRatio: MAX_DIFF_PIXEL_RATIO }); //prettier-ignore
+			await matchSnapshot(page, 'category-page.png')
 		});
 
 		test('Can see published articles', async ({ page }) => {
@@ -119,7 +120,7 @@ test.describe('Articles', () => {
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].headline)).not.toBeVisible();
 			await expect(page.getByText('Delete')).toBeVisible();
 			await expect(page.getByText('Publish')).not.toBeVisible();
-			expect(await page.screenshot({ fullPage: true })).toMatchSnapshot({ name: 'article-published-by-author.png' , maxDiffPixelRatio: MAX_DIFF_PIXEL_RATIO }); //prettier-ignore
+			await matchSnapshot(page, 'article-published-by-author.png')
 
 			// Published article by Bob
 			await goToHomepageViaLogo(page);
@@ -132,7 +133,7 @@ test.describe('Articles', () => {
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).not.toBeVisible();
 			await expect(page.getByText('Delete')).not.toBeVisible();
 			await expect(page.getByText('Publish')).not.toBeVisible();
-			expect(await page.screenshot({ fullPage: true })).toMatchSnapshot({ name: 'article-published-by-others.png' , maxDiffPixelRatio: MAX_DIFF_PIXEL_RATIO }); //prettier-ignore
+			await matchSnapshot(page, 'article-published-by-others.png')
 		});
 
 		test('Can edit own draft articles', async ({ page }) => {
@@ -215,7 +216,7 @@ test.describe('Articles', () => {
 			expect(await page.locator('audio.article__player').getAttribute('src')).toMatch(
 				/^.*\/api\/files\/[^/]+\/[^/]+\/.+\.mp3$/
 			); // 'xxx/api/files/xxx/xxx/xxx.mp3'
-			expect(await page.screenshot({ fullPage: true })).toMatchSnapshot({ name: 'article-with-audio.png' , maxDiffPixelRatio: MAX_DIFF_PIXEL_RATIO }); //prettier-ignore
+			await matchSnapshot(page, 'article-with-audio.png')
 		});
 
 		test('Articles can have images', async ({ page }) => {
@@ -239,7 +240,7 @@ test.describe('Articles', () => {
 			expect(await page.locator('img.article__img').getAttribute('src')).toMatch(
 				/^.*\/api\/files\/[^/]+\/[^/]+\/.+\.png$/
 			); // 'xxx/api/files/xxx/xxx/xxx.mp3'
-			expect(await page.screenshot({ fullPage: true })).toMatchSnapshot({ name: 'article-with-image.png' , maxDiffPixelRatio: MAX_DIFF_PIXEL_RATIO }); //prettier-ignore
+			await matchSnapshot(page, 'article-with-image.png')
 		});
 	});
 

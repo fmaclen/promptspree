@@ -2,13 +2,14 @@ import { expect, test } from '@playwright/test';
 
 import { ArticleStatus } from '../src/lib/articles.js';
 import { MOCK_ARTICLE_COMPLETIONS } from '../src/lib/tests.js';
-import { MAX_DIFF_PIXEL_RATIO, MOCK_USERS } from './lib/fixtures.js';
+import { MOCK_USERS } from './lib/fixtures.js';
 import {
 	createArticle,
 	createUser,
 	getUser,
 	loginUser,
 	logoutCurrentUser,
+	matchSnapshot,
 	prepareToAcceptDialog,
 	resetDatabase,
 	setSnapshotPath,
@@ -65,7 +66,7 @@ test.describe('Profile', () => {
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Articles 1' })).not.toBeVisible(); // prettier-ignore
 
 			await page.getByText('Drafts 1').click();
-			expect(await page.screenshot({ fullPage: true })).toMatchSnapshot({ name: 'profile-with-drafts.png' , maxDiffPixelRatio: MAX_DIFF_PIXEL_RATIO }); //prettier-ignore
+			await matchSnapshot(page, 'profile-with-drafts.png')
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline)).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].body[0])).toBeVisible(); // Summary
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].body[1])).not.toBeVisible();
@@ -92,7 +93,7 @@ test.describe('Profile', () => {
 
 			await page.getByText('Drafts 0').click();
 			await expect(page.getByText('No draft articles, generate one')).toBeVisible();
-			expect(await page.screenshot({ fullPage: true })).toMatchSnapshot({ name: 'profile-without-drafts.png' , maxDiffPixelRatio: MAX_DIFF_PIXEL_RATIO }); //prettier-ignore
+			await matchSnapshot(page, 'profile-without-drafts.png')
 		});
 
 		test('Can delete published or draft articles', async ({ page }) => {
@@ -142,7 +143,7 @@ test.describe('Profile', () => {
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Drafts 1' })).not.toBeVisible(); // prettier-ignore
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Published 1' })).not.toBeVisible(); // prettier-ignore
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Articles 1' })).toBeVisible();
-			expect(await page.screenshot({ fullPage: true })).toMatchSnapshot({ name: 'profile-other-user.png' , maxDiffPixelRatio: MAX_DIFF_PIXEL_RATIO }); //prettier-ignore
+			await matchSnapshot(page, 'profile-other-user.png')
 		});
 
 		test('Date joined is displayed correctly', async ({ page }) => {
