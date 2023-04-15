@@ -3,7 +3,7 @@ import { readFileSync } from 'fs';
 
 import { ArticleStatus } from '../src/lib/articles.js';
 import { MOCK_ARTICLE_COMPLETIONS, MockPrompt } from '../src/lib/tests.js';
-import { MOCK_USERS } from './lib/fixtures.js';
+import { MAX_DIFF_PIXEL_RATIO, MOCK_USERS } from './lib/fixtures.js';
 import {
 	createArticle,
 	createUser,
@@ -15,6 +15,7 @@ import {
 	logoutCurrentUser,
 	prepareToAcceptDialog,
 	resetDatabase,
+	setSnapshotPath,
 	updateArticle,
 	verifyUser
 } from './lib/helpers.js';
@@ -44,6 +45,10 @@ test.describe('Articles', () => {
 		await resetDatabase();
 	});
 
+	test.beforeEach(async ({page},testInfo) => {
+		setSnapshotPath(testInfo);
+	});
+
 	test('No articles to browse', async ({ page }) => {
 		await page.goto('/');
 		await expectToBeInHomepage(page);
@@ -52,6 +57,7 @@ test.describe('Articles', () => {
 		await page.getByText('Politics').click();
 		await expect(page.getByText('Sorry, we can\'t show you the articles right now. Please try again later')).not.toBeVisible(); // prettier-ignore
 		await expect(page.getByText('There are no articles in the Politics category, try creating one')).toBeVisible(); // prettier-ignore
+		expect(await page.screenshot({ fullPage: true})).toMatchSnapshot({ name: 'homepage-with-no-articles.png' , maxDiffPixelRatio: MAX_DIFF_PIXEL_RATIO }); //prettier-ignore
 	});
 
 	test.describe('With articles', () => {
@@ -81,6 +87,7 @@ test.describe('Articles', () => {
 			await expect(page.locator('li.articles__li a.category', { hasText: MOCK_ARTICLE_COMPLETIONS[3].category })).toBeVisible(); // prettier-ignore
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].body[0])).toBeVisible(); // Summary
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].body[1])).not.toBeVisible();
+			expect(await page.screenshot({ fullPage: true })).toMatchSnapshot({ name: 'homepage-with-articles.png' , maxDiffPixelRatio: MAX_DIFF_PIXEL_RATIO }); //prettier-ignore
 
 			// Category page
 			await page
@@ -93,6 +100,7 @@ test.describe('Articles', () => {
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[0])).toBeVisible(); // Summary
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[1])).not.toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].headline)).not.toBeVisible();
+			expect(await page.screenshot({ fullPage: true })).toMatchSnapshot({ name: 'category-page.png' , maxDiffPixelRatio: MAX_DIFF_PIXEL_RATIO }); //prettier-ignore
 		});
 
 		test('Can see published articles', async ({ page }) => {
@@ -111,6 +119,7 @@ test.describe('Articles', () => {
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].headline)).not.toBeVisible();
 			await expect(page.getByText('Delete')).toBeVisible();
 			await expect(page.getByText('Publish')).not.toBeVisible();
+			expect(await page.screenshot({ fullPage: true })).toMatchSnapshot({ name: 'article-published-by-author.png' , maxDiffPixelRatio: MAX_DIFF_PIXEL_RATIO }); //prettier-ignore
 
 			// Published article by Bob
 			await goToHomepageViaLogo(page);
@@ -123,6 +132,7 @@ test.describe('Articles', () => {
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).not.toBeVisible();
 			await expect(page.getByText('Delete')).not.toBeVisible();
 			await expect(page.getByText('Publish')).not.toBeVisible();
+			expect(await page.screenshot({ fullPage: true })).toMatchSnapshot({ name: 'article-published-by-others.png' , maxDiffPixelRatio: MAX_DIFF_PIXEL_RATIO }); //prettier-ignore
 		});
 
 		test('Can edit own draft articles', async ({ page }) => {
@@ -205,6 +215,31 @@ test.describe('Articles', () => {
 			expect(await page.locator('audio.article__player').getAttribute('src')).toMatch(
 				/^.*\/api\/files\/[^/]+\/[^/]+\/.+\.mp3$/
 			); // 'xxx/api/files/xxx/xxx/xxx.mp3'
+			expect(await page.screenshot({ fullPage: true })).toMatchSnapshot({ name: 'article-with-audio.png' , maxDiffPixelRatio: MAX_DIFF_PIXEL_RATIO }); //prettier-ignore
+		});
+
+		test('Articles can have images', async ({ page }) => {
+			// NOTE: This test only checks that the player is visible when an audio path is present.
+			const article = await getLastArticle(`headline = "${MOCK_ARTICLE_COMPLETIONS[1].headline}"`);
+
+			const imageData = readFileSync('tests/lib/fixtures/the-great-plague.png');
+			const imageBlob = new Blob([imageData], { type: 'image/png' });
+			const formData = new FormData();
+			formData.append('image', imageBlob, 'the-great-plague.png');
+			article?.id && (await updateArticle(article?.id, formData));
+
+			await page.getByText(MOCK_ARTICLE_COMPLETIONS[3].headline).click();
+			await expect(page.locator('img.article__img')).not.toBeVisible();
+
+			await goToHomepageViaLogo(page);
+			await expect(page.locator('img.article__img')).not.toBeVisible();
+
+			await page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline).click();
+			await expect(page.locator('img.article__img')).toBeVisible();
+			expect(await page.locator('img.article__img').getAttribute('src')).toMatch(
+				/^.*\/api\/files\/[^/]+\/[^/]+\/.+\.png$/
+			); // 'xxx/api/files/xxx/xxx/xxx.mp3'
+			expect(await page.screenshot({ fullPage: true })).toMatchSnapshot({ name: 'article-with-image.png' , maxDiffPixelRatio: MAX_DIFF_PIXEL_RATIO }); //prettier-ignore
 		});
 	});
 

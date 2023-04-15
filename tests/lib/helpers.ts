@@ -1,6 +1,6 @@
 import type { ArticleCollection } from '$lib/pocketbase.schema.js';
 import type { MockArticleCompletion } from '$lib/tests';
-import { type Page, expect } from '@playwright/test';
+import { type Page, expect, type TestInfo } from '@playwright/test';
 import PocketBase, { BaseAuthStore } from 'pocketbase';
 
 import { type ArticleStatus, EXPAND_RECORD_RELATIONS } from '../../src/lib/articles.js';
@@ -136,4 +136,11 @@ export const prepareToAcceptDialog = async (page: Page, message: RegExp) => {
 
 		dialog.accept();
 	});
+};
+
+// Playwright renames snapshots to match the current OS and browser, so we need to
+// update the test configuration so it always matches the macOS + Chromium snapshot.
+// REF: https://github.com/microsoft/playwright/issues/7575#issuecomment-1240566545
+export const setSnapshotPath = (testInfo: TestInfo) => {
+	testInfo.snapshotPath = (name: string) => `${testInfo.file}-snapshots/${name}`;
 };

@@ -1,5 +1,7 @@
 export const TEST_ADMIN_USER = 'playwright@example.com';
 export const TEST_ADMIN_PASSWORD = 'playwright';
+export const MAX_DIFF_PIXEL_RATIO = 0.075;
+
 export const MOCK_USERS = {
 	alice: {
 		email: 'alice@example.com',

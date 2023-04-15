@@ -1,17 +1,19 @@
 import { expect, test } from '@playwright/test';
 
-import { MOCK_USERS } from './lib/fixtures.js';
+import { MAX_DIFF_PIXEL_RATIO, MOCK_USERS } from './lib/fixtures.js';
 import {
 	createAndLoginUser,
 	createUser,
 	expectToBeInHomepage,
 	logoutCurrentUser,
 	resetDatabase,
+	setSnapshotPath,
 	verifyUser
 } from './lib/helpers.js';
 
 test.describe('Users', () => {
-	test.beforeEach(async ({ page }) => {
+	test.beforeEach(async ({ page },testInfo) => {
+		setSnapshotPath(testInfo);
 		await resetDatabase();
 		await page.goto('/');
 	});
@@ -50,6 +52,7 @@ test.describe('Users', () => {
 		await submitButton.click();
 		await expect(page.getByText('Nickname is already taken or is invalid')).toBeVisible();
 		await expect(page.getByText('Email is already in use or is invalid')).not.toBeVisible();
+		expect(await page.screenshot({ fullPage: true })).toMatchSnapshot({ name: 'auth-signup-with-errors.png' , maxDiffPixelRatio: MAX_DIFF_PIXEL_RATIO }); //prettier-ignore
 	});
 
 	test('Can join', async ({ page }) => {
@@ -71,6 +74,7 @@ test.describe('Users', () => {
 		await submitButton.click();
 		await expect(page.getByText('Almost there...')).toBeVisible();
 		await expect(page.getByText('Check your email to verify your account')).toBeVisible();
+		expect(await page.screenshot({ fullPage: true })).toMatchSnapshot({ name: 'auth-signup-verification.png' , maxDiffPixelRatio: MAX_DIFF_PIXEL_RATIO }); //prettier-ignore
 	});
 
 	test('Can login and logout', async ({ page }) => {
@@ -97,6 +101,7 @@ test.describe('Users', () => {
 
 		await submitButton.click();
 		await expect(page.getByText("Can't login, check your credentials")).toBeVisible();
+		expect(await page.screenshot({ fullPage: true })).toMatchSnapshot({ name: 'auth-login-with-errors.png' , maxDiffPixelRatio: MAX_DIFF_PIXEL_RATIO }); //prettier-ignore
 
 		await verifyUser(MOCK_USERS.alice.email);
 
@@ -145,6 +150,7 @@ test.describe('Users', () => {
 
 		await page.getByLabel('E-mail').fill('mocked@example.com');
 		await expect(passwordResetButton).not.toBeDisabled();
+		expect(await page.screenshot({ fullPage: true })).toMatchSnapshot({ name: 'auth-forgot-password.png' , maxDiffPixelRatio: MAX_DIFF_PIXEL_RATIO }); //prettier-ignore
 
 		await passwordResetButton.click();
 		await expect(
@@ -152,6 +158,7 @@ test.describe('Users', () => {
 		).toBeVisible();
 		await expect(passwordResetButton).toBeDisabled();
 		await expect(page.getByLabel('E-mail')).toBeDisabled();
+		expect(await page.screenshot({ fullPage: true })).toMatchSnapshot({ name: 'auth-confirm-email.png' , maxDiffPixelRatio: MAX_DIFF_PIXEL_RATIO }); //prettier-ignore
 
 		await page.getByText('login here').click();
 		await expect(loginButton).toBeVisible();
