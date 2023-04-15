@@ -85,7 +85,7 @@
 	div.article__category-placeholder {
 		height: 14px;
 		width: 25%;
-		background-color: var(--color-primary-darker);
+		background-color: var(--color-green-darker);
 	}
 
 	li.article__headline-placeholder {

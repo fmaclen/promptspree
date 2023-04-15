@@ -33,8 +33,8 @@
 		cursor: pointer;
 		font-family: var(--font-sans);
 		border-radius: var(--border-radius-l);
-		border: 1px solid var(--color-primary);
-		background-color: var(--color-primary);
+		border: 1px solid var(--color-green);
+		background-color: var(--color-green);
 		color: var(--color-neutral-950);
 
 		&:active {
@@ -42,28 +42,28 @@
 		}
 
 		&--secondary {
-			color: var(--color-secondary);
-			background-color: var(--color-secondary-darkest);
-			border-color: var(--color-secondary-darker);
+			color: var(--color-yellow);
+			background-color: var(--color-yellow-darkest);
+			border-color: var(--color-yellow-darker);
 
 			&:hover {
-				border-color: var(--color-secondary);
+				border-color: var(--color-yellow);
 			}
 		}
 
 		&--positive {
-			background-color: var(--color-positive);
-			border-color: var(--color-positive);
+			background-color: var(--color-green);
+			border-color: var(--color-green);
 		}
 
 		&--negative {
 			color: var(--color-neutral-50);
-			background-color: var(--color-negative);
-			border-color: var(--color-negative);
+			background-color: var(--color-red);
+			border-color: var(--color-red);
 
 			&.form-button--secondary {
-				background-color: var(--color-negative-secondary);
-				color: var(--color-negative);
+				background-color: var(--color-red-dark);
+				color: var(--color-red);
 			}
 		}
 

@@ -51,7 +51,7 @@
 		font-size: 14px;
 		font-weight: 600;
 		margin: 0;
-		color: var(--color-primary);
+		color: var(--color-green);
 	}
 
 	a.article__a {
@@ -59,7 +59,7 @@
 
 		&:hover {
 			h1.article__h1 {
-				color: var(--color-primary);
+				color: var(--color-green);
 			}
 		}
 	}

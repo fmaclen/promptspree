@@ -17,7 +17,7 @@
 
 	&:active,
 	&:focus {
-		outline: 1px solid var(--color-primary);
+		outline: 1px solid var(--color-green);
 		-webkit-tap-highlight-color: rgba(0, 0, 0, 0); // Removes outline on iOS
 	}
 

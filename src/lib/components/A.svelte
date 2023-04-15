@@ -22,15 +22,15 @@
 
 		&:hover,
 		&--highlighted {
-			color: var(--color-secondary);
+			color: var(--color-yellow);
 		}
 
 		&--positive {
-			color: var(--color-positive);
+			color: var(--color-green);
 			text-decoration: underline;
 
 			&:hover {
-				color: var(--color-positive);
+				color: var(--color-green);
 				text-decoration: unset;
 			}
 		}

@@ -216,7 +216,7 @@
 		border-bottom: 1px solid transparent;
 
 		&:hover {
-			color: var(--color-primary);
+			color: var(--color-green);
 		}
 	}
 
@@ -282,16 +282,16 @@
 		}
 
 		&--active {
-			background-color: var(--color-primary-darkest);
-			color: var(--color-primary);
-			border-color: var(--color-primary-dark);
+			background-color: var(--color-green-darkest);
+			color: var(--color-green);
+			border-color: var(--color-green-dark);
 
 			&:hover {
-				border-color: var(--color-primary);
+				border-color: var(--color-green);
 			}
 
 			span.header__hamburger-line {
-				background-color: var(--color-primary);
+				background-color: var(--color-green);
 			}
 		}
 	}
@@ -324,12 +324,12 @@
 		}
 
 		&--active {
-			background-color: var(--color-primary-darkest);
-			color: var(--color-primary);
-			border-color: var(--color-primary-dark);
+			background-color: var(--color-green-darkest);
+			color: var(--color-green);
+			border-color: var(--color-green-dark);
 
 			&:hover {
-				border-color: var(--color-primary);
+				border-color: var(--color-green);
 			}
 		}
 	}

@@ -134,7 +134,7 @@
 		align-self: center;
 
 		&:hover {
-			color: var(--color-primary);
+			color: var(--color-green);
 		}
 	}
 
@@ -181,6 +181,6 @@
 	}
 
 	p.article-prompt__assistant {
-		color: var(--color-primary-dark);
+		color: var(--color-green-dark);
 	}
 </style>

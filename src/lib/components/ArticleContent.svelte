@@ -57,8 +57,8 @@
 		cursor: help;
 		margin-left: 16px;
 		border-radius: var(--border-radius-l);
-		color: var(--color-secondary);
-		border: 1px solid var(--color-secondary);
+		color: var(--color-yellow);
+		border: 1px solid var(--color-yellow);
 		filter: invert(1);
 	}
 

@@ -282,7 +282,7 @@
 		border-radius: var(--border-radius-l);
 
 		&--user {
-			background-color: var(--color-primary-darkest);
+			background-color: var(--color-green-darkest);
 		}
 
 		&--assistant {
@@ -323,11 +323,11 @@
 		margin-block: 0;
 
 		&--user {
-			color: var(--color-primary);
+			color: var(--color-green);
 		}
 
 		&--assistant {
-			color: var(--color-secondary);
+			color: var(--color-yellow);
 		}
 	}
 
@@ -358,7 +358,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 12px;
-		border-left: 2px solid var(--color-secondary);
+		border-left: 2px solid var(--color-yellow);
 		padding-left: 20px;
 		box-sizing: border-box;
 		width: 50%;
@@ -432,12 +432,12 @@
 		cursor: pointer;
 		font-size: 16px;
 		font-family: var(--font-sans);
-		border: 1px solid var(--color-secondary-darkest);
-		background-color: var(--color-secondary-darkest);
-		color: var(--color-secondary);
+		border: 1px solid var(--color-yellow-darkest);
+		background-color: var(--color-yellow-darkest);
+		color: var(--color-yellow);
 
 		&:hover {
-			border: 1px solid var(--color-secondary-dark);
+			border: 1px solid var(--color-yellow-dark);
 		}
 	}
 
@@ -463,7 +463,7 @@
 
 		&:not(.chat__form--loading) {
 			&:focus-within {
-				border-color: var(--color-primary-dark);
+				border-color: var(--color-green-dark);
 			}
 		}
 	}
@@ -512,8 +512,8 @@
 		display: flex;
 		align-items: center;
 		gap: 12px;
-		border: 1px solid var(--color-primary-darkest);
-		background-color: var(--color-primary-darkest);
+		border: 1px solid var(--color-green-darkest);
+		background-color: var(--color-green-darkest);
 		border-radius: var(--border-radius-l);
 		transition: padding 200ms;
 		padding: 12px;

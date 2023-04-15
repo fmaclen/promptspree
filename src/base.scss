@@ -4,10 +4,6 @@
 
 	--color-accent: hsl(248, 40%, 40%);
 	--color-accent-secondary: hsl(248, 40%, 95%);
-	--color-positive: hsl(170, 90%, 39%);
-	--color-positive-secondary: hsl(170, 90%, 95%);
-	--color-negative: hsl(342, 83%, 48%);
-	--color-negative-secondary: hsl(342, 83%, 95%);
 
 	--border-radius-l: 8px;
 	--border-radius-m: 4px;
@@ -26,55 +22,32 @@
 	--color-neutral-950: #141414;
 	--color-neutral-1000: #0f0f0f;
 
-	--color-primary-lightest: #eafff8;
-	--color-primary-lighter: #c4fdea;
-	--color-primary-light: #9cf2d5;
-	--color-primary: #5de9ba;
-	--color-primary-dark: #32765e;
-	--color-primary-darker: #17362b;
-	--color-primary-darkest: #222b28;
+	--color-green-lightest: #eafff8;
+	--color-green-lighter: #c4fdea;
+	--color-green-light: #9cf2d5;
+	--color-green: #5de9ba;
+	--color-green-dark: #32765e;
+	--color-green-darker: #17362b;
+	--color-green-darkest: #222b28;
 
-	--color-secondary-lightest: #fff9ec;
-	--color-secondary-lighter: #fdefce;
-	--color-secondary-light: #f4d58b;
-	--color-secondary: #eec053;
-	--color-secondary-dark: #876922;
-	--color-secondary-darker: #413416;
-	--color-secondary-darkest: #2f2919;
+	--color-yellow-lightest: #fff9ec;
+	--color-yellow-lighter: #fdefce;
+	--color-yellow-light: #f4d58b;
+	--color-yellow: #eec053;
+	--color-yellow-dark: #876922;
+	--color-yellow-darker: #413416;
+	--color-yellow-darkest: #2f2919;
+
+	--color-red-lightest: #FFECEC;
+	--color-red-lighter: #FDCECE;
+	--color-red-light: #F48B8B;
+	--color-red: #EE5353;
+	--color-red-dark: #8C1D1D;
+	--color-red-darker: #411616;
+	--color-red-darkest: #2F1919;
 }
 
 @mixin baseForm {
 	width: 100%;
 	box-sizing: border-box;
-}
-
-@mixin baseInput {
-	display: block;
-	width: 100%;
-	font-size: 14px;
-	padding: 16px;
-	box-sizing: border-box;
-	border: 1px solid var(--color-neutral-500);
-	font-family: var(--font-mono);
-	color: var(--color-neutral-100);
-	border-radius: var(--border-radius-l);
-	background-color: var(--color-neutral-700);
-
-	&:active,
-	&:focus {
-		outline: 1px solid var(--color-primary);
-		-webkit-tap-highlight-color: rgba(0, 0, 0, 0); // Removes outline on iOS
-	}
-
-	&::placeholder {
-		color: var(--color-neutral-400);
-	}
-}
-
-@mixin disabledInput {
-	pointer-events: none;
-	color: var(--color-neutral-500);
-	border-color: var(--color-neutral-700);
-	background-color: var(--color-neutral-700);
-	cursor: default;
 }
