@@ -7,7 +7,7 @@ import { type ArticleStatus, EXPAND_RECORD_RELATIONS } from '../../src/lib/artic
 import { MessageRole } from '../../src/lib/messages.js';
 import { CURRENT_MODEL } from '../../src/lib/openai.js';
 import { miniStringify } from '../../src/lib/utils.js';
-import { TEST_ADMIN_PASSWORD, TEST_ADMIN_USER } from './fixtures.js';
+import { MAX_DIFF_PIXEL_RATIO, TEST_ADMIN_PASSWORD, TEST_ADMIN_USER } from './fixtures.js';
 
 interface User {
 	email: string;
@@ -142,5 +142,15 @@ export const prepareToAcceptDialog = async (page: Page, message: RegExp) => {
 // update the test configuration so it always matches the macOS + Chromium snapshot.
 // REF: https://github.com/microsoft/playwright/issues/7575#issuecomment-1240566545
 export const setSnapshotPath = (testInfo: TestInfo) => {
+	console.warn("testInfo //////////////////",testInfo);
 	testInfo.snapshotPath = (name: string) => `${testInfo.file}-snapshots/${name}`;
 };
+
+
+export async function matchSnapshot(page: Page, name: string) {
+	// NOTE: We are currently only running snapshots locally on macOS.
+	// To add run visual regression tests on CI we need to account for all the different
+	// variations of browser and viewport resolutions (i.e. desktop/mobile).
+	const isMacOs = process.platform === 'darwin';
+	if (isMacOs) expect(await page.screenshot({ fullPage: true })).toMatchSnapshot({ name , maxDiffPixelRatio: MAX_DIFF_PIXEL_RATIO }); //prettier-ignore
+}
