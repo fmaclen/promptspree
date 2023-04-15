@@ -38,7 +38,7 @@
 				{/if}
 			</button>
 
-			<Logo title={APP_NAME} hasDarkBackground={true} on:click={() => (isExpanded = false)} />
+			<Logo title={APP_NAME} on:click={() => (isExpanded = false)} />
 
 			<a
 				class="primary-action {$page.url.pathname.includes('/play')
@@ -312,7 +312,6 @@
 		font-size: 14px;
 		font-weight: 600;
 		padding: 8px 12px;
-		margin-left: auto;
 		border-radius: var(--border-radius-l);
 		color: var(--color-neutral-50);
 		border: 1px solid var(--color-neutral-500);

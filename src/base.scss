@@ -1,50 +1,4 @@
-@font-face {
-  font-family: 'Mona Sans';
-  src: url('/fonts/Mona-Sans-Regular.woff2') format('woff2');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Mona Sans';
-  src: url('/fonts/Mona-Sans-Bold.woff2') format('woff2');
-  font-weight: bold;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Mona Sans Narrow';
-  src: url('/fonts/Mona-Sans-RegularNarrowItalic.woff2') format('woff2');
-  font-weight: normal;
-  font-style: italic;
-}
-
-@font-face {
-  font-family: 'Mona Sans Narrow';
-  src: url('/fonts/Mona-Sans-BlackNarrowItalic.woff2') format('woff2');
-  font-weight: 900;
-  font-style: italic;
-}
-
-@font-face {
-  font-family: 'Mona Sans Wide';
-  src: url('/fonts/Mona-Sans-ExtraBoldWide.woff2') format('woff2');
-  font-weight: 800;
-  font-style: normal;
-}
-
 :global(body) {
-	--font-base: 'Mona Sans', sans-serif;
-	--font-wide: 'Mona Sans Wide', sans-serif;
-	--font-narrow: 'Mona Sans Narrow', sans-serif;
-
-	--color-accent: hsl(248, 40%, 40%);
-	--color-accent-secondary: hsl(248, 40%, 95%);
-
-	--border-radius-l: 8px;
-	--border-radius-m: 4px;
-	--border-radius-s: 2px;
-
 	--color-neutral-50: #ffffff;
 	--color-neutral-100: #e3e8e6;
 	--color-neutral-200: #a4b0ac;
@@ -74,11 +28,134 @@
 	--color-yellow-darker: #413416;
 	--color-yellow-darkest: #2f2919;
 
-	--color-red-lightest: #FFECEC;
-	--color-red-lighter: #FDCECE;
-	--color-red-light: #F48B8B;
-	--color-red: #EE5353;
-	--color-red-dark: #8C1D1D;
+	--color-red-lightest: #ffecec;
+	--color-red-lighter: #fdcece;
+	--color-red-light: #f48b8b;
+	--color-red: #ee5353;
+	--color-red-dark: #8c1d1d;
 	--color-red-darker: #411616;
-	--color-red-darkest: #2F1919;
+	--color-red-darkest: #2f1919;
+
+	--border-radius-l: 8px;
+	--border-radius-m: 4px;
+	--border-radius-s: 2px;
+
+	--font-base: 'Mona Sans', sans-serif;
+	--font-wide: 'Mona Sans Wide', sans-serif;
+	--font-narrow: 'Mona Sans Narrow', sans-serif;
+}
+
+@font-face {
+	font-family: 'Mona Sans';
+	src: url('/fonts/Mona-Sans-Regular.woff2') format('woff2');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Mona Sans';
+	src: url('/fonts/Mona-Sans-Bold.woff2') format('woff2');
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Mona Sans Narrow';
+	src: url('/fonts/Mona-Sans-RegularNarrowItalic.woff2') format('woff2');
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'Mona Sans Narrow';
+	src: url('/fonts/Mona-Sans-ExtraBoldNarrowItalic.woff2') format('woff2');
+	font-weight: 800;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'Mona Sans Wide';
+	src: url('/fonts/Mona-Sans-ExtraBoldWide.woff2') format('woff2');
+	font-weight: 800;
+	font-style: normal;
+}
+
+@mixin headline-xxl {
+	font-family: var(--font-wide);
+	font-size: 40px;
+	line-height: 1.2em;
+	letter-spacing: -0.025em;
+	font-weight: 800;
+	margin: 0;
+}
+
+@mixin headline-xl {
+	font-family: var(--font-wide);
+	font-size: 32px;
+	line-height: 1.2em;
+	letter-spacing: -0.025em;
+	font-weight: 800;
+	margin: 0;
+}
+
+@mixin headline-l {
+	font-family: var(--font-base);
+	font-size: 24px;
+	line-height: 1.2em;
+	letter-spacing: -0.025em;
+	font-weight: bold;
+	margin: 0;
+}
+
+// @mixin headline-m {
+// 	font-family: var(--font-base);
+// 	font-size: 18px;
+// 	line-height: 1.2em;
+// 	letter-spacing: -0.025em;
+// 	font-weight: bold;
+// 	margin: 0;
+// }
+
+@mixin subtitle-l {
+	font-family: var(--font-narrow);
+	font-size: 28px;
+	line-height: 1em;
+	letter-spacing: 0.05em;
+	margin: 0;
+	font-weight: bold;
+	font-style: italic;
+	text-transform: uppercase;
+}
+
+@mixin subtitle-m {
+	font-family: var(--font-narrow);
+	font-size: 16px;
+	line-height: 1em;
+	letter-spacing: 0.05em;
+	margin: 0;
+	text-transform: uppercase;
+}
+
+@mixin paragraph-l {
+	font-family: var(--font-base);
+	font-size: 20px;
+	line-height: 1.5em;
+	letter-spacing: 0.025em;
+	margin: 0;
+}
+
+@mixin paragraph-m {
+	font-family: var(--font-base);
+	font-size: 16px;
+	line-height: 1.4em;
+	letter-spacing: 0.025em;
+	margin: 0;
+}
+
+@mixin paragraph-s {
+	font-family: var(--font-base);
+	font-size: 13px;
+	line-height: 1.2em;
+	letter-spacing: 0.025em;
+	margin: 0;
 }

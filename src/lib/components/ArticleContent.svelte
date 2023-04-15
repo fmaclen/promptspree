@@ -11,7 +11,11 @@
 	<ArticleHeader {article} {size} />
 
 	{#if article.imageSrc && size === ArticleSize.FULL}
-		<img src="{article.imageSrc}" class="article__img" alt="AI-generated illustration of the article" />
+		<img
+			src={article.imageSrc}
+			class="article__img"
+			alt="AI-generated illustration of the article"
+		/>
 	{/if}
 
 	<ArticleBody {article} {size} />

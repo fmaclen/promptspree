@@ -5,11 +5,7 @@ import {
 	ArticleStatus,
 	isCategoryValid
 } from '$lib/articles';
-import {
-	createArticleCollection,
-	getArticle,
-	updateArticleCollection
-} from '$lib/articles.server';
+import { createArticleCollection, getArticle, updateArticleCollection } from '$lib/articles.server';
 import { type Message, MessageRole } from '$lib/messages';
 import { createMessageCollection, getMessage } from '$lib/messages.server';
 import type { CompletionResponse } from '$lib/openai';
