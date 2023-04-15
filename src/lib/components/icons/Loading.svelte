@@ -29,13 +29,13 @@
 
 		&--primary {
 			circle {
-				fill: var(--color-primary);
+				fill: var(--color-green);
 			}
 		}
 
 		&--secondary {
 			circle {
-				fill: var(--color-secondary);
+				fill: var(--color-yellow);
 			}
 		}
 	}

@@ -25,12 +25,14 @@
 	}
 
 	p.article__p {
-		margin: 0;
-		font-size: 14px;
-		line-height: 1.5em;
 		color: var(--color-neutral-200);
 
+		&:not(.article__p--full) {
+			@include paragraph-m;
+		}
+
 		&--full {
+			@include paragraph-l;
 			font-size: 18px;
 		}
 

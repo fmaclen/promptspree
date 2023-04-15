@@ -82,11 +82,11 @@
 		}
 
 		&--active {
-			background-color: var(--color-primary-darkest);
-			color: var(--color-primary);
+			background-color: var(--color-green-darkest);
+			color: var(--color-green);
 
 			&:hover {
-				background-color: var(--color-primary-darker);
+				background-color: var(--color-green-darker);
 			}
 		}
 	}

@@ -171,7 +171,7 @@
 		accent-color: transparent;
 
 		&:checked {
-			accent-color: var(--color-primary);
+			accent-color: var(--color-green);
 		}
 	}
 </style>

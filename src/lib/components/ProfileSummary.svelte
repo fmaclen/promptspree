@@ -149,11 +149,11 @@
 		&:hover,
 		&:focus,
 		&--active {
-			color: var(--color-secondary);
-			background-color: var(--color-secondary-darkest);
+			color: var(--color-yellow);
+			background-color: var(--color-yellow-darkest);
 
 			&:hover {
-				background-color: var(--color-secondary-darker);
+				background-color: var(--color-yellow-darker);
 			}
 		}
 	}

@@ -21,8 +21,8 @@
 	svg.user-icon {
 		path,
 		circle {
-			/* fill: var(--color-secondary); */
-			fill: var(--color-primary);
+			/* fill: var(--color-yellow); */
+			fill: var(--color-green);
 			/* fill: var(--color-neutral-300); */
 		}
 	}

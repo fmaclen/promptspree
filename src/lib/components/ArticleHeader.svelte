@@ -27,14 +27,14 @@
 	}
 
 	h1.article__h1 {
-		font-weight: 600;
-		letter-spacing: -0.025em;
-		margin: 0;
-		font-size: 24px;
-		line-height: 1.2em;
 		color: var(--color-neutral-100);
 
+		&:not(.article__h1--full) {
+			@include headline-l;
+		}
+
 		&--full {
+			@include headline-xxl;
 			font-size: 40px;
 		}
 
@@ -48,10 +48,8 @@
 	}
 
 	h2.article__h2 {
-		font-size: 14px;
-		font-weight: 600;
-		margin: 0;
-		color: var(--color-primary);
+		@include subtitle-m;
+		color: var(--color-green);
 	}
 
 	a.article__a {
@@ -59,7 +57,7 @@
 
 		&:hover {
 			h1.article__h1 {
-				color: var(--color-primary);
+				color: var(--color-green);
 			}
 		}
 	}

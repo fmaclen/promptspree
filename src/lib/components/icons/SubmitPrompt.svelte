@@ -26,7 +26,7 @@
 <style lang="scss">
 	svg.submit-prompt-icon {
 		path {
-			fill: var(--color-primary);
+			fill: var(--color-green);
 		}
 
 		&--disabled {

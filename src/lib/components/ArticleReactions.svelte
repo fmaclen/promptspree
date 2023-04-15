@@ -169,9 +169,9 @@
 	button.reactions__context-menu-reaction {
 		&--reacted,
 		&--reacted:hover {
-			color: var(--color-primary);
-			border-color: var(--color-primary-dark);
-			background-color: var(--color-primary-darker);
+			color: var(--color-green);
+			border-color: var(--color-green-dark);
+			background-color: var(--color-green-darker);
 		}
 	}
 

@@ -38,7 +38,7 @@
 				{/if}
 			</button>
 
-			<Logo title={APP_NAME} hasDarkBackground={true} on:click={() => (isExpanded = false)} />
+			<Logo title={APP_NAME} on:click={() => (isExpanded = false)} />
 
 			<a
 				class="primary-action {$page.url.pathname.includes('/play')
@@ -129,59 +129,14 @@
 </div>
 
 <style lang="scss">
-	@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;400;600;800&family=Overpass+Mono:wght@300&family=Playfair+Display:wght@400;800&display=swap');
-
 	:global(html) {
 		height: 100%;
 	}
 
 	:global(body) {
-		--font-sans: 'Inter', sans-serif;
-		--font-mono: 'Overpass Mono', monospace;
-
-		--color-accent: hsl(248, 40%, 40%);
-		--color-accent-secondary: hsl(248, 40%, 95%);
-		--color-positive: hsl(170, 90%, 39%);
-		--color-positive-secondary: hsl(170, 90%, 95%);
-		--color-negative: hsl(342, 83%, 48%);
-		--color-negative-secondary: hsl(342, 83%, 95%);
-
-		--border-radius-l: 8px;
-		--border-radius-m: 4px;
-		--border-radius-s: 2px;
-
-		--color-neutral-50: #ffffff;
-		--color-neutral-100: #e3e8e6;
-		--color-neutral-200: #a4b0ac;
-		--color-neutral-300: #6d7471;
-		--color-neutral-400: #4f5452;
-		--color-neutral-500: #3b3f3e;
-		--color-neutral-600: #2d2f2e;
-		--color-neutral-700: #232424;
-		--color-neutral-800: #1e1e1e;
-		--color-neutral-900: #181818;
-		--color-neutral-950: #141414;
-		--color-neutral-1000: #0f0f0f;
-
-		--color-primary-lightest: #eafff8;
-		--color-primary-lighter: #c4fdea;
-		--color-primary-light: #9cf2d5;
-		--color-primary: #5de9ba;
-		--color-primary-dark: #32765e;
-		--color-primary-darker: #17362b;
-		--color-primary-darkest: #222b28;
-
-		--color-secondary-lightest: #fff9ec;
-		--color-secondary-lighter: #fdefce;
-		--color-secondary-light: #f4d58b;
-		--color-secondary: #eec053;
-		--color-secondary-dark: #876922;
-		--color-secondary-darker: #413416;
-		--color-secondary-darkest: #2f2919;
-
 		height: 100%;
 		margin: 0;
-		font-family: var(--font-sans);
+		font-family: var(--font-base);
 		background-color: var(--color-neutral-800);
 	}
 
@@ -259,7 +214,7 @@
 		border-bottom: 1px solid transparent;
 
 		&:hover {
-			color: var(--color-primary);
+			color: var(--color-green);
 		}
 	}
 
@@ -325,16 +280,16 @@
 		}
 
 		&--active {
-			background-color: var(--color-primary-darkest);
-			color: var(--color-primary);
-			border-color: var(--color-primary-dark);
+			background-color: var(--color-green-darkest);
+			color: var(--color-green);
+			border-color: var(--color-green-dark);
 
 			&:hover {
-				border-color: var(--color-primary);
+				border-color: var(--color-green);
 			}
 
 			span.header__hamburger-line {
-				background-color: var(--color-primary);
+				background-color: var(--color-green);
 			}
 		}
 	}
@@ -357,7 +312,6 @@
 		font-size: 14px;
 		font-weight: 600;
 		padding: 8px 12px;
-		margin-left: auto;
 		border-radius: var(--border-radius-l);
 		color: var(--color-neutral-50);
 		border: 1px solid var(--color-neutral-500);
@@ -367,12 +321,12 @@
 		}
 
 		&--active {
-			background-color: var(--color-primary-darkest);
-			color: var(--color-primary);
-			border-color: var(--color-primary-dark);
+			background-color: var(--color-green-darkest);
+			color: var(--color-green);
+			border-color: var(--color-green-dark);
 
 			&:hover {
-				border-color: var(--color-primary);
+				border-color: var(--color-green);
 			}
 		}
 	}

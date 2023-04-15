@@ -19,13 +19,13 @@
 		color: var(--color-neutral-200);
 
 		&--positive {
-			background-color: var(--color-positive-secondary);
-			color: var(--color-positive);
+			background-color: var(--color-green-dark);
+			color: var(--color-green);
 		}
 
 		&--negative {
-			background-color: var(--color-negative-secondary);
-			color: var(--color-negative);
+			background-color: var(--color-red-dark);
+			color: var(--color-red);
 		}
 	}
 </style>

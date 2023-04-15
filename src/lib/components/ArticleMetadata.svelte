@@ -39,16 +39,17 @@
 
 <aside class="metadata">
 	<nav class="metadata__nav">
-		<a class="metadata__a" href={`/profile/${article.user.id}`}>
-			<span class="metadata__author">{article.user.nickname}</span>
+		<div class="metadata__author">
+			<a class="metadata__a" href={`/profile/${article.user.id}`}>
+				{article.user.nickname}
+			</a>
 
 			<time class="metadata__time" title={article.updated} datetime={article.updated}>
 				{formatDistance(new Date(article.updated), new Date(), {
 					addSuffix: true
 				})}
 			</time>
-		</a>
-
+		</div>
 		<ArticleReactions
 			{article}
 			currentUserCanReact={currentUser !== null && isActionable && !isPublishable}
@@ -105,18 +106,19 @@
 
 <style lang="scss">
 	aside.metadata {
+		@include paragraph-s;
 		width: 100%;
-		font-size: 13px;
 		box-sizing: border-box;
 		display: flex;
 		gap: 16px;
 		flex-direction: column;
-		height: max-content;
 		color: var(--color-neutral-200);
 	}
 
-	span.metadata__author {
-		font-weight: 600;
+	div.metadata__author {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
 		color: inherit;
 	}
 
@@ -125,16 +127,13 @@
 	}
 
 	a.metadata__a {
-		display: flex;
-		gap: 2px;
-		flex-direction: column;
+		display: block;
 		color: inherit;
 		text-decoration: none;
-		width: max-content;
-		align-self: center;
+		font-weight: bold;
 
 		&:hover {
-			color: var(--color-primary);
+			color: var(--color-green);
 		}
 	}
 
@@ -172,7 +171,6 @@
 
 	code.article-prompt__code {
 		font-size: 13px;
-		font-family: var(--font-mono);
 		overflow-y: scroll;
 		color: var(--color-neutral-300);
 		background-color: var(--color-neutral-700);
@@ -181,6 +179,6 @@
 	}
 
 	p.article-prompt__assistant {
-		color: var(--color-primary-dark);
+		color: var(--color-green-dark);
 	}
 </style>

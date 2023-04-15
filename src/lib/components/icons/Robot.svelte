@@ -15,8 +15,8 @@
 <style lang="scss">
 	svg.robot-icon {
 		path {
-			fill: var(--color-secondary);
-			/* fill: var(--color-primary); */
+			fill: var(--color-yellow);
+			/* fill: var(--color-green); */
 		}
 	}
 </style>

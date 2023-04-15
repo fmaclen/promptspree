@@ -11,7 +11,11 @@
 	<ArticleHeader {article} {size} />
 
 	{#if article.imageSrc && size === ArticleSize.FULL}
-		<img src="{article.imageSrc}" class="article__img" alt="AI-generated illustration of the article" />
+		<img
+			src={article.imageSrc}
+			class="article__img"
+			alt="AI-generated illustration of the article"
+		/>
 	{/if}
 
 	<ArticleBody {article} {size} />
@@ -57,8 +61,8 @@
 		cursor: help;
 		margin-left: 16px;
 		border-radius: var(--border-radius-l);
-		color: var(--color-secondary);
-		border: 1px solid var(--color-secondary);
+		color: var(--color-yellow);
+		border: 1px solid var(--color-yellow);
 		filter: invert(1);
 	}
 

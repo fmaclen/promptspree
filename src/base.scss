@@ -1,0 +1,126 @@
+:global(body) {
+	--color-neutral-50: #ffffff;
+	--color-neutral-100: #e3e8e6;
+	--color-neutral-200: #a4b0ac;
+	--color-neutral-300: #6d7471;
+	--color-neutral-400: #4f5452;
+	--color-neutral-500: #3b3f3e;
+	--color-neutral-600: #2d2f2e;
+	--color-neutral-700: #232424;
+	--color-neutral-800: #1e1e1e;
+	--color-neutral-900: #181818;
+	--color-neutral-950: #141414;
+	--color-neutral-1000: #0f0f0f;
+
+	--color-green-lightest: #eafff8;
+	--color-green-lighter: #c4fdea;
+	--color-green-light: #9cf2d5;
+	--color-green: #5de9ba;
+	--color-green-dark: #32765e;
+	--color-green-darker: #17362b;
+	--color-green-darkest: #222b28;
+
+	--color-yellow-lightest: #fff9ec;
+	--color-yellow-lighter: #fdefce;
+	--color-yellow-light: #f4d58b;
+	--color-yellow: #eec053;
+	--color-yellow-dark: #876922;
+	--color-yellow-darker: #413416;
+	--color-yellow-darkest: #2f2919;
+
+	--color-red-lightest: #ffecec;
+	--color-red-lighter: #fdcece;
+	--color-red-light: #f48b8b;
+	--color-red: #ee5353;
+	--color-red-dark: #8c1d1d;
+	--color-red-darker: #411616;
+	--color-red-darkest: #2f1919;
+
+	--border-radius-l: 8px;
+	--border-radius-m: 4px;
+	--border-radius-s: 2px;
+
+	--font-base: 'Mona Sans', sans-serif;
+	--font-wide: 'Mona Sans Wide', sans-serif;
+	--font-narrow: 'Mona Sans Narrow', sans-serif;
+}
+
+@mixin headline-xxl {
+	font-family: var(--font-wide);
+	font-size: 40px;
+	line-height: 1.2em;
+	letter-spacing: -0.025em;
+	font-weight: 800;
+	margin: 0;
+}
+
+@mixin headline-xl {
+	font-family: var(--font-wide);
+	font-size: 32px;
+	line-height: 1.2em;
+	letter-spacing: -0.025em;
+	font-weight: 800;
+	margin: 0;
+}
+
+@mixin headline-l {
+	font-family: var(--font-base);
+	font-size: 24px;
+	line-height: 1.2em;
+	letter-spacing: -0.025em;
+	font-weight: bold;
+	margin: 0;
+}
+
+// @mixin headline-m {
+// 	font-family: var(--font-base);
+// 	font-size: 18px;
+// 	line-height: 1.2em;
+// 	letter-spacing: -0.025em;
+// 	font-weight: bold;
+// 	margin: 0;
+// }
+
+@mixin subtitle-l {
+	font-family: var(--font-narrow);
+	font-size: 28px;
+	line-height: 1em;
+	letter-spacing: 0.05em;
+	margin: 0;
+	font-weight: bold;
+	font-style: italic;
+	text-transform: uppercase;
+}
+
+@mixin subtitle-m {
+	font-family: var(--font-narrow);
+	font-size: 16px;
+	line-height: 1em;
+	letter-spacing: 0.05em;
+	margin: 0;
+	text-transform: uppercase;
+}
+
+@mixin paragraph-l {
+	font-family: var(--font-base);
+	font-size: 20px;
+	line-height: 1.5em;
+	letter-spacing: 0.025em;
+	margin: 0;
+}
+
+@mixin paragraph-m {
+	font-family: var(--font-base);
+	font-size: 16px;
+	line-height: 1.4em;
+	letter-spacing: 0.025em;
+	margin: 0;
+}
+
+@mixin paragraph-s {
+	font-family: var(--font-base);
+	font-size: 13px;
+	line-height: 1.2em;
+	letter-spacing: 0.025em;
+	margin: 0;
+}

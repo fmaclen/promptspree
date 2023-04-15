@@ -45,7 +45,7 @@ test.describe('Profile', () => {
 			await loginUser(MOCK_USERS.alice, page);
 			await page.goto('/');
 			await page
-				.locator('span.metadata__author', { hasText: MOCK_USERS.alice.nickname })
+				.locator('a.metadata__a', { hasText: MOCK_USERS.alice.nickname })
 				.first()
 				.click();
 			await expect(page.locator('h1.section__h1', { hasText: MOCK_USERS.alice.nickname })).toBeVisible(); // prettier-ignore
@@ -130,7 +130,7 @@ test.describe('Profile', () => {
 	test.describe('When profile is not current user', () => {
 		test.beforeEach(async ({ page }) => {
 			await page.goto('/');
-			await page.locator('span.metadata__author', { hasText: MOCK_USERS.bob.nickname }).click();
+			await page.locator('a.metadata__a', { hasText: MOCK_USERS.bob.nickname }).click();
 			await expect(page.locator('h1.section__h1', { hasText: MOCK_USERS.bob.nickname })).toBeVisible(); // prettier-ignore
 		});
 
