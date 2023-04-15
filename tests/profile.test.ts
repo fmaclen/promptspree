@@ -44,10 +44,7 @@ test.describe('Profile', () => {
 		test.beforeEach(async ({ page }) => {
 			await loginUser(MOCK_USERS.alice, page);
 			await page.goto('/');
-			await page
-				.locator('a.metadata__a', { hasText: MOCK_USERS.alice.nickname })
-				.first()
-				.click();
+			await page.locator('a.metadata__a', { hasText: MOCK_USERS.alice.nickname }).first().click();
 			await expect(page.locator('h1.section__h1', { hasText: MOCK_USERS.alice.nickname })).toBeVisible(); // prettier-ignore
 		});
 

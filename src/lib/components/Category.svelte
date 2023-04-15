@@ -4,13 +4,10 @@
 	export let label: string;
 	export let isActive: boolean | undefined = false;
 
-  const id = label.toLowerCase();
+	const id = label.toLowerCase();
 </script>
 
-<a
-	href="/category/{id}"
-	class="category category--{id} {isActive ? 'category--active' : ''}"
->
+<a href="/category/{id}" class="category category--{id} {isActive ? 'category--active' : ''}">
 	<span class="category__halftone">
 		<Halftone />
 	</span>
@@ -26,7 +23,7 @@
 		text-decoration: none;
 		box-sizing: border-box;
 		color: inherit;
-    width: max-content;
+		width: max-content;
 		padding-top: 4px;
 		padding-bottom: 2px;
 		padding-left: 20px;

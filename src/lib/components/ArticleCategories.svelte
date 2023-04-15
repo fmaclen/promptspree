@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { ArticleCategory } from '$lib/articles';
-	import Category from './Category.svelte';
+	import Category from '$lib/components/Category.svelte';
 
 	export let currentCategory: ArticleCategory | null = null;
 
@@ -14,7 +14,7 @@
 
 <nav class="categories">
 	{#each categories as category}
-		<Category id={category.id} label={category.label} isActive={currentCategory === category.label} />
+		<Category label={category.label} isActive={currentCategory === category.label} />
 	{/each}
 </nav>
 
