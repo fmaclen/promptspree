@@ -172,7 +172,6 @@
 
 	code.article-prompt__code {
 		font-size: 13px;
-		font-family: var(--font-mono);
 		overflow-y: scroll;
 		color: var(--color-neutral-300);
 		background-color: var(--color-neutral-700);

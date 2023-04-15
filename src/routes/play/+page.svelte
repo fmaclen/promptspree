@@ -431,7 +431,7 @@
 		text-align: left;
 		cursor: pointer;
 		font-size: 16px;
-		font-family: var(--font-sans);
+		font-family: var(--font-base);
 		border: 1px solid var(--color-yellow-darkest);
 		background-color: var(--color-yellow-darkest);
 		color: var(--color-yellow);
@@ -476,7 +476,7 @@
 		background: transparent;
 		resize: none;
 		box-sizing: border-box;
-		font-family: var(--font-sans);
+		font-family: var(--font-base);
 		color: var(--color-neutral-100);
 
 		&:active,

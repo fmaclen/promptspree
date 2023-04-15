@@ -129,8 +129,6 @@
 </div>
 
 <style lang="scss">
-	@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;400;600;800&family=Overpass+Mono:wght@300&family=Playfair+Display:wght@400;800&display=swap');
-
 	:global(html) {
 		height: 100%;
 	}
@@ -138,7 +136,7 @@
 	:global(body) {
 		height: 100%;
 		margin: 0;
-		font-family: var(--font-sans);
+		font-family: var(--font-base);
 		background-color: var(--color-neutral-800);
 	}
 

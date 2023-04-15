@@ -31,7 +31,7 @@
 		text-align: center;
 		width: 100%;
 		cursor: pointer;
-		font-family: var(--font-sans);
+		font-family: var(--font-base);
 		border-radius: var(--border-radius-l);
 		border: 1px solid var(--color-green);
 		background-color: var(--color-green);

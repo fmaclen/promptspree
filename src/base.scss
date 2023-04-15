@@ -1,6 +1,42 @@
+@font-face {
+  font-family: 'Mona Sans';
+  src: url('/fonts/Mona-Sans-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Mona Sans';
+  src: url('/fonts/Mona-Sans-Bold.woff2') format('woff2');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Mona Sans Narrow';
+  src: url('/fonts/Mona-Sans-RegularNarrowItalic.woff2') format('woff2');
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Mona Sans Narrow';
+  src: url('/fonts/Mona-Sans-BlackNarrowItalic.woff2') format('woff2');
+  font-weight: 900;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Mona Sans Wide';
+  src: url('/fonts/Mona-Sans-ExtraBoldWide.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+}
+
 :global(body) {
-	--font-sans: 'Inter', sans-serif;
-	--font-mono: 'Overpass Mono', monospace;
+	--font-base: 'Mona Sans', sans-serif;
+	--font-wide: 'Mona Sans Wide', sans-serif;
+	--font-narrow: 'Mona Sans Narrow', sans-serif;
 
 	--color-accent: hsl(248, 40%, 40%);
 	--color-accent-secondary: hsl(248, 40%, 95%);
@@ -45,9 +81,4 @@
 	--color-red-dark: #8C1D1D;
 	--color-red-darker: #411616;
 	--color-red-darkest: #2F1919;
-}
-
-@mixin baseForm {
-	width: 100%;
-	box-sizing: border-box;
 }
