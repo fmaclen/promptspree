@@ -26,7 +26,7 @@
 
 <style lang="scss">
 	input.form-field-input {
-		@import './Form.scss';
+		@import '$lib/components/Form.scss';
 		@include baseInput;
 
 		line-height: 1em;
