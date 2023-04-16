@@ -1,5 +1,4 @@
 <script lang="ts">
-	import ArticleCategories from '$lib/components/ArticleCategories.svelte';
 	import ArticleSummaries from '$lib/components/ArticleSummaries.svelte';
 	import Head from '$lib/components/Head.svelte';
 	import Notice from '$lib/components/Notice.svelte';

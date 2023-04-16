@@ -6,7 +6,7 @@
 	import { Toaster } from 'svelte-french-toast';
 	import { slide } from 'svelte/transition';
 
-	import ArticleCategories from '../lib/components/ArticleCategories.svelte';
+	import CategoryList from '../lib/components/CategoryList.svelte';
 	import Footer from '../lib/components/Footer.svelte';
 	import type { PageData } from './$types';
 
@@ -62,7 +62,7 @@
 			aria-labelledby="hamburger"
 			transition:slide={{ duration: 150 }}
 		>
-			<ArticleCategories component="button" />
+			<CategoryList component="button" />
 			<ul class="aside__ul">
 				{#if data.user}
 					<li class="aside__li">

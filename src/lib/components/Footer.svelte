@@ -2,7 +2,7 @@
 	import A from '$lib/components/A.svelte';
 	import { CURRENT_MODEL } from '$lib/openai';
 	import { APP_NAME } from '$lib/utils';
-	import ArticleCategories from './ArticleCategories.svelte';
+	import CategoryList from './CategoryList.svelte';
 	import Isologo from './Isologo.svelte';
 </script>
 
@@ -30,7 +30,7 @@
     <nav class="footer__link-groups">
       <div class="footer__link-group">
         <h4 class="footer__link-group-title">Categories</h4>
-        <ArticleCategories component="link" />
+        <CategoryList component="link" />
       </div>
       <div class="footer__link-group">
         <h4 class="footer__link-group-title">About</h4>
