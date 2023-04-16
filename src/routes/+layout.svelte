@@ -141,7 +141,7 @@
 		display: flex;
 		flex-direction: column;
 		height: 100%;
-		background-image: url('HalftoneBackground.svg');
+		background-image: url('/HalftoneBackground.svg');
 		background-repeat: no-repeat;
 		background-position-x: center;
 		background-position-y: -33vh;

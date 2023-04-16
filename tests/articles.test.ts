@@ -258,7 +258,7 @@ test.describe('Articles', () => {
 
 		await prepareToAcceptDialog(page, /Are you sure you want to delete the article?/);
 		await page.getByText('Delete').click();
-		await expect(page.locator('h1.section__h1', { hasText: MOCK_USERS.alice.nickname })).toBeVisible(); // prettier-ignore
+		await expect(page.locator('h1.headline-xl', { hasText: MOCK_USERS.alice.nickname })).toBeVisible(); // prettier-ignore
 		await expect(page.getByText('No published articles, generate one')).toBeVisible();
 		await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[2])).not.toBeVisible();
 	});

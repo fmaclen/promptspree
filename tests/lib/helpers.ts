@@ -57,7 +57,7 @@ export async function verifyUser(email: string): Promise<void> {
 export async function loginUser(user: User, page: Page): Promise<void> {
 	await page.goto('/login');
 	await page.getByLabel('E-mail').fill(user.email);
-	await page.getByLabel('Password', { exact: true }).fill(user.password);
+	await page.getByLabel('Password', { exact: false }).fill(user.password);
 
 	const loginButton = page.locator('button[type=submit]', { hasText: 'Login' });
 	await expect(loginButton).not.toBeDisabled();

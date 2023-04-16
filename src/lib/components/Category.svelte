@@ -29,7 +29,7 @@
 		padding-left: var(--halftone-size);
 
 		background-color: var(--color-neutral-100); // Base color
-		background-image: url("HalftoneCategoryButton.svg");
+		background-image: url("/HalftoneCategoryButton.svg");
 		background-repeat: no-repeat;
 		background-position: center left;
 		background-size: var(--halftone-size);

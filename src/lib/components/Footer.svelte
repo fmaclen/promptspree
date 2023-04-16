@@ -34,6 +34,7 @@
       </div>
       <div class="footer__link-group">
         <h4 class="footer__link-group-title">About</h4>
+        <A href="https://github.com/fmaclen/promptspree/issues">Known issues</A>
         <A href="/legal/">Terms of service</A>
         <A href="/legal/">Privacy policy</A>
       </div>
