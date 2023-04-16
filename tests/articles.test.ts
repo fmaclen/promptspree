@@ -223,10 +223,10 @@ test.describe('Articles', () => {
 			// NOTE: This test only checks that the player is visible when an audio path is present.
 			const article = await getLastArticle(`headline = "${MOCK_ARTICLE_COMPLETIONS[1].headline}"`);
 
-			const imageData = readFileSync('tests/lib/fixtures/the-great-plague');
+			const imageData = readFileSync('tests/lib/fixtures/the-great-plague.png');
 			const imageBlob = new Blob([imageData], { type: 'image/png' });
 			const formData = new FormData();
-			formData.append('image', imageBlob, 'the-great-plague');
+			formData.append('image', imageBlob, 'the-great-plague.png');
 			article?.id && (await updateArticle(article?.id, formData));
 
 			await page.getByText(MOCK_ARTICLE_COMPLETIONS[3].headline).click();
