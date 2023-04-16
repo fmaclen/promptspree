@@ -18,8 +18,6 @@
 
 <HeadlineXl>{category}</HeadlineXl>
 
-<ArticleCategories component="button" currentCategory={category} />
-
 <Section>
 	{#if articles.length > 0}
 		<ArticleSummaries {articles} />

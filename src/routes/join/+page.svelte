@@ -6,11 +6,11 @@
 	import FormFieldset from '$lib/components/FormFieldset.svelte';
 	import FormInput from '$lib/components/FormInput.svelte';
 	import Head from '$lib/components/Head.svelte';
+	import HeadlineXl from '$lib/components/HeadlineXL.svelte';
 	import Notice from '$lib/components/Notice.svelte';
 	import P from '$lib/components/P.svelte';
 	import Section from '$lib/components/Section.svelte';
 	import { Sentiment } from '$lib/utils';
-	import HeadlineXl from '$lib/components/HeadlineXL.svelte';
 
 	type PocketbaseFieldErrors = {
 		[key: string]: {
@@ -60,20 +60,19 @@
 
 <Head title={['Join']} />
 
-
 <Section isVerticallyCentered={true}>
 	<HeadlineXl>{success ? 'Almost there...' : 'Join to play'}</HeadlineXl>
 
 	{#if success}
-	<Notice>
-		<P>Check your email to verify your account</P>
-		<P>
-			After you do, please head over to the
-			<A href="/login" isHighlighted={true}>login page</A> to start
-		</P>
-	</Notice>
+		<Notice>
+			<P>Check your email to verify your account</P>
+			<P>
+				After you do, please head over to the
+				<A href="/login" isHighlighted={true}>login page</A> to start
+			</P>
+		</Notice>
 	{:else}
-	<Notice>Already have an account? <A href="/login" isHighlighted={true}>Login</A></Notice>
+		<Notice>Already have an account? <A href="/login" isHighlighted={true}>Login</A></Notice>
 	{/if}
 
 	<form class="form" method="POST" use:enhance={handleSubmit}>
@@ -131,7 +130,7 @@
 							name="terms"
 							bind:checked={hasAcceptedTerms}
 						/>
-						<P>
+						<P size="s">
 							I agree to the <A href="/legal" isHighlighted={true}>terms of service</A>
 							and
 							<A href="/legal" isHighlighted={true}>privacy policy</A>.
