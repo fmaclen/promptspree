@@ -109,6 +109,11 @@
 		display: grid;
 		grid-auto-flow: column;
 		gap: 128px;
+
+		@media (max-width: 768px) {
+			grid-auto-flow: row;
+			gap: 64px;
+		}
 	}
 
 	div.legal__content {

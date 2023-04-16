@@ -15,9 +15,10 @@
 		align-items: center;
 		flex-direction: column;
 		row-gap: 64px;
+		padding-block: 64px;
 
 		@media (max-width: 768px) {
-			padding: 32px;
+			padding-block: 32px;
 			row-gap: 32px;
 			box-sizing: border-box;
 		}
@@ -34,10 +35,10 @@
 
 	div.section__container {
 		@include container-inner;
-		padding-block: 64px;
+		/* padding-block: 64px; */
 
 		@media (max-width: 768px) {
-			padding-block: 32px;
+			/* padding-block: 32px; */
 		}
 	}
 </style>

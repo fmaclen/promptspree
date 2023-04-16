@@ -259,6 +259,10 @@
 		padding-block: 32px;
 		padding-inline: 64px;
 		box-sizing: border-box;
+
+		@media (max-width: 768px) {
+			padding-inline: 24px;
+		}
 	}
 
 	button.header__hamburger {
