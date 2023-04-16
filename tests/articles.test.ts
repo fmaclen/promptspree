@@ -195,13 +195,13 @@ test.describe('Articles', () => {
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[2].headline)).not.toBeVisible();
 		});
 
-		test('Articles with audio are listenable', async ({ page }) => {
+		test('Articles can have audio and images', async ({ page }) => {
 			// NOTE: This test only checks that the player is visible when an audio path is present.
-			const article = await getLastArticle(`headline = "${MOCK_ARTICLE_COMPLETIONS[1].headline}"`);
+			let article = await getLastArticle(`headline = "${MOCK_ARTICLE_COMPLETIONS[1].headline}"`);
 
 			const audioData = readFileSync('tests/lib/fixtures/the-great-plague.mp3');
 			const audioBlob = new Blob([audioData], { type: 'audio/mp3' });
-			const formData = new FormData();
+			let formData = new FormData();
 			formData.append('audio', audioBlob, 'the-great-plague.mp3');
 			article?.id && (await updateArticle(article?.id, formData));
 
@@ -216,19 +216,14 @@ test.describe('Articles', () => {
 			expect(await page.locator('audio.article__player').getAttribute('src')).toMatch(
 				/^.*\/api\/files\/[^/]+\/[^/]+\/.+\.mp3$/
 			); // 'xxx/api/files/xxx/xxx/xxx.mp3'
-			await matchSnapshot(page, 'article-with-audio')
-		});
-
-		test('Articles can have images', async ({ page }) => {
-			// NOTE: This test only checks that the player is visible when an audio path is present.
-			const article = await getLastArticle(`headline = "${MOCK_ARTICLE_COMPLETIONS[1].headline}"`);
 
 			const imageData = readFileSync('tests/lib/fixtures/the-great-plague.png');
 			const imageBlob = new Blob([imageData], { type: 'image/png' });
-			const formData = new FormData();
+			formData = new FormData();
 			formData.append('image', imageBlob, 'the-great-plague.png');
 			article?.id && (await updateArticle(article?.id, formData));
 
+			await goToHomepageViaLogo(page);
 			await page.getByText(MOCK_ARTICLE_COMPLETIONS[3].headline).click();
 			await expect(page.locator('img.article__img')).not.toBeVisible();
 
@@ -240,7 +235,7 @@ test.describe('Articles', () => {
 			expect(await page.locator('img.article__img').getAttribute('src')).toMatch(
 				/^.*\/api\/files\/[^/]+\/[^/]+\/.+\.png$/
 			); // 'xxx/api/files/xxx/xxx/xxx.mp3'
-			await matchSnapshot(page, 'article-with-image')
+			await matchSnapshot(page, 'article-with-audio-and-image')
 		});
 	});
 

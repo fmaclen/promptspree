@@ -145,6 +145,8 @@ export const setSnapshotPath = (testInfo: TestInfo) => {
 	testInfo.snapshotPath = (name: string) => `${testInfo.file}-snapshots/${name}`;
 };
 
+export const delay = (ms = 200) => new Promise((resolve) => setTimeout(resolve, ms));
+
 export async function matchSnapshot(page: Page, name: string) {
 	// NOTE: We are currently only running snapshots locally on macOS.
 	// To add run visual regression tests on CI we need to account for all the different
@@ -152,10 +154,12 @@ export async function matchSnapshot(page: Page, name: string) {
 	if (process.platform !== 'darwin') return;
 	
 	// Desktop
+	await delay(); // Waits for animations to finish
 	expect(await page.screenshot({ fullPage: true })).toMatchSnapshot({ name: `${name}-desktop.png` , maxDiffPixelRatio: MAX_DIFF_PIXEL_RATIO });
 
 	// Mobile
 	await page.setViewportSize({ width: 375, height: 667 });
+	// await delay(); // Waits for animations to finish
 	expect(await page.screenshot({ fullPage: true })).toMatchSnapshot({ name: `${name}-mobile.png` , maxDiffPixelRatio: MAX_DIFF_PIXEL_RATIO });
 
 	// Reset viewport size
