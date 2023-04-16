@@ -29,11 +29,14 @@
 			max-width: 512px;
 			margin-block: auto;
 		}
-
-		background-color: var(--color-neutral-950);
 	}
 
 	div.section__container {
 		@include container-inner;
+		padding-block: 64px;
+
+		@media (max-width: 768px) {
+			padding-block: 32px;
+		}
 	}
 </style>
