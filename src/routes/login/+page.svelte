@@ -9,6 +9,7 @@
 	import Notice from '$lib/components/Notice.svelte';
 	import Section from '$lib/components/Section.svelte';
 	import { Sentiment } from '$lib/utils';
+	import HeadlineXl from '$lib/components/HeadlineXL.svelte';
 
 	let isLoading = false;
 	let email = '';
@@ -34,9 +35,12 @@
 
 <Head title={['Login']} />
 
-<Notice>Don't have an account? <A href="/join" isHighlighted={true}>Join to play</A></Notice>
 
-<Section isVerticallyCentered={true} title="Login">
+<Section isVerticallyCentered={true}>
+	<HeadlineXl>Login</HeadlineXl>
+
+	<Notice>Don't have an account? <A href="/join" isHighlighted={true}>Join to play</A></Notice>
+
 	<form class="form" method="POST" use:enhance={handleSubmit}>
 		<FormFieldset>
 			{#if error}
@@ -55,10 +59,10 @@
 
 			<FormField label="Password">
 				<FormInput type="password" name="password" required={true} bind:value={password} />
+				<A href="/login/forgot-password" isHighlighted={true}>Forgot your password?</A>
 			</FormField>
 
 			<FormButton type="submit" label="Login" disabled={isSubmitDisabled} />
-			<A href="/login/forgot-password" isHighlighted={true}>Forgot your password?</A>
 		</FormFieldset>
 	</form>
 </Section>
@@ -67,5 +71,6 @@
 	form.form {
 		@import '$lib/components/Form.scss';
 		@include baseForm;
+		margin-top: 32px;
 	}
 </style>

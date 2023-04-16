@@ -10,6 +10,7 @@
 	import P from '$lib/components/P.svelte';
 	import Section from '$lib/components/Section.svelte';
 	import { Sentiment } from '$lib/utils';
+	import HeadlineXl from '$lib/components/HeadlineXL.svelte';
 
 	type PocketbaseFieldErrors = {
 		[key: string]: {
@@ -59,20 +60,25 @@
 
 <Head title={['Join']} />
 
-<Notice>Already have an account? <A href="/login" isHighlighted={true}>Login</A></Notice>
 
-<Section isVerticallyCentered={true} title={success ? 'Almost there...' : 'Join to play'}>
+<Section isVerticallyCentered={true}>
+	<HeadlineXl>{success ? 'Almost there...' : 'Join to play'}</HeadlineXl>
+
+	{#if success}
+	<Notice>
+		<P>Check your email to verify your account</P>
+		<P>
+			After you do, please head over to the
+			<A href="/login" isHighlighted={true}>login page</A> to start
+		</P>
+	</Notice>
+	{:else}
+	<Notice>Already have an account? <A href="/login" isHighlighted={true}>Login</A></Notice>
+	{/if}
+
 	<form class="form" method="POST" use:enhance={handleSubmit}>
 		<FormFieldset>
-			{#if success}
-				<Notice>
-					<P>Check your email to verify your account</P>
-					<P>
-						After you do, please head over to the
-						<A href="/login" isHighlighted={true}>login page</A> to start
-					</P>
-				</Notice>
-			{:else}
+			{#if !success}
 				<FormField label="E-mail">
 					<FormInput
 						type="email"
@@ -148,6 +154,7 @@
 	form.form {
 		@import '$lib/components/Form.scss';
 		@include baseForm;
+		margin-top: 32px;
 	}
 
 	div.form-field-checkbox {

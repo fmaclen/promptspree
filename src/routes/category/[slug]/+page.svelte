@@ -17,9 +17,10 @@
 <Head title={[category, 'Articles']} />
 
 <HeadlineXl>{category}</HeadlineXl>
+
 <ArticleCategories currentCategory={category} />
 
-<Section title={category}>
+<Section>
 	{#if articles.length > 0}
 		<ArticleSummaries {articles} />
 	{:else}

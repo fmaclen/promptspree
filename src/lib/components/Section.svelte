@@ -26,7 +26,7 @@
 		}
 
 		&--vertically-centered {
-			max-width: 512px;
+			max-width: 576px;
 			margin-block: auto;
 		}
 	}

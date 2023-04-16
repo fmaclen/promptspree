@@ -154,8 +154,9 @@
 
 		background-image: url("HalftoneBackground.svg");
 		background-repeat: no-repeat;
-		background-position: center top;
-		background-size: clamp(390px, 100vw, 512px);
+		background-position-x: center;
+		background-position-y: -33vh;
+		background-size: clamp(480px, 100vw, 1024px);
 	}
 
 	aside.layout__aside {
@@ -252,17 +253,18 @@
 	header.header {
 		grid-area: header;
 
-		/* position: sticky; */
+		/* position: sticky;
 		top: 0;
 		z-index: 3;
-		/* background-color: var(--color-neutral-900);
+		background-color: var(--color-neutral-900);
 		border-bottom: 1px solid var(--color-neutral-700); */
 	}
 
 	hgroup.header__hgroup {
 		display: flex;
 		justify-content: space-between;
-		padding: 12px 24px;
+		padding-block: 32px;
+		padding-inline: 64px;
 		box-sizing: border-box;
 	}
 

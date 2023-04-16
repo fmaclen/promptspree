@@ -9,16 +9,17 @@
 		@include container-outer;
 		@include headline-xl;
     text-align: center;
-		padding-top: 24px;
-		padding-bottom: 24px;
+		padding-block: 32px;
 		color: var(--color-neutral-100);
 
 		@media (max-width: 768px) {
 			font-size: 32px;
+			padding-block: 24px;
 		}
 	}
 
   span.headline-xl__inner {
     @include container-inner;
+		padding-inline: 0;
   }
 </style>

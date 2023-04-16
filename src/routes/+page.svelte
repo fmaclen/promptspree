@@ -40,8 +40,7 @@
 		@include container-outer;
 		@include headline-xxl;
 		text-align: center;
-		padding-top: 64px;
-		padding-bottom: 64px;
+		padding-block: 64px;
 		color: var(--color-neutral-100);
 	}
 
