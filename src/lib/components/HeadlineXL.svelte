@@ -10,7 +10,6 @@
 		@include headline-xl;
     text-align: center;
 		padding-block: 32px;
-		color: var(--color-neutral-100);
 
 		@media (max-width: 768px) {
 			font-size: 32px;

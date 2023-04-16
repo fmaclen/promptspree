@@ -19,6 +19,7 @@
 		@media (max-width: 768px) {
 			padding: 32px;
 			row-gap: 32px;
+			box-sizing: border-box;
 		}
 
 		&:not(:first-of-type) {

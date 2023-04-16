@@ -18,7 +18,7 @@
 
 <HeadlineXl>{category}</HeadlineXl>
 
-<ArticleCategories currentCategory={category} />
+<ArticleCategories component="button" currentCategory={category} />
 
 <Section>
 	{#if articles.length > 0}

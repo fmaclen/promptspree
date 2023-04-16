@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { ArticleCategory } from '$lib/articles';
+	import A from '$lib/components/A.svelte';
 	import Category from '$lib/components/Category.svelte';
 
 	export let currentCategory: ArticleCategory | null = null;
+	export let component: 'button' | 'link';
 
 	const categories = Object.keys(ArticleCategory).map((key) => {
 		return {
@@ -12,11 +14,21 @@
 	});
 </script>
 
-<nav class="categories">
+{#if component === 'button'}
+	<nav class="categories">
+		{#each categories as category}
+			<Category label={category.label} isActive={currentCategory === category.label} />
+		{/each}
+	</nav>
+{/if}
+
+{#if component === 'link'}
 	{#each categories as category}
-		<Category label={category.label} isActive={currentCategory === category.label} />
+		<A href={`/category/${category.id}`}>
+			{category.label}
+		</A>
 	{/each}
-</nav>
+{/if}
 
 <style lang="scss">
 	nav.categories {

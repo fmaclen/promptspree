@@ -7,6 +7,7 @@
 	import { slide } from 'svelte/transition';
 
 	import type { PageData } from './$types';
+	import Footer from '../lib/components/Footer.svelte';
 
 	export let data: PageData;
 	let isExpanded = false;
@@ -117,15 +118,7 @@
 		<slot />
 	</main>
 
-	<footer class="layout__footer">
-		<A href="/">
-			&copy; {new Date().getFullYear()}
-			{APP_NAME}
-		</A>
-		<A href="/legal/">Terms of service</A>
-		<A href="/legal/">Privacy policy</A>
-		<A target="_blank" href="https://github.com/fmaclen/promptspree/">GitHub</A>
-	</footer>
+	<Footer/>
 </div>
 
 <style lang="scss">
@@ -137,6 +130,7 @@
 		height: 100%;
 		margin: 0;
 		font-family: var(--font-base);
+		color: var(--color-neutral-100);
 		background-color: var(--color-neutral-800);
 	}
 
@@ -145,18 +139,17 @@
 		display: flex;
 		flex-direction: column;
 		height: 100%;
-
-		&--playSection {
-			footer.layout__footer {
-				display: none;
-			}
-		}
-
 		background-image: url("HalftoneBackground.svg");
 		background-repeat: no-repeat;
 		background-position-x: center;
 		background-position-y: -33vh;
 		background-size: clamp(480px, 100vw, 1024px);
+
+		&--playSection {
+			:global(footer.footer) {
+				display: none;
+			}
+		}
 	}
 
 	aside.layout__aside {
@@ -342,26 +335,5 @@
 		display: block;
 		font-size: 12px;
 		width: 12px;
-	}
-
-	/* ------------------------------------------------------------------------ */
-
-	footer.layout__footer {
-		display: flex;
-		width: 100%;
-		gap: 24px;
-		font-size: 13px;
-		text-align: center;
-		padding: 24px;
-		box-sizing: border-box;
-		margin-inline: auto;
-		color: var(--color-neutral-300);
-		background-color: var(--color-neutral-1000);
-
-		@media (max-width: 768px) {
-			flex-direction: column-reverse;
-			text-align: unset;
-			margin-inline: unset;
-		}
 	}
 </style>
