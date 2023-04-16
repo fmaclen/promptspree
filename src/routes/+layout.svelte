@@ -141,9 +141,9 @@
 	}
 
 	div.layout {
+		position: relative;
 		display: flex;
 		flex-direction: column;
-		position: relative;
 		height: 100%;
 
 		&--playSection {
@@ -151,6 +151,11 @@
 				display: none;
 			}
 		}
+
+		background-image: url("HalftoneBackground.svg");
+		background-repeat: no-repeat;
+		background-position: center top;
+		background-size: clamp(390px, 100vw, 512px);
 	}
 
 	aside.layout__aside {
@@ -247,11 +252,11 @@
 	header.header {
 		grid-area: header;
 
-		position: sticky;
+		/* position: sticky; */
 		top: 0;
 		z-index: 3;
-		background-color: var(--color-neutral-900);
-		border-bottom: 1px solid var(--color-neutral-700);
+		/* background-color: var(--color-neutral-900);
+		border-bottom: 1px solid var(--color-neutral-700); */
 	}
 
 	hgroup.header__hgroup {

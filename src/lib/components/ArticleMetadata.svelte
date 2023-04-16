@@ -106,7 +106,7 @@
 
 <style lang="scss">
 	aside.metadata {
-		@include paragraph-s;
+		@include paragraph-xs;
 		width: 100%;
 		box-sizing: border-box;
 		display: flex;

@@ -45,6 +45,26 @@
 	--font-narrow: 'Mona Sans Narrow', sans-serif;
 }
 
+@mixin container-outer {
+	width: 100%;
+	margin-inline: auto;
+}
+
+@mixin container-inner {
+	width: 100%;
+	max-width: 1280px;
+	height: max-content;
+	box-sizing: border-box;
+	margin-inline: auto;
+	padding-left: 64px;
+	padding-right: 64px;
+
+	@media (max-width: 768px) {
+		padding-left: 32px;
+		padding-right: 32px;
+	}
+}
+
 @mixin headline-xxl {
 	font-family: var(--font-wide);
 	font-size: 40px;
@@ -117,6 +137,13 @@
 }
 
 @mixin paragraph-s {
+	font-family: var(--font-base);
+	font-size: 14px;
+	line-height: 1.4em;
+	margin: 0;
+}
+
+@mixin paragraph-xs {
 	font-family: var(--font-base);
 	font-size: 13px;
 	line-height: 1.2em;
