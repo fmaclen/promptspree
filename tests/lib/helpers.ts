@@ -1,13 +1,13 @@
 import type { ArticleCollection } from '$lib/pocketbase.schema.js';
 import type { MockArticleCompletion } from '$lib/tests';
-import { type Page, expect } from '@playwright/test';
+import { type Page, type TestInfo, expect } from '@playwright/test';
 import PocketBase, { BaseAuthStore } from 'pocketbase';
 
 import { type ArticleStatus, EXPAND_RECORD_RELATIONS } from '../../src/lib/articles.js';
 import { MessageRole } from '../../src/lib/messages.js';
 import { CURRENT_MODEL } from '../../src/lib/openai.js';
 import { miniStringify } from '../../src/lib/utils.js';
-import { TEST_ADMIN_PASSWORD, TEST_ADMIN_USER } from './fixtures.js';
+import { MAX_DIFF_PIXEL_RATIO, TEST_ADMIN_PASSWORD, TEST_ADMIN_USER } from './fixtures.js';
 
 interface User {
 	email: string;
@@ -137,3 +137,31 @@ export const prepareToAcceptDialog = async (page: Page, message: RegExp) => {
 		dialog.accept();
 	});
 };
+
+// Playwright renames snapshots to match the current OS and browser, so we need to
+// update the test configuration so it always matches the macOS + Chromium snapshot.
+// REF: https://github.com/microsoft/playwright/issues/7575#issuecomment-1240566545
+export const setSnapshotPath = (testInfo: TestInfo) => {
+	testInfo.snapshotPath = (name: string) => `${testInfo.file}-snapshots/${name}`;
+};
+
+export const delay = (ms = 200) => new Promise((resolve) => setTimeout(resolve, ms));
+
+export async function matchSnapshot(page: Page, name: string) {
+	// NOTE: We are currently only running snapshots locally on macOS.
+	// To add run visual regression tests on CI we need to account for all the different
+	// variations of browser and viewport resolutions (i.e. desktop/mobile).
+	if (process.platform !== 'darwin') return;
+	
+	// Desktop
+	await delay(); // Waits for animations to finish
+	expect(await page.screenshot({ fullPage: true })).toMatchSnapshot({ name: `${name}-desktop.png` , maxDiffPixelRatio: MAX_DIFF_PIXEL_RATIO });
+
+	// Mobile
+	await page.setViewportSize({ width: 375, height: 667 });
+	// await delay(); // Waits for animations to finish
+	expect(await page.screenshot({ fullPage: true })).toMatchSnapshot({ name: `${name}-mobile.png` , maxDiffPixelRatio: MAX_DIFF_PIXEL_RATIO });
+
+	// Reset viewport size
+	await page.setViewportSize({ width: 1280, height: 720 });
+}
