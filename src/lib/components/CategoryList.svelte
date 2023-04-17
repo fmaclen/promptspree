@@ -3,7 +3,6 @@
 	import A from '$lib/components/A.svelte';
 	import Category from '$lib/components/Category.svelte';
 
-	export let currentCategory: ArticleCategory | null = null;
 	export let component: 'button' | 'link';
 
 	const categories = Object.keys(ArticleCategory).map((key) => {

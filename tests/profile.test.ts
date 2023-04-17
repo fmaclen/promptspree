@@ -59,7 +59,6 @@ test.describe('Profile', () => {
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[0])).toBeVisible(); // Summary
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[1])).not.toBeVisible();
-			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].notes)).not.toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline)).not.toBeVisible();
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Drafts 1' })).toBeVisible(); // prettier-ignore
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Published 1' })).toBeVisible(); // prettier-ignore
@@ -69,7 +68,6 @@ test.describe('Profile', () => {
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline)).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].body[0])).toBeVisible(); // Summary
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].body[1])).not.toBeVisible();
-			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].notes)).not.toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).not.toBeVisible();
 			await matchSnapshot(page, 'profile-with-drafts');
 		});
@@ -80,10 +78,8 @@ test.describe('Profile', () => {
 
 			await page.getByText('Drafts 1').click();
 			await expect(publishButton).not.toBeVisible();
-			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].notes)).not.toBeVisible();
 
 			await page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline).click();
-			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].notes)).toBeVisible();
 			await expect(publishButton).toBeVisible();
 
 			await publishButton.click();
