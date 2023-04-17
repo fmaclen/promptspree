@@ -194,7 +194,7 @@ test.describe('Articles', () => {
 
 		test('Articles can have audio and images', async ({ page }) => {
 			// NOTE: This test only checks that the player is visible when an audio path is present.
-			let article = await getLastArticle(`headline = "${MOCK_ARTICLE_COMPLETIONS[1].headline}"`);
+			const article = await getLastArticle(`headline = "${MOCK_ARTICLE_COMPLETIONS[1].headline}"`);
 
 			const audioData = readFileSync('tests/lib/fixtures/the-great-plague.mp3');
 			const audioBlob = new Blob([audioData], { type: 'audio/mp3' });
@@ -231,7 +231,7 @@ test.describe('Articles', () => {
 			await expect(page.locator('img.article__img')).toBeVisible();
 			expect(await page.locator('img.article__img').getAttribute('src')).toMatch(
 				/^.*\/api\/files\/[^/]+\/[^/]+\/.+\.png$/
-			); // 'xxx/api/files/xxx/xxx/xxx.mp3'
+			); // 'xxx/api/files/xxx/xxx/xxx.png'
 			await matchSnapshot(page, 'article-with-audio-and-image');
 		});
 	});
