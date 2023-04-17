@@ -253,35 +253,33 @@
 	}
 
 	div.chat__container {
-		max-width: 1280px;
-		margin-inline: auto;
+		@include container-inner;
 	}
 
 	ul.chat__messages {
+		@include container-outer;
 		display: flex;
 		flex-direction: column;
 		list-style: none;
 		margin-block: 0;
 		padding-inline: 0;
+		padding-block: 24px;
 		max-height: 100%;
 		gap: 12px;
-		padding: 24px;
+	}
 
-		@media (max-width: 767px) {
-			padding: 12px;
-		}
+	li.chat__message-container {
+		@include container-inner;
 	}
 
 	div.chat__message {
+		@include paragraph-m;
 		display: grid;
 		grid-template-columns: max-content auto;
 		gap: 12px;
-		font-size: 16px;
-		padding: 24px;
-		max-width: 1280px;
-		box-sizing: border-box;
-		margin-inline: auto;
 		border-radius: var(--border-radius-l);
+		padding: 24px;
+		box-sizing: border-box;
 
 		&--user {
 			background-color: var(--color-green-darkest);
@@ -347,10 +345,11 @@
 	}
 
 	span.chat__latest-version {
+		@include paragraph-xs;
 		display: flex;
-		font-size: 14px;
 		align-items: center;
 		padding-inline: 12px;
+		line-height: 1em;
 		color: var(--color-neutral-300);
 		background-color: var(--color-neutral-600);
 		border-radius: var(--border-radius-l);
@@ -375,34 +374,29 @@
 	}
 
 	h1.chat__article-h1 {
-		font-weight: 600;
-		letter-spacing: -0.025em;
-		margin-block: 0;
-		font-size: 24px;
-		line-height: 1.2em;
+		@include headline-l;
 		color: var(--color-neutral-100);
 	}
 
 	p.chat__article-p {
-		margin-block: 0;
-		font-size: 14px;
-		line-height: 1.5em;
+		@include paragraph-s;
 		color: var(--color-neutral-200);
 	}
 
 	/* ------------------------------------------------------------------------ */
 
 	footer.chat__footer {
+		@include container-outer;
 		position: sticky;
 		bottom: 0;
-		padding: 24px;
+		padding-block: 24px;
 		backdrop-filter: blur(1px);
 		-webkit-backdrop-filter: blur(1px);
 		background-color: rgba(25, 25, 25, 0.9);
 		border-top: 1px solid var(--color-neutral-700);
 
 		@media (max-width: 768px) {
-			padding: 16px;
+			padding-block: 16px;
 		}
 	}
 
@@ -421,12 +415,13 @@
 	}
 
 	button.chat__suggestion {
-		padding: 8px;
+		@include paragraph-s;
+		line-height: 1em;
 		background-color: transparent;
-		border-radius: 4px;
 		text-align: left;
 		cursor: pointer;
-		font-size: 16px;
+		padding: 8px;
+		border-radius: 4px;
 		font-family: var(--font-base);
 		border: 1px solid var(--color-yellow-darkest);
 		background-color: var(--color-yellow-darkest);

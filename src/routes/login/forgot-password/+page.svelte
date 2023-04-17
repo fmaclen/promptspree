@@ -6,6 +6,7 @@
 	import FormFieldset from '$lib/components/FormFieldset.svelte';
 	import FormInput from '$lib/components/FormInput.svelte';
 	import Head from '$lib/components/Head.svelte';
+	import HeadlineXl from '$lib/components/HeadlineXL.svelte';
 	import Notice from '$lib/components/Notice.svelte';
 	import Section from '$lib/components/Section.svelte';
 	import { UNKNOWN_ERROR_MESSAGE } from '$lib/utils';
@@ -36,11 +37,13 @@
 
 <Head title={['Forgot your password?']} />
 
-<Notice>
-	Enter the email address you used to join and we'll send instructions to reset your password
-</Notice>
+<Section isVerticallyCentered={true}>
+	<HeadlineXl>Forgot your password?</HeadlineXl>
 
-<Section isVerticallyCentered={true} title="Forgot your password?">
+	<Notice>
+		Enter the email address you used to join and we'll send instructions to reset your password
+	</Notice>
+
 	<form class="form" method="POST" use:enhance={handleSubmit}>
 		<FormFieldset>
 			<FormField label="E-mail">
@@ -63,5 +66,6 @@
 	form.form {
 		@import '$lib/components/Form.scss';
 		@include baseForm;
+		margin-top: 32px;
 	}
 </style>

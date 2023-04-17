@@ -3,18 +3,21 @@
 </script>
 
 <label class="form-field">
-	{label}
+	<span class="form-field__span">{label}</span>
 	<slot />
 </label>
 
 <style lang="scss">
 	label.form-field {
+		@include paragraph-s;
 		display: flex;
 		flex-direction: column;
 		gap: 8px;
-		font-size: 14px;
-		font-weight: 600;
 		color: var(--color-neutral-200);
 		width: 100%;
+	}
+
+	span.form-field__span {
+		font-weight: 600;
 	}
 </style>

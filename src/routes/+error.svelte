@@ -1,5 +1,6 @@
 <script>
 	import { page } from '$app/stores';
+	import HeadlineXl from '$lib/components/HeadlineXL.svelte';
 	import Notice from '$lib/components/Notice.svelte';
 	import Section from '$lib/components/Section.svelte';
 
@@ -9,7 +10,8 @@
 	let error = $page.error && $page.error.message;
 </script>
 
-<Section isVerticallyCentered={true} title="Error {$page.status}">
+<Section isVerticallyCentered={true}>
+	<HeadlineXl>Error {$page.status}</HeadlineXl>
 	<Notice>
 		{error === 'Error: 500' ? DEFAULT_ERROR : error}
 	</Notice>

@@ -6,6 +6,8 @@
 	import { Toaster } from 'svelte-french-toast';
 	import { slide } from 'svelte/transition';
 
+	import CategoryList from '../lib/components/CategoryList.svelte';
+	import Footer from '../lib/components/Footer.svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -60,6 +62,7 @@
 			aria-labelledby="hamburger"
 			transition:slide={{ duration: 150 }}
 		>
+			<CategoryList component="button" />
 			<ul class="aside__ul">
 				{#if data.user}
 					<li class="aside__li">
@@ -117,15 +120,7 @@
 		<slot />
 	</main>
 
-	<footer class="layout__footer">
-		<A href="/">
-			&copy; {new Date().getFullYear()}
-			{APP_NAME}
-		</A>
-		<A href="/legal/">Terms of service</A>
-		<A href="/legal/">Privacy policy</A>
-		<A target="_blank" href="https://github.com/fmaclen/promptspree/">GitHub</A>
-	</footer>
+	<Footer />
 </div>
 
 <style lang="scss">
@@ -137,17 +132,23 @@
 		height: 100%;
 		margin: 0;
 		font-family: var(--font-base);
+		color: var(--color-neutral-100);
 		background-color: var(--color-neutral-800);
 	}
 
 	div.layout {
+		position: relative;
 		display: flex;
 		flex-direction: column;
-		position: relative;
 		height: 100%;
+		background-image: url('/HalftoneBackground.svg');
+		background-repeat: no-repeat;
+		background-position-x: center;
+		background-position-y: -33vh;
+		background-size: clamp(480px, 100vw, 1024px);
 
 		&--playSection {
-			footer.layout__footer {
+			:global(footer.footer) {
 				display: none;
 			}
 		}
@@ -247,18 +248,23 @@
 	header.header {
 		grid-area: header;
 
-		position: sticky;
+		/* position: sticky;
 		top: 0;
 		z-index: 3;
 		background-color: var(--color-neutral-900);
-		border-bottom: 1px solid var(--color-neutral-700);
+		border-bottom: 1px solid var(--color-neutral-700); */
 	}
 
 	hgroup.header__hgroup {
 		display: flex;
 		justify-content: space-between;
-		padding: 12px 24px;
+		padding-block: 32px;
+		padding-inline: 64px;
 		box-sizing: border-box;
+
+		@media (max-width: 768px) {
+			padding-inline: 24px;
+		}
 	}
 
 	button.header__hamburger {
@@ -335,26 +341,5 @@
 		display: block;
 		font-size: 12px;
 		width: 12px;
-	}
-
-	/* ------------------------------------------------------------------------ */
-
-	footer.layout__footer {
-		display: flex;
-		width: 100%;
-		gap: 24px;
-		font-size: 13px;
-		text-align: center;
-		padding: 24px;
-		box-sizing: border-box;
-		margin-inline: auto;
-		color: var(--color-neutral-300);
-		background-color: var(--color-neutral-1000);
-
-		@media (max-width: 768px) {
-			flex-direction: column-reverse;
-			text-align: unset;
-			margin-inline: unset;
-		}
 	}
 </style>

@@ -1,11 +1,11 @@
 <script lang="ts">
 	import A from '$lib/components/A.svelte';
-	import ArticleCategories from '$lib/components/ArticleCategories.svelte';
 	import ArticleSummaries from '$lib/components/ArticleSummaries.svelte';
 	import Head from '$lib/components/Head.svelte';
 	import Notice from '$lib/components/Notice.svelte';
 	import Section from '$lib/components/Section.svelte';
 
+	import HeadlineXl from '../../../lib/components/HeadlineXL.svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -15,9 +15,9 @@
 
 <Head title={[category, 'Articles']} />
 
-<ArticleCategories currentCategory={category} />
+<HeadlineXl>{category}</HeadlineXl>
 
-<Section title={category}>
+<Section>
 	{#if articles.length > 0}
 		<ArticleSummaries {articles} />
 	{:else}

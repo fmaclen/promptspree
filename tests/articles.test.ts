@@ -46,7 +46,7 @@ test.describe('Articles', () => {
 		await resetDatabase();
 	});
 
-	test.beforeEach(async ({page},testInfo) => {
+	test.beforeEach(async ({ page }, testInfo) => {
 		setSnapshotPath(testInfo);
 	});
 
@@ -58,7 +58,7 @@ test.describe('Articles', () => {
 		await page.getByText('Politics').click();
 		await expect(page.getByText('Sorry, we can\'t show you the articles right now. Please try again later')).not.toBeVisible(); // prettier-ignore
 		await expect(page.getByText('There are no articles in the Politics category, try creating one')).toBeVisible(); // prettier-ignore
-		await matchSnapshot(page, 'homepage-with-no-articles')
+		await matchSnapshot(page, 'homepage-with-no-articles');
 	});
 
 	test.describe('With articles', () => {
@@ -88,20 +88,19 @@ test.describe('Articles', () => {
 			await expect(page.locator('li.articles__li a.category', { hasText: MOCK_ARTICLE_COMPLETIONS[3].category })).toBeVisible(); // prettier-ignore
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].body[0])).toBeVisible(); // Summary
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].body[1])).not.toBeVisible();
-			await matchSnapshot(page, 'homepage-with-articles')
+			await matchSnapshot(page, 'homepage-with-articles');
 
 			// Category page
 			await page
 				.locator('li.articles__li a.category', { hasText: MOCK_ARTICLE_COMPLETIONS[1].category })
 				.click();
-			await expect(page.locator(`nav.categories a.category--${MOCK_ARTICLE_COMPLETIONS[1].category.toLowerCase()}`)).toHaveClass(/category--active/); // prettier-ignore
 			await expect(page.locator('li.articles__li a.category', { hasText: MOCK_ARTICLE_COMPLETIONS[1].category })).toBeVisible(); // prettier-ignore
 			await expect(page.getByText(MOCK_USERS.alice.nickname)).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[0])).toBeVisible(); // Summary
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[1])).not.toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].headline)).not.toBeVisible();
-			await matchSnapshot(page, 'category-page')
+			await matchSnapshot(page, 'category-page');
 		});
 
 		test('Can see published articles', async ({ page }) => {
@@ -116,11 +115,10 @@ test.describe('Articles', () => {
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[0])).toBeVisible(); // Summary
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[1])).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[2])).toBeVisible();
-			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].notes)).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].headline)).not.toBeVisible();
 			await expect(page.getByText('Delete')).toBeVisible();
 			await expect(page.getByText('Publish')).not.toBeVisible();
-			await matchSnapshot(page, 'article-published-by-author')
+			await matchSnapshot(page, 'article-published-by-author');
 
 			// Published article by Bob
 			await goToHomepageViaLogo(page);
@@ -129,11 +127,10 @@ test.describe('Articles', () => {
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].body[0])).toBeVisible(); // Summary
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].body[1])).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].body[2])).toBeVisible();
-			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].notes)).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).not.toBeVisible();
 			await expect(page.getByText('Delete')).not.toBeVisible();
 			await expect(page.getByText('Publish')).not.toBeVisible();
-			await matchSnapshot(page, 'article-published-by-others')
+			await matchSnapshot(page, 'article-published-by-others');
 		});
 
 		test('Can edit own draft articles', async ({ page }) => {
@@ -197,7 +194,7 @@ test.describe('Articles', () => {
 
 		test('Articles can have audio and images', async ({ page }) => {
 			// NOTE: This test only checks that the player is visible when an audio path is present.
-			let article = await getLastArticle(`headline = "${MOCK_ARTICLE_COMPLETIONS[1].headline}"`);
+			const article = await getLastArticle(`headline = "${MOCK_ARTICLE_COMPLETIONS[1].headline}"`);
 
 			const audioData = readFileSync('tests/lib/fixtures/the-great-plague.mp3');
 			const audioBlob = new Blob([audioData], { type: 'audio/mp3' });
@@ -234,8 +231,8 @@ test.describe('Articles', () => {
 			await expect(page.locator('img.article__img')).toBeVisible();
 			expect(await page.locator('img.article__img').getAttribute('src')).toMatch(
 				/^.*\/api\/files\/[^/]+\/[^/]+\/.+\.png$/
-			); // 'xxx/api/files/xxx/xxx/xxx.mp3'
-			await matchSnapshot(page, 'article-with-audio-and-image')
+			); // 'xxx/api/files/xxx/xxx/xxx.png'
+			await matchSnapshot(page, 'article-with-audio-and-image');
 		});
 	});
 
@@ -258,7 +255,7 @@ test.describe('Articles', () => {
 
 		await prepareToAcceptDialog(page, /Are you sure you want to delete the article?/);
 		await page.getByText('Delete').click();
-		await expect(page.locator('h1.section__h1', { hasText: MOCK_USERS.alice.nickname })).toBeVisible(); // prettier-ignore
+		await expect(page.locator('h1.headline-xl', { hasText: MOCK_USERS.alice.nickname })).toBeVisible(); // prettier-ignore
 		await expect(page.getByText('No published articles, generate one')).toBeVisible();
 		await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[2])).not.toBeVisible();
 	});

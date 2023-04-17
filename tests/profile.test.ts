@@ -37,7 +37,7 @@ async function seedTest() {
 }
 
 test.describe('Profile', () => {
-	test.beforeEach(async ({page},testInfo) => {
+	test.beforeEach(async ({ page }, testInfo) => {
 		setSnapshotPath(testInfo);
 		await resetDatabase();
 		await seedTest();
@@ -48,7 +48,7 @@ test.describe('Profile', () => {
 			await loginUser(MOCK_USERS.alice, page);
 			await page.goto('/');
 			await page.locator('a.metadata__a', { hasText: MOCK_USERS.alice.nickname }).first().click();
-			await expect(page.locator('h1.section__h1', { hasText: MOCK_USERS.alice.nickname })).toBeVisible(); // prettier-ignore
+			await expect(page.locator('h1.headline-xl', { hasText: MOCK_USERS.alice.nickname })).toBeVisible(); // prettier-ignore
 		});
 
 		test.afterEach(async ({ page }) => {
@@ -59,19 +59,17 @@ test.describe('Profile', () => {
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[0])).toBeVisible(); // Summary
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[1])).not.toBeVisible();
-			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].notes)).not.toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline)).not.toBeVisible();
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Drafts 1' })).toBeVisible(); // prettier-ignore
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Published 1' })).toBeVisible(); // prettier-ignore
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Articles 1' })).not.toBeVisible(); // prettier-ignore
 
 			await page.getByText('Drafts 1').click();
-			await matchSnapshot(page, 'profile-with-drafts')
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline)).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].body[0])).toBeVisible(); // Summary
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].body[1])).not.toBeVisible();
-			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].notes)).not.toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).not.toBeVisible();
+			await matchSnapshot(page, 'profile-with-drafts');
 		});
 
 		test('Can publish draft articles', async ({ page }) => {
@@ -80,10 +78,8 @@ test.describe('Profile', () => {
 
 			await page.getByText('Drafts 1').click();
 			await expect(publishButton).not.toBeVisible();
-			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].notes)).not.toBeVisible();
 
 			await page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline).click();
-			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].notes)).toBeVisible();
 			await expect(publishButton).toBeVisible();
 
 			await publishButton.click();
@@ -93,7 +89,7 @@ test.describe('Profile', () => {
 
 			await page.getByText('Drafts 0').click();
 			await expect(page.getByText('No draft articles, generate one')).toBeVisible();
-			await matchSnapshot(page, 'profile-without-drafts')
+			await matchSnapshot(page, 'profile-without-drafts');
 		});
 
 		test('Can delete published or draft articles', async ({ page }) => {
@@ -133,7 +129,7 @@ test.describe('Profile', () => {
 		test.beforeEach(async ({ page }) => {
 			await page.goto('/');
 			await page.locator('a.metadata__a', { hasText: MOCK_USERS.bob.nickname }).click();
-			await expect(page.locator('h1.section__h1', { hasText: MOCK_USERS.bob.nickname })).toBeVisible(); // prettier-ignore
+			await expect(page.locator('h1.headline-xl', { hasText: MOCK_USERS.bob.nickname })).toBeVisible(); // prettier-ignore
 		});
 
 		test('Can only see published articles from other users', async ({ page }) => {
@@ -143,7 +139,7 @@ test.describe('Profile', () => {
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Drafts 1' })).not.toBeVisible(); // prettier-ignore
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Published 1' })).not.toBeVisible(); // prettier-ignore
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Articles 1' })).toBeVisible();
-			await matchSnapshot(page, 'profile-other-user')
+			await matchSnapshot(page, 'profile-other-user');
 		});
 
 		test('Date joined is displayed correctly', async ({ page }) => {

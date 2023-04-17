@@ -1,17 +1,10 @@
 <script lang="ts">
-	import Halftone from '$lib/components/backgrounds/Halftone.svelte';
-
 	export let label: string;
-	export let isActive: boolean | undefined = false;
 
 	const id = label.toLowerCase();
 </script>
 
-<a href="/category/{id}" class="category category--{id} {isActive ? 'category--active' : ''}">
-	<span class="category__halftone">
-		<Halftone />
-	</span>
-
+<a href="/category/{id}" class="category category--{id}">
 	{label}
 </a>
 
@@ -24,14 +17,21 @@
 		box-sizing: border-box;
 		color: inherit;
 		width: max-content;
+		transition: transform 100ms linear, filter 100ms linear;
 		padding-top: 4px;
 		padding-bottom: 2px;
-		padding-left: 20px;
 		padding-right: 12px;
 		border-radius: var(--border-radius-m);
 		color: var(--color-neutral-900);
-		background-color: var(--color-neutral-100);
-		transition: transform 100ms linear, filter 100ms linear;
+
+		--halftone-size: 16px;
+		padding-left: var(--halftone-size);
+
+		background-color: var(--color-neutral-100); // Base color
+		background-image: url('/HalftoneCategoryButton.svg');
+		background-repeat: no-repeat;
+		background-position: center left;
+		background-size: var(--halftone-size);
 
 		&:hover {
 			transform: scale(1.1);
@@ -75,20 +75,6 @@
 
 		&--opinion {
 			background-color: #e95d5d;
-		}
-	}
-
-	span.category__halftone {
-		position: absolute;
-		overflow: hidden;
-		top: 50%;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		transform: translateY(-50%);
-
-		:global(path) {
-			fill: var(--color-neutral-900);
 		}
 	}
 </style>

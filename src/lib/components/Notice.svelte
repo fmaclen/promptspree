@@ -10,21 +10,22 @@
 
 <style lang="scss">
 	div.notice {
+		@include paragraph-s;
 		text-align: center;
 		width: 100%;
-		font-size: 14px;
 		padding: 16px;
 		box-sizing: border-box;
-		background-color: var(--color-neutral-900);
+		background-color: var(--color-neutral-700);
 		color: var(--color-neutral-200);
+		border-radius: var(--border-radius-l);
 
 		&--positive {
-			background-color: var(--color-green-dark);
+			background-color: var(--color-green-darker);
 			color: var(--color-green);
 		}
 
 		&--negative {
-			background-color: var(--color-red-dark);
+			background-color: var(--color-red-darker);
 			color: var(--color-red);
 		}
 	}

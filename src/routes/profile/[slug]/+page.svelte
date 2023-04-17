@@ -3,9 +3,9 @@
 	import ArticleSummaries from '$lib/components/ArticleSummaries.svelte';
 	import Head from '$lib/components/Head.svelte';
 	import Notice from '$lib/components/Notice.svelte';
-	import ProfileSummary from '$lib/components/ProfileSummary.svelte';
 	import Section from '$lib/components/Section.svelte';
 
+	import ProfileHeader from '../ProfileHeader.svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -18,16 +18,17 @@
 
 <Head title={[profile.nickname, 'Profile']} />
 
-<Section title={profile.nickname}>
-	<ProfileSummary
-		id={profile.id}
-		{isCurrentUserProfile}
-		totalDrafts={data.totalDrafts}
-		totalPublished={articles.length}
-		promptScore={profile.promptScore}
-		created={profile.created}
-	/>
+<ProfileHeader
+	id={profile.id}
+	created={profile.created}
+	{isCurrentUserProfile}
+	nickname={profile.nickname}
+	totalDrafts={data.totalDrafts}
+	totalPublished={articles.length}
+	promptScore={profile.promptScore}
+/>
 
+<Section>
 	{#if articles.length > 0}
 		<ArticleSummaries {articles} />
 	{:else if isCurrentUserProfile}

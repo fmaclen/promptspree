@@ -45,6 +45,24 @@
 	--font-narrow: 'Mona Sans Narrow', sans-serif;
 }
 
+@mixin container-outer {
+	width: 100%;
+	margin-inline: auto;
+}
+
+@mixin container-inner {
+	width: 100%;
+	max-width: 1280px;
+	height: max-content;
+	box-sizing: border-box;
+	margin-inline: auto;
+	padding-inline: 64px;
+
+	@media (max-width: 768px) {
+		padding-inline: 32px;
+	}
+}
+
 @mixin headline-xxl {
 	font-family: var(--font-wide);
 	font-size: 40px;
@@ -72,18 +90,9 @@
 	margin: 0;
 }
 
-// @mixin headline-m {
-// 	font-family: var(--font-base);
-// 	font-size: 18px;
-// 	line-height: 1.2em;
-// 	letter-spacing: -0.025em;
-// 	font-weight: bold;
-// 	margin: 0;
-// }
-
 @mixin subtitle-l {
 	font-family: var(--font-narrow);
-	font-size: 28px;
+	font-size: 18px;
 	line-height: 1em;
 	letter-spacing: 0.05em;
 	margin: 0;
@@ -118,7 +127,14 @@
 
 @mixin paragraph-s {
 	font-family: var(--font-base);
+	font-size: 14px;
+	line-height: 1.4em;
+	margin: 0;
+}
+
+@mixin paragraph-xs {
+	font-family: var(--font-base);
 	font-size: 13px;
-	line-height: 1.2em;
+	line-height: 1.3em;
 	margin: 0;
 }

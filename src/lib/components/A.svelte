@@ -20,6 +20,10 @@
 		text-decoration: none;
 		color: inherit;
 
+		&:hover {
+			text-decoration: underline;
+		}
+
 		&:hover,
 		&--highlighted {
 			color: var(--color-yellow);
