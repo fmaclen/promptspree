@@ -1,13 +1,12 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import A from '$lib/components/A.svelte';
+	import CategoryList from '$lib/components/CategoryList.svelte';
+	import Footer from '$lib/components/Footer.svelte';
 	import Logo from '$lib/components/Logo.svelte';
 	import { APP_NAME } from '$lib/utils';
 	import { Toaster } from 'svelte-french-toast';
 	import { slide } from 'svelte/transition';
 
-	import CategoryList from '../lib/components/CategoryList.svelte';
-	import Footer from '../lib/components/Footer.svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -248,11 +247,13 @@
 	header.header {
 		grid-area: header;
 
-		/* position: sticky;
+		/*
+		position: sticky;
 		top: 0;
 		z-index: 3;
 		background-color: var(--color-neutral-900);
-		border-bottom: 1px solid var(--color-neutral-700); */
+		border-bottom: 1px solid var(--color-neutral-700);
+		*/
 	}
 
 	hgroup.header__hgroup {

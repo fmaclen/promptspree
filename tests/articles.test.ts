@@ -203,13 +203,13 @@ test.describe('Articles', () => {
 			article?.id && (await updateArticle(article?.id, formData));
 
 			await page.getByText(MOCK_ARTICLE_COMPLETIONS[3].headline).click();
-			await expect(page.locator('nav.article__audio', { hasText: 'Plus' })).not.toBeVisible();
+			await expect(page.locator('nav.article__audio')).not.toBeVisible();
 
 			await goToHomepageViaLogo(page);
-			await expect(page.locator('nav.article__audio', { hasText: 'Plus' })).not.toBeVisible();
+			await expect(page.locator('nav.article__audio')).not.toBeVisible();
 
 			await page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline).click();
-			await expect(page.locator('nav.article__audio', { hasText: 'Plus' })).toBeVisible();
+			await expect(page.locator('nav.article__audio')).toBeVisible();
 			expect(await page.locator('audio.article__player').getAttribute('src')).toMatch(
 				/^.*\/api\/files\/[^/]+\/[^/]+\/.+\.mp3$/
 			); // 'xxx/api/files/xxx/xxx/xxx.mp3'
