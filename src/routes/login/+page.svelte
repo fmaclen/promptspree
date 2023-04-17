@@ -6,10 +6,10 @@
 	import FormFieldset from '$lib/components/FormFieldset.svelte';
 	import FormInput from '$lib/components/FormInput.svelte';
 	import Head from '$lib/components/Head.svelte';
+	import HeadlineXl from '$lib/components/HeadlineXL.svelte';
 	import Notice from '$lib/components/Notice.svelte';
 	import Section from '$lib/components/Section.svelte';
 	import { Sentiment } from '$lib/utils';
-	import HeadlineXl from '$lib/components/HeadlineXL.svelte';
 
 	let isLoading = false;
 	let email = '';
@@ -34,7 +34,6 @@
 </script>
 
 <Head title={['Login']} />
-
 
 <Section isVerticallyCentered={true}>
 	<HeadlineXl>Login</HeadlineXl>

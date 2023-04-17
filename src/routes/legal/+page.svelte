@@ -5,6 +5,7 @@
 	import P from '$lib/components/P.svelte';
 	import Section from '$lib/components/Section.svelte';
 	import { APP_EMAIL, APP_NAME } from '$lib/utils';
+
 	import Notice from '../../lib/components/Notice.svelte';
 </script>
 

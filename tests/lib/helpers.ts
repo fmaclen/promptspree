@@ -152,15 +152,21 @@ export async function matchSnapshot(page: Page, name: string) {
 	// To add run visual regression tests on CI we need to account for all the different
 	// variations of browser and viewport resolutions (i.e. desktop/mobile).
 	if (process.platform !== 'darwin') return;
-	
+
 	// Desktop
 	await delay(); // Waits for animations to finish
-	expect(await page.screenshot({ fullPage: true })).toMatchSnapshot({ name: `${name}-desktop.png` , maxDiffPixelRatio: MAX_DIFF_PIXEL_RATIO });
+	expect(await page.screenshot({ fullPage: true })).toMatchSnapshot({
+		name: `${name}-desktop.png`,
+		maxDiffPixelRatio: MAX_DIFF_PIXEL_RATIO
+	});
 
 	// Mobile
 	await page.setViewportSize({ width: 375, height: 667 });
 	// await delay(); // Waits for animations to finish
-	expect(await page.screenshot({ fullPage: true })).toMatchSnapshot({ name: `${name}-mobile.png` , maxDiffPixelRatio: MAX_DIFF_PIXEL_RATIO });
+	expect(await page.screenshot({ fullPage: true })).toMatchSnapshot({
+		name: `${name}-mobile.png`,
+		maxDiffPixelRatio: MAX_DIFF_PIXEL_RATIO
+	});
 
 	// Reset viewport size
 	await page.setViewportSize({ width: 1280, height: 720 });

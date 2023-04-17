@@ -56,22 +56,6 @@
 		/>
 	</nav>
 
-	{#if size === ArticleSize.FULL}
-		{#if article.messages}
-			<div class="article-prompt">
-				<code class="article-prompt__code">
-					{#each article.messages as message}
-						{#if typeof message.content === 'string'}
-							<p>{message.content}</p>
-						{:else if message.content?.notes !== undefined}
-							<p class="article-prompt__assistant">{message.content.notes}</p>
-						{/if}
-					{/each}
-				</code>
-			</div>
-		{/if}
-	{/if}
-
 	{#if isDeletable || isPublishable}
 		<nav class="metadata__author-actions">
 			{#if isPublishable}
@@ -160,25 +144,5 @@
 		border-radius: var(--border-radius-l);
 		color: var(--color-neutral-100);
 		background-color: var(--color-neutral-600);
-	}
-
-	/* ------------------------------------------------------------------------ */
-
-	div.article-prompt {
-		display: flex;
-		flex-direction: column;
-	}
-
-	code.article-prompt__code {
-		font-size: 13px;
-		overflow-y: scroll;
-		color: var(--color-neutral-300);
-		background-color: var(--color-neutral-700);
-		border-radius: var(--border-radius-l);
-		padding: 0 16px;
-	}
-
-	p.article-prompt__assistant {
-		color: var(--color-green-dark);
 	}
 </style>

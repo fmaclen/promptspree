@@ -13,7 +13,7 @@ import {
 } from './lib/helpers.js';
 
 test.describe('Users', () => {
-	test.beforeEach(async ({ page },testInfo) => {
+	test.beforeEach(async ({ page }, testInfo) => {
 		setSnapshotPath(testInfo);
 		await resetDatabase();
 		await page.goto('/');
@@ -53,7 +53,7 @@ test.describe('Users', () => {
 		await submitButton.click();
 		await expect(page.getByText('Nickname is already taken or is invalid')).toBeVisible();
 		await expect(page.getByText('Email is already in use or is invalid')).not.toBeVisible();
-		await matchSnapshot(page, 'auth-signup-with-errors')
+		await matchSnapshot(page, 'auth-signup-with-errors');
 	});
 
 	test('Can join', async ({ page }) => {
@@ -75,7 +75,7 @@ test.describe('Users', () => {
 		await submitButton.click();
 		await expect(page.getByText('Almost there...')).toBeVisible();
 		await expect(page.getByText('Check your email to verify your account')).toBeVisible();
-		await matchSnapshot(page, 'auth-signup-verification')
+		await matchSnapshot(page, 'auth-signup-verification');
 	});
 
 	test('Can login and logout', async ({ page }) => {
@@ -102,7 +102,7 @@ test.describe('Users', () => {
 
 		await submitButton.click();
 		await expect(page.getByText("Can't login, check your credentials")).toBeVisible();
-		await matchSnapshot(page, 'auth-login-with-errors')
+		await matchSnapshot(page, 'auth-login-with-errors');
 
 		await verifyUser(MOCK_USERS.alice.email);
 
@@ -125,12 +125,12 @@ test.describe('Users', () => {
 		// Logout
 		await page.click('button[aria-label="Toggle navigation"]');
 		await page.getByText('Logout').click();
-		
+
 		// Check logged out navigation
 		await page.click('button[aria-label="Toggle navigation"]');
 		await expect(page.getByText('Login')).toBeVisible();
 		await expect(page.getByText('Alice')).not.toBeVisible();
-		await matchSnapshot(page, 'homepage-with-logged-out-user')
+		await matchSnapshot(page, 'homepage-with-logged-out-user');
 	});
 
 	test('Can reset forgotten password', async ({ page }) => {
@@ -154,7 +154,7 @@ test.describe('Users', () => {
 
 		await page.getByLabel('E-mail').fill('mocked@example.com');
 		await expect(passwordResetButton).not.toBeDisabled();
-		await matchSnapshot(page, 'auth-forgot-password')
+		await matchSnapshot(page, 'auth-forgot-password');
 
 		await passwordResetButton.click();
 		await expect(
@@ -162,7 +162,7 @@ test.describe('Users', () => {
 		).toBeVisible();
 		await expect(passwordResetButton).toBeDisabled();
 		await expect(page.getByLabel('E-mail')).toBeDisabled();
-		await matchSnapshot(page, 'auth-confirm-email')
+		await matchSnapshot(page, 'auth-confirm-email');
 
 		await page.getByText('login here').click();
 		await expect(loginButton).toBeVisible();

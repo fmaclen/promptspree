@@ -90,15 +90,6 @@
 	margin: 0;
 }
 
-// @mixin headline-m {
-// 	font-family: var(--font-base);
-// 	font-size: 18px;
-// 	line-height: 1.2em;
-// 	letter-spacing: -0.025em;
-// 	font-weight: bold;
-// 	margin: 0;
-// }
-
 @mixin subtitle-l {
 	font-family: var(--font-narrow);
 	font-size: 18px;
@@ -144,6 +135,6 @@
 @mixin paragraph-xs {
 	font-family: var(--font-base);
 	font-size: 13px;
-	line-height: 1.2em;
+	line-height: 1.3em;
 	margin: 0;
 }

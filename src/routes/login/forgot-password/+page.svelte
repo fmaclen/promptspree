@@ -6,11 +6,11 @@
 	import FormFieldset from '$lib/components/FormFieldset.svelte';
 	import FormInput from '$lib/components/FormInput.svelte';
 	import Head from '$lib/components/Head.svelte';
+	import HeadlineXl from '$lib/components/HeadlineXL.svelte';
 	import Notice from '$lib/components/Notice.svelte';
 	import Section from '$lib/components/Section.svelte';
 	import { UNKNOWN_ERROR_MESSAGE } from '$lib/utils';
 	import toast from 'svelte-french-toast';
-	import HeadlineXl from '$lib/components/HeadlineXL.svelte';
 
 	import ToastSuccess from './ToastSuccess.svelte';
 

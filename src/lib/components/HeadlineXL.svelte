@@ -1,7 +1,7 @@
 <h1 class="headline-xl">
-	<span class="headline-xl__inner">
+	<div class="headline-xl__inner">
 		<slot />
-	</span>
+	</div>
 </h1>
 
 <style lang="scss">
@@ -17,9 +17,8 @@
 		}
 	}
 
-	span.headline-xl__inner {
+	div.headline-xl__inner {
 		@include container-inner;
-		display: block;
 
 		@media (max-width: 768px) {
 			padding-inline: 0px;

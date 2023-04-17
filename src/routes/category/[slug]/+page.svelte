@@ -4,8 +4,8 @@
 	import Head from '$lib/components/Head.svelte';
 	import Notice from '$lib/components/Notice.svelte';
 	import Section from '$lib/components/Section.svelte';
-	import HeadlineXl from '../../../lib/components/HeadlineXL.svelte';
 
+	import HeadlineXl from '../../../lib/components/HeadlineXL.svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;

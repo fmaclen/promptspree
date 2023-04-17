@@ -23,12 +23,12 @@
 		padding-right: 12px;
 		border-radius: var(--border-radius-m);
 		color: var(--color-neutral-900);
-		
+
 		--halftone-size: 16px;
 		padding-left: var(--halftone-size);
 
 		background-color: var(--color-neutral-100); // Base color
-		background-image: url("/HalftoneCategoryButton.svg");
+		background-image: url('/HalftoneCategoryButton.svg');
 		background-repeat: no-repeat;
 		background-position: center left;
 		background-size: var(--halftone-size);

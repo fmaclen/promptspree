@@ -37,7 +37,7 @@ async function seedTest() {
 }
 
 test.describe('Profile', () => {
-	test.beforeEach(async ({page},testInfo) => {
+	test.beforeEach(async ({ page }, testInfo) => {
 		setSnapshotPath(testInfo);
 		await resetDatabase();
 		await seedTest();
@@ -71,7 +71,7 @@ test.describe('Profile', () => {
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].body[1])).not.toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].notes)).not.toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).not.toBeVisible();
-			await matchSnapshot(page, 'profile-with-drafts')
+			await matchSnapshot(page, 'profile-with-drafts');
 		});
 
 		test('Can publish draft articles', async ({ page }) => {
@@ -93,7 +93,7 @@ test.describe('Profile', () => {
 
 			await page.getByText('Drafts 0').click();
 			await expect(page.getByText('No draft articles, generate one')).toBeVisible();
-			await matchSnapshot(page, 'profile-without-drafts')
+			await matchSnapshot(page, 'profile-without-drafts');
 		});
 
 		test('Can delete published or draft articles', async ({ page }) => {
@@ -143,7 +143,7 @@ test.describe('Profile', () => {
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Drafts 1' })).not.toBeVisible(); // prettier-ignore
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Published 1' })).not.toBeVisible(); // prettier-ignore
 			await expect(page.locator('li.profile-summary__li', { hasText: 'Articles 1' })).toBeVisible();
-			await matchSnapshot(page, 'profile-other-user')
+			await matchSnapshot(page, 'profile-other-user');
 		});
 
 		test('Date joined is displayed correctly', async ({ page }) => {
