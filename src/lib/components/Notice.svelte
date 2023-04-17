@@ -20,12 +20,12 @@
 		border-radius: var(--border-radius-l);
 
 		&--positive {
-			background-color: var(--color-green-dark);
+			background-color: var(--color-green-darker);
 			color: var(--color-green);
 		}
 
 		&--negative {
-			background-color: var(--color-red-dark);
+			background-color: var(--color-red-darker);
 			color: var(--color-red);
 		}
 	}

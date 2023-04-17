@@ -94,7 +94,6 @@ test.describe('Articles', () => {
 			await page
 				.locator('li.articles__li a.category', { hasText: MOCK_ARTICLE_COMPLETIONS[1].category })
 				.click();
-			await expect(page.locator(`nav.categories a.category--${MOCK_ARTICLE_COMPLETIONS[1].category.toLowerCase()}`)).toHaveClass(/category--active/); // prettier-ignore
 			await expect(page.locator('li.articles__li a.category', { hasText: MOCK_ARTICLE_COMPLETIONS[1].category })).toBeVisible(); // prettier-ignore
 			await expect(page.getByText(MOCK_USERS.alice.nickname)).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).toBeVisible();

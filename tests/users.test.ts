@@ -97,7 +97,7 @@ test.describe('Users', () => {
 		await expect(submitButton).toBeDisabled();
 
 		await page.getByLabel('E-mail').fill(MOCK_USERS.alice.email);
-		await page.getByLabel('Password', { exact: true }).fill(MOCK_USERS.alice.password);
+		await page.getByLabel('Password').fill(MOCK_USERS.alice.password);
 		await expect(submitButton).not.toBeDisabled();
 
 		await submitButton.click();
@@ -106,10 +106,11 @@ test.describe('Users', () => {
 
 		await verifyUser(MOCK_USERS.alice.email);
 
-		await page.getByLabel('Password', { exact: true }).fill(MOCK_USERS.alice.password);
+		await page.getByLabel('Password').fill(MOCK_USERS.alice.password);
 		await submitButton.click();
 		await expect(page.getByText("Can't login, check your credentials")).not.toBeVisible();
 
+		await page.click('button[aria-label="Toggle navigation"]');
 		await expect(page.locator('a.category', { hasText: 'Politics' })).toBeVisible();
 		await expectToBeInHomepage(page);
 
@@ -122,12 +123,14 @@ test.describe('Users', () => {
 		await expect(page.getByText('Login')).not.toBeVisible();
 
 		// Logout
+		await page.click('button[aria-label="Toggle navigation"]');
 		await page.getByText('Logout').click();
-
+		
 		// Check logged out navigation
 		await page.click('button[aria-label="Toggle navigation"]');
 		await expect(page.getByText('Login')).toBeVisible();
 		await expect(page.getByText('Alice')).not.toBeVisible();
+		await matchSnapshot(page, 'homepage-with-logged-out-user')
 	});
 
 	test('Can reset forgotten password', async ({ page }) => {

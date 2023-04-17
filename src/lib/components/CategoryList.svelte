@@ -17,7 +17,7 @@
 {#if component === 'button'}
 	<nav class="categories">
 		{#each categories as category}
-			<Category label={category.label} isActive={currentCategory === category.label} />
+			<Category label={category.label} />
 		{/each}
 	</nav>
 {/if}

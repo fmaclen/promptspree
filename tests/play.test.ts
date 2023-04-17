@@ -59,7 +59,7 @@ test.describe('Play', () => {
 			await generateButton.click();
 			await expect(page.locator('div.chat__message--user')).toBeVisible();
 			await expect(page.locator('div.chat__message--assistant')).toBeVisible();
-			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].category)).toBeVisible();
+			await expect(page.locator('div.chat__message--assistant a.category', { hasText: MOCK_ARTICLE_COMPLETIONS[0].category })).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline)).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].body[0])).toBeVisible();
 			expect(await page.locator('p.chat__article-p').count()).toBe(4);
@@ -73,13 +73,13 @@ test.describe('Play', () => {
 
 			prompt = MockPrompt.GENERATE_ARTICLE_1;
 			await page.locator('textarea').fill(prompt);
-			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].category)).not.toBeVisible();
+			await expect(page.locator('div.chat__message--assistant a.category', { hasText: MOCK_ARTICLE_COMPLETIONS[1].category })).not.toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).not.toBeVisible();
 
 			// Pressing "Enter" also submits prompt
 			await expect(page.locator('textarea')).toBeFocused();
 			await page.keyboard.press('Enter');
-			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].category)).toBeVisible();
+			await expect(page.locator('div.chat__message--assistant a.category', { hasText: MOCK_ARTICLE_COMPLETIONS[1].category })).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).toBeVisible();
 			await expect(page.locator('a.profile-summary__a--active', { hasText: 'Drafts' })).not.toBeVisible(); // prettier-ignore
 			expect(await page.locator('div.chat__message').count()).toBeLessThan(6);
