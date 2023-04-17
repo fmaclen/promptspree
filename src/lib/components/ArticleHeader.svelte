@@ -8,7 +8,7 @@
 	const isSizeFull = size === ArticleSize.FULL;
 </script>
 
-<header class="article__header">
+<header class="article__header {isSizeFull ? 'article__header--full' : ''}">
 	<Category label={article.category} />
 
 	{#if isSizeFull}
@@ -25,6 +25,10 @@
 		display: flex;
 		flex-direction: column;
 		row-gap: 16px;
+
+		&--full {
+			grid-area: headline;
+		}
 	}
 
 	h1.article__h1 {
