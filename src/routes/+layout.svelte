@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import CategoryList from '$lib/components/CategoryList.svelte';
+	import Footer from '$lib/components/Footer.svelte';
 	import Logo from '$lib/components/Logo.svelte';
 	import { APP_NAME } from '$lib/utils';
 	import { Toaster } from 'svelte-french-toast';
 	import { slide } from 'svelte/transition';
 
-	import CategoryList from '$lib/components/CategoryList.svelte';
-	import Footer from '$lib/components/Footer.svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
