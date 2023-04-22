@@ -423,8 +423,10 @@
 		background-color: var(--color-yellow-darkest);
 		color: var(--color-yellow);
 
-		&:hover {
-			background-color: var(--color-yellow-darker);
+		@media (hover: hover) and (pointer: fine) {
+			&:hover {
+				background-color: var(--color-yellow-darker);
+			}
 		}
 	}
 
@@ -508,8 +510,10 @@
 		border: none;
 		transition: padding 200ms;
 
-		&:hover {
-			padding-inline: 24px;
+		@media (hover: hover) and (pointer: fine) {
+			&:hover {
+				padding-inline: 24px;
+			}
 		}
 	}
 </style>

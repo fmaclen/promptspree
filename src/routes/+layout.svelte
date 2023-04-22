@@ -120,7 +120,7 @@
 		<slot />
 	</main>
 
-	<Footer />
+	<Footer user={data.user} />
 </div>
 
 <style lang="scss">
@@ -214,8 +214,10 @@
 		border-top: 1px solid transparent;
 		border-bottom: 1px solid transparent;
 
-		&:hover {
-			color: var(--color-green);
+		@media (hover: hover) and (pointer: fine) {
+			&:hover {
+				color: var(--color-blue-light);
+			}
 		}
 	}
 

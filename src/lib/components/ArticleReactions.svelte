@@ -118,16 +118,10 @@
 
 	a.reactions__summary {
 		text-decoration: none;
-		padding-left: 12px;
-		padding-right: 12px;
-		color: var(--color-neutral-200);
-		background-color: var(--color-neutral-600);
 	}
 
 	button.reactions__context-menu-toggle {
 		cursor: pointer;
-		padding-left: 12px;
-		padding-right: 12px;
 		width: 56px;
 	}
 
@@ -138,30 +132,34 @@
 		font-size: 16px;
 		cursor: pointer;
 
-		&:hover {
-			background-color: var(--color-neutral-500);
+		@media (hover: hover) and (pointer: fine) {
+			&:hover {
+				background-color: var(--color-neutral-500);
+			}
 		}
 	}
 
 	a.reactions__summary,
 	button.reactions__context-menu-toggle,
 	button.reactions__context-menu-reaction {
+		@include baseButton;
+		min-height: 40px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		height: 40px;
 		gap: 6px;
+		border: none;
 		box-sizing: border-box;
-		background-color: transparent;
 		border-radius: var(--border-radius-l);
-		border: 1px solid var(--color-neutral-600);
 	}
 
 	a.reactions__summary,
 	button.reactions__context-menu-toggle {
-		&:focus,
-		&:hover {
-			border-color: var(--color-neutral-400);
+		@media (hover: hover) and (pointer: fine) {
+			&:focus,
+			&:hover {
+				border-color: var(--color-neutral-400);
+			}
 		}
 	}
 
@@ -169,9 +167,8 @@
 	button.reactions__context-menu-reaction {
 		&--reacted,
 		&--reacted:hover {
-			color: var(--color-green);
-			border-color: var(--color-green-dark);
-			background-color: var(--color-green-darker);
+			color: var(--color-blue-light);
+			background-color: var(--color-blue-darker);
 		}
 	}
 

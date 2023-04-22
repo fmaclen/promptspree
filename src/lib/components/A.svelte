@@ -20,22 +20,14 @@
 		text-decoration: none;
 		color: inherit;
 
-		&:hover {
-			text-decoration: underline;
-		}
-
-		&:hover,
-		&--highlighted {
-			color: var(--color-yellow);
-		}
-
-		&--positive {
-			color: var(--color-green);
-			text-decoration: underline;
-
+		@media (hover: hover) and (pointer: fine) {
 			&:hover {
-				color: var(--color-green);
-				text-decoration: unset;
+				text-decoration: underline;
+			}
+
+			&:hover,
+			&--highlighted {
+				color: var(--color-yellow);
 			}
 		}
 	}

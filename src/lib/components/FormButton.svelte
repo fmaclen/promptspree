@@ -47,8 +47,10 @@
 			background-color: var(--color-yellow-darkest);
 			border-color: var(--color-yellow-darker);
 
-			&:hover {
-				border-color: var(--color-yellow);
+			@media (hover: hover) and (pointer: fine) {
+				&:hover {
+					border-color: var(--color-yellow);
+				}
 			}
 		}
 

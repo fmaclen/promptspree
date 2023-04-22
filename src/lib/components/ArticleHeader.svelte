@@ -55,9 +55,11 @@
 	a.article__a {
 		text-decoration: none;
 
-		&:hover {
-			h1.article__h1 {
-				color: var(--color-blue-light);
+		@media (hover: hover) and (pointer: fine) {
+			&:hover {
+				h1.article__h1 {
+					color: var(--color-blue-light);
+				}
 			}
 		}
 	}

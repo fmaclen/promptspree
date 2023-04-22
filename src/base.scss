@@ -153,16 +153,20 @@
 	border-radius: var(--border-radius-l);
 	background-color: var(--color-neutral-600);
 
-	&:hover {
-		background-color: var(--color-blue-dark);
+	@media (hover: hover) and (pointer: fine) {
+		&:hover {
+			background-color: var(--color-blue-dark);
+		}
 	}
 
 	&--active {
 		background-color: var(--color-blue-darker);
 		color: var(--color-blue-light);
 
-		&:hover {
-			border-color: var(--color-blue);
+		@media (hover: hover) and (pointer: fine) {
+			&:hover {
+				border-color: var(--color-blue);
+			}
 		}
 	}
 }
