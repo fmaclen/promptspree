@@ -24,7 +24,7 @@ test.describe('Users', () => {
 		await verifyUser(MOCK_USERS.alice.email);
 
 		await page.click('button[aria-label="Toggle navigation"]');
-		await page.getByText('Join to play').click();
+		await page.getByText('Join to play').first().click();
 		await expect(page.locator('h1', { hasText: 'Join to play' })).toBeVisible();
 
 		const submitButton = page.locator('button[type=submit]', { hasText: 'Join' });
@@ -58,7 +58,7 @@ test.describe('Users', () => {
 
 	test('Can join', async ({ page }) => {
 		await page.click('button[aria-label="Toggle navigation"]');
-		await page.getByText('Join to play').click();
+		await page.getByText('Join to play').first().click();
 		await expect(page.locator('h1', { hasText: 'Join to play' })).toBeVisible();
 		await expect(page.getByText('Already have an account? Login')).toBeVisible();
 
@@ -83,13 +83,13 @@ test.describe('Users', () => {
 
 		// Check logged out navigation
 		await page.click('button[aria-label="Toggle navigation"]');
-		await expect(page.getByText('Join to play')).toBeVisible();
-		await expect(page.getByText('Login')).toBeVisible();
+		await expect(page.getByText('Join to play').first()).toBeVisible();
+		await expect(page.getByText('Login').first()).toBeVisible();
 		await expect(page.getByText('Alice')).not.toBeVisible();
 		await expect(page.getByText('Drafts')).not.toBeVisible();
 		await expect(page.getByText('Logout')).not.toBeVisible();
 
-		await page.getByText('Login').click();
+		await page.getByText('Login').first().click();
 		await expect(page.locator('h1', { hasText: 'Login' })).toBeVisible();
 		await expect(page.getByText("Don't have an account? Join to play")).toBeVisible();
 
@@ -117,7 +117,7 @@ test.describe('Users', () => {
 		// Check logged in navigation
 		await page.click('button[aria-label="Toggle navigation"]');
 		await expect(page.getByText('Alice')).toBeVisible();
-		await expect(page.getByText('Drafts')).toBeVisible();
+		await expect(page.getByText('Drafts').first()).toBeVisible();
 		await expect(page.getByText('Logout')).toBeVisible();
 		await expect(page.getByText('Join to play')).not.toBeVisible();
 		await expect(page.getByText('Login')).not.toBeVisible();
@@ -128,7 +128,7 @@ test.describe('Users', () => {
 
 		// Check logged out navigation
 		await page.click('button[aria-label="Toggle navigation"]');
-		await expect(page.getByText('Login')).toBeVisible();
+		await expect(page.getByText('Login').first()).toBeVisible();
 		await expect(page.getByText('Alice')).not.toBeVisible();
 		await matchSnapshot(page, 'homepage-with-logged-out-user');
 	});

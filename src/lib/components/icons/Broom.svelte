@@ -30,7 +30,7 @@
 <style lang="scss">
 	svg.broom-icon {
 		path {
-			fill: var(--color-green);
+			fill: var(--color-blue-light);
 		}
 	}
 </style>

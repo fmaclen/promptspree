@@ -117,7 +117,7 @@ test.describe('Articles', () => {
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[2])).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].headline)).not.toBeVisible();
 			await expect(page.getByText('Delete')).toBeVisible();
-			await expect(page.getByText('Publish')).not.toBeVisible();
+			await expect(page.getByText('Publish', { exact: true })).not.toBeVisible();
 			await matchSnapshot(page, 'article-published-by-author');
 
 			// Published article by Bob
@@ -129,7 +129,7 @@ test.describe('Articles', () => {
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].body[2])).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).not.toBeVisible();
 			await expect(page.getByText('Delete')).not.toBeVisible();
-			await expect(page.getByText('Publish')).not.toBeVisible();
+			await expect(page.getByText('Publish', { exact: true })).not.toBeVisible();
 			await matchSnapshot(page, 'article-published-by-others');
 		});
 
@@ -148,7 +148,7 @@ test.describe('Articles', () => {
 				`status = "${ArticleStatus.DRAFT}" && user = "${user?.id}"`
 			);
 			expect(article?.headline).toBe(MOCK_ARTICLE_COMPLETIONS[0].headline);
-			await expect(page.getByText('Publish')).not.toBeVisible();
+			await expect(page.getByText('Publish', { exact: true })).not.toBeVisible();
 			await expect(page.getByText('Edit')).not.toBeVisible();
 
 			const generateButton = page.locator('button.chat__button-generate');
@@ -160,7 +160,7 @@ test.describe('Articles', () => {
 
 			await page.getByText(MOCK_ARTICLE_COMPLETIONS[0].headline).click();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[0].body[3])).toBeVisible();
-			await expect(page.getByText('Publish')).toBeVisible();
+			await expect(page.getByText('Publish').first()).toBeVisible();
 			await expect(page.getByText('Edit')).toBeVisible();
 			await expect(generateButton).not.toBeVisible();
 
@@ -173,7 +173,7 @@ test.describe('Articles', () => {
 			await expect(page.locator('h1.chat__article-h1', { hasText:MOCK_ARTICLE_COMPLETIONS[0].headline })).toBeVisible(); // prettier-ignore
 			await expect(page.locator('h1.chat__article-h1', { hasText:MOCK_ARTICLE_COMPLETIONS[1].headline })).toBeVisible(); // prettier-ignore
 
-			await page.getByText('Drafts').click();
+			await page.getByText('Drafts').first().click();
 			await expect(
 				page.locator('a.profile-summary__a--active', { hasText: 'Drafts 1' })
 			).toBeVisible();

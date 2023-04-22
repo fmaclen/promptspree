@@ -1,6 +1,6 @@
 # Promptspree
 
-Promptspree is an open-source project designed as a platform for testing and exploring generative AI technologies.
+Promptspree is an open-source project designed as a sandbox for experimenting generative AI technologies.
 
 #### Current stack
 

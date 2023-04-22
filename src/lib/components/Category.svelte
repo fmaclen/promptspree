@@ -33,8 +33,10 @@
 		background-position: center left;
 		background-size: var(--halftone-size);
 
-		&:hover {
-			transform: scale(1.1);
+		@media (hover: hover) and (pointer: fine) {
+			&:hover {
+				transform: scale(1.1);
+			}
 		}
 
 		&--politics {

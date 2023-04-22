@@ -62,8 +62,10 @@
 		text-decoration: none;
 		font-weight: bold;
 
-		&:hover {
-			color: var(--color-green);
+		@media (hover: hover) and (pointer: fine) {
+			&:hover {
+				color: var(--color-blue-light);
+			}
 		}
 	}
 

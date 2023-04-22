@@ -151,7 +151,6 @@
 
 <style lang="scss">
 	form.form {
-		@import '$lib/components/Form.scss';
 		@include baseForm;
 		margin-top: 32px;
 	}

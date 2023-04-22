@@ -1,9 +1,13 @@
-<script>
+<script lang="ts">
 	import A from '$lib/components/A.svelte';
 	import { CURRENT_MODEL } from '$lib/openai';
+	import type { UserCollection } from '$lib/pocketbase.schema';
 	import { APP_NAME } from '$lib/utils';
+
 	import CategoryList from './CategoryList.svelte';
 	import Isologo from './Isologo.svelte';
+
+	export let user: UserCollection | null = null;
 </script>
 
 <footer class="footer">
@@ -13,8 +17,7 @@
 		</a>
 		<div class="footer__about">
 			<p class="footer__p">
-				{APP_NAME} is an open-source project designed as a platform for testing and exploring generative
-				AI technologies.
+				{APP_NAME} is an open-source project designed as a sandbox for experimenting generative AI technologies.
 			</p>
 			<p class="footer__p">
 				Articles are currently being generated with <strong>{CURRENT_MODEL}</strong> by
@@ -28,6 +31,18 @@
 		</div>
 
 		<nav class="footer__link-groups">
+			<div class="footer__link-group">
+				{#if user}
+					<h4 class="footer__link-group-title">My account</h4>
+					<A href="/profile/{user.id}">Profile</A>
+					<A href="/profile/{user.id}">Published</A>
+					<A href="/profile/{user.id}/drafts">Drafts</A>
+				{:else}
+					<h4 class="footer__link-group-title">Account</h4>
+					<A href="/join/">Join to play</A>
+					<A href="/login/">Login</A>
+				{/if}
+			</div>
 			<div class="footer__link-group">
 				<h4 class="footer__link-group-title">Categories</h4>
 				<CategoryList component="link" />
@@ -94,18 +109,18 @@
 		flex-direction: row;
 		width: 100%;
 		white-space: nowrap;
-		gap: 128px;
+		gap: 64px;
 
 		@media (max-width: 1096px) {
 			gap: 64px;
 		}
 
 		@media (max-width: 960px) {
-			flex-direction: column;
 			gap: 32px;
 		}
 
 		@media (max-width: 640px) {
+			flex-direction: column;
 			padding-top: 24px;
 		}
 	}
