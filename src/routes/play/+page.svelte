@@ -503,13 +503,14 @@
 		display: flex;
 		align-items: center;
 		gap: 12px;
-		border: 1px solid var(--color-green-darkest);
-		background-color: var(--color-green-darkest);
-		border-radius: var(--border-radius-l);
+		border: none;
 		transition: padding 200ms;
 		padding: 12px;
-
+		background-color: var(--color-blue-darker);
+		border-radius: var(--border-radius-l);
+		
 		&:hover {
+			background-color: var(--color-blue-dark);
 			padding-left: 24px;
 			padding-right: 24px;
 		}

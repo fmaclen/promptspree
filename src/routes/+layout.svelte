@@ -3,6 +3,7 @@
 	import CategoryList from '$lib/components/CategoryList.svelte';
 	import Footer from '$lib/components/Footer.svelte';
 	import Logo from '$lib/components/Logo.svelte';
+	import Magic from '$lib/components/icons/Magic.svelte';
 	import { APP_NAME } from '$lib/utils';
 	import { Toaster } from 'svelte-french-toast';
 	import { slide } from 'svelte/transition';
@@ -42,12 +43,14 @@
 			<Logo title={APP_NAME} on:click={() => (isExpanded = false)} />
 
 			<a
-				class="primary-action {$page.url.pathname.includes('/play')
+				class="primary-action {isPlaySection
 					? 'primary-action--active'
 					: ''}"
-				href={$page.url.pathname.includes('/play') ? '/' : '/play'}
+				href={isPlaySection ? '/' : '/play'}
 			>
-				<span class="primary-action__icon">✨</span>
+				<span class="primary-action__icon">
+					<Magic isActive={isPlaySection} />
+				</span>
 				Play
 			</a>
 		</hgroup>
@@ -272,31 +275,17 @@
 		display: flex;
 		flex-direction: column;
 		row-gap: 2px;
+		border: none;
 		justify-content: center;
 		background-color: transparent;
-		font-family: var(--font-base);
+		cursor: pointer;
 		font-weight: 400;
-		padding: 8px;
-		border-radius: var(--border-radius-l);
+		font-family: var(--font-base);
 		color: var(--color-neutral-100);
-		background-color: var(--color-neutral-800);
-		border: 1px solid var(--color-neutral-500);
-
-		&:hover {
-			border-color: var(--color-neutral-300);
-		}
-
+		
 		&--active {
-			background-color: var(--color-green-darkest);
-			color: var(--color-green);
-			border-color: var(--color-green-dark);
-
-			&:hover {
-				border-color: var(--color-green);
-			}
-
 			span.header__hamburger-line {
-				background-color: var(--color-green);
+				background-color: var(--color-blue-light);
 			}
 		}
 	}
@@ -310,37 +299,42 @@
 	}
 
 	/* ------------------------------------------------------------------------ */
-
+	
 	a.primary-action {
 		display: flex;
 		align-items: center;
-		column-gap: 8px;
+		column-gap: 4px;
 		text-decoration: none;
 		font-size: 14px;
 		font-weight: 600;
-		padding: 8px 12px;
-		border-radius: var(--border-radius-l);
 		color: var(--color-neutral-50);
-		border: 1px solid var(--color-neutral-500);
-
-		&:hover {
-			border-color: var(--color-neutral-300);
-		}
-
-		&--active {
-			background-color: var(--color-green-darkest);
-			color: var(--color-green);
-			border-color: var(--color-green-dark);
-
-			&:hover {
-				border-color: var(--color-green);
-			}
-		}
 	}
 
 	span.primary-action__icon {
 		display: block;
 		font-size: 12px;
-		width: 12px;
+	}
+
+	/* ------------------------------------------------------------------------ */
+
+	button.header__hamburger,
+	a.primary-action {
+		padding-inline: 12px;
+		padding-block: 6px;
+		border-radius: var(--border-radius-l);
+		background-color: var(--color-neutral-600);
+
+		&:hover {
+			background-color: var(--color-blue-dark);
+		}
+
+		&--active {
+			background-color: var(--color-blue-darker);
+			color: var(--color-blue-light);
+
+			&:hover {
+				border-color: var(--color-blue);
+			}
+		}
 	}
 </style>
