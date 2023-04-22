@@ -74,13 +74,13 @@ test.describe('Reactions', () => {
 		await loginUser(MOCK_USERS.bob, page);
 		await page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline).click();
 		await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[2])).toBeVisible();
-		await expect(page.locator(reactionSummaryClass, { hasText: '🤯 1' })).toBeVisible();
-		await expect(page.locator(reactionSummaryClass)).not.toHaveClass(/reactions__summary--active/); // prettier-ignore
+		await expect(page.locator(reactionSummaryClass, { hasText: '🤯 1' }).first()).toBeVisible();
+		await expect(page.locator(reactionSummaryClass).first()).not.toHaveClass(/reactions__summary--active/); // prettier-ignore
 
 		await reactionsContextMenuToggle.click();
 		await page.getByText('🤔').click();
 		await expect(page.locator(reactionSummaryClass, { hasText: '🤯🤔 2' })).toBeVisible();
-		await expect(page.locator(reactionSummaryClass)).toHaveClass(/reactions__summary--active/); // prettier-ignore
+		await expect(page.locator(reactionSummaryClass).first()).toHaveClass(/reactions__summary--active/); // prettier-ignore
 
 		await reactionsContextMenuToggle.click();
 		await expect(reactionsContextMenuReactionReacted).toBeVisible();

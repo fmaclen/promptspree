@@ -94,12 +94,14 @@ test.describe('Articles', () => {
 			await page
 				.locator('li.articles__li a.category', { hasText: MOCK_ARTICLE_COMPLETIONS[1].category })
 				.click();
-			await expect(page.locator('li.articles__li a.category', { hasText: MOCK_ARTICLE_COMPLETIONS[1].category })).toBeVisible(); // prettier-ignore
+			await expect(page.locator('li.articles__li a.category', { hasText: MOCK_ARTICLE_COMPLETIONS[1].category })).toBeVisible();
 			await expect(page.getByText(MOCK_USERS.alice.nickname)).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[0])).toBeVisible(); // Summary
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[1])).not.toBeVisible();
-			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].headline)).not.toBeVisible();
+			await expect(
+				page.locator('div.article-layout--full', { hasText: MOCK_ARTICLE_COMPLETIONS[3].headline })
+			).not.toBeVisible();
 			await matchSnapshot(page, 'category-page');
 		});
 
@@ -111,19 +113,23 @@ test.describe('Articles', () => {
 
 			// Published article by Alice
 			await page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline).click();
-			await expect(page.locator('h1.article__h1', { hasText: MOCK_ARTICLE_COMPLETIONS[1].headline })).toBeVisible(); // prettier-ignore
+			await expect(page.locator('div.article-layout--full', { hasText: MOCK_ARTICLE_COMPLETIONS[1].headline })).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[0])).toBeVisible(); // Summary
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[1])).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[2])).toBeVisible();
-			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].headline)).not.toBeVisible();
+			await expect(
+				page.locator('div.article-layout--full', { hasText: MOCK_ARTICLE_COMPLETIONS[3].headline })
+			).not.toBeVisible();
 			await expect(page.getByText('Delete')).toBeVisible();
 			await expect(page.getByText('Publish', { exact: true })).not.toBeVisible();
 			await matchSnapshot(page, 'article-published-by-author');
 
 			// Published article by Bob
 			await goToHomepageViaLogo(page);
-			await page.getByText(MOCK_ARTICLE_COMPLETIONS[3].headline).click();
-			await expect(page.locator('h1.article__h1', { hasText: MOCK_ARTICLE_COMPLETIONS[3].headline })).toBeVisible(); // prettier-ignore
+			await page
+				.locator('div.article-layout--full', { hasText: MOCK_ARTICLE_COMPLETIONS[3].headline })
+				.click();
+			await expect(page.locator('div.article-layout--full', { hasText: MOCK_ARTICLE_COMPLETIONS[3].headline })).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].body[0])).toBeVisible(); // Summary
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].body[1])).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].body[2])).toBeVisible();

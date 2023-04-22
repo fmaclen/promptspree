@@ -31,9 +31,12 @@
 	<Section title="Frontpage" subtitle={today}>
 		<ArticleSummaries articles={data.articles.slice(0,7)} singleSize={ArticleSize.MEDIUM} />
 	</Section>
-	<Section title="Throwback news">
-		<ArticleSummaries articles={data.articles.slice(8)} singleSize={ArticleSize.SMALL} />
-	</Section>
+
+	{#if data.articles.slice(8).length > 0}
+		<Section title="Throwback news">
+			<ArticleSummaries articles={data.articles.slice(8)} singleSize={ArticleSize.SMALL} />
+		</Section>
+	{/if}
 {/if}
 
 <style lang="scss">
