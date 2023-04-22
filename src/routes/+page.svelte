@@ -28,10 +28,10 @@
 		<Notice>Sorry, we can't show you the articles right now. Please try again later</Notice>
 	</Section>
 {:else}
-	<Section sectionTitle="Frontpage" sectionHeaderSubtitle={today}>
+	<Section title="Frontpage" subtitle={today}>
 		<ArticleSummaries articles={data.articles.slice(0,7)} singleSize={ArticleSize.MEDIUM} />
 	</Section>
-	<Section sectionTitle="Throwback news">
+	<Section title="Throwback news">
 		<ArticleSummaries articles={data.articles.slice(8)} singleSize={ArticleSize.SMALL} />
 	</Section>
 {/if}

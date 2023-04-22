@@ -1,15 +1,15 @@
 <script lang="ts">
 	export let isVerticallyCentered: boolean = false;
-	export let sectionTitle: string | undefined = undefined;
-	export let sectionHeaderSubtitle: string | undefined = undefined;
+	export let title: string | undefined = undefined;
+	export let subtitle: string | undefined = undefined;
 </script>
 
-{#if sectionTitle}
+{#if title}
 	<header class="section__header">
 		<div class="section__container">
-			<strong class="section__header__key">{sectionTitle}</strong>
-			{#if sectionHeaderSubtitle}
-				<span class="section__header__value">{sectionHeaderSubtitle}</span>
+			<strong class="section__header__key">{title}</strong>
+			{#if subtitle}
+				<span class="section__header__value">{subtitle}</span>
 			{/if}
 		</div>
 	</header>
