@@ -7,7 +7,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 		// Set Admin client
 		event.locals.pbAdmin = await pbAdmin();
 	} catch (_) {
-		// Redirect to the hompeage if the admin client fails to initialize
+		// If the admin client fails to initialize we redirect to the homepage
+		// where the app can fail gracefully and displays an error to the user.
 		if (event.route.id !== '/') throw redirect(303, '/');
 	}
 

@@ -110,7 +110,7 @@
 		width: 100%;
 		white-space: nowrap;
 		gap: 64px;
-		
+
 		@media (max-width: 1096px) {
 			gap: 64px;
 		}
@@ -118,7 +118,7 @@
 		@media (max-width: 960px) {
 			gap: 32px;
 		}
-		
+
 		@media (max-width: 640px) {
 			flex-direction: column;
 			padding-top: 24px;

@@ -56,7 +56,12 @@
 
 	{#if currentUserCanReact}
 		<div class="reactions__context-menu-container">
-			<button class={`reactions__context-menu-toggle ${ isContextMenuVisible ? "reactions__context-menu-toggle--active" : ""}`} on:click={toggleContextMenuVisibility}>
+			<button
+				class={`reactions__context-menu-toggle ${
+					isContextMenuVisible ? 'reactions__context-menu-toggle--active' : ''
+				}`}
+				on:click={toggleContextMenuVisibility}
+			>
 				{#if isLoading}
 					<Loading />
 				{:else}
@@ -182,6 +187,6 @@
 
 	span.reactions__summary-total {
 		font-size: 13px;
-		color: var(--color-neutral-300)
+		color: var(--color-neutral-300);
 	}
 </style>
