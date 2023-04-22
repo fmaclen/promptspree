@@ -24,7 +24,8 @@
 
 <style lang="scss">
 	button.form-button {
-		padding: 16px 24px;
+		padding-block: 16px;
+		padding-inline: 24px;
 		font-size: 14px;
 		font-weight: 600;
 		box-sizing: border-box;
@@ -33,9 +34,9 @@
 		cursor: pointer;
 		font-family: var(--font-base);
 		border-radius: var(--border-radius-l);
-		border: 1px solid var(--color-green);
-		background-color: var(--color-green);
-		color: var(--color-neutral-950);
+		border: none;
+		color: var(--color-neutral-50);
+		background-color: var(--color-blue);
 
 		&:active {
 			transform: scale(0.98);
@@ -52,12 +53,12 @@
 		}
 
 		&--positive {
+			color: var(--color-neutral-950);
 			background-color: var(--color-green);
 			border-color: var(--color-green);
 		}
 
 		&--negative {
-			color: var(--color-neutral-50);
 			background-color: var(--color-red);
 			border-color: var(--color-red);
 
@@ -68,7 +69,8 @@
 		}
 
 		&--compact {
-			padding: 8px 16px;
+			padding-block: 12px;
+			padding-inline: 16px;
 		}
 
 		&:disabled {
@@ -77,8 +79,8 @@
 
 			box-shadow: none;
 			color: var(--color-neutral-500);
-			border-color: var(--color-neutral-900);
-			background-color: var(--color-neutral-900);
+			border-color: var(--color-neutral-950);
+			background-color: var(--color-neutral-950);
 		}
 	}
 </style>

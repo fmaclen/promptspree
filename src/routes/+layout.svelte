@@ -43,9 +43,7 @@
 			<Logo title={APP_NAME} on:click={() => (isExpanded = false)} />
 
 			<a
-				class="primary-action {isPlaySection
-					? 'primary-action--active'
-					: ''}"
+				class="primary-action {isPlaySection ? 'primary-action--active' : ''}"
 				href={isPlaySection ? '/' : '/play'}
 			>
 				<span class="primary-action__icon">
@@ -262,6 +260,7 @@
 	hgroup.header__hgroup {
 		display: flex;
 		justify-content: space-between;
+		column-gap: 12px;
 		padding-block: 32px;
 		padding-inline: 64px;
 		box-sizing: border-box;
@@ -282,7 +281,7 @@
 		font-weight: 400;
 		font-family: var(--font-base);
 		color: var(--color-neutral-100);
-		
+
 		&--active {
 			span.header__hamburger-line {
 				background-color: var(--color-blue-light);
@@ -299,7 +298,7 @@
 	}
 
 	/* ------------------------------------------------------------------------ */
-	
+
 	a.primary-action {
 		display: flex;
 		align-items: center;
@@ -308,6 +307,10 @@
 		font-size: 14px;
 		font-weight: 600;
 		color: var(--color-neutral-50);
+
+		@media (max-width: 768px) {
+			margin-left: auto;
+		}
 	}
 
 	span.primary-action__icon {
@@ -319,22 +322,6 @@
 
 	button.header__hamburger,
 	a.primary-action {
-		padding-inline: 12px;
-		padding-block: 6px;
-		border-radius: var(--border-radius-l);
-		background-color: var(--color-neutral-600);
-
-		&:hover {
-			background-color: var(--color-blue-dark);
-		}
-
-		&--active {
-			background-color: var(--color-blue-darker);
-			color: var(--color-blue-light);
-
-			&:hover {
-				border-color: var(--color-blue);
-			}
-		}
+		@include baseButton;
 	}
 </style>

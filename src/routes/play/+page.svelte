@@ -146,12 +146,7 @@
 									<form class="chat__publish" method="POST" action="?/publish">
 										<input type="hidden" name="articleId" value={article?.id} />
 										<input type="hidden" name="messageId" value={message.id} />
-										<FormButton
-											label="Publish"
-											type="submit"
-											sentiment={Sentiment.POSITIVE}
-											isCompact={true}
-										/>
+										<FormButton label="Publish" type="submit" isCompact={true} />
 										{#if isLastMessage}
 											<span class="chat__latest-version">Latest version</span>
 										{/if}
@@ -219,7 +214,9 @@
 					<textarea
 						class="chat__textarea"
 						name="prompt"
-						placeholder={'Type your prompt here...'}
+						placeholder={article
+							? 'Ask for changes to edit the article...'
+							: 'Type a prompt or use a suggestion to generate an article...'}
 						bind:this={textareaRef}
 						bind:value={prompt}
 						on:click={toggleSuggestions}
@@ -393,7 +390,6 @@
 		backdrop-filter: blur(1px);
 		-webkit-backdrop-filter: blur(1px);
 		background-color: rgba(25, 25, 25, 0.9);
-		border-top: 1px solid var(--color-neutral-700);
 
 		@media (max-width: 768px) {
 			padding-block: 16px;
@@ -420,15 +416,15 @@
 		background-color: transparent;
 		text-align: left;
 		cursor: pointer;
+		border: none;
 		padding: 8px;
 		border-radius: 4px;
 		font-family: var(--font-base);
-		border: 1px solid var(--color-yellow-darkest);
 		background-color: var(--color-yellow-darkest);
 		color: var(--color-yellow);
 
 		&:hover {
-			border: 1px solid var(--color-yellow-dark);
+			background-color: var(--color-yellow-darker);
 		}
 	}
 
@@ -446,15 +442,20 @@
 		display: flex;
 		flex-grow: 1;
 		gap: 8px;
-		padding: 8px;
+		padding-block: 8px;
+		padding-inline: 12px;
 		border-radius: var(--border-radius-l);
-		border: 1px solid var(--color-neutral-500);
 		background-color: var(--color-neutral-700);
 		transition: border-color 0.2s ease-in-out;
 
 		&:not(.chat__form--loading) {
 			&:focus-within {
-				border-color: var(--color-green-dark);
+				color: var(--color-green-lightest);
+				background-color: var(--color-green-darkest);
+
+				.chat__textarea::placeholder {
+					color: var(--color-green-dark);
+				}
 			}
 		}
 	}
@@ -500,19 +501,15 @@
 	}
 
 	button.chat__button-reset {
+		@include baseButton;
 		display: flex;
 		align-items: center;
 		gap: 12px;
 		border: none;
 		transition: padding 200ms;
-		padding: 12px;
-		background-color: var(--color-blue-darker);
-		border-radius: var(--border-radius-l);
-		
+
 		&:hover {
-			background-color: var(--color-blue-dark);
-			padding-left: 24px;
-			padding-right: 24px;
+			padding-inline: 24px;
 		}
 	}
 </style>

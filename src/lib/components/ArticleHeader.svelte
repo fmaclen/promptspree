@@ -57,7 +57,7 @@
 
 		&:hover {
 			h1.article__h1 {
-				color: var(--color-green);
+				color: var(--color-blue-light);
 			}
 		}
 	}

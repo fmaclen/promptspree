@@ -13,8 +13,7 @@
 		</a>
 		<div class="footer__about">
 			<p class="footer__p">
-				{APP_NAME} is an open-source project designed as a platform for testing and exploring generative
-				AI technologies.
+				{APP_NAME} is an open-source project designed as a sandbox for experimenting generative AI technologies.
 			</p>
 			<p class="footer__p">
 				Articles are currently being generated with <strong>{CURRENT_MODEL}</strong> by

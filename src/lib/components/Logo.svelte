@@ -106,7 +106,11 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		transform: translateX(8px); // Offsets the caret so it's visually centered
+		transform: translateX(24px); // Offsets the caret so it's visually centered
+
+		@media (max-width: 768px) {
+			transform: translateX(0);
+		}
 	}
 
 	@keyframes caret-blink {
