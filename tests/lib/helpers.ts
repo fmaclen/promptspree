@@ -23,19 +23,19 @@ export async function resetDatabase(): Promise<void> {
 	await pb.admins.authWithPassword(TEST_ADMIN_USER, TEST_ADMIN_PASSWORD);
 
 	// Delete all reactions
-	const reactions = await pb.collection('reactions').getFullList(200);
+	const reactions = await pb.collection('reactions').getFullList();
 	for (const reaction of reactions) {
 		await pb.collection('reactions').delete(reaction.id);
 	}
 
 	// Delete all articles
-	const articles = await pb.collection('articles').getFullList(200);
+	const articles = await pb.collection('articles').getFullList();
 	for (const article of articles) {
 		await pb.collection('articles').delete(article.id);
 	}
 
 	// Delete all users
-	const users = await pb.collection('users').getFullList(200);
+	const users = await pb.collection('users').getFullList();
 	for (const user of users) {
 		await pb.collection('users').delete(user.id);
 	}
