@@ -175,6 +175,14 @@
 			background-color: var(--color-blue-darker);
 		}
 	}
+	
+	a.reactions__summary {
+		&--active span.reactions__summary-total,
+		&--active:hover  {
+			color: var(--color-blue-light);
+			background-color: var(--color-blue-darker);
+		}
+	}
 
 	span.reactions__summary-emoji {
 		font-size: 16px;
