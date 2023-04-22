@@ -3,6 +3,7 @@
 	import ArticleLayout from '$lib/components/ArticleLayout.svelte';
 
 	export let articles: Article[];
+	export let singleSize: ArticleSize | undefined = ArticleSize.MEDIUM;
 
 	interface SizedArticle extends Article {
 		size: ArticleSize;
@@ -10,7 +11,7 @@
 
 	let sizedArticles: SizedArticle[];
 	$: sizedArticles = articles.map((article, index) => {
-		if (index <= 7) {
+		if (!singleSize && index <= 7) {
 			// The first 7 are medium size
 			return { ...article, size: ArticleSize.MEDIUM };
 		} else {
@@ -23,7 +24,7 @@
 <ul class="articles">
 	{#each sizedArticles as article}
 		<li class="articles__li">
-			<ArticleLayout {article} size={article.size} />
+			<ArticleLayout {article} size={singleSize || article.size} />
 		</li>
 	{/each}
 </ul>

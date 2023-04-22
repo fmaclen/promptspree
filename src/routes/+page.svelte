@@ -3,6 +3,7 @@
 	import Head from '$lib/components/Head.svelte';
 	import Notice from '$lib/components/Notice.svelte';
 	import Section from '$lib/components/Section.svelte';
+	import { ArticleSize } from '../lib/articles';
 
 	import type { PageData } from './$types';
 
@@ -27,8 +28,11 @@
 		<Notice>Sorry, we can't show you the articles right now. Please try again later</Notice>
 	</Section>
 {:else}
-	<Section>
-		<ArticleSummaries articles={data.articles} />
+	<Section sectionTitle="Frontpage" sectionHeaderSubtitle={today}>
+		<ArticleSummaries articles={data.articles.slice(0,7)} singleSize={ArticleSize.MEDIUM} />
+	</Section>
+	<Section sectionTitle="Throwback news">
+		<ArticleSummaries articles={data.articles.slice(8)} singleSize={ArticleSize.SMALL} />
 	</Section>
 {/if}
 
@@ -51,4 +55,6 @@
 			padding-inline: 24px;
 		}
 	}
+
+
 </style>
