@@ -4,17 +4,17 @@
 	export let subtitle: string | undefined = undefined;
 </script>
 
-{#if title}
-	<header class="section__header">
-		<div class="section__container">
-			<strong class="section__header__key">{title}</strong>
-			{#if subtitle}
-				<span class="section__header__value">{subtitle}</span>
-			{/if}
-		</div>
-	</header>
-{/if}
 <section class="section {isVerticallyCentered ? 'section--vertically-centered' : ''}">
+	{#if title}
+		<header class="section__header">
+			<div class="section__container">
+				<strong class="section__header__key">{title}</strong>
+				{#if subtitle}
+					<span class="section__header__value">{subtitle}</span>
+				{/if}
+			</div>
+		</header>
+	{/if}
 	<div class="section__container">
 		<slot />
 	</div>
@@ -52,7 +52,6 @@
 	header.section__header {
 		@include container-outer;
 		text-align: center;
-		padding-inline: 32px;
 		padding-block: 24px;
 		background-color: var(--color-neutral-900);
 	}
