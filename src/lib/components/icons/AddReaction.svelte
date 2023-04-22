@@ -1,4 +1,15 @@
-<svg width="28" height="16" viewBox="0 0 28 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<script lang="ts">
+	export let isActive: boolean = false;
+</script>
+
+<svg
+	class={`add-reaction-icon ${isActive ? 'add-reaction-icon--active' : ''}`}
+	width="28"
+	height="16"
+	viewBox="0 0 28 16"
+	fill="none"
+	xmlns="http://www.w3.org/2000/svg"
+>
 	<path
 		d="M0 8C0 3.59375 3.5625 0 8 0C12.4063 0 16 3.59375 16 8C16 12.4375 12.4063 16 8 16C3.5625 16 0 12.4375 0 8ZM8 13.5C10.375 13.5 12.375 11.9375 12.9688 9.84375C13.0938 9.40625 12.7188 9 12.2813 9H3.6875C3.25 9 2.875 9.40625 3 9.84375C3.59375 11.9375 5.59375 13.5 8 13.5ZM5.5 5C4.9375 5 4.5 5.46875 4.5 6C4.5 6.5625 4.9375 7 5.5 7C6.0625 7 6.5 6.5625 6.5 6C6.5 5.46875 6.0625 5 5.5 5ZM10.5 7C11.0625 7 11.5 6.5625 11.5 6C11.5 5.46875 11.0625 5 10.5 5C9.9375 5 9.5 5.46875 9.5 6C9.5 6.5625 9.9375 7 10.5 7Z"
 		fill="#A4B0AC"
@@ -8,3 +19,13 @@
 		fill="#A4B0AC"
 	/>
 </svg>
+
+<style lang="scss">
+	.add-reaction-icon {
+		&--active {
+			path {
+				fill: var(--color-blue-light);
+			}
+		}
+	}
+</style>

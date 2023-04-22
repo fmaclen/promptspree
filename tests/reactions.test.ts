@@ -41,7 +41,7 @@ test.describe('Reactions', () => {
 		const reactionSummaryClass = 'a.reactions__summary';
 		const reactionsContextMenuReaction = page.locator('button.reactions__context-menu-reaction');
 		const reactionsContextMenuReactionReacted = page.locator(
-			'button.reactions__context-menu-reaction--reacted'
+			'button.reactions__context-menu-reaction--active'
 		);
 		const reactionsContextMenuToggle = page.locator('button.reactions__context-menu-toggle');
 		const reactionsContextMenu = page.locator('div.reactions__context-menu');
@@ -75,12 +75,12 @@ test.describe('Reactions', () => {
 		await page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline).click();
 		await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[2])).toBeVisible();
 		await expect(page.locator(reactionSummaryClass, { hasText: '🤯 1' })).toBeVisible();
-		await expect(page.locator(reactionSummaryClass)).not.toHaveClass(/reactions__summary--reacted/); // prettier-ignore
+		await expect(page.locator(reactionSummaryClass)).not.toHaveClass(/reactions__summary--active/); // prettier-ignore
 
 		await reactionsContextMenuToggle.click();
 		await page.getByText('🤔').click();
 		await expect(page.locator(reactionSummaryClass, { hasText: '🤯🤔 2' })).toBeVisible();
-		await expect(page.locator(reactionSummaryClass)).toHaveClass(/reactions__summary--reacted/); // prettier-ignore
+		await expect(page.locator(reactionSummaryClass)).toHaveClass(/reactions__summary--active/); // prettier-ignore
 
 		await reactionsContextMenuToggle.click();
 		await expect(reactionsContextMenuReactionReacted).toBeVisible();

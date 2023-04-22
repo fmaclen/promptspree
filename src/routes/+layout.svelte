@@ -325,5 +325,6 @@
 	button.header__hamburger,
 	a.primary-action {
 		@include baseButton;
+		@include baseButtonActive;
 	}
 </style>

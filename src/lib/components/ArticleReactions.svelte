@@ -42,7 +42,7 @@
 		<a
 			href="/article/{article.id}"
 			class={`reactions__summary ${
-				reactions.byCurrentUser !== null ? 'reactions__summary--reacted' : ''
+				reactions.byCurrentUser !== null ? 'reactions__summary--active' : ''
 			}`}
 		>
 			{#each reactionsByTotal as reaction}
@@ -56,11 +56,11 @@
 
 	{#if currentUserCanReact}
 		<div class="reactions__context-menu-container">
-			<button class="reactions__context-menu-toggle" on:click={toggleContextMenuVisibility}>
+			<button class={`reactions__context-menu-toggle ${ isContextMenuVisible ? "reactions__context-menu-toggle--active" : ""}`} on:click={toggleContextMenuVisibility}>
 				{#if isLoading}
 					<Loading />
 				{:else}
-					<AddReaction />
+					<AddReaction isActive={isContextMenuVisible} />
 				{/if}
 			</button>
 
@@ -79,7 +79,7 @@
 								type="submit"
 								class="reactions__context-menu-reaction
 								{article.reactions.byCurrentUser === reaction.index
-									? 'reactions__context-menu-reaction--reacted'
+									? 'reactions__context-menu-reaction--active'
 									: ''}"
 							>
 								{reaction.reaction}
@@ -150,7 +150,6 @@
 		gap: 6px;
 		border: none;
 		box-sizing: border-box;
-		border-radius: var(--border-radius-l);
 	}
 
 	a.reactions__summary,
@@ -165,8 +164,8 @@
 
 	a.reactions__summary,
 	button.reactions__context-menu-reaction {
-		&--reacted,
-		&--reacted:hover {
+		&--active,
+		&--active:hover {
 			color: var(--color-blue-light);
 			background-color: var(--color-blue-darker);
 		}
@@ -182,6 +181,7 @@
 	}
 
 	span.reactions__summary-total {
-		font-size: 14px;
+		font-size: 13px;
+		color: var(--color-neutral-300)
 	}
 </style>

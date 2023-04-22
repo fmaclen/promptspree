@@ -504,6 +504,7 @@
 
 	button.chat__button-reset {
 		@include baseButton;
+		@include baseButtonActive;
 		display: flex;
 		align-items: center;
 		gap: 12px;

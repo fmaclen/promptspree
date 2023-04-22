@@ -158,7 +158,9 @@
 			background-color: var(--color-blue-dark);
 		}
 	}
+}
 
+@mixin baseButtonActive {
 	&--active {
 		background-color: var(--color-blue-darker);
 		color: var(--color-blue-light);
