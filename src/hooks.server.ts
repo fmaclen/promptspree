@@ -1,10 +1,15 @@
 import { pbAdmin, pocketbaseUrl } from '$lib/pocketbase.server';
-import type { Handle, RequestEvent } from '@sveltejs/kit';
+import { type Handle, type RequestEvent, redirect } from '@sveltejs/kit';
 import Pocketbase from 'pocketbase';
 
 export const handle: Handle = async ({ event, resolve }) => {
-	// Set Admin client
-	event.locals.pbAdmin = await pbAdmin();
+	try {
+		// Set Admin client
+		event.locals.pbAdmin = await pbAdmin();
+	} catch (_) {
+		// Redirect to the hompeage if the admin client fails to initialize
+		if (event.route.id !== '/') throw redirect(303, '/');
+	}
 
 	// Authenticate current user
 	await handleUserAuth(event);
