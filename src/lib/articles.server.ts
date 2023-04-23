@@ -32,13 +32,18 @@ export async function getArticle(locals: App.Locals, articleId?: string): Promis
 
 export async function getArticles(locals: App.Locals, filter: string): Promise<Article[]> {
 	try {
-		const collection: ArticleCollection[] = await locals.pbAdmin
-			.collection('articles')
-			.getFullList(undefined, {
-				sort: '-updated',
-				filter: filter,
-				expand: EXPAND_RECORD_RELATIONS
-			});
+		const listCollection = await locals.pbAdmin.collection('articles').getList(1, 30, {
+			sort: '-updated',
+			filter: filter,
+			expand: EXPAND_RECORD_RELATIONS
+		});
+		
+		// NOTE:
+		// We need an ArticleCollection[] to generate the articles but `listCollection.items`
+		// has a type Record[]. I can't remember how I set it up initially but 
+		// `getFullList()` does return the correct type and `getList()` doesn't.
+		const collection: ArticleCollection[] = listCollection.items;
+
 		return generateArticlesFromCollection(collection, locals.user?.id);
 	} catch (_) {
 		return [];

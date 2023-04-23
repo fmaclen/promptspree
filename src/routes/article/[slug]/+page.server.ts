@@ -1,5 +1,5 @@
-import { getArticleAndUserIds } from '$lib/articles';
-import { deleteArticle, getArticle, publishArticle } from '$lib/articles.server';
+import { ArticleStatus, getArticleAndUserIds } from '$lib/articles';
+import { deleteArticle, getArticle, getArticles, publishArticle } from '$lib/articles.server';
 import type { ReactionCollection } from '$lib/pocketbase.schema';
 import type { Reaction, Reactions } from '$lib/reactions';
 import { calculateReactionsFromCollection } from '$lib/reactions';
@@ -17,8 +17,10 @@ import type { PageServerLoad } from './$types';
 export const load: PageServerLoad = async ({ locals, params }) => {
 	const article = await getArticle(locals, params.slug);
 
+	const suggestedArticles = await getArticles(locals, `status = "${ArticleStatus.PUBLISHED}"`)
+
 	if (article) {
-		return { article };
+		return { article, suggestedArticles };
 	} else {
 		throw error(404, 'Article not found');
 	}

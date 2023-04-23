@@ -1,8 +1,20 @@
 <script lang="ts">
 	export let isVerticallyCentered: boolean = false;
+	export let title: string | undefined = undefined;
+	export let subtitle: string | undefined = undefined;
 </script>
 
 <section class="section {isVerticallyCentered ? 'section--vertically-centered' : ''}">
+	{#if title}
+		<header class="section__header">
+			<div class="section__container">
+				<strong class="section__header__key">{title}</strong>
+				{#if subtitle}
+					<span class="section__header__value">{subtitle}</span>
+				{/if}
+			</div>
+		</header>
+	{/if}
 	<div class="section__container">
 		<slot />
 	</div>
@@ -35,5 +47,28 @@
 
 	div.section__container {
 		@include container-inner;
+	}
+
+	header.section__header {
+		@include container-outer;
+		text-align: center;
+		padding-block: 24px;
+		background-color: var(--color-neutral-900);
+	}
+
+	strong.section__header__key,
+	span.section__header__value {
+		@media (max-width: 640px) {
+			@include subtitle-m;
+		}
+	}
+	strong.section__header__key {
+		@include subtitle-l;
+	}
+
+	span.section__header__value {
+		@include subtitle-l;
+		font-weight: unset;
+		color: var(--color-neutral-300);
 	}
 </style>
