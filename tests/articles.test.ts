@@ -94,7 +94,11 @@ test.describe('Articles', () => {
 			await page
 				.locator('li.articles__li a.category', { hasText: MOCK_ARTICLE_COMPLETIONS[1].category })
 				.click();
-			await expect(page.locator('li.articles__li a.category', { hasText: MOCK_ARTICLE_COMPLETIONS[1].category })).toBeVisible();
+			await expect(
+				page.locator('li.articles__li a.category', {
+					hasText: MOCK_ARTICLE_COMPLETIONS[1].category
+				})
+			).toBeVisible();
 			await expect(page.getByText(MOCK_USERS.alice.nickname)).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[0])).toBeVisible(); // Summary
@@ -113,10 +117,18 @@ test.describe('Articles', () => {
 
 			// Published article by Alice
 			await page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline).click();
-			await expect(page.locator('div.article-layout--full', { hasText: MOCK_ARTICLE_COMPLETIONS[1].headline })).toBeVisible();
-			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[0])).toBeVisible(); // Summary
-			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[1])).toBeVisible();
-			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].body[2])).toBeVisible();
+			await expect(
+				page.locator('div.article-layout--full', { hasText: MOCK_ARTICLE_COMPLETIONS[1].headline })
+			).toBeVisible();
+			await expect(
+				page.locator('p.article__p--full', { hasText: MOCK_ARTICLE_COMPLETIONS[1].body[0] })
+			).toBeVisible(); // Summary
+			await expect(
+				page.locator('p.article__p--full', { hasText: MOCK_ARTICLE_COMPLETIONS[1].body[1] })
+			).toBeVisible();
+			await expect(
+				page.locator('p.article__p--full', { hasText: MOCK_ARTICLE_COMPLETIONS[1].body[2] })
+			).toBeVisible();
 			await expect(
 				page.locator('div.article-layout--full', { hasText: MOCK_ARTICLE_COMPLETIONS[3].headline })
 			).not.toBeVisible();
@@ -126,14 +138,16 @@ test.describe('Articles', () => {
 
 			// Published article by Bob
 			await goToHomepageViaLogo(page);
-			await page
-				.locator('div.article-layout--full', { hasText: MOCK_ARTICLE_COMPLETIONS[3].headline })
-				.click();
-			await expect(page.locator('div.article-layout--full', { hasText: MOCK_ARTICLE_COMPLETIONS[3].headline })).toBeVisible();
-			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].body[0])).toBeVisible(); // Summary
+			await page.getByText(MOCK_ARTICLE_COMPLETIONS[3].headline).click();
+			await expect(page.locator('div.article-layout--full', { hasText: MOCK_ARTICLE_COMPLETIONS[3].headline })).toBeVisible(); // prettier-ignore
+			await expect(
+				page.locator('div.article-layout--full', { hasText: MOCK_ARTICLE_COMPLETIONS[3].body[0] })
+			).toBeVisible(); // Summary
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].body[1])).toBeVisible();
 			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[3].body[2])).toBeVisible();
-			await expect(page.getByText(MOCK_ARTICLE_COMPLETIONS[1].headline)).not.toBeVisible();
+			await expect(
+				page.locator('div.article-layout--full', { hasText: MOCK_ARTICLE_COMPLETIONS[1].headline })
+			).not.toBeVisible();
 			await expect(page.getByText('Delete')).not.toBeVisible();
 			await expect(page.getByText('Publish', { exact: true })).not.toBeVisible();
 			await matchSnapshot(page, 'article-published-by-others');
