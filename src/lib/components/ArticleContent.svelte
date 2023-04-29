@@ -57,9 +57,9 @@
 	</div>
 
 	{#if isDeletable || isPublishable}
-		<nav class="article-content__actions">
+		<nav class="article__actions">
 			{#if isPublishable}
-				<a class="metadata__edit" href={`/play?articleId=${article.id}`}>Edit</a>
+				<a class="article__edit" href={`/play?articleId=${article.id}`}>Edit</a>
 
 				<form method="POST" action="?/publish" use:enhance={handlePublish}>
 					<input type="hidden" name="articleId" value={article.id} />
@@ -67,7 +67,6 @@
 						label="Publish"
 						type="submit"
 						isCompact={true}
-						sentiment={Sentiment.POSITIVE}
 					/>
 				</form>
 			{/if}
@@ -142,7 +141,29 @@
 		border-radius: var(--border-radius-l);
 	}
 
-	nav.article-content__actions {
+	nav.article__actions {
 		grid-area: actions;
+		display: grid;
+		grid-auto-flow: row;
+		height: max-content;
+		gap: 4px;
+
+		@media (max-width: 1024px) {
+			width: 100%;
+			grid-auto-flow: column;
+		}
+	}
+
+	a.article__edit {
+		display: block;
+		font-weight: 600;
+		text-decoration: none;
+		font-size: 14px;
+		padding-block: 12px;
+    padding-inline: 16px;
+		text-align: center;
+		border-radius: var(--border-radius-l);
+		background-color: var(--color-green);
+		color: var(--color-neutral-900);
 	}
 </style>
