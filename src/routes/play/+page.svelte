@@ -10,7 +10,6 @@
 	import Robot from '$lib/components/icons/Robot.svelte';
 	import SubmitPrompt from '$lib/components/icons/SubmitPrompt.svelte';
 	import { type Message, MessageRole } from '$lib/messages';
-	import { Sentiment } from '$lib/utils';
 	import type { ActionResult } from '@sveltejs/kit';
 	import { onMount } from 'svelte';
 	import toast from 'svelte-french-toast';
@@ -297,7 +296,7 @@
 				height: 100%;
 				width: 90%;
 				animation-name: progress-animation;
-				animation-duration: 20s;
+				animation-duration: 40s;
 				animation-timing-function: ease-out;
 			}
 
@@ -306,7 +305,7 @@
 					width: 0%;
 				}
 				100% {
-					width: 95%;
+					width: 90%;
 				}
 			}
 		}
