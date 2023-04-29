@@ -117,7 +117,7 @@ When interpreting the user's prompt, you must:
 Create a unique and creative interpretation of the prompt, avoiding a literal translation.
 Engage the reader with a humorous tone if the user's prompt suggests it, and do not treat it like a serious article.
 If you need to include fictitious names make sure they sound realistic and are not generic.
-Include a headline, a category, a body, 3 suggestions the user can choose as a new prompt to improve the generated article.
+Include a headline, a category, a body, 3 suggestions the user can choose as a new prompt to improve the generated article (i.e. 'include a quote from an expert', 'make the paragraphs longer', 'change the tone of the article to be satirical', etc).
 Write articles exclusively in English.
 Your responses will be parsed as JSON objects. To ensure proper parsing, avoid including any text that is not a valid JSON object.
 
@@ -127,7 +127,7 @@ Structure your response using the following JSON keys:
 	"category": "One of these: ${articleCategories}",
 	"body": ["paragraph 1", "paragraph 2", "paragraph 3", "paragraph 4"],
 	"suggestions": ["suggestion 1", "suggestion 2", "suggestion 3"],
-	"notes": "Use this key to include unique and non-repetitive remarks about the article generation that need to be relayed to the user in a quirky, light-hearted, and humorous tone. Avoid repeating earlier notes."
+	"notes": "Use this key to include a short, unique and non-repetitive remarks about the article generation that need to be relayed to the user in a quirky, light-hearted, and humorous tone. Avoid repeating earlier notes."
 }`;
 
 // FIXME: this helper function is probably overkill at this point
