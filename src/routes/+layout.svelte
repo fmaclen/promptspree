@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import { page } from '$app/stores';
 	import CategoryList from '$lib/components/CategoryList.svelte';
 	import Footer from '$lib/components/Footer.svelte';
@@ -14,6 +15,22 @@
 	let isExpanded = false;
 	$: isPlaySection = $page.url.pathname.includes('/play');
 </script>
+
+<svelte:head>
+	{#if data.googleAnalyticsId}
+		<!-- Google tag (gtag.js) -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id={data.googleAnalyticsId}">
+		</script>
+		{@html `<script>${`
+			window.dataLayer = window.dataLayer || [];
+			function gtag() {
+				dataLayer.push(arguments);
+			}
+			gtag('js', new Date());
+			gtag('config', '${data.googleAnalyticsId}');
+		`}</script>`}
+	{/if}
+</svelte:head>
 
 <div
 	class="layout {isExpanded ? 'layout--expanded' : ''} {isPlaySection ? 'layout--playSection' : ''}"
