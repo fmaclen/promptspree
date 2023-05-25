@@ -17,6 +17,11 @@
 </script>
 
 <svelte:head>
+	{#if data.plausibleDomain}
+		<script defer data-domain={data.plausibleDomain} src="https://plausible.io/js/script.js">
+		</script>
+	{/if}
+
 	{#if data.googleAnalyticsId}
 		<!-- Google tag (gtag.js) -->
 		<script async src="https://www.googletagmanager.com/gtag/js?id={data.googleAnalyticsId}">
